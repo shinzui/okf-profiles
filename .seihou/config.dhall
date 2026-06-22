@@ -1,0 +1,2 @@
+{ `git.repoName` = "okf-profiles"
+}

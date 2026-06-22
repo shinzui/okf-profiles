@@ -42,9 +42,10 @@ PostgreSQL; this repo is where they evolve and get versioned.
 ```text
 package.dhall                 # entry point: re-exports the schema records and all profiles
 Profile/
-  Type.dhall                  # the Profile schema, as { Type, default } for completion
-  TypeRule.dhall              # the per-type rule schema, as { Type, default }
-  FrontmatterRules.dhall      # the frontmatter-rules schema, as { Type, default }
+  okf.dhall                   # pinned remote import of okf's canonical schema (the only URL+hash)
+  Type.dhall                  # Profile schema: okf's type + local default, as { Type, default }
+  TypeRule.dhall              # per-type rule schema: okf's type + local default
+  FrontmatterRules.dhall      # frontmatter-rules schema: okf's type + local default
 profiles/
   postgresql.dhall            # the PostgreSQL profile value (built with Profile::{…})
 ```
@@ -68,7 +69,7 @@ changes a consumer's conventions.
 -- your-project/okf-profile.dhall
 let okf =
       https://raw.githubusercontent.com/shinzui/okf-profiles/v0.1.0/package.dhall
-        sha256:<filled-in-by-dhall-freeze>
+        sha256:04a684786df59fde0216e5f1a0ed62753d5d0ea41ea1b9480616144282ad13e9
 
 in  okf.postgresql
 ```
@@ -78,7 +79,7 @@ Override an existing profile without copying — `//` replaces fields on the val
 ```dhall
 let okf =
       https://raw.githubusercontent.com/shinzui/okf-profiles/v0.1.0/package.dhall
-        sha256:<...>
+        sha256:04a684786df59fde0216e5f1a0ed62753d5d0ea41ea1b9480616144282ad13e9
 
 in  okf.postgresql
     //  { name = "acme-warehouse" }
@@ -91,7 +92,7 @@ fields you set; everything else takes the schema default:
 ```dhall
 let okf =
       https://raw.githubusercontent.com/shinzui/okf-profiles/v0.1.0/package.dhall
-        sha256:<...>
+        sha256:04a684786df59fde0216e5f1a0ed62753d5d0ea41ea1b9480616144282ad13e9
 
 in  okf.Profile::{
     , name = "acme-warehouse"
@@ -141,11 +142,12 @@ The schema currently matches `okf` with profile support (okf-core ≥ the versio
 that introduced `Okf.Profile`). When in doubt, run the validation below against the
 `okf` you have.
 
-> **Single source of truth.** Once `okf` is published, the schema *types* here are a
-> pinned remote import of okf's canonical schema (`okf-core/dhall/Profile.dhall`);
-> this repo keeps only the `default` records and the profile values. okf owns the
-> shape, okf-profiles owns the conventions. The import is one-way: okf depends on
-> nothing here.
+> **Single source of truth.** The schema *types* here are a pinned remote import of
+> okf's canonical schema, in [`Profile/okf.dhall`](./Profile/okf.dhall) (the only
+> URL + integrity hash in this repo); the sibling files add only the `default`
+> records, and `profiles/` holds the values. okf owns the shape, okf-profiles owns
+> the conventions. The import is one-way: okf depends on nothing here. To track a
+> newer okf, bump the commit ref in `Profile/okf.dhall` and re-run `dhall freeze`.
 
 
 ## Schema evolution
