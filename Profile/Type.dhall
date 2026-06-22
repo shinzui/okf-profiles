@@ -1,4 +1,4 @@
---| The schema for a complete OKF house profile.
+--| Schema for a complete OKF house profile.
 --
 -- A profile is a declarative description of how a team uses the Open Knowledge
 -- Format (OKF): which `type:` strings are allowed, which frontmatter keys are
@@ -9,22 +9,31 @@
 -- profile remains fully OKF-conformant; profiles are house conventions layered
 -- on top, checked (advisory by default) with `okf validate --profile`.
 --
--- * `name`              identifier for the profile, used in tool output.
--- * `okfVersion`        the OKF specification version the profile targets.
--- * `frontmatter`       global frontmatter expectations (see FrontmatterRules).
--- * `allowUnknownTypes` when False, any concept whose `type:` is not covered by a
---                       rule is reported as a violation.
--- * `types`             one rule per governed `type:` string (see TypeRule).
+-- Exported as a `{ Type, default }` record so values are built with completion:
+-- `Profile::{ name = "…", types = [ … ] }`. Only `name` is mandatory; `okfVersion`,
+-- `allowUnknownTypes`, `frontmatter`, and `types` have defaults. Adding a new field
+-- later (to the type and to `default`) does not break existing `Profile::{ … }`
+-- values. See README.md ("Schema evolution").
 --
--- Mirrors the `ProfileSpec` decoder in okf-core's `Okf.Profile`. Keep the two in
--- sync; see README.md ("Compatibility").
+-- The type mirrors the `ProfileSpec` decoder in okf-core's `Okf.Profile`. After okf
+-- is published, it becomes a pinned remote import of okf's canonical schema.
 let TypeRule = ./TypeRule.dhall
 
 let FrontmatterRules = ./FrontmatterRules.dhall
 
-in  { name : Text
-    , okfVersion : Text
-    , frontmatter : FrontmatterRules
-    , allowUnknownTypes : Bool
-    , types : List TypeRule
-    }
+let profileType =
+      { name : Text
+      , okfVersion : Text
+      , frontmatter : FrontmatterRules.Type
+      , allowUnknownTypes : Bool
+      , types : List TypeRule.Type
+      }
+
+let defaults =
+      { okfVersion = "0.1"
+      , frontmatter = FrontmatterRules.default
+      , allowUnknownTypes = False
+      , types = [] : List TypeRule.Type
+      }
+
+in  { Type = profileType, default = defaults }

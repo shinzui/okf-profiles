@@ -40,18 +40,20 @@ PostgreSQL; this repo is where they evolve and get versioned.
 ## Layout
 
 ```text
-package.dhall                 # entry point: re-exports the schema types and all profiles
+package.dhall                 # entry point: re-exports the schema records and all profiles
 Profile/
-  Type.dhall                  # the ProfileSpec record type
-  TypeRule.dhall              # the per-type rule record type
-  FrontmatterRules.dhall      # the frontmatter-rules record type
+  Type.dhall                  # the Profile schema, as { Type, default } for completion
+  TypeRule.dhall              # the per-type rule schema, as { Type, default }
+  FrontmatterRules.dhall      # the frontmatter-rules schema, as { Type, default }
 profiles/
-  postgresql.dhall            # the PostgreSQL profile value (annotated against Profile/Type.dhall)
+  postgresql.dhall            # the PostgreSQL profile value (built with Profile::{…})
 ```
 
-The schema types are published deliberately. Importing `Profile` lets a project's
-override be **type-checked against the schema** instead of failing later at decode
-time.
+Each schema is exported as a `{ Type, default }` record so values are built with
+Dhall's **record completion** operator `::` — `Profile::{ name = … }` fills every
+field that has a default. This is what makes the schema safe to grow (see
+[Schema evolution](#schema-evolution)) and lets a project's profile be
+**type-checked against the schema** instead of failing later at decode time.
 
 
 ## Consuming a profile
@@ -71,7 +73,7 @@ let okf =
 in  okf.postgresql
 ```
 
-Override or extend without copying — this is the whole point of shipping the type:
+Override an existing profile without copying — `//` replaces fields on the value:
 
 ```dhall
 let okf =
@@ -81,6 +83,21 @@ let okf =
 in  okf.postgresql
     //  { name = "acme-warehouse" }
     //  { allowUnknownTypes = True }
+```
+
+Or build a fresh profile against the imported schema with completion — only the
+fields you set; everything else takes the schema default:
+
+```dhall
+let okf =
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.1.0/package.dhall
+        sha256:<...>
+
+in  okf.Profile::{
+    , name = "acme-warehouse"
+    , types =
+      [ okf.TypeRule::{ type = "PostgreSQL Table", pathPattern = Some "schemas/*/tables/*" } ]
+    }
 ```
 
 Then point the tool at your file:
@@ -124,6 +141,39 @@ The schema currently matches `okf` with profile support (okf-core ≥ the versio
 that introduced `Okf.Profile`). When in doubt, run the validation below against the
 `okf` you have.
 
+> **Single source of truth.** Once `okf` is published, the schema *types* here are a
+> pinned remote import of okf's canonical schema (`okf-core/dhall/Profile.dhall`);
+> this repo keeps only the `default` records and the profile values. okf owns the
+> shape, okf-profiles owns the conventions. The import is one-way: okf depends on
+> nothing here.
+
+
+## Schema evolution
+
+In Dhall, **record fields are always required** — adding even an `Optional` field
+to a record type breaks every existing value that omitted it. That is why each
+schema here is a `{ Type, default }` record consumed through the completion operator
+`::`. `Profile::{ name = "x" }` desugars to `(Profile.default // { name = "x" }) :
+Profile.Type`, so a value only ever names the fields it cares about.
+
+To add a field later:
+
+1. Add it to the schema's type **and** to its `default`.
+2. Existing `Profile::{ … }` / `TypeRule::{ … }` values keep compiling unchanged —
+   the default supplies the new field.
+
+This is the idiomatic Dhall form of the Input/Type/default/mk pattern; completion
+is preferred over a fixed minimal-input constructor because profile authors
+routinely override the "optional" fields.
+
+**Caveat — the Haskell boundary.** Completion protects *consumer source* from field
+additions, but the value still **decodes against okf-core's exact record**: Dhall
+record decoding rejects unknown fields. So adding a field is a *coordinated* change
+— okf-core's `ProfileSpec` decoder, okf's published `Profile.dhall`, and this repo's
+`{ Type, default }` must move together, gated by okf's drift-guard test and released
+with a tag bump plus an updated `okfVersion` / minimum-`okf` note. Completion buys
+backward compatibility for *authors*, not a license to diverge from the decoder.
+
 
 ## Validating this repo
 
@@ -147,7 +197,8 @@ Expected: `OK: <n> concepts` with no `profile:` lines.
 
 ## Adding a profile
 
-1. Add `profiles/<name>.dhall`, annotated `: ../Profile/Type.dhall`.
+1. Add `profiles/<name>.dhall`, built with `Profile::{ … }` / `TypeRule::{ … }`
+   against `../Profile/Type.dhall`.
 2. Re-export it from `package.dhall`.
 3. `dhall type --file profiles/<name>.dhall` must pass.
 4. Add a row describing it to this README and bump the tag on release.
