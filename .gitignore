@@ -1,0 +1,11 @@
+# Dhall local import cache (if a tool writes one into the tree)
+.cache/
+
+# Editor/OS noise
+.DS_Store
+*.swp
+
+# Agent harness scratch
+.claude/
+.agents/
+CLAUDE.local.md
