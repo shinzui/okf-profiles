@@ -15,4 +15,5 @@
 , TypeRule = ./Profile/TypeRule.dhall
 , FrontmatterRules = ./Profile/FrontmatterRules.dhall
 , postgresql = ./profiles/postgresql.dhall
+, tanPostgresql = ./profiles/tan-postgresql.dhall
 }
