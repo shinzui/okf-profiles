@@ -47,7 +47,14 @@ Profile/
   TypeRule.dhall              # per-type rule schema: okf's type + local default
   FrontmatterRules.dhall      # frontmatter-rules schema: okf's type + local default
 profiles/
-  postgresql.dhall            # the PostgreSQL profile value (built with Profile::{…})
+  documentation/
+    package.dhall             # namespaced documentation-profile exports
+    pattern-catalog.dhall     # implementation-pattern catalog conventions
+  postgresql.dhall            # stable flat PostgreSQL export
+  tan-postgresql.dhall        # stable flat tan PostgreSQL export
+fixtures/
+  documentation-pattern-catalog/
+                              # three-concept end-to-end profile fixture
 ```
 
 Each schema is exported as a `{ Type, default }` record so values are built with
@@ -73,6 +80,19 @@ let okf =
 
 in  okf.postgresql
 ```
+
+Namespaced profile families are available from the same package. For example,
+an implementation-pattern corpus consumes the documentation catalog profile as:
+
+```dhall
+let okf =
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.2.0/package.dhall
+
+in  okf.documentation.patternCatalog
+```
+
+Run `dhall freeze --inplace` in the consuming repository to add the release's
+semantic hash before committing the import.
 
 Override an existing profile without copying — `//` replaces fields on the value:
 
@@ -138,9 +158,12 @@ decoding breaks at load time. Two rules keep them aligned:
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
-The schema currently matches `okf` with profile support (okf-core ≥ the version
-that introduced `Okf.Profile`). When in doubt, run the validation below against the
-`okf` you have.
+The schema currently matches `okf` with profile support (okf-core ≥ 0.1.1.0).
+The `documentation.patternCatalog` profile also requires profile support from
+that release. When in doubt, run the validation below against the `okf` you
+have. The existing `postgresql` and `tanPostgresql` fields remain stable flat
+exports; new profile families should use a namespaced directory and package
+field.
 
 > **Single source of truth.** The schema *types* here are a pinned remote import of
 > okf's canonical schema, in [`Profile/okf.dhall`](./Profile/okf.dhall) (the only
@@ -184,6 +207,7 @@ Type-check every Dhall file (requires the `dhall` CLI, ≥ 1.42):
 ```bash
 dhall type --file package.dhall
 dhall type --file profiles/postgresql.dhall
+dhall type --file profiles/documentation/pattern-catalog.dhall
 ```
 
 Both should print the inferred type and exit `0`. To prove a profile actually
@@ -196,12 +220,33 @@ okf validate examples/postgresql-sample --profile /path/to/okf-profiles/profiles
 
 Expected: `OK: <n> concepts` with no `profile:` lines.
 
+The documentation pattern-catalog fixture is self-contained:
+
+```bash
+okf validate fixtures/documentation-pattern-catalog \
+  --strict \
+  --profile profiles/documentation/pattern-catalog.dhall \
+  --profile-enforce
+```
+
+Expected: `OK: 3 concepts` with no `profile:` lines.
+
+
+## Profile catalog
+
+| Export | Purpose | Minimum `okf` |
+|---|---|---|
+| `documentation.patternCatalog` | Mori-addressable catalogs of standards, guides, patterns, runbooks, references, and gotchas | 0.1.1.0 |
+| `postgresql` | PostgreSQL schemas, tables, and views | 0.1.1.0 |
+| `tanPostgresql` | The PostgreSQL profile plus logical event streams | 0.1.1.0 |
+
 
 ## Adding a profile
 
-1. Add `profiles/<name>.dhall`, built with `Profile::{ … }` / `TypeRule::{ … }`
-   against `../Profile/Type.dhall`.
-2. Re-export it from `package.dhall`.
+1. Add `profiles/<family>/<name>.dhall`, built with `Profile::{ … }` /
+   `TypeRule::{ … }` against `../../Profile/Type.dhall`.
+2. Re-export it from the family `package.dhall`, then export that package from
+   the root `package.dhall`. Keep existing flat exports stable.
 3. `dhall type --file profiles/<name>.dhall` must pass.
 4. Add a row describing it to this README and bump the tag on release.
 

@@ -14,6 +14,7 @@
 { Profile = ./Profile/Type.dhall
 , TypeRule = ./Profile/TypeRule.dhall
 , FrontmatterRules = ./Profile/FrontmatterRules.dhall
+, documentation = ./profiles/documentation/package.dhall
 , postgresql = ./profiles/postgresql.dhall
 , tanPostgresql = ./profiles/tan-postgresql.dhall
 }
