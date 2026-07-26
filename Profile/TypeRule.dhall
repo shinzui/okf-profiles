@@ -11,6 +11,7 @@ let defaults =
       , resourceScheme = None Text
       , requireSchemaSection = False
       , schemaColumns = [] : List Text
+      , idPrefix = None Text
       }
 
 in  { Type = okf.TypeRule, default = defaults }

@@ -50,6 +50,10 @@ profiles/
   documentation/
     package.dhall             # namespaced documentation-profile exports
     pattern-catalog.dhall     # implementation-pattern catalog conventions
+  coordination/
+    package.dhall             # namespaced coordination-profile exports
+    improvement-requests.dhall
+                              # cross-repository improvement-request conventions
   postgresql.dhall            # stable flat PostgreSQL export
   tan-postgresql.dhall        # stable flat tan PostgreSQL export
 fixtures/
@@ -158,12 +162,13 @@ decoding breaks at load time. Two rules keep them aligned:
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
-The schema currently matches `okf` with profile support (okf-core ≥ 0.1.1.0).
-The `documentation.patternCatalog` profile also requires profile support from
-that release. When in doubt, run the validation below against the `okf` you
-have. The existing `postgresql` and `tanPostgresql` fields remain stable flat
-exports; new profile families should use a namespaced directory and package
-field.
+The schema currently matches `okf` 0.2.0.0. The `coordination.improvementRequests`
+profile requires 0.2.0.0 because it uses profile-declared stable document IDs.
+The other profiles require profile support from okf-core 0.1.1.0, but this
+catalog release as a whole must be decoded with 0.2.0.0 or later. When in doubt,
+run the validation below against the `okf` you have. The existing `postgresql`
+and `tanPostgresql` fields remain stable flat exports; new profile families
+should use a namespaced directory and package field.
 
 > **Single source of truth.** The schema *types* here are a pinned remote import of
 > okf's canonical schema, in [`Profile/okf.dhall`](./Profile/okf.dhall) (the only
@@ -231,11 +236,48 @@ okf validate fixtures/documentation-pattern-catalog \
 
 Expected: `OK: 3 concepts` with no `profile:` lines.
 
+The cross-repository improvement-request fixture exercises stable IDs and the
+closed, flat profile vocabulary:
+
+```bash
+okf validate fixtures/improvement-requests \
+  --strict \
+  --profile profiles/coordination/improvement-requests.dhall \
+  --profile-enforce
+```
+
+Expected: `OK: 2 concepts`. Run
+`scripts/test-improvement-requests-profile.sh` with an `okf` 0.2.0.0 binary to
+also prove that missing IDs, wrong prefixes, duplicate IDs, missing required
+metadata, unknown types, and nested paths are rejected.
+
+`coordination.improvementRequests` requires the frontmatter fields `type`,
+`title`, `description`, `timestamp`, `requestId`, `status`, and `origin`.
+`requestId` is a stable `IR-N` handle and is unique only within one bundle; the
+concept path remains OKF's canonical identity. The profile permits unknown
+producer fields so consumers may add `originPlan`, `targetPlan`, `contracts`,
+or tags. It deliberately does not validate lifecycle enumeration, Mori URI
+artifact kinds, project ownership, or registry resolution; Mori performs those
+semantic checks after OKF profile enforcement.
+
+A tagged consumer imports it as:
+
+```dhall
+let profiles =
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.3.0/package.dhall
+
+in  profiles.coordination.improvementRequests
+```
+
+Freeze the import in the consumer with `dhall freeze --inplace` before
+committing it.
+
 
 ## Profile catalog
 
 | Export | Purpose | Minimum `okf` |
 |---|---|---|
+| `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles | 0.2.0.0 |
 | `documentation.patternCatalog` | Mori-addressable catalogs of standards, guides, patterns, runbooks, references, and gotchas | 0.1.1.0 |
 | `postgresql` | PostgreSQL schemas, tables, and views | 0.1.1.0 |
 | `tanPostgresql` | The PostgreSQL profile plus logical event streams | 0.1.1.0 |

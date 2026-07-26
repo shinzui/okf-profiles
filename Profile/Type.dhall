@@ -23,6 +23,7 @@ let defaults =
       { okfVersion = "0.1"
       , frontmatter = FrontmatterRules.default
       , allowUnknownTypes = False
+      , idField = None Text
       , types = [] : List TypeRule.Type
       }
 
