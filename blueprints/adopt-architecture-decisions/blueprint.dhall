@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-architecture-decisions"
-    , version = Some "0.1.1"
+    , version = Some "0.1.2"
     , description = Some
         "Adapt an existing docs/adr corpus to the shared OKF architecture-decision profile, preserving project-specific history while adding stable ADR-N handles, strict validation, Mori bundle registration, and rename-stable cross-repository references."
     , prompt = ./prompt.md as Text
@@ -26,6 +26,8 @@ in  S.Blueprint::{
       , "Write"
       , "Bash(dhall *)"
       , "Bash(git *)"
+      , "Bash(find *)"
+      , "Bash(make *)"
       , "Bash(mori *)"
       , "Bash(okf *)"
       , "Bash(rg *)"

@@ -80,6 +80,14 @@ profile. Type-check it before changing ADRs:
 dhall type --file docs/adr/profile.dhall
 ```
 
+In a batch CLI sandbox, outbound network access may be unavailable even though the descriptor is
+correct and the parent Seihou process can resolve its pinned import. If type-checking fails solely
+because that sandbox cannot reach the pinned remote import, verify that the copied descriptor is
+byte-for-byte identical to the shipped reference, use `migration-reference.md` as the authoritative
+field contract, and continue the migration. Do not treat sandbox-only network isolation as a reason
+to stop after copying the profile: the calling module migration performs the same type-check and
+strict validation outside the agent sandbox before it can advance its version.
+
 Every decision concept must have YAML frontmatter with the profile-required ADR fields plus OKF's
 strict authoring fields. Values are shaped like:
 
@@ -184,6 +192,8 @@ so a checkout remains self-contained. Across repositories, replace
 literal filesystem paths or informal citations touched by this migration with the canonical
 handle-form `mori://` reference returned by Mori.
 
-Finish by reporting migrated ADR count, preserved and newly allocated handles, collision resolutions,
+Do not report success until strict profile and log validation passes, except for the explicitly
+documented batch-sandbox network case above where the parent process owns the final gate. Finish by
+reporting migrated ADR count, preserved and newly allocated handles, collision resolutions,
 reserved-file moves, the check surface updated, exact validation commands and results, and any Mori
 registration step that remains external.
