@@ -5,7 +5,7 @@ profile-governed OKF bundle at `docs/adr/`. Preserve their historical meaning an
 repository's actual conventions rather than applying a blind textual rewrite. Complete the
 migration, strict validation, Mori registration, and repository-native check integration.
 
-This run requires a tool-capable interactive provider such as `claude-cli` or `codex-cli`.
+This run requires a tool-capable local CLI provider such as `claude-cli` or `codex-cli`.
 
 Treat any additional prompt supplied to `seihou agent run` as repository-specific guidance—for
 example, known legacy metadata, a preferred existing check target, or fields that must be preserved.

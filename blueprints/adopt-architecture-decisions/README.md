@@ -11,6 +11,13 @@ Install the blueprint from this repository and run it in the target repository:
 seihou agent run adopt-architecture-decisions
 ```
 
+For module migrations and other non-interactive automation, use Seihou's batch
+launcher:
+
+```sh
+seihou agent run adopt-architecture-decisions --batch
+```
+
 Pass a repository-specific prompt when local history or checks need extra guidance:
 
 ```bash

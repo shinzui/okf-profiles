@@ -7,7 +7,7 @@
   [] : List { name : Text, version : Optional Text, path : Text, description : Optional Text, tags : List Text }
 , blueprints =
   [ { name = "adopt-architecture-decisions"
-    , version = Some "0.1.0"
+    , version = Some "0.1.1"
     , path = "blueprints/adopt-architecture-decisions"
     , description = Some
         "Adapt an existing docs/adr corpus to the shared OKF architecture-decision profile, stable ADR-N handles, strict validation, and Mori bundle addressing"
