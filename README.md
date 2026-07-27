@@ -31,7 +31,7 @@ Three repositories, three responsibilities — keep them distinct:
 |---|---|
 | [`okf`](https://github.com/shinzui/okf) | The format engine and CLI: parsing, validation, the `--profile` mechanism, exit codes. Ships a *self-contained sample* profile at `docs/profiles/postgresql.dhall` for its own tests and docs. |
 | **`okf-profiles`** (this repo) | The *authoritative* profiles and the conventions they encode. The thing every project imports. |
-| `mori` | Discovery: registers this repo so profiles are findable, and (planned) attaches a profile to a registered bundle and validates it at observe time. |
+| `mori` | Discovery and addressing: registers OKF bundles, indexes their concepts, and resolves project-and-bundle-scoped stable document handles. |
 
 The sample inside `okf` and the profiles here intentionally start identical for
 PostgreSQL; this repo is where they evolve and get versioned.
@@ -49,6 +49,8 @@ Profile/
 profiles/
   documentation/
     package.dhall             # namespaced documentation-profile exports
+    architecture-decisions.dhall
+                              # flat ADR corpus with stable ADR-N handles
     pattern-catalog.dhall     # implementation-pattern catalog conventions
   coordination/
     package.dhall             # namespaced coordination-profile exports
@@ -57,8 +59,14 @@ profiles/
   postgresql.dhall            # stable flat PostgreSQL export
   tan-postgresql.dhall        # stable flat tan PostgreSQL export
 fixtures/
+  architecture-decisions/    # valid stable-ID ADR fixture
+  architecture-decisions-invalid/
+                              # rejection fixtures for the ADR contract
   documentation-pattern-catalog/
                               # three-concept end-to-end profile fixture
+blueprints/
+  adopt-architecture-decisions/
+                              # adaptive Seihou migration for existing ADR corpora
 ```
 
 Each schema is exported as a `{ Type, default }` record so values are built with
@@ -272,12 +280,39 @@ in  profiles.coordination.improvementRequests
 Freeze the import in the consumer with `dhall freeze --inplace` before
 committing it.
 
+The architecture-decision fixture exercises the same stable-ID machinery for
+repository-owned ADRs:
+
+```bash
+scripts/test-architecture-decisions-profile.sh
+```
+
+The script proves that a valid flat corpus passes and that missing IDs, wrong
+prefixes, duplicate IDs, missing required metadata, unknown types, and nested
+paths fail. A tagged consumer installs the descriptor as `docs/adr/profile.dhall`:
+
+```dhall
+let profiles =
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.4.0/package.dhall
+        sha256:39e79b65672439cde9c1271e3d92abf68ba1e2427541598e0d04de23e741f0cb
+
+in  profiles.documentation.architectureDecisions
+```
+
+Existing ADR corpora should be migrated with the adaptive Seihou blueprint in
+`blueprints/adopt-architecture-decisions`. Its prompt inventories each repository's
+legacy metadata and numbering before it adds frontmatter, resolves collisions,
+registers the Mori bundle, and integrates strict validation. This belongs here—next
+to the profile contract—rather than in Mori or in each repository as a one-off
+rewriter.
+
 
 ## Profile catalog
 
 | Export | Purpose | Minimum `okf` |
 |---|---|---|
 | `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles | 0.2.0.0 |
+| `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles | 0.2.0.0 |
 | `documentation.patternCatalog` | Mori-addressable catalogs of standards, guides, patterns, runbooks, references, and gotchas | 0.1.1.0 |
 | `postgresql` | PostgreSQL schemas, tables, and views | 0.1.1.0 |
 | `tanPostgresql` | The PostgreSQL profile plus logical event streams | 0.1.1.0 |

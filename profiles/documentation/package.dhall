@@ -1,2 +1,4 @@
 --| Reusable documentation profiles.
-{ patternCatalog = ./pattern-catalog.dhall }
+{ architectureDecisions = ./architecture-decisions.dhall
+, patternCatalog = ./pattern-catalog.dhall
+}
