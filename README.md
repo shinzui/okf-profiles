@@ -52,6 +52,7 @@ profiles/
     architecture-decisions.dhall
                               # flat ADR corpus with stable ADR-N handles
     pattern-catalog.dhall     # implementation-pattern catalog conventions
+    research-documents.dhall  # nested research corpus with stable RES-N handles
   coordination/
     package.dhall             # namespaced coordination-profile exports
     improvement-requests.dhall
@@ -64,6 +65,7 @@ fixtures/
                               # rejection fixtures for the ADR contract
   documentation-pattern-catalog/
                               # three-concept end-to-end profile fixture
+  research-documents/         # research records and model-review provenance fixture
 blueprints/
   adopt-architecture-decisions/
                               # adaptive Seihou migration for existing ADR corpora
@@ -221,6 +223,7 @@ Type-check every Dhall file (requires the `dhall` CLI, ≥ 1.42):
 dhall type --file package.dhall
 dhall type --file profiles/postgresql.dhall
 dhall type --file profiles/documentation/pattern-catalog.dhall
+dhall type --file profiles/documentation/research-documents.dhall
 ```
 
 Both should print the inferred type and exit `0`. To prove a profile actually
@@ -321,6 +324,26 @@ in  profiles.coordination.improvementRequests
 
 Freeze the import in the consumer with `dhall freeze --inplace` before
 committing it.
+
+The research-document profile reuses the review contract above for technical
+research, audits, surveys, evaluations, and design explorations. It requires
+`type`, `title`, `description`, `timestamp`, `researchId`, `status`, and
+`scope`; recommends `reviews`, `sources`, `relatedPlans`, `relatedDecisions`,
+`supersedes`, and `supersededBy`; permits nested paths such as `notes/*`; and
+allocates stable `RES-N` handles. A review remains optional until a human or
+model actually reviews the document, and model reviews record `provider`,
+`model`, and `effort` exactly as above.
+
+Run its acceptance and rejection suite with:
+
+```bash
+scripts/test-research-documents-profile.sh
+```
+
+The fixture proves nested research documents and model-review provenance. The
+rejection cases cover missing IDs, wrong prefixes, duplicate IDs, missing
+required metadata, and unknown types. A tagged consumer imports the profile as
+`profiles.documentation.researchDocuments`.
 
 The architecture-decision fixture exercises the same stable-ID machinery for
 repository-owned ADRs:
