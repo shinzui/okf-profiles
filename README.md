@@ -261,6 +261,7 @@ metadata, unknown types, and nested paths are rejected.
 
 `coordination.improvementRequests` requires the frontmatter fields `type`,
 `title`, `description`, `timestamp`, `requestId`, `status`, and `origin`.
+`reviews` is recommended but optional.
 `requestId` is a stable `IR-N` handle and is unique only within one bundle; the
 concept path remains OKF's canonical identity. The profile permits unknown
 producer fields so consumers may add `originPlan`, `targetPlan`, `contracts`,
@@ -268,11 +269,52 @@ or tags. It deliberately does not validate lifecycle enumeration, Mori URI
 artifact kinds, project ownership, or registry resolution; Mori performs those
 semantic checks after OKF profile enforcement.
 
+`reviews` is an optional chronological list of timestamp-bound review records.
+It may be absent or empty when no review has occurred; do not invent a
+placeholder review for a draft. Preserve old records after a material update
+and change the document's `timestamp`; a record is current only when its
+`document_timestamp` equals that timestamp. Append a new record only after an
+actual review. Review approval approves the request document for the named
+scope; it does not change the request's lifecycle `status`.
+
+Use the review shape established by the documentation-pattern governance
+convention:
+
+```yaml
+reviews:
+  - kind: human | model
+    reviewer: stable-human-or-agent-identity
+    reviewed_at: 2026-07-28T02:32:33Z
+    document_timestamp: 2026-07-28T00:11:06Z
+    scope: content | technical-accuracy | editorial | catalog-metadata | content-and-metadata
+    outcome: approved | changes-requested | commented
+    context: >-
+      Concise description of the repository, evidence, and architectural basis used.
+```
+
+A model review additionally records the serving provider, the most specific
+model identifier actually available, and the provider-reported reasoning or
+thinking effort:
+
+```yaml
+    provider: openai
+    model: gpt-5.6-sol
+    effort: xhigh
+```
+
+Do not infer an undisclosed deployment identifier or effort. Use `unspecified`
+when the serving environment does not expose one. The current OKF profile
+language does not validate the shape of values nested inside YAML lists;
+repositories that need enforced review structure or freshness should add a
+review-status check alongside OKF validation, as the documentation-pattern
+catalog does.
+
 A tagged consumer imports it as:
 
 ```dhall
 let profiles =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.3.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.5.0/package.dhall
+        sha256:a3e1e6823ec6b31f97a80055e215fa1c95ae7669eac60c3d316d821eb901fb80
 
 in  profiles.coordination.improvementRequests
 ```
@@ -311,7 +353,7 @@ rewriter.
 
 | Export | Purpose | Minimum `okf` |
 |---|---|---|
-| `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles | 0.2.0.0 |
+| `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles and optional review provenance | 0.2.0.0 |
 | `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles | 0.2.0.0 |
 | `documentation.patternCatalog` | Mori-addressable catalogs of standards, guides, patterns, runbooks, references, and gotchas | 0.1.1.0 |
 | `postgresql` | PostgreSQL schemas, tables, and views | 0.1.1.0 |

@@ -17,6 +17,7 @@ in  Profile::{
         , "status"
         , "origin"
         ]
+      , recommended = [ "reviews" ]
       }
     , allowUnknownTypes = False
     , idField = Some "requestId"
