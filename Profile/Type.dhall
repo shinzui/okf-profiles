@@ -1,4 +1,4 @@
---| Schema for a complete OKF house profile.
+--| Record-completion schema for a complete OKF house profile.
 --
 -- A profile is a declarative description of how a team uses the Open Knowledge
 -- Format (OKF): which `type:` strings are allowed, which frontmatter keys are
@@ -9,22 +9,7 @@
 -- profile remains fully OKF-conformant; profiles are house conventions layered
 -- on top, checked (advisory by default) with `okf validate --profile`.
 --
--- The record *type* comes from okf's canonical schema (./okf.dhall); this file
--- adds only the `default` record so values are built with completion:
--- `Profile::{ name = "…", types = [ … ] }`. Only `name` is mandatory. See
--- README.md ("Schema evolution").
-let okf = ./okf.dhall
-
-let TypeRule = ./TypeRule.dhall
-
-let FrontmatterRules = ./FrontmatterRules.dhall
-
-let defaults =
-      { okfVersion = "0.1"
-      , frontmatter = FrontmatterRules.default
-      , allowUnknownTypes = False
-      , idField = None Text
-      , types = [] : List TypeRule.Type
-      }
-
-in  { Type = okf.Profile, default = defaults }
+-- Both the type and its defaults come from okf's pinned canonical schema so this
+-- package cannot accidentally drift from the decoder. Values are built with
+-- completion: `Profile::{ name = "…", types = [ … ] }`.
+let okf = ./okf.dhall in okf.defaults.Profile

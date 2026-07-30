@@ -43,9 +43,10 @@ PostgreSQL; this repo is where they evolve and get versioned.
 package.dhall                 # entry point: re-exports the schema records and all profiles
 Profile/
   okf.dhall                   # pinned remote import of okf's canonical schema (the only URL+hash)
-  Type.dhall                  # Profile schema: okf's type + local default, as { Type, default }
-  TypeRule.dhall              # per-type rule schema: okf's type + local default
-  FrontmatterRules.dhall      # frontmatter-rules schema: okf's type + local default
+  Type.dhall                  # re-export of okf's profile completion module
+  TypeRule.dhall              # re-export of okf's per-type completion module
+  FrontmatterRules.dhall      # re-export of okf's frontmatter completion module
+  ReviewRule.dhall            # shared nested review-provenance contract
 profiles/
   documentation/
     package.dhall             # namespaced documentation-profile exports
@@ -71,7 +72,9 @@ blueprints/
                               # adaptive Seihou migration for existing ADR corpora
 ```
 
-Each schema is exported as a `{ Type, default }` record so values are built with
+The pinned okf schema exports each authoring record as a `{ Type, default }`
+completion module, and this package re-exports those modules directly so local
+defaults cannot drift from okf's decoder. Values are built with
 Dhall's **record completion** operator `::` — `Profile::{ name = … }` fills every
 field that has a default. This is what makes the schema safe to grow (see
 [Schema evolution](#schema-evolution)) and lets a project's profile be
@@ -172,18 +175,17 @@ decoding breaks at load time. Two rules keep them aligned:
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
-The schema currently matches `okf` 0.2.0.0. The `coordination.improvementRequests`
-profile requires 0.2.0.0 because it uses profile-declared stable document IDs.
-The other profiles require profile support from okf-core 0.1.1.0, but this
-catalog release as a whole must be decoded with 0.2.0.0 or later. When in doubt,
-run the validation below against the `okf` you have. The existing `postgresql`
-and `tanPostgresql` fields remain stable flat exports; new profile families
-should use a namespaced directory and package field.
+The schema is pinned to the `okf` 0.3.0.0 release commit. Every profile in this
+checkout uses 0.3 rules—descriptions, field cardinality and formats at minimum—so
+the catalog must be decoded with okf-core 0.3.0.0 or later. The existing
+`postgresql` and `tanPostgresql` fields remain stable flat exports; new profile
+families should use a namespaced directory and package field.
 
 > **Single source of truth.** The schema *types* here are a pinned remote import of
 > okf's canonical schema, in [`Profile/okf.dhall`](./Profile/okf.dhall) (the only
-> URL + integrity hash in this repo); the sibling files add only the `default`
-> records, and `profiles/` holds the values. okf owns the shape, okf-profiles owns
+> URL + integrity hash in this repo); the sibling files re-export okf's own
+> completion modules, and `profiles/` holds the values. okf owns the shape and
+> defaults, while okf-profiles owns
 > the conventions. The import is one-way: okf depends on nothing here. To track a
 > newer okf, bump the commit ref in `Profile/okf.dhall` and re-run `dhall freeze`.
 
@@ -196,11 +198,9 @@ schema here is a `{ Type, default }` record consumed through the completion oper
 `::`. `Profile::{ name = "x" }` desugars to `(Profile.default // { name = "x" }) :
 Profile.Type`, so a value only ever names the fields it cares about.
 
-To add a field later:
-
-1. Add it to the schema's type **and** to its `default`.
-2. Existing `Profile::{ … }` / `TypeRule::{ … }` values keep compiling unchanged —
-   the default supplies the new field.
+When okf adds a defaulted field, existing `Profile::{ … }` / `TypeRule::{ … }`
+values keep compiling unchanged. Upgrade `Profile/okf.dhall` by commit and hash
+together; do not duplicate or override the upstream defaults here.
 
 This is the idiomatic Dhall form of the Input/Type/default/mk pattern; completion
 is preferred over a fixed minimal-input constructor because profile authors
@@ -226,7 +226,7 @@ dhall type --file profiles/documentation/pattern-catalog.dhall
 dhall type --file profiles/documentation/research-documents.dhall
 ```
 
-Both should print the inferred type and exit `0`. To prove a profile actually
+All should print the inferred type and exit `0`. To prove a profile actually
 works end-to-end, run it against the `okf` sample bundle from a checkout of the
 `okf` repo:
 
@@ -240,27 +240,33 @@ The documentation pattern-catalog fixture is self-contained:
 
 ```bash
 okf validate fixtures/documentation-pattern-catalog \
-  --strict \
   --profile profiles/documentation/pattern-catalog.dhall \
-  --profile-enforce
+  --profile-enforce \
+  --log-enforce
 ```
 
 Expected: `OK: 3 concepts` with no `profile:` lines.
 
-The cross-repository improvement-request fixture exercises stable IDs and the
-closed, flat profile vocabulary:
+The cross-repository improvement-request fixture exercises stable IDs, typed
+fields, lifecycle values, Mori URIs, and structured reviews:
 
 ```bash
 okf validate fixtures/improvement-requests \
-  --strict \
   --profile profiles/coordination/improvement-requests.dhall \
   --profile-enforce
 ```
 
 Expected: `OK: 2 concepts`. Run
-`scripts/test-improvement-requests-profile.sh` with an `okf` 0.2.0.0 binary to
+`scripts/test-improvement-requests-profile.sh` with an `okf` 0.3.0.0 binary to
 also prove that missing IDs, wrong prefixes, duplicate IDs, missing required
-metadata, unknown types, and nested paths are rejected.
+metadata, unknown types, nested paths, malformed timestamps and URIs, invalid
+lifecycle values, and malformed nested reviews are rejected.
+
+These acceptance commands intentionally omit `--strict`. In okf 0.3, strict mode
+enforces every `recommended` profile rule; catalog recommendations such as
+`reviews`, `sources`, and supersession links are genuinely optional. All fields
+the catalog requires for authored documents—including `description` and
+`timestamp` where applicable—are explicit `required` rules.
 
 `coordination.improvementRequests` requires the frontmatter fields `type`,
 `title`, `description`, `timestamp`, `requestId`, `status`, and `origin`.
@@ -268,9 +274,10 @@ metadata, unknown types, and nested paths are rejected.
 `requestId` is a stable `IR-N` handle and is unique only within one bundle; the
 concept path remains OKF's canonical identity. The profile permits unknown
 producer fields so consumers may add `originPlan`, `targetPlan`, `contracts`,
-or tags. It deliberately does not validate lifecycle enumeration, Mori URI
-artifact kinds, project ownership, or registry resolution; Mori performs those
-semantic checks after OKF profile enforcement.
+or tags. It validates the request lifecycle vocabulary, requires a Mori-scheme
+URI for `origin`, and constrains `targetPlan` to a scalar while retaining both
+repository-relative paths and Mori URIs. Mori still owns artifact-kind
+semantics, project ownership, and external registry resolution.
 
 `reviews` is an optional chronological list of timestamp-bound review records.
 It may be absent or empty when no review has occurred; do not invent a
@@ -306,11 +313,11 @@ thinking effort:
 ```
 
 Do not infer an undisclosed deployment identifier or effort. Use `unspecified`
-when the serving environment does not expose one. The current OKF profile
-language does not validate the shape of values nested inside YAML lists;
-repositories that need enforced review structure or freshness should add a
-review-status check alongside OKF validation, as the documentation-pattern
-catalog does.
+when the serving environment does not expose one. okf validates the nested
+record shape, vocabularies, cardinalities, and UTC timestamp formats, and makes
+`provider`, `model`, and `effort` conditionally required for model reviews.
+Freshness—the equality of `document_timestamp` and the document's top-level
+`timestamp`—still needs a repository-specific review-status check.
 
 A tagged consumer imports it as:
 
@@ -329,8 +336,9 @@ The research-document profile reuses the review contract above for technical
 research, audits, surveys, evaluations, and design explorations. It requires
 `type`, `title`, `description`, `timestamp`, `researchId`, `status`, and
 `scope`; recommends `reviews`, `sources`, `relatedPlans`, `relatedDecisions`,
-`supersedes`, and `supersededBy`; permits nested paths such as `notes/*`; and
-allocates stable `RES-N` handles. A review remains optional until a human or
+and `supersedes`; requires `supersededBy` only when `status: superseded`;
+permits nested paths such as `notes/*`; and allocates stable `RES-N` handles.
+A review remains optional until a human or
 model actually reviews the document, and model reviews record `provider`,
 `model`, and `effort` exactly as above.
 
@@ -340,9 +348,16 @@ Run its acceptance and rejection suite with:
 scripts/test-research-documents-profile.sh
 ```
 
+Run `scripts/test-pattern-catalog-profile.sh` for the corresponding catalog
+acceptance fixture and its malformed format/cardinality/vocabulary rejection.
+Run `scripts/test-tan-postgresql-profile.sh` to exercise its type-specific table
+role vocabularies and the conditional `sourceStreams` requirement.
+
 The fixture proves nested research documents and model-review provenance. The
 rejection cases cover missing IDs, wrong prefixes, duplicate IDs, missing
-required metadata, and unknown types. A tagged consumer imports the profile as
+required metadata, unknown types, invalid vocabularies and timestamps, and
+incomplete model reviews, plus a missing conditionally required successor. A
+tagged consumer imports the profile as
 `profiles.documentation.researchDocuments`.
 
 The architecture-decision fixture exercises the same stable-ID machinery for
@@ -353,8 +368,9 @@ scripts/test-architecture-decisions-profile.sh
 ```
 
 The script proves that a valid flat corpus passes and that missing IDs, wrong
-prefixes, duplicate IDs, missing required metadata, unknown types, and nested
-paths fail. A tagged consumer installs the descriptor as `docs/adr/profile.dhall`:
+prefixes, duplicate IDs, missing required metadata, unknown types, nested paths,
+and dangling ADR references fail. A tagged consumer installs the descriptor as
+`docs/adr/profile.dhall`:
 
 ```dhall
 let profiles =
@@ -367,7 +383,7 @@ in  profiles.documentation.architectureDecisions
 Existing ADR corpora should be migrated with the adaptive Seihou blueprint in
 `blueprints/adopt-architecture-decisions`. Its prompt inventories each repository's
 legacy metadata and numbering before it adds frontmatter, resolves collisions,
-registers the Mori bundle, and integrates strict validation. This belongs here—next
+registers the Mori bundle, and integrates enforced validation. This belongs here—next
 to the profile contract—rather than in Mori or in each repository as a one-off
 rewriter.
 
@@ -376,11 +392,12 @@ rewriter.
 
 | Export | Purpose | Minimum `okf` |
 |---|---|---|
-| `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles and optional review provenance | 0.2.0.0 |
-| `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles | 0.2.0.0 |
-| `documentation.patternCatalog` | Mori-addressable catalogs of standards, guides, patterns, runbooks, references, and gotchas | 0.1.1.0 |
-| `postgresql` | PostgreSQL schemas, tables, and views | 0.1.1.0 |
-| `tanPostgresql` | The PostgreSQL profile plus logical event streams | 0.1.1.0 |
+| `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles and structured review provenance | 0.3.0.0 |
+| `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles and checked supersession references | 0.3.0.0 |
+| `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, timestamp, and tag fields | 0.3.0.0 |
+| `documentation.researchDocuments` | Nested research corpora with `RES-N` handles, structured reviews, and conditional supersession | 0.3.0.0 |
+| `postgresql` | PostgreSQL schemas, tables, and views with typed timestamps and resource URIs | 0.3.0.0 |
+| `tanPostgresql` | PostgreSQL plus per-table role vocabularies and conditional source streams | 0.3.0.0 |
 
 
 ## Adding a profile

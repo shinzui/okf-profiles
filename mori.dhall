@@ -53,9 +53,9 @@ in  Schema.Project::{
     , templates =
       [ Schema.SeihouTemplate::{
         , name = "adopt-architecture-decisions"
-        , version = Some "0.1.2"
+        , version = Some "0.1.3"
         , description = Some
-            "Adapt an existing docs/adr corpus to the shared OKF architecture-decision profile, stable ADR-N handles, strict validation, and Mori bundle addressing"
+            "Adapt an existing docs/adr corpus to the shared OKF architecture-decision profile, stable ADR-N handles, enforced profile validation, and Mori bundle addressing"
         , modulePath = "blueprints/adopt-architecture-decisions"
         , tags = [ "adr", "documentation", "migration", "mori", "okf" ]
         }

@@ -6,7 +6,6 @@ okf_bin="${OKF_BIN:-okf}"
 profile="profiles/documentation/architecture-decisions.dhall"
 
 "${okf_bin}" validate fixtures/architecture-decisions \
-  --strict \
   --profile "${profile}" \
   --profile-enforce \
   --log-enforce
@@ -17,9 +16,9 @@ for fixture in \
   duplicate-id \
   missing-required \
   unknown-type \
-  nested-path; do
+  nested-path \
+  dangling-reference; do
   if "${okf_bin}" validate "fixtures/architecture-decisions-invalid/${fixture}" \
-    --strict \
     --profile "${profile}" \
     --profile-enforce >/dev/null 2>&1; then
     echo "expected profile enforcement to reject ${fixture}" >&2

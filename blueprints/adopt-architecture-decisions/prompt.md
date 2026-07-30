@@ -3,7 +3,7 @@
 Migrate the current repository's existing Architecture Decision Records (ADRs) into a
 profile-governed OKF bundle at `docs/adr/`. Preserve their historical meaning and adapt to the
 repository's actual conventions rather than applying a blind textual rewrite. Complete the
-migration, strict validation, Mori registration, and repository-native check integration.
+migration, enforced profile validation, Mori registration, and repository-native check integration.
 
 This run requires a tool-capable local CLI provider such as `claude-cli` or `codex-cli`.
 
@@ -86,7 +86,7 @@ because that sandbox cannot reach the pinned remote import, verify that the copi
 byte-for-byte identical to the shipped reference, use `migration-reference.md` as the authoritative
 field contract, and continue the migration. Do not treat sandbox-only network isolation as a reason
 to stop after copying the profile: the calling module migration performs the same type-check and
-strict validation outside the agent sandbox before it can advance its version.
+enforced profile validation outside the agent sandbox before it can advance its version.
 
 Every decision concept must have YAML frontmatter with the profile-required ADR fields plus OKF's
 strict authoring fields. Values are shaped like:
@@ -152,7 +152,6 @@ Makefile, justfile, Nix check, or equivalent):
 
 ```bash
 okf validate docs/adr \
-  --strict \
   --profile docs/adr/profile.dhall \
   --profile-enforce \
   --log-enforce
@@ -172,7 +171,7 @@ okf log add docs/adr \
 
 ## Phase 4: Validate and prove addressing
 
-Run the strict validation command. Fix every missing field, malformed/duplicate ID, unknown type,
+Run the enforced validation command. Fix every missing field, malformed/duplicate ID, unknown type,
 path mismatch, malformed log, or stale timestamp; do not weaken the profile to make legacy files
 pass.
 

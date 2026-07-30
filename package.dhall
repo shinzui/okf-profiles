@@ -11,11 +11,21 @@
 --
 -- See README.md for how to generate the real hash (`dhall freeze`) and for the
 -- public-repo / pinning rationale.
-{ Profile = ./Profile/Type.dhall
-, TypeRule = ./Profile/TypeRule.dhall
-, FrontmatterRules = ./Profile/FrontmatterRules.dhall
-, coordination = ./profiles/coordination/package.dhall
-, documentation = ./profiles/documentation/package.dhall
-, postgresql = ./profiles/postgresql.dhall
-, tanPostgresql = ./profiles/tan-postgresql.dhall
-}
+let okf = ./Profile/okf.dhall
+
+in  { Profile = okf.defaults.Profile
+    , TypeRule = okf.defaults.TypeRule
+    , FrontmatterRules = okf.defaults.FrontmatterRules
+    , FieldRule = okf.defaults.FieldRule
+    , NestedRules = okf.defaults.NestedRules
+    , NestedFieldRule = okf.defaults.NestedFieldRule
+    , HandleReferenceRule = okf.defaults.HandleReferenceRule
+    , Cardinality = okf.Cardinality
+    , FieldFormat = okf.FieldFormat
+    , mk = okf.mk
+    , reviewRule = ./Profile/ReviewRule.dhall
+    , coordination = ./profiles/coordination/package.dhall
+    , documentation = ./profiles/documentation/package.dhall
+    , postgresql = ./profiles/postgresql.dhall
+    , tanPostgresql = ./profiles/tan-postgresql.dhall
+    }

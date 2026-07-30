@@ -28,7 +28,6 @@ Registration-time Mori profile checks are advisory. Repository checks must there
 
 ```bash
 okf validate docs/adr \
-  --strict \
   --profile docs/adr/profile.dhall \
   --profile-enforce \
   --log-enforce

@@ -6,7 +6,6 @@ okf_bin="${OKF_BIN:-okf}"
 profile="profiles/coordination/improvement-requests.dhall"
 
 "${okf_bin}" validate fixtures/improvement-requests \
-  --strict \
   --profile "${profile}" \
   --profile-enforce
 
@@ -16,9 +15,9 @@ for fixture in \
   duplicate-id \
   missing-required \
   unknown-type \
-  nested-path; do
+  nested-path \
+  invalid-policy; do
   if "${okf_bin}" validate "fixtures/improvement-requests-invalid/${fixture}" \
-    --strict \
     --profile "${profile}" \
     --profile-enforce >/dev/null 2>&1; then
     echo "expected profile enforcement to reject ${fixture}" >&2

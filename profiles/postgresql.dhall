@@ -15,20 +15,66 @@ let Profile = ../Profile/Type.dhall
 
 let TypeRule = ../Profile/TypeRule.dhall
 
+let okf = ../Profile/okf.dhall
+
+let FieldRule = okf.defaults.FieldRule
+
+let Cardinality = okf.Cardinality
+
+let FieldFormat = okf.FieldFormat
+
+let scalar =
+      \(name : Text) ->
+      \(description : Text) ->
+        FieldRule::{
+        , field = name
+        , description = Some description
+        , cardinality = Cardinality.Scalar
+        }
+
 in  Profile::{
     , name = "shinzui-postgresql"
+    , description = Some
+        "Conventions for documenting PostgreSQL schemas, tables, and views as an OKF bundle."
     , frontmatter =
-      { required = [ "type", "title" ]
-      , recommended = [ "description", "timestamp", "resource" ]
+      { required =
+        [ scalar
+            "type"
+            "The exact PostgreSQL concept type governed by this profile."
+        , scalar "title" "Human-readable name of the database object."
+        ]
+      , recommended =
+        [ scalar
+            "description"
+            "One or two sentences explaining the object's purpose."
+        , FieldRule::{
+          , field = "timestamp"
+          , description = Some
+              "UTC time when this description was last confirmed accurate."
+          , cardinality = Cardinality.Scalar
+          , format = Some FieldFormat.Rfc3339Utc
+          }
+        , FieldRule::{
+          , field = "resource"
+          , description = Some "postgresql:// URI locating the live object."
+          , cardinality = Cardinality.Scalar
+          , format = Some (FieldFormat.UriWithScheme "postgresql")
+          }
+        ]
       }
+    , allowUnknownTypes = False
     , types =
       [ TypeRule::{
         , type = "PostgreSQL Schema"
+        , description = Some
+            "One PostgreSQL namespace and the objects it groups."
         , pathPattern = Some "schemas/*"
         , resourceScheme = Some "postgresql"
         }
       , TypeRule::{
         , type = "PostgreSQL Table"
+        , description = Some
+            "One physical table, including its column contract."
         , pathPattern = Some "schemas/*/tables/*"
         , resourceScheme = Some "postgresql"
         , requireSchemaSection = True
@@ -36,6 +82,7 @@ in  Profile::{
         }
       , TypeRule::{
         , type = "PostgreSQL View"
+        , description = Some "One view and the columns it projects."
         , pathPattern = Some "schemas/*/views/*"
         , resourceScheme = Some "postgresql"
         , requireSchemaSection = True

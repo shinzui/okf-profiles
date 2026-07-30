@@ -6,7 +6,6 @@ okf_bin="${OKF_BIN:-okf}"
 profile="profiles/documentation/research-documents.dhall"
 
 "${okf_bin}" validate fixtures/research-documents \
-  --strict \
   --profile "${profile}" \
   --profile-enforce \
   --log-enforce
@@ -16,9 +15,10 @@ for fixture in \
   wrong-prefix \
   duplicate-id \
   missing-required \
-  unknown-type; do
+  unknown-type \
+  invalid-policy \
+  missing-superseded-by; do
   if "${okf_bin}" validate "fixtures/research-documents-invalid/${fixture}" \
-    --strict \
     --profile "${profile}" \
     --profile-enforce >/dev/null 2>&1; then
     echo "expected profile enforcement to reject ${fixture}" >&2
