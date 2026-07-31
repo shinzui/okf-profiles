@@ -19,7 +19,7 @@
            }
 , blueprints =
   [ { name = "adopt-architecture-decisions"
-    , version = Some "0.1.3"
+    , version = Some "0.7.0"
     , path = "blueprints/adopt-architecture-decisions"
     , description = Some
         "Adapt an existing docs/adr corpus to the shared OKF architecture-decision profile, stable ADR-N handles, enforced profile validation, and Mori bundle addressing"
