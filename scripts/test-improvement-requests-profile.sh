@@ -16,7 +16,9 @@ for fixture in \
   missing-required \
   unknown-type \
   nested-path \
-  invalid-policy; do
+  invalid-policy \
+  missing-completed-at \
+  missing-superseded-by; do
   if "${okf_bin}" validate "fixtures/improvement-requests-invalid/${fixture}" \
     --profile "${profile}" \
     --profile-enforce >/dev/null 2>&1; then

@@ -58,6 +58,7 @@ profiles/
     package.dhall             # namespaced coordination-profile exports
     improvement-requests.dhall
                               # cross-repository improvement-request conventions
+    use-cases.dhall           # JTBD use cases and feature-delivery tracking
   postgresql.dhall            # stable flat PostgreSQL export
   tan-postgresql.dhall        # stable flat tan PostgreSQL export
 fixtures/
@@ -175,9 +176,9 @@ decoding breaks at load time. Two rules keep them aligned:
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
-The schema is pinned to the `okf` 0.3.0.0 release commit. Every profile in this
-checkout uses 0.3 rules—descriptions, field cardinality and formats at minimum—so
-the catalog must be decoded with okf-core 0.3.0.0 or later. The existing
+The schema is pinned to the `okf` 0.4.0.0 release commit. Every profile in this
+checkout uses 0.4 rules, including optional top-level and nested fields, so the
+catalog must be decoded with okf-core 0.4.0.0 or later. The existing
 `postgresql` and `tanPostgresql` fields remain stable flat exports; new profile
 families should use a namespaced directory and package field.
 
@@ -224,6 +225,7 @@ dhall type --file package.dhall
 dhall type --file profiles/postgresql.dhall
 dhall type --file profiles/documentation/pattern-catalog.dhall
 dhall type --file profiles/documentation/research-documents.dhall
+dhall type --file profiles/coordination/use-cases.dhall
 ```
 
 All should print the inferred type and exit `0`. To prove a profile actually
@@ -248,7 +250,7 @@ okf validate fixtures/documentation-pattern-catalog \
 Expected: `OK: 3 concepts` with no `profile:` lines.
 
 The cross-repository improvement-request fixture exercises stable IDs, typed
-fields, lifecycle values, Mori URIs, and structured reviews:
+fields, lifecycle values including completion, Mori URIs, and structured reviews:
 
 ```bash
 okf validate fixtures/improvement-requests \
@@ -257,12 +259,12 @@ okf validate fixtures/improvement-requests \
 ```
 
 Expected: `OK: 2 concepts`. Run
-`scripts/test-improvement-requests-profile.sh` with an `okf` 0.3.0.0 binary to
+`scripts/test-improvement-requests-profile.sh` with an `okf` 0.4.0.0 binary to
 also prove that missing IDs, wrong prefixes, duplicate IDs, missing required
 metadata, unknown types, nested paths, malformed timestamps and URIs, invalid
 lifecycle values, and malformed nested reviews are rejected.
 
-These acceptance commands intentionally omit `--strict`. In okf 0.3, strict mode
+These acceptance commands intentionally omit `--strict`. In okf 0.4, strict mode
 enforces every `recommended` profile rule; catalog recommendations such as
 `reviews`, `sources`, and supersession links are genuinely optional. All fields
 the catalog requires for authored documents—including `description` and
@@ -274,10 +276,38 @@ the catalog requires for authored documents—including `description` and
 `requestId` is a stable `IR-N` handle and is unique only within one bundle; the
 concept path remains OKF's canonical identity. The profile permits unknown
 producer fields so consumers may add `originPlan`, `targetPlan`, `contracts`,
-or tags. It validates the request lifecycle vocabulary, requires a Mori-scheme
-URI for `origin`, and constrains `targetPlan` to a scalar while retaining both
+or tags. It validates `proposed`, `accepted`, `in-progress`, `completed`,
+`rejected`, `withdrawn`, and `superseded`, requires `completedAt` for completed
+requests and `supersededBy` for superseded requests, requires a Mori-scheme URI
+for `origin`, and constrains `targetPlan` to a scalar while retaining both
 repository-relative paths and Mori URIs. Mori still owns artifact-kind
 semantics, project ownership, and external registry resolution.
+
+The JTBD use-case fixture exercises stable `UC-N` handles, structured jobs,
+typed feature lifecycle, Mori project ownership, and stable improvement-request
+references:
+
+```bash
+okf validate fixtures/use-cases \
+  --profile profiles/coordination/use-cases.dhall \
+  --profile-enforce \
+  --log-enforce
+```
+
+Expected: `OK: 2 concepts`. Run `scripts/test-use-cases-profile.sh` to also
+prove that missing jobs, invalid feature states, non-Mori owners, non-Mori
+request references, and duplicate use-case IDs are rejected.
+
+`coordination.useCases` requires each `Use Case` to carry `useCaseId`, `status`,
+`origin`, non-empty `jobs`, and non-empty `features`. A job records its stable
+name, actor, situation, motivation, and outcome. A feature records its stable
+name, description, delivery state, Mori owner URIs, and observable acceptance.
+Optional nested `jobs` and `improvementRequests` fields map a feature back to
+the job it advances and to repository-owned delivery requests. The top-level
+`improvementRequests` field mirrors the union of feature request references so
+consumers can traverse stable concept URIs. OKF 0.4 validates those external
+references as Mori URIs; it cannot resolve a document handle owned by another
+bundle during local validation.
 
 `reviews` is an optional chronological list of timestamp-bound review records.
 It may be absent or empty when no review has occurred; do not invent a
@@ -392,12 +422,13 @@ rewriter.
 
 | Export | Purpose | Minimum `okf` |
 |---|---|---|
-| `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles and structured review provenance | 0.3.0.0 |
-| `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles and checked supersession references | 0.3.0.0 |
-| `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, timestamp, and tag fields | 0.3.0.0 |
-| `documentation.researchDocuments` | Nested research corpora with `RES-N` handles, structured reviews, and conditional supersession | 0.3.0.0 |
-| `postgresql` | PostgreSQL schemas, tables, and views with typed timestamps and resource URIs | 0.3.0.0 |
-| `tanPostgresql` | PostgreSQL plus per-table role vocabularies and conditional source streams | 0.3.0.0 |
+| `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles, completion state, and structured review provenance | 0.4.0.0 |
+| `coordination.useCases` | JTBD use cases with `UC-N` handles, typed feature delivery, and repository-owned request references | 0.4.0.0 |
+| `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles and checked supersession references | 0.4.0.0 |
+| `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, timestamp, and tag fields | 0.4.0.0 |
+| `documentation.researchDocuments` | Nested research corpora with `RES-N` handles, structured reviews, and conditional supersession | 0.4.0.0 |
+| `postgresql` | PostgreSQL schemas, tables, and views with typed timestamps and resource URIs | 0.4.0.0 |
+| `tanPostgresql` | PostgreSQL plus per-table role vocabularies and conditional source streams | 0.4.0.0 |
 
 
 ## Adding a profile

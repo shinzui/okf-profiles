@@ -76,6 +76,7 @@ in        base
                     }
                   ]
                 , recommended = [] : List FieldRule.Type
+                , optional = [] : List FieldRule.Type
                 }
               , pathPattern = Some "schemas/*/tables/*"
               , resourceScheme = Some "postgresql"

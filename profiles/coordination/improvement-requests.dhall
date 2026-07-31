@@ -9,11 +9,16 @@ let okf = ../../Profile/okf.dhall
 
 let FieldRule = okf.defaults.FieldRule
 
+let HandleReferenceRule = okf.defaults.HandleReferenceRule
+
 let Cardinality = okf.Cardinality
 
 let FieldFormat = okf.FieldFormat
 
 let reviewRule = ../../Profile/ReviewRule.dhall
+
+let condition =
+      \(field : Text) -> \(hasValue : List Text) -> { field, hasValue }
 
 let scalar =
       \(name : Text) ->
@@ -50,7 +55,15 @@ in  Profile::{
         , FieldRule::{
           , field = "status"
           , description = Some "Lifecycle decision for the request."
-          , allowedValues = [ "proposed", "accepted", "rejected", "withdrawn" ]
+          , allowedValues =
+            [ "proposed"
+            , "accepted"
+            , "in-progress"
+            , "completed"
+            , "rejected"
+            , "withdrawn"
+            , "superseded"
+            ]
           , cardinality = Cardinality.Scalar
           }
         , FieldRule::{
@@ -60,6 +73,24 @@ in  Profile::{
           , cardinality = Cardinality.Scalar
           , format = Some (FieldFormat.UriWithScheme "mori")
           }
+        , FieldRule::{
+          , field = "completedAt"
+          , description = Some
+              "UTC time at which acceptance evidence proved the request complete."
+          , cardinality = Cardinality.Scalar
+          , format = Some FieldFormat.Rfc3339Utc
+          , when = Some (condition "status" [ "completed" ])
+          }
+        , FieldRule::{
+          , field = "supersededBy"
+          , description = Some "Later request that replaces this request."
+          , cardinality = Cardinality.Scalar
+          , reference = Some HandleReferenceRule::{
+            , localPrefix = "IR"
+            , externalUriSchemes = [ "mori" ]
+            }
+          , when = Some (condition "status" [ "superseded" ])
+          }
         ]
       , recommended =
         [ reviewRule
@@ -68,6 +99,17 @@ in  Profile::{
           , description = Some
               "Repository-relative path or Mori URI of the implementation plan."
           , cardinality = Cardinality.Scalar
+          }
+        , FieldRule::{
+          , field = "resolution"
+          , description = Some
+              "Evidence or rationale recorded when a request reaches a terminal state."
+          , cardinality = Cardinality.Scalar
+          , when = Some
+              ( condition
+                  "status"
+                  [ "completed", "rejected", "withdrawn", "superseded" ]
+              )
           }
         ]
       }

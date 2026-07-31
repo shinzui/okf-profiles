@@ -4,9 +4,11 @@ title: Link requests to implementation plans
 description: Record a target plan without deriving lifecycle from it.
 timestamp: "2026-07-26T00:01:00Z"
 requestId: IR-2
-status: accepted
+status: completed
 origin: mori://example/origin/packages/example-library
+completedAt: "2026-07-26T00:03:00Z"
 targetPlan: mori://example/target/plans/1-implement-request
+resolution: The target plan's acceptance checks passed.
 reviews:
   - kind: model
     reviewer: example-agent
@@ -23,4 +25,4 @@ reviews:
 
 # Link requests to implementation plans
 
-This conforming fixture proves that producer-defined plan metadata is allowed.
+This conforming fixture proves completion metadata and producer-defined plan metadata.

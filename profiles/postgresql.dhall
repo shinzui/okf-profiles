@@ -61,6 +61,7 @@ in  Profile::{
           , format = Some (FieldFormat.UriWithScheme "postgresql")
           }
         ]
+      , optional = [] : List FieldRule.Type
       }
     , allowUnknownTypes = False
     , types =

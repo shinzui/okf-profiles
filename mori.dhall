@@ -26,7 +26,7 @@ in  Schema.Project::{
         , language = Schema.Language.Dhall
         , path = Some "."
         , description = Some
-            "Profile schema records ({ Type, default }) plus the documentation, coordination, and PostgreSQL profile families"
+            "Profile schema records ({ Type, default }) plus documentation, JTBD use-case, improvement-request, and PostgreSQL profile families"
         }
       ]
     , dependencies = [ "shinzui/okf", "shinzui/seihou" ]

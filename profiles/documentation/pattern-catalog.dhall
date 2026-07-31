@@ -74,6 +74,7 @@ in  Profile::{
           , description = Some "Earlier guidance replaced by this document."
           }
         ]
+      , optional = [] : List FieldRule.Type
       }
     , types =
       [ rule "Navigation" "getting-started"

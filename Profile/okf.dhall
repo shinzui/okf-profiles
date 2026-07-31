@@ -6,5 +6,5 @@
 -- newer okf, bump the commit ref below and re-run `dhall freeze --inplace Profile/okf.dhall`.
 --
 -- The dependency is one-way: okf owns the schema, okf-profiles consumes it.
-https://raw.githubusercontent.com/shinzui/okf/88ceed847f8578fe1584e9290e60c82b28e4f0d2/okf-core/dhall/package.dhall
-  sha256:bfbaa6e7654bbdc09a0e2fbe36c429ed3c6fa7a313aa0821560dbbffe905c908
+https://raw.githubusercontent.com/shinzui/okf/774379a09ba13d23a6b0747ae2078fd3b6d78c4d/okf-core/dhall/package.dhall
+  sha256:4221ba7fc778aea894c8ef43e7309625a0bf565f59b14163bd16360d88e2bc0a

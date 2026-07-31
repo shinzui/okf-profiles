@@ -93,5 +93,6 @@ in  FieldRule::{
           }
         ]
       , recommended = [] : List NestedFieldRule.Type
+      , optional = [] : List NestedFieldRule.Type
       }
     }
