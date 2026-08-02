@@ -3,6 +3,12 @@ type: Architecture Decision Record
 title: Use stable identifiers
 description: Give each ADR a rename-stable handle.
 timestamp: 2026-07-26T00:00:00Z
+generated:
+  by: human:nadeem
+  at: 2026-07-26T00:00:00Z
+verified:
+  by: human:nadeem
+  at: 2026-07-26T00:00:00Z
 docId: ADR-1
 status: Accepted
 date: 2026-07-26
