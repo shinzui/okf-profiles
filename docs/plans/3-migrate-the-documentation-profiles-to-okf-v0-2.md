@@ -37,27 +37,83 @@ repository does today, and something the architecture-decision fixture currently
 
 ## Progress
 
-- [ ] Confirm EP-2 has landed and `Profile/V02.dhall` exists
-- [ ] Record the baseline: run all scripts and save the output
-- [ ] Migrate `profiles/documentation/architecture-decisions.dhall`
-- [ ] Reclassify `supersedes`, `supersededBy`, `originatingPlan` to `optional`
-- [ ] Update `fixtures/architecture-decisions` and its invalid siblings
-- [ ] Extend `scripts/test-architecture-decisions-profile.sh` with `--strict`
-- [ ] Migrate `profiles/documentation/pattern-catalog.dhall`, including the `sources` shape
-- [ ] Update `fixtures/documentation-pattern-catalog` and its invalid sibling
-- [ ] Extend `scripts/test-pattern-catalog-profile.sh` with `--strict`
-- [ ] Migrate `profiles/documentation/research-documents.dhall`, including the `sources` shape
-- [ ] Update `fixtures/research-documents` and its invalid siblings
-- [ ] Extend `scripts/test-research-documents-profile.sh` with `--strict`
-- [ ] Add invalid fixtures covering the new v0.2 rules for each profile
-- [ ] Record in this plan whether the blueprint override was folded upstream
-- [ ] Re-run every script and confirm all pass
-- [ ] Commit with the required git trailers
+- [x] Confirm EP-2 has landed and `Profile/V02.dhall` exists (2026-08-01)
+- [x] Record the baseline: run all scripts and save the output (2026-08-01)
+- [x] Capture the pre-migration `--strict` failure on the ADR fixture (2026-08-01)
+- [x] Migrate `profiles/documentation/architecture-decisions.dhall` (2026-08-01)
+- [x] Reclassify `supersedes`, `supersededBy`, `originatingPlan` to `optional` (2026-08-01)
+- [x] Update `fixtures/architecture-decisions` and its invalid siblings (2026-08-01)
+- [x] Extend `scripts/test-architecture-decisions-profile.sh` with `--strict` (2026-08-01)
+- [x] Migrate `profiles/documentation/pattern-catalog.dhall`, including the `sources` shape (2026-08-01)
+- [x] Update `fixtures/documentation-pattern-catalog` and its invalid sibling (2026-08-01)
+- [x] Restructure the pattern-catalog invalid tree to one directory per case (2026-08-01)
+- [x] Extend `scripts/test-pattern-catalog-profile.sh` with `--strict` (2026-08-01)
+- [x] Migrate `profiles/documentation/research-documents.dhall`, including the `sources` shape (2026-08-01)
+- [x] Update `fixtures/research-documents` and its invalid siblings (2026-08-01)
+- [x] Extend `scripts/test-research-documents-profile.sh` with `--strict` (2026-08-01)
+- [x] Add invalid fixtures covering the new v0.2 rules for each profile (2026-08-01)
+- [x] Sweep every spliced v0.2 rule in all three profiles for load-bearingness (2026-08-01)
+- [x] Prove `requireBundleVersion` is live on a de-indexed bundle copy (2026-08-01)
+- [x] Record in this plan whether the blueprint override was folded upstream (2026-08-01)
+- [x] Re-run every script and confirm all pass (2026-08-01)
+- [x] Commit with the required git trailers (2026-08-01)
 
 
 ## Surprises & Discoveries
 
-(None yet.)
+- **An invalid fixture placed at a bundle root fails its own path rule as well as the rule it
+  was written for.** The pattern-catalog profile's `Guide` type carries `pathPattern = "*/**"`,
+  meaning a guide must live in a subdirectory. The first drafts of `bad-actor`,
+  `missing-generated`, and `bad-source-shape` put `guide.md` at the bundle root, so each
+  produced *two* deviations — the intended one plus `Guide must match path pattern: */**`. The
+  script's rejection loop would still have passed, silently, even if the intended rule were
+  deleted from the profile. Moving each file into a `runtime/` subdirectory reduced every
+  fixture to exactly one deviation. **This is the failure mode the plan warned about, and it
+  is invisible unless you read each fixture's advisory individually rather than only checking
+  that the loop rejects.** EP-4 and EP-5 should run each new invalid fixture *without*
+  `--profile-enforce` and confirm the advisory count is 1. Date: 2026-08-01
+
+- **`--strict` did not fail on the research-document fixture for the reason the plan
+  predicted.** The plan expected `supersedes`, `relatedPlans`, and `relatedDecisions` to fail as
+  recommended-and-absent, which they did. What it did not anticipate is that keeping `reviews`
+  recommended — which the plan explicitly directed — fails the *second* fixture,
+  `notes/alternative-evaluation.md`, which carries no `reviews` block. The plan's rationale for
+  keeping it recommended ("the fixture does carry `reviews`") is true of only one of the two
+  concepts. Rather than demote the rule and lose the nudge, a human review entry was added to
+  the second fixture. See the Decision Log. Date: 2026-08-01
+
+- **Two of the three profiles needed more invalid fixtures than the plan specified, for the same
+  reason EP-2 found.** Sweeping every spliced v0.2 rule for load-bearingness — deleting each in
+  turn and re-running the script — showed that the plan's two-fixtures-per-profile allowance
+  (`bad-actor`, `missing-generated`) left `v02.verified` and `v02.legacyTimestamp` untested in
+  all three profiles, and `v02.sources` untested in two. Each profile gained the fixtures needed
+  to make every rule it splices load-bearing: four new cases for architecture decisions, five for
+  the pattern catalog, five for research documents. The `bad-legacy-timestamp` case is the most
+  valuable of them — it proves that demoting `timestamp` to `optional` stopped its *absence*
+  being reported without stopping its *format* being checked, which is the precise behaviour the
+  demotion decision rests on and which nothing else tests. Date: 2026-08-01
+
+- **`okf index --write` must be re-run after moving a file within an invalid fixture.** Moving
+  `guide.md` into a `runtime/` subdirectory left the previously generated root `index.md`
+  listing a concept at the old path. Deleting the stale index and regenerating fixed it. The
+  command is idempotent with respect to content but does not notice that a file it previously
+  indexed has moved. Date: 2026-08-01
+
+- **The `sources` shape change produces an unusually clear diagnostic**, which makes it a good
+  migration signal for EP-6 to quote to consumers:
+
+  ```text
+  profile: runtime/guide: frontmatter element at sources[0] must be a record, found: "mori://example/runtime"
+  ```
+
+  It names the offending list index and shows the offending value, so a consumer can find every
+  occurrence in their corpus by running validation once. Date: 2026-08-01
+
+- **The pre-migration `--strict` failure reproduced exactly as the plan documented it** — six
+  advisories, three per concept, on `originatingPlan`, `supersededBy`, and `supersedes`. This
+  confirms the plan's central claim that the shipped profile was wrong and that the
+  `adopt-architecture-decisions` blueprint's override was a workaround for a defect here rather
+  than a consumer preference. Date: 2026-08-01
 
 
 ## Decision Log
@@ -85,10 +141,162 @@ repository does today, and something the architecture-decision fixture currently
   consumer corpus and is what the EP-6 migration blueprint carries.
   Date: 2026-08-01
 
+- Decision: Restructure `fixtures/documentation-pattern-catalog-invalid/` into one directory per
+  case, rather than adding a parallel `-invalid-v02/` tree.
+  Rationale: The plan offered both and asked for the choice to be recorded. Every other invalid
+  fixture tree in this repository already uses one directory per case, and the pattern-catalog
+  tree was the lone exception — a single `invalid-policy.md` at the top level, validated by a
+  bare `if` rather than a loop. A second parallel tree would have left the profile with two
+  invalid trees and the script with two differently-shaped checks, which is more confusing than
+  the inconsistency it avoids. The restructure is a `git mv` plus converting the `if` into the
+  same rejection loop every sibling script uses, and it makes all six trees uniform.
+  Date: 2026-08-01
+
+- Decision: Add a `reviews` entry to `fixtures/research-documents/notes/alternative-evaluation.md`
+  rather than demoting `reviewRule` to `optional`.
+  Rationale: The plan directed that `reviews` stay `recommended` and gave the reason — a research
+  corpus should be nudged toward recording review provenance. But `--strict` then fails the
+  second fixture, which carried no `reviews` block; the plan's stated justification held for only
+  one of the two concepts. Demoting the rule would have silently discarded the plan's intent to
+  make the check bite, so the fixture was brought up to the standard instead. `reviews` is now
+  the only field left `recommended` in any of the three profiles, and the profile comment says
+  why.
+  Date: 2026-08-01
+
+- Decision: Add invalid fixtures beyond the two per profile the plan allowed for, until every
+  spliced v0.2 rule is load-bearing.
+  Rationale: Carrying forward EP-2's finding, recorded in the parent MasterPlan's Surprises &
+  Discoveries. A rule with no fixture can be deleted from a profile with the test suite still
+  green, and `v02.verified`, `v02.legacyTimestamp`, and `v02.sources` were each in that state in
+  at least one profile. Verified by sweeping all four rules in all three profiles after the
+  additions.
+  Date: 2026-08-01
+
+- Decision: Keep `timestamp` on one architecture-decision fixture concept and drop it from the
+  other, and drop it entirely from the second research-document concept.
+  Rationale: The plan asked for this on the ADR fixture and the reasoning generalises — one
+  concept proves the demoted rule still accepts and format-checks the legacy key, the other
+  proves its absence is never reported. Doing the same in the research corpus costs nothing and
+  covers the same behaviour in a nested bundle.
+  Date: 2026-08-01
+
 
 ## Outcomes & Retrospective
 
-(To be filled during and after implementation.)
+Complete on 2026-08-01, in three commits — one per milestone, as the plan directed.
+
+### The headline result
+
+The command that fails today on the unmigrated profile:
+
+```text
+$ okf validate fixtures/architecture-decisions --strict \
+    --profile profiles/documentation/architecture-decisions.dhall --profile-enforce
+profile: 0001-use-stable-identifiers: missing profile-recommended field: originatingPlan (Plan that produced the decision, when recorded.)
+profile: 0001-use-stable-identifiers: missing profile-recommended field: supersededBy (Later ADR handle replacing this decision.)
+profile: 0001-use-stable-identifiers: missing profile-recommended field: supersedes (Earlier ADR handles replaced by this decision.)
+profile: 0002-keep-local-links: missing profile-recommended field: originatingPlan (Plan that produced the decision, when recorded.)
+profile: 0002-keep-local-links: missing profile-recommended field: supersededBy (Later ADR handle replacing this decision.)
+profile: 0002-keep-local-links: missing profile-recommended field: supersedes (Earlier ADR handles replaced by this decision.)
+```
+
+and the same command after this plan:
+
+```text
+OK: 2 concepts (okf_version 0.2)
+```
+
+All three acceptance bundles now validate under `--strict --profile-enforce --log-enforce` and
+report the version declaration: `OK: 2 concepts (okf_version 0.2)` for architecture decisions and
+research documents, `OK: 3 concepts (okf_version 0.2)` for the pattern catalog. All seven test
+scripts pass, and `Profile/V02.dhall`, `Profile/ReviewRule.dhall`, the root `package.dhall`, and
+the coordination and PostgreSQL profiles were not touched — verified with a scoped
+`git status --short`.
+
+`requireBundleVersion` was proven live by removing the root index from a throwaway copy:
+
+```text
+profile: bundle does not declare okf_version; this profile requires 0.2 or later
+```
+
+### 1. Was the blueprint override folded upstream? — YES
+
+**EP-6 can delete the override.** `supersedes`, `supersededBy`, and `originatingPlan` are now in
+`profiles/documentation/architecture-decisions.dhall`'s `optional` list, with their `ADR`
+handle-reference constraints unchanged. The profile's `recommended` list is now empty.
+
+`blueprints/adopt-architecture-decisions/files/architecture-decisions-profile.dhall` currently
+pins okf-profiles v0.7.0 and layers an override reclassifying exactly those three fields. Once it
+is repinned to v0.8.0 that override is a no-op and should be removed, leaving the shipped file a
+plain import. EP-6 should say so in the `0.7.0 -> 0.8.0` migration edge: adopters who copied the
+override can drop it.
+
+### 2. What a consumer corpus must change, per profile
+
+This is the list EP-6 turns into migration prose. **All three profiles** share these four
+changes:
+
+- **Add `generated`** to every concept — a mapping with a required `by` (an OKF §7 actor:
+  `human:<id>`, `process:<id>`, or `<producer>/<version>`) and a recommended `at` (RFC3339 UTC).
+  This is now *required*; a concept without it fails.
+- **`timestamp` is no longer required.** Keep it or drop it. If kept it must still be RFC3339
+  UTC. The natural migration is `timestamp: X` → `generated: {by: <actor>, at: X}`, reusing the
+  same instant so `--log-enforce` still matches the enclosing `log.md`.
+- **Add a root `index.md` declaring `okf_version: "0.2"`**, via
+  `okf index <bundle> --write --okf-version 0.2`. Without it every concept passes but the bundle
+  is a profile deviation.
+- **`verified` is newly accepted** as an optional family — a list of `{by, at}` mappings, or one
+  bare mapping. Nothing breaks if it is absent.
+
+Additionally, **`documentation.patternCatalog` and `documentation.researchDocuments`**:
+
+- **`sources` changes shape**, and this is the one genuinely breaking edit. It was a bare list of
+  strings; it is now a list of records whose `resource` member is required. Migration is
+  `sources: [X]` → `sources: [{resource: X}]`. Optional members are `id`, `title`, `author` (an
+  actor), `usage_count` (an unquoted YAML integer), and `last_modified` (a date). If an entry
+  carries an `id`, a body footnote with that label must cite it under `--strict`. The diagnostic
+  is `frontmatter element at sources[0] must be a record, found: "…"`.
+- **`sources` and `supersedes` moved from `recommended` to `optional`**, so a corpus that omits
+  them stops failing `--strict`. In the pattern catalog `recommended` is now empty.
+
+Additionally, **`documentation.architectureDecisions`**: `supersedes`, `supersededBy`, and
+`originatingPlan` moved to `optional` — a pure relaxation, nothing to do.
+
+Additionally, **`documentation.researchDocuments`**: `sources`, `relatedPlans`,
+`relatedDecisions`, and `supersedes` moved to `optional`. `reviews` remains the only
+`recommended` field anywhere in these three profiles, so a research record with no `reviews`
+block still fails `--strict` — deliberately.
+
+### What went differently from the plan
+
+Three things, each recorded above in full. Invalid fixtures placed at a bundle root tripped the
+pattern catalog's `Guide` path rule and so failed for two reasons at once, which would have made
+them useless as tests of the rule they were written for. Keeping `reviews` recommended broke a
+research fixture the plan assumed carried reviews. And the two-fixtures-per-profile allowance
+left three of the four spliced rules untested in at least one profile, so fourteen invalid
+fixtures were written rather than six.
+
+### The pattern EP-4 and EP-5 should copy
+
+Per this plan's Interfaces and Dependencies, the shape established here is: splice `v02.generated`
+into `required`; put `v02.verified` and `v02.legacyTimestamp` in `optional`; set
+`okfVersion = "0.2"` and `requireBundleVersion = Some "0.2"` in the same edit; run
+`okf index <bundle> --write --okf-version 0.2` on the acceptance bundle **and every invalid
+sibling**; add `--strict` to the script; and move any recommended-and-ordinarily-absent field to
+`optional` rather than leaving `--strict` red. Two additions to that shape are worth copying and
+are recorded in the parent MasterPlan: **check each new invalid fixture produces exactly one
+advisory**, and **sweep every spliced rule for load-bearingness** rather than trusting that a
+rejection loop which passes is a loop that tests anything.
+
+### ADR
+
+No ADR was written here, for the reason EP-2 recorded: `docs/adr/` does not exist and creating it
+is EP-7's deliverable under the now-migrated architecture-decision profile. This plan applied two
+policies rather than deciding them — the house `status` key winning over OKF v0.2 §5.4, and
+`reviews` coexisting with `verified` — and both are already documented in `Profile/V02.dhall`'s
+header for EP-7 to promote. This plan adds one further durable item for EP-7 to consider: the
+reclassification of provenance fields to `optional` is a general principle for this catalog, not
+a one-off — under `--strict` a recommended field must be one a well-run corpus actually carries.
 
 
 ## Context and Orientation

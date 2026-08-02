@@ -200,7 +200,7 @@ v0.2 conformance.
 |---|-------|------|-----------|-----------|--------|
 | 1 | Move the profile schema pin to okf 0.5.0.0 and widen the exported descriptor surface | docs/plans/1-move-the-profile-schema-pin-to-okf-0-5-0-0-and-widen-the-exported-descriptor-surface.md | None | None | Complete |
 | 2 | Ship the shared OKF v0.2 field-family module and the okfV02 reference profile | docs/plans/2-ship-the-shared-okf-v0-2-field-family-module-and-the-okfv02-reference-profile.md | EP-1 | None | Complete |
-| 3 | Migrate the documentation profiles to OKF v0.2 | docs/plans/3-migrate-the-documentation-profiles-to-okf-v0-2.md | EP-2 | None | Not Started |
+| 3 | Migrate the documentation profiles to OKF v0.2 | docs/plans/3-migrate-the-documentation-profiles-to-okf-v0-2.md | EP-2 | None | Complete |
 | 4 | Migrate the coordination profiles to OKF v0.2 | docs/plans/4-migrate-the-coordination-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Not Started |
 | 5 | Migrate the PostgreSQL profiles to OKF v0.2 | docs/plans/5-migrate-the-postgresql-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Not Started |
 | 6 | Ship Seihou blueprint migrations for consumer OKF bundles | docs/plans/6-ship-seihou-blueprint-migrations-for-consumer-okf-bundles.md | EP-3, EP-4, EP-5 | None | Not Started |
@@ -344,10 +344,10 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
 - [x] EP-2: `Profile/V02.dhall` defines the six shared v0.2 field families (2026-08-01)
 - [x] EP-2: `okfV02` reference profile exported and covered by a fixture plus a test script (2026-08-01)
 - [x] EP-2: `status`-collision and `reviews`-versus-`verified` policies written down (2026-08-01)
-- [ ] EP-3: `documentation.architectureDecisions` declares `okfVersion = "0.2"` and passes `--strict`
-- [ ] EP-3: `documentation.patternCatalog` migrated, including the `sources` shape change
-- [ ] EP-3: `documentation.researchDocuments` migrated, including the `sources` shape change
-- [ ] EP-3: documentation fixtures carry root `index.md` files and v0.2 provenance
+- [x] EP-3: `documentation.architectureDecisions` declares `okfVersion = "0.2"` and passes `--strict` (2026-08-01)
+- [x] EP-3: `documentation.patternCatalog` migrated, including the `sources` shape change (2026-08-01)
+- [x] EP-3: `documentation.researchDocuments` migrated, including the `sources` shape change (2026-08-01)
+- [x] EP-3: documentation fixtures carry root `index.md` files and v0.2 provenance (2026-08-01)
 - [ ] EP-4: `coordination.improvementRequests` migrated and passing `--strict`
 - [ ] EP-4: `coordination.useCases` migrated and passing `--strict`
 - [ ] EP-4: coordination fixtures carry root `index.md` files and v0.2 provenance
@@ -454,6 +454,47 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
   projected out of a record type (`Not a record or a union`). An empty presence list needs
   `[] : List okf.defaults.FieldRule.Type` (or `NestedFieldRule.Type` for nested rules). The
   migration plans will write empty presence lists too. Discovered 2026-08-01.
+
+- **An invalid fixture can fail for two reasons at once, which silently voids it as a test.**
+  EP-3's new pattern-catalog fixtures were first written at the bundle root, where they tripped
+  the `Guide` type's `pathPattern = "*/**"` rule *in addition to* the v0.2 rule they were
+  written for. The rejection loop still passed, so nothing looked wrong — but the fixture would
+  have kept passing with the v0.2 rule deleted from the profile. **EP-4 and EP-5 must run each
+  new invalid fixture without `--profile-enforce` and confirm it reports exactly one advisory.**
+  Combined with the load-bearingness sweep below, that is what makes a rejection fixture
+  trustworthy. Discovered 2026-08-01.
+
+- **EP-3 confirmed EP-2's teeth-check finding generalises, and acted on it.** The plan allowed
+  two invalid fixtures per profile (`bad-actor`, `missing-generated`). Sweeping every spliced
+  v0.2 rule showed that left `v02.verified` and `v02.legacyTimestamp` untested in all three
+  documentation profiles and `v02.sources` untested in two. Fourteen invalid fixtures were
+  written instead of six. The most valuable is `bad-legacy-timestamp`, which proves demoting
+  `timestamp` to `optional` stopped its *absence* being reported without stopping its *format*
+  being checked — the exact behaviour the demotion decision rests on, and which nothing else in
+  the repository tests. **EP-4 and EP-5 should expect to write more fixtures than their plans
+  budget for.** Discovered 2026-08-01.
+
+- **`okf index --write` does not notice that an indexed file has moved.** Relocating a concept
+  within an invalid fixture left the previously generated `index.md` listing the old path;
+  deleting the stale index and regenerating fixed it. It is idempotent with respect to content
+  only. Discovered 2026-08-01.
+
+- **The `adopt-architecture-decisions` blueprint override is now redundant — EP-6 must delete
+  it.** EP-3 folded the reclassification of `supersedes`, `supersededBy`, and `originatingPlan`
+  from `recommended` to `optional` upstream into
+  `profiles/documentation/architecture-decisions.dhall`, whose `recommended` list is now empty.
+  Once `blueprints/adopt-architecture-decisions/files/architecture-decisions-profile.dhall` is
+  repinned from v0.7.0 to v0.8.0 its override is a no-op and should be removed, leaving a plain
+  import. EP-6's `0.7.0 -> 0.8.0` migration edge should tell adopters who copied the override
+  that they can drop it. The full per-profile list of consumer-visible changes EP-6 needs is in
+  EP-3's Outcomes & Retrospective under "What a consumer corpus must change, per profile".
+  Recorded 2026-08-01.
+
+- **`reviews` is now the only `recommended` field in any documentation profile**, deliberately.
+  Everything else that was recommended-and-ordinarily-absent moved to `optional`, because under
+  `--strict` a recommended field must be one a well-run corpus actually carries. This is a
+  general principle for the catalog rather than a one-off, and **EP-7 should consider promoting
+  it into `docs/adr/`** alongside the two policies EP-2 recorded. Recorded 2026-08-01.
 
 - **`mori.dhall` and `seihou-registry.dhall` disagree about the blueprint version** —
   `0.1.3` versus `0.7.0` for the same `adopt-architecture-decisions` blueprint. The
