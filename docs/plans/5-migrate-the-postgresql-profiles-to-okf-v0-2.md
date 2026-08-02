@@ -56,9 +56,9 @@ the PostgreSQL fixture currently fails.
 - [x] Sweep every spliced v0.2 rule for load-bearingness (2026-08-02)
 - [x] Extend `scripts/test-tan-postgresql-profile.sh` with `--strict` (2026-08-02)
 - [x] Prove `requireBundleVersion` is live on a de-indexed bundle copy (2026-08-02)
-- [ ] Add a fixture and script for the base `postgresql` profile, which has neither today
-- [ ] Re-run every script and confirm all pass
-- [ ] Commit with the required git trailers
+- [x] Add a fixture and script for the base `postgresql` profile, which has neither today (2026-08-02)
+- [x] Re-run every script and confirm all pass (2026-08-02)
+- [x] Commit with the required git trailers (2026-08-02)
 
 
 ## Surprises & Discoveries
@@ -106,6 +106,25 @@ the PostgreSQL fixture currently fails.
   here: it demonstrates in one line that the two branches of the house-`status` policy really are
   different profiles with different vocabularies, not a single convention applied loosely.
   Date: 2026-08-02
+
+- **`resourceScheme` and the profile-wide `resource` format rule are mutually redundant, so
+  neither is individually load-bearing.** The plan's acceptance check asks you to remove
+  `resourceScheme = Some "postgresql"` from the `PostgreSQL Table` type rule and confirm the new
+  script fails on `bad-resource-scheme`. It does fail — but so does removing the profile-wide
+  `resource` rule instead, and for the same fixture. Both express the same constraint over the
+  same value, so `mysql://example/sales/orders` trips both and no value can trip only one:
+
+  ```text
+  profile: schemas/sales/tables/orders: frontmatter value at resource must match format uri-with-scheme(postgresql), found: "mysql://example/sales/orders"
+  profile: schemas/sales/tables/orders: resource must use scheme postgresql://, found: mysql://example/sales/orders
+  ```
+
+  The fixture therefore tests the scheme constraint as a whole rather than either rule
+  individually, and "the script fails when I delete the rule" is *not* sufficient evidence that a
+  fixture tests that rule. `requireSchemaSection` was swept the same way and **is** individually
+  load-bearing. The redundancy is not a defect — `resourceScheme` is per-type and the format rule
+  is profile-wide, and tan's `Event Stream` deliberately has the latter without the former — but
+  it is worth knowing before anyone tries to simplify one away. Date: 2026-08-02
 
 - **The tan fixture had no `log.md` at all**, which the other acceptance bundles do have. Adding
   `generated.at` dates therefore produced two core `log:` advisories — the failure mode EP-2
@@ -177,7 +196,127 @@ the PostgreSQL fixture currently fails.
 
 ## Outcomes & Retrospective
 
-(To be filled during and after implementation.)
+Complete on 2026-08-02, in two commits — the migration, then the new base-profile coverage, as
+the plan directed.
+
+### The headline result
+
+The command that failed before this plan:
+
+```text
+$ okf validate fixtures/tan-postgresql --strict \
+    --profile profiles/tan-postgresql.dhall --profile-enforce
+schemas/public/tables/orders: missing recommended field: description
+schemas/public/tables/orders: missing generated field (or legacy timestamp)
+streams/order: missing recommended field: description
+streams/order: missing generated field (or legacy timestamp)
+profile: schemas/public/tables/orders: missing profile-recommended field: description (One or two sentences explaining the object's purpose.)
+profile: schemas/public/tables/orders: missing profile-recommended field: timestamp (UTC time when this description was last confirmed accurate.)
+profile: streams/order: missing profile-recommended field: description (One or two sentences explaining the object's purpose.)
+profile: streams/order: missing profile-recommended field: resource (postgresql:// URI locating the live object.)
+profile: streams/order: missing profile-recommended field: timestamp (UTC time when this description was last confirmed accurate.)
+```
+
+and after:
+
+```text
+OK: 2 concepts (okf_version 0.2)
+```
+
+The new base-profile bundle reports `OK: 3 concepts (okf_version 0.2)` under the same flags plus
+`--log-enforce`. **There are now eight test scripts and all eight pass**, up from six when this
+initiative started. The Dhall type-check sweep is clean, and `Profile/V02.dhall`,
+`Profile/ReviewRule.dhall`, the root `package.dhall`, and the documentation and coordination
+profiles were not touched.
+
+`profiles/tan-postgresql.dhall` is **unchanged**. Every v0.2 change reached `tanPostgresql`
+through its `//` record merge, verified with `okf profile show` rather than assumed.
+
+`requireBundleVersion` was proven live on throwaway copies of both bundles:
+
+```text
+profile: bundle does not declare okf_version; this profile requires 0.2 or later
+```
+
+All five spliced v0.2 rules — `generated`, `verified`, `status`, `staleAfter`, `legacyTimestamp` —
+are load-bearing, verified by deleting each in turn and confirming
+`scripts/test-tan-postgresql-profile.sh` fails.
+
+### What a consumer corpus must change
+
+**Both PostgreSQL profiles** (the changes are identical, because `tanPostgresql` inherits its
+frontmatter from `postgresql`):
+
+- **`generated` is newly *recommended*** — a mapping with a required `by` (an OKF §7 actor:
+  `human:<id>`, `process:<id>`, or `<producer>/<version>`) and a recommended `at` (RFC3339 UTC).
+  **It is recommended, not required**, unlike the five documentation and coordination profiles.
+  A concept without it validates normally and is only reported under `--strict`. For a database
+  description the natural actor is `process:<sync-tool>`, not a human.
+- **`timestamp` is no longer recommended, only optional.** Keep it or drop it. If kept it must
+  still be RFC3339 UTC. The natural migration is `timestamp: X` →
+  `generated: {by: <actor>, at: X}`, reusing the same instant so log coverage still matches.
+  Because it moved from `recommended` to `optional`, a corpus that omits it **stops** failing
+  `--strict` — this is a pure relaxation.
+- **Add a root `index.md` declaring `okf_version: "0.2"`**, via
+  `okf index <bundle> --write --okf-version 0.2`. Without it every concept passes but the bundle
+  is a profile deviation. Note these trees are several levels deep, so several index files are
+  generated; only the root one carries the declaration, which is correct.
+- **`verified`, `status`, and `stale_after` are newly accepted** as optional families. Nothing
+  breaks if they are absent.
+
+**The divergence EP-6 must not get wrong.** These are the only two profiles in the catalog that
+adopt OKF v0.2's `status` and `stale_after`. The five house-`status` profiles —
+`documentation.architectureDecisions`, `documentation.patternCatalog`,
+`documentation.researchDocuments`, `coordination.improvementRequests`, and
+`coordination.useCases` — keep their own lifecycle vocabulary on the `status` key and do **not**
+declare either. A migration prompt that tells a consumer to adopt `draft`/`stable`/`deprecated`
+on an ADR or use-case bundle is telling them to break it. The observable difference:
+
+```text
+profile: … frontmatter value at status must be one of [draft, stable, deprecated], found: "current"
+```
+
+happens on a PostgreSQL bundle and must never happen on the other five.
+
+Neither profile declares `sources` or `usage_window`, and neither declares `reviews` — the
+`reviews`-versus-`verified` guidance that applies to the coordination and research profiles does
+not apply here.
+
+### The base profile now has a test
+
+`scripts/test-postgresql-profile.sh` is new. The most-consumed export in this catalog previously
+had no fixture and no script; the README suggested validating it against a sample bundle from a
+checkout of the okf repository, so this repository's own checks proved nothing about it.
+**EP-7 must add it to the README's validation section** alongside the seven others.
+
+The new bundle covers all three concept types — `schemas/sales.md`,
+`schemas/sales/tables/orders.md`, `schemas/sales/views/daily_totals.md` — with the `schemas/sales.md`
+file and `schemas/sales/` directory coexisting exactly as the path patterns require. Two rejection
+cases lock down rules that predate this plan: `bad-resource-scheme` and `missing-schema-section`.
+
+### What went differently from the plan
+
+Two things. The plan expected `resource` on the event stream to be a judgement call and it was —
+resolved by completing the fixture rather than weakening the rule, as the plan directed, with the
+stream's `resource` pointing at the message-store table it lives in. And the plan's acceptance
+check for `resourceScheme` turned out not to prove what it claims; see Surprises & Discoveries.
+
+Five rejection fixtures were written rather than two, for the reason EP-2 through EP-4 all found:
+this profile splices more v0.2 rules than any other in the catalog, and the plan's budget would
+have left three of the five untested.
+
+### ADR
+
+No ADR was written here, for the reason EP-2, EP-3, and EP-4 recorded: `docs/adr/` does not exist
+and creating it is EP-7's deliverable. This plan contributes two items to EP-7's distillation
+pass, both durable and neither specific to this migration:
+
+- **Presence class determines whether adding a family disturbs existing fixtures.** EP-4 found
+  that requiring `generated` invalidated fourteen rejection fixtures at once; this plan
+  recommended it instead and disturbed none. Same family, same catalog, opposite outcome, and the
+  difference is entirely the presence class.
+- **"The script fails when I delete the rule" does not prove a fixture tests that rule** when two
+  rules constrain the same value. The `resourceScheme` case is the worked example.
 
 
 ## Context and Orientation
