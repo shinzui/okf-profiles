@@ -1,6 +1,8 @@
 --| Profile for a Mori-addressable catalog of implementation patterns and standards.
 let Profile = ../../Profile/Type.dhall
 
+let FrontmatterRules = ../../Profile/FrontmatterRules.dhall
+
 let TypeRule = ../../Profile/TypeRule.dhall
 
 let okf = ../../Profile/okf.dhall
@@ -10,6 +12,8 @@ let FieldRule = okf.defaults.FieldRule
 let Cardinality = okf.Cardinality
 
 let FieldFormat = okf.FieldFormat
+
+let v02 = ../../Profile/V02.dhall
 
 let scalar =
       \(name : Text) ->
@@ -34,17 +38,15 @@ in  Profile::{
     , name = "mori-documentation-pattern-catalog"
     , description = Some
         "Mori-addressable implementation patterns, standards, guides, and operational documentation."
-    , frontmatter =
-      { required =
+    , frontmatter = FrontmatterRules::{
+      , required =
         [ scalar "type" "The documentation category governed by a type rule."
         , scalar "title" "Human-readable document title."
         , scalar "description" "Concise statement of the document's purpose."
-        , FieldRule::{
-          , field = "timestamp"
-          , description = Some "UTC time of the last meaningful revision."
-          , cardinality = Cardinality.Scalar
-          , format = Some FieldFormat.Rfc3339Utc
-          }
+        ,     v02.generated
+          //  { description = Some
+                  "§5.2. Who produced this document's current content, and when."
+              }
         , FieldRule::{
           , field = "resource"
           , description = Some "Canonical Mori URI for this document."
@@ -63,19 +65,41 @@ in  Profile::{
           , cardinality = Cardinality.Scalar
           }
         ]
-      , recommended =
-        [ FieldRule::{
-          , field = "sources"
-          , description = Some "Source material supporting the guidance."
-          , cardinality = Cardinality.List
-          }
+      , -- Nothing is recommended. Under `--strict` a recommended-and-absent
+        -- field is an error, and both fields below are ordinarily absent: most
+        -- catalog documents supersede nothing and cite no external source.
+        recommended = [] : List FieldRule.Type
+      , optional =
+        [ -- Was a bare list of URI strings; now the OKF v0.2 §5.1
+          -- list-of-records shape, where the former URI becomes each entry's
+          -- required `resource` member. This is breaking for a consumer corpus.
+          --
+          -- Note this is unrelated to the top-level `resource` key above, which
+          -- is OKF §4.1's canonical Mori URI for the document itself.
+          v02.sources
         , FieldRule::{
           , field = "supersedes"
           , description = Some "Earlier guidance replaced by this document."
           }
+        ,     v02.verified
+          //  { description = Some
+                  "§5.2. Independent confirmations that this guidance is accurate."
+              }
+        , -- The superseded v0.1 key, kept so an unmigrated catalog keeps
+          -- validating. `optional` means its absence is never reported while its
+          -- format is still checked whenever it is present.
+              v02.legacyTimestamp
+          //  { description = Some
+                  "Superseded v0.1 revision timestamp. Prefer `generated.at`."
+              }
         ]
-      , optional = [] : List FieldRule.Type
       }
+    , -- The house `status` key above keeps its `current`/`deprecated`
+      -- vocabulary and deliberately does not adopt OKF v0.2 §5.4's
+      -- draft/stable/deprecated, nor `stale_after`. See the header of
+      -- ../../Profile/V02.dhall for the policy and its reasoning.
+      okfVersion = "0.2"
+    , requireBundleVersion = Some "0.2"
     , types =
       [ rule "Navigation" "getting-started"
       , rule "Overview" "*/overview"

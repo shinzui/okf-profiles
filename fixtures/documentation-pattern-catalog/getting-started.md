@@ -3,6 +3,9 @@ type: Navigation
 title: Getting started
 description: Task-oriented routes into the example runtime catalog
 timestamp: 2026-07-22T00:00:00Z
+generated:
+  by: human:nadeem
+  at: 2026-07-22T00:00:00Z
 resource: mori://example/patterns/docs/getting-started
 tags: [navigation, runtime]
 status: current
