@@ -26,8 +26,10 @@ in  { Profile = okf.defaults.Profile
     , FieldFormat = okf.FieldFormat
     , mk = okf.mk
     , reviewRule = ./Profile/ReviewRule.dhall
+    , v02 = ./Profile/V02.dhall
     , coordination = ./profiles/coordination/package.dhall
     , documentation = ./profiles/documentation/package.dhall
+    , okfV02 = ./profiles/okf-v0-2.dhall
     , postgresql = ./profiles/postgresql.dhall
     , tanPostgresql = ./profiles/tan-postgresql.dhall
     }

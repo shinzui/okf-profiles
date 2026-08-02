@@ -41,24 +41,80 @@ collides with OKF's, and how the house `reviews` family relates to OKF's `verifi
 
 ## Progress
 
-- [ ] Confirm EP-1 has landed: `Profile/okf.dhall` pins okf 0.5.0.0
-- [ ] Read upstream's reference profile at `okf/docs/profiles/okf-v0-2.dhall`
-- [ ] Write `Profile/V02.dhall` with `trustMembers` and the six family values
-- [ ] Type-check `Profile/V02.dhall` and inspect the evaluated values
-- [ ] Write `profiles/okf-v0-2.dhall`, the standalone reference profile
-- [ ] Export `v02` and `okfV02` from the root `package.dhall`
-- [ ] Create the valid fixture bundle `fixtures/okf-v0-2/`
-- [ ] Create the invalid fixture bundles under `fixtures/okf-v0-2-invalid/`
-- [ ] Write `scripts/test-okf-v0-2-profile.sh` and make it pass
-- [ ] Prove the script has teeth by removing a rule and watching it fail
-- [ ] Record the `status`-collision policy in the module's doc comments
-- [ ] Record the `reviews`-versus-`verified` policy in the module's doc comments
-- [ ] Commit with the required git trailers
+- [x] Confirm EP-1 has landed: `Profile/okf.dhall` pins okf 0.5.0.0 (2026-08-01)
+- [x] Read upstream's reference profile at `okf/docs/profiles/okf-v0-2.dhall` (2026-08-01)
+- [x] Write `Profile/V02.dhall` with `trustMembers` and the six family values (2026-08-01)
+- [x] Type-check `Profile/V02.dhall` and inspect the evaluated values (2026-08-01)
+- [x] Write `profiles/okf-v0-2.dhall`, the standalone reference profile (2026-08-01)
+- [x] Export `v02` and `okfV02` from the root `package.dhall` (2026-08-01)
+- [x] Create the valid fixture bundle `fixtures/okf-v0-2/` (2026-08-01)
+- [x] Create the invalid fixture bundles under `fixtures/okf-v0-2-invalid/` (2026-08-01)
+- [x] Write `scripts/test-okf-v0-2-profile.sh` and make it pass (2026-08-01)
+- [x] Prove the script has teeth by removing a rule and watching it fail (2026-08-01)
+- [x] Add the two missing invalid fixtures the teeth-check exposed —
+      `bad-verified-actor` and `bad-usage-window-date` — so all six rules are
+      load-bearing (2026-08-01)
+- [x] Record the `status`-collision policy in the module's doc comments (2026-08-01)
+- [x] Record the `reviews`-versus-`verified` policy in the module's doc comments (2026-08-01)
+- [x] Commit with the required git trailers (2026-08-01)
 
 
 ## Surprises & Discoveries
 
-(None yet.)
+- **The six invalid fixtures the plan specified left two of the six rules untested.** Step 7
+  asked for a teeth-check on `status` and "one other rule of your choice". Running it against
+  *all six* rules instead — by deleting each entry from the profile in turn and re-running the
+  script — showed that removing `v02.verified` or `v02.usageWindow` left the script passing.
+  Neither had an invalid fixture: the specified six break `generated` (twice), `status`,
+  `stale_after`, and `sources` (twice), and nothing exercised the other two. Two fixtures were
+  added to close the gap, `bad-verified-actor` (a `verified` list entry whose `by` is the bare
+  name `schema-check`) and `bad-usage-window-date` (`usage_window.from: 2026-05`, month
+  precision rather than a calendar date). After that all six rules are load-bearing, verified
+  by re-running the full sweep. The lesson generalises to EP-3 through EP-5: check every rule,
+  not a sample, because the untested ones are exactly the ones a later edit can silently
+  delete. Date: 2026-08-01
+
+- **`bad-verified-actor` uses the list spelling on purpose.** `verified` is built with
+  `field.recordOrList`, which declares `objectFields` *and* `elementFields` against the same
+  member rules. The acceptance bundle's `bare-verified.md` exercises the `objectFields` branch,
+  so the invalid fixture deliberately uses the list form to exercise `elementFields`. The
+  diagnostic confirms the branch it hit: `frontmatter value at verified[0].by must match format
+  actor`. Date: 2026-08-01
+
+- **The valid fixture needed a `log.md`, which the plan did not mention.** Under `--strict` the
+  bundle initially emitted three `log:` advisories — `generated date 2026-07-30 has no enclosing
+  log.md` — one per concept. These are core strict authoring checks, not profile deviations, so
+  `okf validate … --profile-enforce` still exited `0` and the acceptance criterion as literally
+  written ("no `profile:` lines") was already met. It was still noise in a fixture meant to be
+  exemplary, and every other acceptance bundle in this repository carries a `log.md`. Adding one
+  with `okf log add fixtures/okf-v0-2 --kind Migration -m "…" --date 2026-07-30` clears it, and
+  the test script now passes `--log-enforce` as `scripts/test-research-documents-profile.sh`
+  does. EP-3 through EP-5 should expect the same when they add v0.2 provenance to existing
+  fixtures: a `generated.at` date needs an enclosing `log.md` covering it. Date: 2026-08-01
+
+- **`grep -c <sha> Profile/okf.dhall` now prints `2`, not the `1` this plan's Step 1 expects.**
+  EP-1 added the commit SHA to `Profile/okf.dhall`'s doc comment as well as the URL, because the
+  comment previously named no version at all. The prerequisite check is still meaningful — `0`
+  means the pin never moved — but a later plan copying this idiom should test for a non-zero
+  count rather than exactly `1`. Date: 2026-08-01
+
+- **`[] : List Profile.Type.frontmatter.required` does not type-check.** Dhall cannot project a
+  field type out of a record *type* that way (`Not a record or a union`). The empty
+  `recommended` list needs a real type annotation: `[] : List okf.defaults.FieldRule.Type`.
+  Upstream's reference profile sidesteps this because it binds `FieldRule` as a top-level
+  `let`. Worth knowing for the migration plans, which will write empty presence lists too.
+  Date: 2026-08-01
+
+- **Keeping descriptions short paid off visibly.** okf echoes a rule's description inside the
+  missing-field diagnostic, exactly as the plan warned:
+
+  ```text
+  profile: concept: missing profile-required field: sources[0].resource (§5.1. What the source
+  is: a followable artifact, or a scope descriptor.)
+  ```
+
+  A paragraph there would have made this line unreadable. All ten shared descriptions are one
+  sentence. Date: 2026-08-01
 
 
 ## Decision Log
@@ -91,10 +147,77 @@ collides with OKF's, and how the house `reviews` family relates to OKF's `verifi
   not a v0.2 rule, and a reference profile must not encode one.
   Date: 2026-08-01
 
+- Decision: Add two invalid fixtures beyond the six the plan specified, and check every rule for
+  load-bearingness rather than the two Step 7 asked for.
+  Rationale: See Surprises & Discoveries. The specified six left `verified` and `usage_window`
+  untested, so the script would have passed with either rule deleted from the profile. A test
+  suite that does not fail when a rule is removed is not testing that rule, and these two rules
+  are the ones EP-3 through EP-5 will splice into house profiles.
+  Date: 2026-08-01
+
+- Decision: Give the acceptance bundle a `log.md` and pass `--log-enforce` in the test script.
+  Rationale: The bundle is a worked example as much as a test fixture, and every other
+  acceptance bundle in this repository carries one. Without it, `--strict` emitted three
+  `log:` advisories that a reader would reasonably mistake for a defect in the profile. The
+  advisories never affected the pass/fail result, so this is a clarity fix rather than a
+  correctness one.
+  Date: 2026-08-01
+
+- Decision: Name `recommended = [] : List okf.defaults.FieldRule.Type` explicitly in the
+  reference profile rather than letting `FrontmatterRules`'s default supply it.
+  Rationale: The emptiness is a decision — nothing in a format-level profile should be
+  recommended, because §11 forbids treating a missing optional family as a deficiency — and an
+  omitted field reads as an oversight where an explicit empty list with a comment reads as
+  intent.
+  Date: 2026-08-01
+
 
 ## Outcomes & Retrospective
 
-(To be filled during and after implementation.)
+Complete on 2026-08-01. Every acceptance criterion in Validation and Acceptance holds.
+
+**What exists now.** `Profile/V02.dhall` defines the six v0.2 families once, exporting all ten
+names the Interfaces and Dependencies section promised — `trustMembers`, `generated`, `verified`,
+`status`, `staleAfter`, `sourceMembers`, `sources`, `usageWindowMembers`, `usageWindow`, and
+`legacyTimestamp`. EP-3, EP-4, and EP-5 can import it and splice values in without re-authoring a
+rule. `profiles/okf-v0-2.dhall` assembles them into a shipped format-level profile, exported as
+`okfV02`; the root `package.dhall` now also exports the module itself as `v02`. Every export EP-1
+left in place is untouched.
+
+**The rules are right, verified three ways.** `generated` evaluates to `objectFields = Some` with
+`by` carrying `FieldFormat.Actor` and `elementFields = None`; `verified` carries both, pointing at
+the same member rules. `okf profile show --registry ./package.dhall okfV02` renders the compiled
+profile with `generated`'s object members displayed, which proves it loads inside okf and not
+merely inside Dhall — the `okfVersion` consistency rules are enforced at profile load time and no
+Dhall type-check can catch them. And the acceptance bundle passes
+`--strict --profile-enforce --log-enforce` with `OK: 3 concepts` and no advisories of any kind.
+
+**Eight invalid fixtures, each failing for exactly the right reason.** Every one produces exactly
+one deviation naming precisely the field it breaks — `generated.by`, `stale_after`, `status`,
+`generated`, `sources[0].resource`, `sources[0].usage_count`, `verified[0].by`, and
+`usage_window.from`. No fixture fails for an unintended reason, which was the risk the plan
+called out.
+
+**The teeth-check found a real gap, and that is the transferable lesson.** Checking all six rules
+rather than the two Step 7 asked for exposed that `verified` and `usage_window` had no invalid
+fixture at all — the profile could have lost either rule silently. Two fixtures closed it. EP-3
+through EP-5 should apply the same sweep to their own profiles: delete each rule in turn and
+confirm the script fails. Sampling two rules would have shipped a suite with a third of its rules
+untested.
+
+**Nothing regressed.** All seven test scripts pass and the Dhall type-check sweep is clean across
+`Profile/`, `profiles/`, and both family packages. This plan was purely additive apart from two
+new fields in the root `package.dhall`.
+
+**No ADR written, deliberately.** The two policies this plan records — the house `status` key
+winning where it collides with OKF v0.2 §5.4, and `reviews` coexisting with `verified` — are
+durable project context and do belong in an ADR. But `docs/adr/` does not exist yet and creating
+it is EP-7's job, which dogfoods the migrated architecture-decision profile. Writing the corpus
+here would either duplicate that work or create it under the unmigrated v0.1 profile. The
+policies are instead written in full, with their reasoning, in `Profile/V02.dhall`'s header
+comment, where the three plans that import the module will read them; EP-7 promotes them into
+`docs/adr/` and can cite the module as the source. This is recorded in the parent MasterPlan so
+EP-7 does not lose it.
 
 
 ## Context and Orientation

@@ -199,7 +199,7 @@ v0.2 conformance.
 | # | Title | Path | Hard Deps | Soft Deps | Status |
 |---|-------|------|-----------|-----------|--------|
 | 1 | Move the profile schema pin to okf 0.5.0.0 and widen the exported descriptor surface | docs/plans/1-move-the-profile-schema-pin-to-okf-0-5-0-0-and-widen-the-exported-descriptor-surface.md | None | None | Complete |
-| 2 | Ship the shared OKF v0.2 field-family module and the okfV02 reference profile | docs/plans/2-ship-the-shared-okf-v0-2-field-family-module-and-the-okfv02-reference-profile.md | EP-1 | None | Not Started |
+| 2 | Ship the shared OKF v0.2 field-family module and the okfV02 reference profile | docs/plans/2-ship-the-shared-okf-v0-2-field-family-module-and-the-okfv02-reference-profile.md | EP-1 | None | Complete |
 | 3 | Migrate the documentation profiles to OKF v0.2 | docs/plans/3-migrate-the-documentation-profiles-to-okf-v0-2.md | EP-2 | None | Not Started |
 | 4 | Migrate the coordination profiles to OKF v0.2 | docs/plans/4-migrate-the-coordination-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Not Started |
 | 5 | Migrate the PostgreSQL profiles to OKF v0.2 | docs/plans/5-migrate-the-postgresql-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Not Started |
@@ -341,9 +341,9 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
 - [x] EP-1: `Profile/okf.dhall` pins okf 0.5.0.0 with a freshly frozen hash (2026-08-01)
 - [x] EP-1: `PathReferenceRule` and `FieldCondition` re-exported from the root `package.dhall` (2026-08-01)
 - [x] EP-1: all seven existing profiles type-check and all six `scripts/test-*.sh` pass unchanged (2026-08-01)
-- [ ] EP-2: `Profile/V02.dhall` defines the six shared v0.2 field families
-- [ ] EP-2: `okfV02` reference profile exported and covered by a fixture plus a test script
-- [ ] EP-2: `status`-collision and `reviews`-versus-`verified` policies written down
+- [x] EP-2: `Profile/V02.dhall` defines the six shared v0.2 field families (2026-08-01)
+- [x] EP-2: `okfV02` reference profile exported and covered by a fixture plus a test script (2026-08-01)
+- [x] EP-2: `status`-collision and `reviews`-versus-`verified` policies written down (2026-08-01)
 - [ ] EP-3: `documentation.architectureDecisions` declares `okfVersion = "0.2"` and passes `--strict`
 - [ ] EP-3: `documentation.patternCatalog` migrated, including the `sources` shape change
 - [ ] EP-3: `documentation.researchDocuments` migrated, including the `sources` shape change
@@ -414,6 +414,46 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
   default and the flag now prints a warning. Every plan in this initiative that re-freezes an
   import should use plain `dhall freeze <file>`. EP-1 corrected the instruction embedded in
   `Profile/okf.dhall`'s own doc comment. Discovered 2026-08-01.
+
+- **A sampled teeth-check hides untested rules; sweep every rule instead.** EP-2's plan asked
+  for a load-bearingness check on `status` "and one other rule of your choice". Running it
+  against all six rules revealed that two — `verified` and `usage_window` — had no invalid
+  fixture at all, so the profile could have lost either rule with the test script still green.
+  Two fixtures were added and all six are now load-bearing. **EP-3, EP-4, and EP-5 must apply
+  the same full sweep**: delete each rule from the profile in turn and confirm
+  `scripts/test-*.sh` fails. The mechanical form is a loop that restores a backup copy of the
+  profile between iterations. Discovered 2026-08-01.
+
+- **A v0.2 `generated.at` date needs an enclosing `log.md` covering it under `--strict`.**
+  Adding provenance to EP-2's new fixture produced one core strict advisory per concept —
+  `log: <concept>: generated date 2026-07-30 has no enclosing log.md`. These are core authoring
+  checks, not profile deviations, so `--profile-enforce` still exits `0` and they are easy to
+  dismiss as unrelated noise. `okf log add <bundle> --kind Migration -m "…" --date <date>`
+  writes the file. **EP-3 through EP-5 will hit this on every fixture bundle they add
+  provenance to**, alongside the separately-recorded `index.md` requirement. Two of the three
+  existing acceptance bundles already carry a `log.md`; the dates in it must cover the
+  `generated.at` values the migration introduces. Discovered 2026-08-01.
+
+- **`Profile/V02.dhall` shipped with all ten exports the three migration plans expect**, so the
+  EP-2 → EP-3/EP-4/EP-5 integration point is satisfied as specified: `trustMembers`,
+  `generated`, `verified`, `status`, `staleAfter`, `sourceMembers`, `sources`,
+  `usageWindowMembers`, `usageWindow`, and `legacyTimestamp`. The module is frozen for those
+  three plans — consume read-only, override a `description` with `//` if needed, and never
+  redefine a constraint. Verified 2026-08-01.
+
+- **The two catalog-wide policies are written in `Profile/V02.dhall`'s header, not yet in an
+  ADR, and EP-7 must promote them.** The house-`status` collision policy and the
+  `reviews`-versus-`verified` policy are durable project context that belongs in `docs/adr/`,
+  but that corpus does not exist until EP-7 creates it under the *migrated* architecture-decision
+  profile. Writing it earlier would either duplicate EP-7's work or create the bundle under the
+  unmigrated v0.1 profile. Both policies are therefore recorded in full, with reasoning, in the
+  module header where EP-3 through EP-5 will read them. **EP-7 must promote both into
+  `docs/adr/` and may cite `Profile/V02.dhall` as the source.** Recorded 2026-08-01.
+
+- **`[] : List Profile.Type.frontmatter.required` is not valid Dhall** — a field type cannot be
+  projected out of a record type (`Not a record or a union`). An empty presence list needs
+  `[] : List okf.defaults.FieldRule.Type` (or `NestedFieldRule.Type` for nested rules). The
+  migration plans will write empty presence lists too. Discovered 2026-08-01.
 
 - **`mori.dhall` and `seihou-registry.dhall` disagree about the blueprint version** —
   `0.1.3` versus `0.7.0` for the same `adopt-architecture-decisions` blueprint. The
