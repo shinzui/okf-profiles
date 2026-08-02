@@ -203,7 +203,7 @@ v0.2 conformance.
 | 3 | Migrate the documentation profiles to OKF v0.2 | docs/plans/3-migrate-the-documentation-profiles-to-okf-v0-2.md | EP-2 | None | Complete |
 | 4 | Migrate the coordination profiles to OKF v0.2 | docs/plans/4-migrate-the-coordination-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Complete |
 | 5 | Migrate the PostgreSQL profiles to OKF v0.2 | docs/plans/5-migrate-the-postgresql-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Complete |
-| 6 | Ship Seihou blueprint migrations for consumer OKF bundles | docs/plans/6-ship-seihou-blueprint-migrations-for-consumer-okf-bundles.md | EP-3, EP-4, EP-5 | None | Not Started |
+| 6 | Ship Seihou blueprint migrations for consumer OKF bundles | docs/plans/6-ship-seihou-blueprint-migrations-for-consumer-okf-bundles.md | EP-3, EP-4, EP-5 | None | Complete |
 | 7 | Release okf-profiles v0.8.0 and dogfood the migrated ADR profile | docs/plans/7-release-okf-profiles-v0-8-0-and-dogfood-the-migrated-adr-profile.md | EP-6 | None | Not Started |
 
 Status values: Not Started, In Progress, Complete, Cancelled.
@@ -354,9 +354,10 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
 - [x] EP-5: `postgresql` and `tanPostgresql` migrated, including OKF `status` and `stale_after` (2026-08-02)
 - [x] EP-5: PostgreSQL fixtures carry root `index.md` files and v0.2 provenance (2026-08-02)
 - [x] EP-5: the base `postgresql` profile has a fixture and a script for the first time (2026-08-02)
-- [ ] EP-6: `0.7.0 -> 0.8.0` migration edge added to `adopt-architecture-decisions`
-- [ ] EP-6: `migrate-okf-bundles-to-v0-2` blueprint authored and validated
-- [ ] EP-6: both blueprints dry-run cleanly with `seihou agent --debug`
+- [x] EP-6: `0.7.0 -> 0.8.0` migration edge added to `adopt-architecture-decisions` (2026-08-02)
+- [x] EP-6: `migrate-okf-bundles-to-v0-2` blueprint authored and validated (2026-08-02)
+- [x] EP-6: both blueprints dry-run cleanly with `seihou agent --debug` (2026-08-02)
+- [x] EP-6: the new blueprint rehearsed by hand against an unmigrated corpus (2026-08-02)
 - [ ] EP-7: `docs/adr/` exists as a profile-governed bundle holding this initiative's ADRs
 - [ ] EP-7: README, catalog table, `mori.dhall`, and `seihou-registry.dhall` reconciled
 - [ ] EP-7: v0.8.0 release notes written and the tag cut
@@ -550,7 +551,40 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
 - **`mori.dhall` and `seihou-registry.dhall` disagree about the blueprint version** —
   `0.1.3` versus `0.7.0` for the same `adopt-architecture-decisions` blueprint. The
   blueprint's own README states the version is deliberately aligned with the `okf-profiles`
-  tag, so `0.7.0` is correct and `mori.dhall` is stale. EP-7 reconciles them.
+  tag, so `0.7.0` is correct and `mori.dhall` is stale. EP-7 reconciles them — and as of EP-6
+  the correct value for both is **`0.8.0`**, since EP-6 bumped the blueprint.
+
+- **`seihou agent --debug` renders the *installed* copy of a blueprint, not the working tree.**
+  `seihou agent migrate` and `run` resolve a blueprint by name from
+  `~/.config/seihou/installed/<name>/`, and there is no `--path` flag. EP-6's first dry-run of its
+  new `0.7.0 -> 0.8.0` edge therefore reported `No blueprint migrations are declared inside the
+  requested version window` — a failure indistinguishable from a wrongly-keyed edge. Staging the
+  working tree over the installed copy (and restoring it afterwards, verified with `diff -r`)
+  showed both edges selecting correctly in ascending order. **EP-7 must reinstall both blueprints
+  after cutting the tag before believing any dry-run**, and the new blueprint's README records the
+  caveat for future maintainers. Discovered 2026-08-02.
+
+- **`seihou agent --debug` is not a pure dry run: it writes a blueprint receipt into
+  `.seihou/manifest.json`.** EP-6's plan asserted it "writes nothing"; it contacts no provider and
+  changes no target file, but it recorded `"blueprint":{…"name":"migrate-okf-bundles-to-v0-2"…}`
+  in *this* repository's manifest, claiming a blueprint had been applied here. Reverted with
+  `git checkout -- .seihou/manifest.json`. **Check `git status` after any `--debug` run.** Worth
+  raising upstream against `mori://shinzui/seihou` alongside IR-1. Discovered 2026-08-02.
+
+- **Two files ship a v0.8.0 pin that does not exist until EP-7 cuts the tag.** EP-6 decided to name
+  the tag with **no `sha256:` hash at all**, under a loud `UNFROZEN IMPORT` marker, rather than
+  invent a hash or leave a wrong-but-resolvable v0.7.0 pin. The window in which an unfrozen file is
+  reachable is zero, because a blueprint is only installable once `seihou-registry.dhall` lists it
+  and EP-7 owns that file. **EP-7 must run
+  `dhall freeze blueprints/adopt-architecture-decisions/files/architecture-decisions-profile.dhall`
+  immediately after tagging.** The second file,
+  `blueprints/migrate-okf-bundles-to-v0-2/files/profile-pins.md`, is Markdown and should stay
+  hashless deliberately. Recorded 2026-08-02.
+
+- **An untracked `.mina/cache/plandigest/` directory appeared in the working tree**, written by
+  tooling outside this initiative and not covered by `.gitignore`. EP-6 left it uncommitted rather
+  than absorb it into a blueprint commit. **EP-7 should decide whether to gitignore it** while
+  reconciling the release surface. Recorded 2026-08-02.
 
 
 ## Decision Log
