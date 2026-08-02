@@ -202,7 +202,7 @@ v0.2 conformance.
 | 2 | Ship the shared OKF v0.2 field-family module and the okfV02 reference profile | docs/plans/2-ship-the-shared-okf-v0-2-field-family-module-and-the-okfv02-reference-profile.md | EP-1 | None | Complete |
 | 3 | Migrate the documentation profiles to OKF v0.2 | docs/plans/3-migrate-the-documentation-profiles-to-okf-v0-2.md | EP-2 | None | Complete |
 | 4 | Migrate the coordination profiles to OKF v0.2 | docs/plans/4-migrate-the-coordination-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Complete |
-| 5 | Migrate the PostgreSQL profiles to OKF v0.2 | docs/plans/5-migrate-the-postgresql-profiles-to-okf-v0-2.md | EP-2 | EP-3 | In Progress |
+| 5 | Migrate the PostgreSQL profiles to OKF v0.2 | docs/plans/5-migrate-the-postgresql-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Complete |
 | 6 | Ship Seihou blueprint migrations for consumer OKF bundles | docs/plans/6-ship-seihou-blueprint-migrations-for-consumer-okf-bundles.md | EP-3, EP-4, EP-5 | None | Not Started |
 | 7 | Release okf-profiles v0.8.0 and dogfood the migrated ADR profile | docs/plans/7-release-okf-profiles-v0-8-0-and-dogfood-the-migrated-adr-profile.md | EP-6 | None | Not Started |
 
@@ -351,8 +351,9 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
 - [x] EP-4: `coordination.improvementRequests` migrated and passing `--strict` (2026-08-02)
 - [x] EP-4: `coordination.useCases` migrated and passing `--strict` (2026-08-02)
 - [x] EP-4: coordination fixtures carry root `index.md` files and v0.2 provenance (2026-08-02)
-- [ ] EP-5: `postgresql` and `tanPostgresql` migrated, including OKF `status` and `stale_after`
-- [ ] EP-5: PostgreSQL fixtures carry root `index.md` files and v0.2 provenance
+- [x] EP-5: `postgresql` and `tanPostgresql` migrated, including OKF `status` and `stale_after` (2026-08-02)
+- [x] EP-5: PostgreSQL fixtures carry root `index.md` files and v0.2 provenance (2026-08-02)
+- [x] EP-5: the base `postgresql` profile has a fixture and a script for the first time (2026-08-02)
 - [ ] EP-6: `0.7.0 -> 0.8.0` migration edge added to `adopt-architecture-decisions`
 - [ ] EP-6: `migrate-okf-bundles-to-v0-2` blueprint authored and validated
 - [ ] EP-6: both blueprints dry-run cleanly with `seihou agent --debug`
@@ -522,6 +523,29 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
   introduces `generated.at` dates that okf now reads in preference to `timestamp` when checking
   log coverage — so the flag tests something the migration created. **EP-5 should check whether
   its scripts pass it** and add it if the fixtures already satisfy it. Recorded 2026-08-02.
+
+- **Presence class decides whether adding a family disturbs a profile's existing fixtures.** EP-4
+  made `generated` *required* and invalidated all fourteen pre-existing rejection fixtures in its
+  two trees at once. EP-5 made it *recommended* and disturbed none — a recommended field's absence
+  is only reported under `--strict`, which no rejection loop passes. Same family, same catalog,
+  opposite outcome, and the presence class is the entire difference. **EP-7 should record this
+  alongside the one-advisory-per-fixture principle**: they are two halves of one rule about how a
+  profile change propagates to its test corpus. Recorded 2026-08-02.
+
+- **"The script fails when I delete the rule" does not prove a fixture tests that rule.** EP-5's
+  plan asked for `resourceScheme = Some "postgresql"` to be removed from the `PostgreSQL Table`
+  type rule to prove `bad-resource-scheme` was load-bearing. The script fails — but it also fails
+  when the *profile-wide* `resource` format rule is removed instead, because both constrain the
+  same value with the same constraint and no test value can trip only one. The fixture tests the
+  scheme constraint as a whole, not either rule. **EP-7 should fold this into the same ADR**: a
+  sweep is only conclusive when exactly one rule governs the value under test. Recorded
+  2026-08-02.
+
+- **The catalog now has eight test scripts, up from six.** EP-2 added
+  `scripts/test-okf-v0-2-profile.sh` and EP-5 added `scripts/test-postgresql-profile.sh` — the
+  base PostgreSQL profile is the most-consumed export in this repository and had no fixture and no
+  script at all, with the README pointing at a sample bundle in a checkout of the okf repository.
+  **EP-7 must list both new scripts in the README's validation section.** Recorded 2026-08-02.
 
 - **`mori.dhall` and `seihou-registry.dhall` disagree about the blueprint version** —
   `0.1.3` versus `0.7.0` for the same `adopt-architecture-decisions` blueprint. The
