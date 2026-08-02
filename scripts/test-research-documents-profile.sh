@@ -6,6 +6,7 @@ okf_bin="${OKF_BIN:-okf}"
 profile="profiles/documentation/research-documents.dhall"
 
 "${okf_bin}" validate fixtures/research-documents \
+  --strict \
   --profile "${profile}" \
   --profile-enforce \
   --log-enforce
@@ -17,7 +18,12 @@ for fixture in \
   missing-required \
   unknown-type \
   invalid-policy \
-  missing-superseded-by; do
+  missing-superseded-by \
+  bad-actor \
+  missing-generated \
+  bad-verified-actor \
+  bad-legacy-timestamp \
+  bad-source-shape; do
   if "${okf_bin}" validate "fixtures/research-documents-invalid/${fixture}" \
     --profile "${profile}" \
     --profile-enforce >/dev/null 2>&1; then
