@@ -19,6 +19,8 @@ let FieldFormat = okf.FieldFormat
 
 let reviewRule = ../../Profile/ReviewRule.dhall
 
+let v02 = ../../Profile/V02.dhall
+
 let scalar =
       \(name : Text) ->
       \(description : Text) ->
@@ -109,18 +111,18 @@ let features =
 in  Profile::{
     , name = "jtbd-use-cases"
     , description = Some
-        "Jobs-to-be-Done use cases connected to typed feature delivery and repository-owned improvement requests."
+        "Jobs-to-be-Done use cases connected to typed feature delivery and repository-owned improvement requests. The house `reviews` family and OKF `verified` coexist: `reviews` records far more than `verified` can, so an approving `reviews` entry should also be mirrored into `verified` to keep the derived trust tier accurate."
     , frontmatter = FrontmatterRules::{
       , required =
         [ scalar "type" "The Use Case or Use Case Theme concept type."
         , scalar "title" "Human-readable title."
         , scalar "description" "Concise statement of the use case or theme."
-        , FieldRule::{
-          , field = "timestamp"
-          , description = Some "UTC time of the last meaningful revision."
-          , cardinality = Cardinality.Scalar
-          , format = Some FieldFormat.Rfc3339Utc
-          }
+        , -- Profile-wide, not inside the `Use Case` type rule: a theme concept
+          -- is a document like any other and should record its producer too.
+              v02.generated
+          //  { description = Some
+                  "§5.2. Who produced this use case or theme's current content, and when."
+              }
         ]
       , recommended = [ reviewRule ]
       , optional =
@@ -134,8 +136,28 @@ in  Profile::{
           , description = Some "Additional navigation links retained as producer metadata."
           , cardinality = Cardinality.List
           }
+        ,     v02.verified
+          //  { description = Some
+                  "§5.2. Independent confirmations that this content is accurate. Mirror an approving `reviews` entry here."
+              }
+        , -- The superseded v0.1 key. okf reads it whenever `generated` is
+          -- absent, so an unmigrated corpus keeps validating; `optional` means
+          -- its absence is never reported while its format is still checked
+          -- whenever it is present. Declaring `okfVersion = "0.2"` with this
+          -- rule in `required` or `recommended` is a hard profile load failure.
+              v02.legacyTimestamp
+          //  { description = Some
+                  "Superseded v0.1 revision timestamp. Prefer `generated.at`."
+              }
         ]
       }
+    , -- The `Use Case` type rule's house `status` key keeps its delivery
+      -- lifecycle vocabulary and deliberately does not adopt OKF v0.2 §5.4's
+      -- draft/stable/deprecated, nor `stale_after`. Its allowing `draft` is a
+      -- coincidence, not partial conformance. See the header of
+      -- ../../Profile/V02.dhall for the policy and its reasoning.
+      okfVersion = "0.2"
+    , requireBundleVersion = Some "0.2"
     , allowUnknownTypes = False
     , idField = Some "useCaseId"
     , types =

@@ -47,14 +47,15 @@ no script in this repository passes today.
 - [x] Add `bad-actor` and `missing-generated` invalid fixtures for improvement requests (2026-08-02)
 - [x] Sweep every spliced v0.2 rule in the improvement-request profile for load-bearingness (2026-08-02)
 - [x] Extend `scripts/test-improvement-requests-profile.sh` with `--strict` (2026-08-02)
-- [ ] Migrate `profiles/coordination/use-cases.dhall`
-- [ ] Update `fixtures/use-cases` and its invalid siblings
-- [ ] Add `bad-actor` and `missing-generated` invalid fixtures for use cases
-- [ ] Sweep every spliced v0.2 rule in the use-case profile for load-bearingness
-- [ ] Extend `scripts/test-use-cases-profile.sh` with `--strict`
-- [ ] Decide and record the presence class of each currently-recommended field
-- [ ] Re-run every script and confirm all pass
-- [ ] Commit with the required git trailers
+- [x] Migrate `profiles/coordination/use-cases.dhall` (2026-08-02)
+- [x] Update `fixtures/use-cases` and its invalid siblings (2026-08-02)
+- [x] Add `bad-actor` and `missing-generated` invalid fixtures for use cases (2026-08-02)
+- [x] Sweep every spliced v0.2 rule in the use-case profile for load-bearingness (2026-08-02)
+- [x] Extend `scripts/test-use-cases-profile.sh` with `--strict` (2026-08-02)
+- [x] Decide and record the presence class of each currently-recommended field (2026-08-02)
+- [x] Prove `requireBundleVersion` is live on a de-indexed bundle copy (2026-08-02)
+- [x] Re-run every script and confirm all pass (2026-08-02)
+- [x] Commit with the required git trailers (2026-08-02)
 
 
 ## Surprises & Discoveries
@@ -127,6 +128,26 @@ no script in this repository passes today.
   `scripts/test-improvement-requests-profile.sh` fails each time.
   Date: 2026-08-02
 
+- Decision: Keep `themes` and `reviews` `recommended` on the use-case profile and add a `reviews`
+  entry to both acceptance concepts, including the theme.
+  Rationale: The plan asked for `themes` to be verified rather than assumed. The pre-migration
+  `--strict` baseline reported only `reviews`, on both concepts, and not `themes` — the use-case
+  fixture already carries it, so the recommendation costs nothing and keeps the body-link mirror
+  nudge. `reviews` was raised the same way it was on the improvement-request side and the same way
+  EP-3 raised the research corpus. Giving the *theme* concept a review entry as well is what the
+  profile-wide `recommended` list demands, and it is honest: a theme is a document someone
+  approved.
+  Date: 2026-08-02
+
+- Decision: Put `v02.generated`, `v02.verified`, and `v02.legacyTimestamp` in the use-case
+  profile's **profile-wide** lists rather than inside the `Use Case` type rule.
+  Rationale: As the plan directed. Both concept types should record their producer, and a
+  `Use Case Theme` is a document like any other; the theme fixture proves the requirement reaches
+  it. Presence rules at profile and type scope accumulate, so a profile-wide requirement cannot be
+  weakened by a type rule — which is the property that makes profile scope the correct home for a
+  family that applies to every concept.
+  Date: 2026-08-02
+
 - Decision: Add `--log-enforce` to `scripts/test-improvement-requests-profile.sh` alongside
   `--strict`.
   Rationale: The plan asked only for `--strict`, but this migration introduces `generated.at`
@@ -149,7 +170,119 @@ no script in this repository passes today.
 
 ## Outcomes & Retrospective
 
-(To be filled during and after implementation.)
+Complete on 2026-08-02, in two commits — one per milestone, as the plan directed.
+
+### The headline result
+
+Both acceptance bundles now validate under `--strict --profile-enforce --log-enforce` and report
+the version declaration. Before, on the unmigrated profiles:
+
+```text
+$ okf validate fixtures/improvement-requests --strict \
+    --profile profiles/coordination/improvement-requests.dhall --profile-enforce
+profile: first: missing profile-recommended field: reviews (Chronological human or model review provenance for this document revision.)
+profile: first: missing profile-recommended field: targetPlan (Repository-relative path or Mori URI of the implementation plan.)
+
+$ okf validate fixtures/use-cases --strict \
+    --profile profiles/coordination/use-cases.dhall --profile-enforce
+profile: 001-investigate-alert: missing profile-recommended field: reviews (Chronological human or model review provenance for this document revision.)
+profile: themes/operations: missing profile-recommended field: reviews (Chronological human or model review provenance for this document revision.)
+```
+
+After:
+
+```text
+OK: 2 concepts (okf_version 0.2)
+```
+
+for both. All seven test scripts pass, the Dhall type-check sweep is clean, and
+`Profile/V02.dhall`, `Profile/ReviewRule.dhall`, the root `package.dhall`,
+`profiles/coordination/package.dhall`, and the documentation and PostgreSQL profiles were not
+touched — verified with `git status --short`.
+
+`requireBundleVersion` was proven live on a throwaway copy with its root index removed:
+
+```text
+profile: bundle does not declare okf_version; this profile requires 0.2 or later
+```
+
+Every spliced v0.2 rule is load-bearing in both profiles, verified by deleting each of the three
+in turn and confirming the corresponding script fails.
+
+### What a consumer corpus must change, per profile
+
+This is the list EP-6
+(`docs/plans/6-ship-seihou-blueprint-migrations-for-consumer-okf-bundles.md`) turns into
+migration prose. **Both coordination profiles** share these four changes, which are the same four
+EP-3 recorded for the documentation profiles:
+
+- **Add `generated`** to every concept — a mapping with a required `by` (an OKF §7 actor:
+  `human:<id>`, `process:<id>`, or `<producer>/<version>`) and a recommended `at` (RFC3339 UTC).
+  This is now *required*; a concept without it fails. The diagnostic is
+  `missing profile-required field: generated`.
+- **`timestamp` is no longer required.** Keep it or drop it. If kept it must still be RFC3339
+  UTC. The natural migration is `timestamp: X` → `generated: {by: <actor>, at: X}`, reusing the
+  same instant so log coverage still matches the enclosing `log.md` — okf reads `generated.at` in
+  preference to `timestamp` for that check.
+- **Add a root `index.md` declaring `okf_version: "0.2"`**, via
+  `okf index <bundle> --write --okf-version 0.2`. Without it every concept passes but the bundle
+  is a profile deviation.
+- **`verified` is newly accepted** as an optional family — a list of `{by, at}` mappings, or one
+  bare mapping. Nothing breaks if it is absent. An approving `reviews` entry should be mirrored
+  into it, or `okf trust` reports the concept as unverified even though a human approved it. Note
+  that a *model* review mirrors to `by: process:<agent>`, not `human:<id>` — the prefix is the
+  sole discriminator between the machine-confirmed and human-reviewed trust tiers.
+
+Additionally, **`coordination.improvementRequests`**:
+
+- **`targetPlan` moved from `recommended` to `optional`** — a pure relaxation, nothing to do. A
+  corpus that omits it stops failing `--strict`.
+- **`reviews` and the conditional `resolution` remain `recommended`.** A request with no
+  `reviews` block still fails `--strict`, deliberately, and so does a request whose `status` is
+  `completed`, `rejected`, `withdrawn`, or `superseded` with no `resolution`. Neither is new, but
+  a consumer adopting `--strict` for the first time as part of this migration will meet both.
+
+Additionally, **`coordination.useCases`**:
+
+- No presence class changed. `reviews` remains `recommended` profile-wide, so **both** a use case
+  and a theme concept with no `reviews` block fail `--strict`. `themes` remains `recommended` on
+  the `Use Case` type rule.
+- The three new families are declared **profile-wide**, so `Use Case Theme` concepts need
+  `generated` too. A consumer whose themes carry only `type`, `title`, `description`, and
+  `timestamp` must update every one of them.
+
+Neither profile adopts OKF v0.2's `status` or `stale_after`, and neither declares `sources` or
+`usage_window`. A consumer's existing `status` vocabulary is unaffected.
+
+### What went differently from the plan
+
+One thing, and it is the finding worth carrying to EP-5. The plan inherited EP-3's warning that a
+*new* invalid fixture can fail for two reasons at once, and it prepared for that. What neither
+plan anticipated is that promoting `generated` to required does the same thing to every
+*pre-existing* invalid fixture in one stroke: all nine improvement-request and all five use-case
+rejection fixtures were written for v0.1, so each began failing for its own rule *and* for missing
+provenance. The rejection loops stayed green throughout, so nothing looked wrong. `missing-jobs`
+and `missing-completed-at` in particular would have kept passing with the rule they exist to test
+deleted from the profile.
+
+The audit that catches it is cheap — run every invalid fixture without `--profile-enforce` and
+read the advisories — and the repair is mechanical. Doing it left all fourteen fixtures reporting
+exactly one advisory each, except `improvement-requests-invalid/invalid-policy` (a deliberate
+kitchen-sink with seven simultaneous violations) and the two ID fixtures, whose single bad value
+trips both a format rule and an ID rule.
+
+The two empty directories `fixtures/improvement-requests-invalid/empty-reviews/` and
+`fixtures/improvement-requests-invalid/missing-reviews/` were left untouched as the plan directed.
+
+### ADR
+
+No ADR was written here, for the reason EP-2 and EP-3 recorded: `docs/adr/` does not exist and
+creating it is EP-7's deliverable under the now-migrated architecture-decision profile. This plan
+applied the two policies from `Profile/V02.dhall`'s header rather than deciding them. It adds one
+item for EP-7 to consider promoting alongside them: **a rejection fixture is only a test if it
+fails for exactly one reason**, and a change that adds a required field to a profile invalidates
+every pre-existing rejection fixture in that profile's tree at once. That is durable guidance for
+anyone extending a profile in this catalog, not a fact about this migration.
 
 
 ## Context and Orientation

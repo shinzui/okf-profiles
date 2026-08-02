@@ -2,7 +2,9 @@
 type: Use Case
 title: Second duplicate
 description: This fixture owns UC-1 again.
-timestamp: "2026-07-30T00:00:00Z"
+generated:
+  by: human:nadeem
+  at: "2026-07-30T00:00:00Z"
 useCaseId: UC-1
 status: draft
 origin: mori://example/platform
