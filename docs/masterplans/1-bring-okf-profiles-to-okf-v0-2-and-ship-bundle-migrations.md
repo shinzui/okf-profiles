@@ -202,7 +202,7 @@ v0.2 conformance.
 | 2 | Ship the shared OKF v0.2 field-family module and the okfV02 reference profile | docs/plans/2-ship-the-shared-okf-v0-2-field-family-module-and-the-okfv02-reference-profile.md | EP-1 | None | Complete |
 | 3 | Migrate the documentation profiles to OKF v0.2 | docs/plans/3-migrate-the-documentation-profiles-to-okf-v0-2.md | EP-2 | None | Complete |
 | 4 | Migrate the coordination profiles to OKF v0.2 | docs/plans/4-migrate-the-coordination-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Complete |
-| 5 | Migrate the PostgreSQL profiles to OKF v0.2 | docs/plans/5-migrate-the-postgresql-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Not Started |
+| 5 | Migrate the PostgreSQL profiles to OKF v0.2 | docs/plans/5-migrate-the-postgresql-profiles-to-okf-v0-2.md | EP-2 | EP-3 | In Progress |
 | 6 | Ship Seihou blueprint migrations for consumer OKF bundles | docs/plans/6-ship-seihou-blueprint-migrations-for-consumer-okf-bundles.md | EP-3, EP-4, EP-5 | None | Not Started |
 | 7 | Release okf-profiles v0.8.0 and dogfood the migrated ADR profile | docs/plans/7-release-okf-profiles-v0-8-0-and-dogfood-the-migrated-adr-profile.md | EP-6 | None | Not Started |
 

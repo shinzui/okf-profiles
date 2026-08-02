@@ -44,16 +44,18 @@ the PostgreSQL fixture currently fails.
 
 ## Progress
 
-- [ ] Confirm EP-2 has landed and `Profile/V02.dhall` exists
-- [ ] Read EP-3's Outcomes section for the established fixture and script pattern
-- [ ] Read okf's own migrated `docs/profiles/postgresql.dhall` as a reference
-- [ ] Record the baseline: run all scripts and save the output
-- [ ] Capture what `--strict` reports on the tan fixture before any change
-- [ ] Migrate `profiles/postgresql.dhall`
-- [ ] Verify `profiles/tan-postgresql.dhall` inherits correctly through its `//` override
-- [ ] Update `fixtures/tan-postgresql` and its two invalid siblings
-- [ ] Add `bad-actor` and `missing-generated` invalid fixtures
-- [ ] Extend `scripts/test-tan-postgresql-profile.sh` with `--strict`
+- [x] Confirm EP-2 has landed and `Profile/V02.dhall` exists (2026-08-02)
+- [x] Read EP-3's Outcomes section for the established fixture and script pattern (2026-08-02)
+- [x] Read okf's own migrated `docs/profiles/postgresql.dhall` as a reference (2026-08-02)
+- [x] Record the baseline: run all scripts and save the output (2026-08-02)
+- [x] Capture what `--strict` reports on the tan fixture before any change (2026-08-02)
+- [x] Migrate `profiles/postgresql.dhall` (2026-08-02)
+- [x] Verify `profiles/tan-postgresql.dhall` inherits correctly through its `//` override (2026-08-02)
+- [x] Update `fixtures/tan-postgresql` and its two invalid siblings (2026-08-02)
+- [x] Add `bad-actor` and `bad-stale-after` invalid fixtures (2026-08-02)
+- [x] Sweep every spliced v0.2 rule for load-bearingness (2026-08-02)
+- [x] Extend `scripts/test-tan-postgresql-profile.sh` with `--strict` (2026-08-02)
+- [x] Prove `requireBundleVersion` is live on a de-indexed bundle copy (2026-08-02)
 - [ ] Add a fixture and script for the base `postgresql` profile, which has neither today
 - [ ] Re-run every script and confirm all pass
 - [ ] Commit with the required git trailers
@@ -61,10 +63,95 @@ the PostgreSQL fixture currently fails.
 
 ## Surprises & Discoveries
 
-(None yet.)
+- **The `//` inheritance worked exactly as the plan described, and
+  `profiles/tan-postgresql.dhall` was not edited at all.** All six changes to the base profile
+  reached `tanPostgresql` through the record merge. Verified two ways rather than one — by
+  evaluating the fields directly and by rendering the loaded profile:
+
+  ```text
+  $ dhall <<< '(./profiles/tan-postgresql.dhall).okfVersion'
+  "0.2"
+  $ dhall <<< '(./profiles/tan-postgresql.dhall).requireBundleVersion'
+  Some "0.2"
+  $ okf profile show --registry ./package.dhall tanPostgresql
+  frontmatter.optional:
+    - verified: §5.2. Independent confirmations that this description still matches the live object.
+    - status: §5.4. Lifecycle state. Absence means `stable`, so this is never demanded.
+    - stale_after: §5.5. Date after which this description should be re-confirmed against the live object.
+    - timestamp: Superseded v0.1 confirmation timestamp. Prefer `generated.at`.
+  ```
+
+  `okf profile show` is the better of the two checks and the one to keep: it renders the profile
+  as okf actually loaded it, so it would also catch a change that type-checks but fails okf's
+  `okfVersion` cross-check. Date: 2026-08-02
+
+- **Unlike EP-4, promoting provenance did *not* invalidate the pre-existing rejection fixtures.**
+  The parent MasterPlan records EP-4's finding that requiring `generated` makes every v0.1-era
+  invalid fixture fail twice. That does not happen here, and the reason is precisely the decision
+  recorded below to keep `generated` `recommended` rather than `required`: a recommended field's
+  absence is only reported under `--strict`, and the rejection loop does not pass it. `invalid-role`
+  and `missing-source-streams` were audited and still report only their own advisories, unchanged.
+  The two findings are two faces of the same rule — *presence class determines whether adding a
+  family disturbs existing fixtures* — and EP-7 should record that when it promotes the
+  one-advisory-per-fixture principle. Date: 2026-08-02
+
+- **The v0.2 lifecycle vocabulary produces the diagnostic the plan asked to see**, captured
+  permanently as a fixture rather than as a manual check:
+
+  ```text
+  profile: schemas/public/tables/orders: frontmatter value at status must be one of [draft, stable, deprecated], found: "current"
+  ```
+
+  `current` is the pattern-catalog profile's house word, which makes it a useful value to reject
+  here: it demonstrates in one line that the two branches of the house-`status` policy really are
+  different profiles with different vocabularies, not a single convention applied loosely.
+  Date: 2026-08-02
+
+- **The tan fixture had no `log.md` at all**, which the other acceptance bundles do have. Adding
+  `generated.at` dates therefore produced two core `log:` advisories — the failure mode EP-2
+  recorded. `okf log add fixtures/tan-postgresql --kind Migration -m "…" --date 2026-07-30`
+  writes it, and with the log in place the script can pass `--log-enforce` like its siblings.
+  Date: 2026-08-02
 
 
 ## Decision Log
+
+- Decision: Give the `Event Stream` concept a `resource` rather than demoting the profile-wide
+  `resource` rule to `optional`.
+  Rationale: `resource` is `recommended` at profile scope, and presence rules accumulate — a type
+  rule can narrow what the profile demands but never weaken it — so the `Event Stream` type rule
+  cannot exempt itself, and `fixtures/tan-postgresql/streams/order.md` failed `--strict` for a
+  missing `resource`. The plan's instruction for this case is explicit: do not weaken the profile,
+  fix the fixture. Demoting the rule would have removed the nudge from tables and views, where a
+  `postgresql://` URI is the single most useful thing a description can carry. The tan profile's
+  own header says a stream "is a logical stream of events inside `message_store.messages`", so
+  the fixture now writes `postgresql://example/message_store/messages#order` — the physical table
+  it lives in, with the category as a fragment. The `Event Stream` type rule declares no
+  `resourceScheme`, deliberately, but the profile-wide format rule still requires the
+  `postgresql` scheme, and the fragment satisfies it.
+  Date: 2026-08-02
+
+- Decision: Add a `log.md` to `fixtures/tan-postgresql` and pass `--log-enforce` in its script.
+  Rationale: Recorded in Surprises & Discoveries. The parent MasterPlan asked EP-5 to check
+  whether its scripts pass the flag, after EP-4 found it was not uniform. It now matches the
+  coordination and documentation scripts, and it tests something this migration created — okf
+  reads `generated.at` in preference to `timestamp` when checking log coverage, so without the
+  flag nothing proves the new provenance dates are accounted for.
+  Date: 2026-08-02
+
+- Decision: Write five new invalid fixtures — `bad-actor`, `bad-verified-actor`, `bad-status`,
+  `bad-stale-after`, and `bad-legacy-timestamp` — rather than the two the plan budgeted for, and
+  no `missing-generated`.
+  Rationale: Two reasons, and they pull in the same direction. First, carrying forward the
+  load-bearingness discipline EP-2 established and EP-3 and EP-4 applied: this profile splices
+  five rules from `Profile/V02.dhall`, more than any other in the catalog, and `bad-actor` plus
+  `bad-stale-after` would have left `verified`, `status`, and `legacyTimestamp` with no fixture at
+  all — deletable from the profile with the script still green. Verified by deleting each of the
+  five in turn and confirming `scripts/test-tan-postgresql-profile.sh` fails each time. Second,
+  `missing-generated` is omitted for the reason the plan gives: `generated` is `recommended` here,
+  so its absence is only an error under `--strict`, and such a fixture would need a different
+  invocation from every other entry in the rejection loop.
+  Date: 2026-08-02
 
 - Decision: Adopt OKF v0.2's `status` and `stale_after` on both PostgreSQL profiles, unlike
   the five profiles that keep a house `status` vocabulary.
