@@ -201,7 +201,7 @@ v0.2 conformance.
 | 1 | Move the profile schema pin to okf 0.5.0.0 and widen the exported descriptor surface | docs/plans/1-move-the-profile-schema-pin-to-okf-0-5-0-0-and-widen-the-exported-descriptor-surface.md | None | None | Complete |
 | 2 | Ship the shared OKF v0.2 field-family module and the okfV02 reference profile | docs/plans/2-ship-the-shared-okf-v0-2-field-family-module-and-the-okfv02-reference-profile.md | EP-1 | None | Complete |
 | 3 | Migrate the documentation profiles to OKF v0.2 | docs/plans/3-migrate-the-documentation-profiles-to-okf-v0-2.md | EP-2 | None | Complete |
-| 4 | Migrate the coordination profiles to OKF v0.2 | docs/plans/4-migrate-the-coordination-profiles-to-okf-v0-2.md | EP-2 | EP-3 | In Progress |
+| 4 | Migrate the coordination profiles to OKF v0.2 | docs/plans/4-migrate-the-coordination-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Complete |
 | 5 | Migrate the PostgreSQL profiles to OKF v0.2 | docs/plans/5-migrate-the-postgresql-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Not Started |
 | 6 | Ship Seihou blueprint migrations for consumer OKF bundles | docs/plans/6-ship-seihou-blueprint-migrations-for-consumer-okf-bundles.md | EP-3, EP-4, EP-5 | None | Not Started |
 | 7 | Release okf-profiles v0.8.0 and dogfood the migrated ADR profile | docs/plans/7-release-okf-profiles-v0-8-0-and-dogfood-the-migrated-adr-profile.md | EP-6 | None | Not Started |
@@ -348,9 +348,9 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
 - [x] EP-3: `documentation.patternCatalog` migrated, including the `sources` shape change (2026-08-01)
 - [x] EP-3: `documentation.researchDocuments` migrated, including the `sources` shape change (2026-08-01)
 - [x] EP-3: documentation fixtures carry root `index.md` files and v0.2 provenance (2026-08-01)
-- [ ] EP-4: `coordination.improvementRequests` migrated and passing `--strict`
-- [ ] EP-4: `coordination.useCases` migrated and passing `--strict`
-- [ ] EP-4: coordination fixtures carry root `index.md` files and v0.2 provenance
+- [x] EP-4: `coordination.improvementRequests` migrated and passing `--strict` (2026-08-02)
+- [x] EP-4: `coordination.useCases` migrated and passing `--strict` (2026-08-02)
+- [x] EP-4: coordination fixtures carry root `index.md` files and v0.2 provenance (2026-08-02)
 - [ ] EP-5: `postgresql` and `tanPostgresql` migrated, including OKF `status` and `stale_after`
 - [ ] EP-5: PostgreSQL fixtures carry root `index.md` files and v0.2 provenance
 - [ ] EP-6: `0.7.0 -> 0.8.0` migration edge added to `adopt-architecture-decisions`
@@ -495,6 +495,33 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
   `--strict` a recommended field must be one a well-run corpus actually carries. This is a
   general principle for the catalog rather than a one-off, and **EP-7 should consider promoting
   it into `docs/adr/`** alongside the two policies EP-2 recorded. Recorded 2026-08-01.
+
+- **Promoting `generated` to required invalidates every *pre-existing* rejection fixture in a
+  profile's tree, all at once.** EP-3 found that a *new* invalid fixture can fail for two reasons;
+  EP-4 found the same defect striking fourteen fixtures that nobody edited. Every v0.1-era
+  rejection fixture carries `timestamp` and no `generated`, so the moment the profile requires
+  `generated` each one fails for its own rule *and* for missing provenance — while the rejection
+  loop stays green, so nothing looks wrong. `missing-jobs` and `missing-completed-at` would each
+  have kept passing with the conditional or required rule they exist to test deleted from the
+  profile. **EP-5 must audit its pre-existing invalid fixtures, not only the new ones**: run every
+  fixture without `--profile-enforce` and confirm each reports exactly one advisory. The repair is
+  mechanical — rewrite `timestamp: X` as `generated: {by: human:nadeem, at: X}`, reusing the
+  instant so log coverage still matches. This is the generalisation of EP-3's finding and belongs
+  in `docs/adr/`: **a rejection fixture is only a test if it fails for exactly one reason.**
+  EP-7 should promote it. Discovered 2026-08-02.
+
+- **A model `reviews` entry mirrors into `verified` as `process:<agent>`, not `human:<id>`.**
+  OKF §5.3 makes the `human:` prefix the sole discriminator between the machine-confirmed and
+  human-reviewed trust tiers, so mirroring a model review under a human actor would overstate the
+  tier. EP-4's improvement-request fixture demonstrates the correct mapping. EP-6's migration prose
+  should say this explicitly — a consumer mirroring `reviews` into `verified` mechanically will
+  otherwise get it wrong on exactly the entries where the distinction matters. Recorded 2026-08-02.
+
+- **`--log-enforce` was not uniform across the test scripts.** The use-case script passed it, the
+  improvement-request script did not. EP-4 added it to the latter, because the migration
+  introduces `generated.at` dates that okf now reads in preference to `timestamp` when checking
+  log coverage — so the flag tests something the migration created. **EP-5 should check whether
+  its scripts pass it** and add it if the fixtures already satisfy it. Recorded 2026-08-02.
 
 - **`mori.dhall` and `seihou-registry.dhall` disagree about the blueprint version** —
   `0.1.3` versus `0.7.0` for the same `adopt-architecture-decisions` blueprint. The
