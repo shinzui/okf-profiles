@@ -2,7 +2,9 @@
 type: Improvement Request
 title: Missing request ID
 description: This fixture omits the stable request handle.
-timestamp: "2026-07-26T00:00:00Z"
+generated:
+  by: human:nadeem
+  at: "2026-07-26T00:00:00Z"
 status: proposed
 origin: mori://example/origin
 ---

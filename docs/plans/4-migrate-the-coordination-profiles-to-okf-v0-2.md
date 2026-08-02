@@ -39,16 +39,18 @@ no script in this repository passes today.
 
 ## Progress
 
-- [ ] Confirm EP-2 has landed and `Profile/V02.dhall` exists
-- [ ] Read EP-3's Outcomes section for the established fixture and script pattern
-- [ ] Record the baseline: run all scripts and save the output
-- [ ] Migrate `profiles/coordination/improvement-requests.dhall`
-- [ ] Update `fixtures/improvement-requests` and its invalid siblings
-- [ ] Add `bad-actor` and `missing-generated` invalid fixtures for improvement requests
-- [ ] Extend `scripts/test-improvement-requests-profile.sh` with `--strict`
+- [x] Confirm EP-2 has landed and `Profile/V02.dhall` exists (2026-08-02)
+- [x] Read EP-3's Outcomes section for the established fixture and script pattern (2026-08-02)
+- [x] Record the baseline: run all scripts and save the output (2026-08-02)
+- [x] Migrate `profiles/coordination/improvement-requests.dhall` (2026-08-02)
+- [x] Update `fixtures/improvement-requests` and its invalid siblings (2026-08-02)
+- [x] Add `bad-actor` and `missing-generated` invalid fixtures for improvement requests (2026-08-02)
+- [x] Sweep every spliced v0.2 rule in the improvement-request profile for load-bearingness (2026-08-02)
+- [x] Extend `scripts/test-improvement-requests-profile.sh` with `--strict` (2026-08-02)
 - [ ] Migrate `profiles/coordination/use-cases.dhall`
 - [ ] Update `fixtures/use-cases` and its invalid siblings
 - [ ] Add `bad-actor` and `missing-generated` invalid fixtures for use cases
+- [ ] Sweep every spliced v0.2 rule in the use-case profile for load-bearingness
 - [ ] Extend `scripts/test-use-cases-profile.sh` with `--strict`
 - [ ] Decide and record the presence class of each currently-recommended field
 - [ ] Re-run every script and confirm all pass
@@ -57,10 +59,83 @@ no script in this repository passes today.
 
 ## Surprises & Discoveries
 
-(None yet.)
+- **Promoting `generated` to required silently voided every pre-existing invalid fixture.** The
+  plan anticipated that a *new* invalid fixture might fail for two reasons at once (EP-3's
+  finding) but not that an *existing* one would. All nine pre-existing improvement-request
+  rejection fixtures were written for OKF v0.1 and carry `timestamp` rather than `generated`, so
+  the moment the profile made `generated` required each of them failed twice — once for its own
+  rule and once for the missing provenance family. `missing-completed-at` in particular would
+  have kept the rejection loop green with its conditional `completedAt` rule deleted from the
+  profile. The fix is mechanical — rewrite each fixture's `timestamp: X` as
+  `generated: {by: human:nadeem, at: X}` — but it has to be done deliberately, and the audit that
+  finds it is running every invalid fixture *without* `--profile-enforce` and reading the
+  advisories. **EP-5 must audit its pre-existing invalid fixtures the same way**, not only the
+  new ones. Date: 2026-08-02
+
+- **`--strict` on the unmigrated coordination profiles was almost clean.** Only three advisories
+  across both bundles, all `reviews`, plus `targetPlan` on one improvement request — far less
+  than the six the architecture-decision profile produced. Baselines:
+
+  ```text
+  $ okf validate fixtures/improvement-requests --strict --profile … --profile-enforce
+  profile: first: missing profile-recommended field: reviews (…)
+  profile: first: missing profile-recommended field: targetPlan (…)
+
+  $ okf validate fixtures/use-cases --strict --profile … --profile-enforce
+  profile: 001-investigate-alert: missing profile-recommended field: reviews (…)
+  profile: themes/operations: missing profile-recommended field: reviews (…)
+  ```
+
+  The conditional `resolution` rule did not fire on `first`, whose status is `proposed`,
+  confirming that a `when` condition suppresses the recommendation as well as the requirement.
+  Date: 2026-08-02
 
 
 ## Decision Log
+
+- Decision: Move `targetPlan` to `optional`, keep `reviews` and the conditional `resolution`
+  `recommended`, and bring `fixtures/improvement-requests/first.md` up to standard by adding a
+  human `reviews` entry.
+  Rationale: The plan asked for each currently-recommended field to be classified and the choice
+  recorded. `targetPlan` is ordinarily absent — a request that has not yet been planned has no
+  target plan — so demanding it under `--strict` reports a normal state as a deficiency. That is
+  the general principle EP-3 recorded for this catalog. `resolution` is already conditional on a
+  terminal status, so it is only demanded once a request is completed, rejected, withdrawn, or
+  superseded; leaving it `recommended` makes "a completed request with no resolution" a reported
+  deficiency, which is exactly the check worth having. `reviews` stays `recommended` for the
+  reason EP-3 gave in the research corpus — a coordination corpus that records no review
+  provenance at all is deficient — and the fixture was raised to that standard rather than the
+  rule lowered to the fixture, following EP-3's precedent.
+  Date: 2026-08-02
+
+- Decision: Add `generated` to all nine pre-existing improvement-request rejection fixtures.
+  Rationale: See Surprises & Discoveries. Making `generated` required meant every v0.1-era
+  invalid fixture failed for two reasons, so none of them tested the rule it was written for any
+  more. Each fixture's existing `timestamp` value became its `generated.at`, which preserves the
+  instant each fixture was authored against. `invalid-policy` is the one exception: it is a
+  deliberate kitchen-sink fixture with seven simultaneous violations including a malformed
+  `timestamp`, so `generated` was added alongside rather than in place of it.
+  Date: 2026-08-02
+
+- Decision: Write four new invalid fixtures for improvement requests rather than the two the
+  plan budgeted for.
+  Rationale: Carrying forward EP-2's and EP-3's finding, recorded in the parent MasterPlan.
+  `bad-actor` and `missing-generated` leave `v02.verified` and `v02.legacyTimestamp` with no
+  fixture at all, so the profile could lose either rule with the test script still green.
+  `bad-verified-actor` and `bad-legacy-timestamp` close both gaps. Verified by deleting each of
+  the three spliced rules from the profile in turn and confirming
+  `scripts/test-improvement-requests-profile.sh` fails each time.
+  Date: 2026-08-02
+
+- Decision: Add `--log-enforce` to `scripts/test-improvement-requests-profile.sh` alongside
+  `--strict`.
+  Rationale: The plan asked only for `--strict`, but this migration introduces `generated.at`
+  dates that okf now reads in preference to `timestamp` when checking log coverage — a check the
+  sibling use-case script already enforces and this one did not. Adding it makes the fixture
+  prove that the new provenance dates are covered by the bundle's `log.md`, which is the concern
+  the migration creates. It passes without any change to `fixtures/improvement-requests/log.md`,
+  because each `generated.at` reuses the `timestamp` the log already covered.
+  Date: 2026-08-02
 
 - Decision: Add `v02.verified` to both profiles' `optional` lists while leaving the shared
   `reviewRule` exactly as it is.

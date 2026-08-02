@@ -2,7 +2,9 @@
 type: Improvement Request
 title: Link requests to implementation plans
 description: Record a target plan without deriving lifecycle from it.
-timestamp: "2026-07-26T00:01:00Z"
+generated:
+  by: human:nadeem
+  at: "2026-07-26T00:01:00Z"
 requestId: IR-2
 status: completed
 origin: mori://example/origin/packages/example-library
@@ -21,8 +23,16 @@ reviews:
     effort: high
     context: >-
       In-repository review against the target project's source and architecture guidance.
+verified:
+  by: process:example-agent
+  at: "2026-07-26T00:02:00Z"
 ---
 
 # Link requests to implementation plans
 
-This conforming fixture proves completion metadata and producer-defined plan metadata.
+This conforming fixture proves completion metadata and producer-defined plan
+metadata. It carries no `timestamp` key at all, proving that the demoted v0.1
+rule never reports its own absence — `generated.at` supersedes it. Its
+approving model `reviews` entry is mirrored into the bare-mapping spelling of
+OKF `verified`, so the derived trust tier reflects the machine confirmation
+rather than reporting the concept as unverified.
