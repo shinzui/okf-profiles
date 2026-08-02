@@ -46,7 +46,7 @@ seihou agent --debug run adopt-architecture-decisions
 ```
 
 A freshly adopted bundle lands on whatever tag the shipped descriptor pins — currently
-**v0.7.0** — so a new adopter needs no migration afterwards.
+**v0.8.0** — so a new adopter needs no migration afterwards.
 
 ## Upgrading an adopted bundle
 
@@ -55,10 +55,12 @@ A freshly adopted bundle lands on whatever tag the shipped descriptor pins — c
 | Edge | Covers |
 |------|--------|
 | `0.6.0 -> 0.7.0` | `description`/`timestamp` promoted to required; new `rfc3339-utc`, calendar-date, and strict `ADR-N` handle formats; handle-reference rules on `supersedes`/`supersededBy` |
+| `0.7.0 -> 0.8.0` | Open Knowledge Format v0.2: `generated` required with an actor-checked `by`; `timestamp` demoted to optional; the bundle must declare `okf_version: "0.2"`; `verified` newly available; the local presence override becomes redundant |
 
 Only releases that need agent intervention get an edge. v0.4.1 through v0.6.0 left the
-architecture-decision profile untouched, so no edge is declared across that range — the single
-`0.6.0 -> 0.7.0` edge covers every consumer pinned anywhere from v0.4.0 up.
+architecture-decision profile untouched, so no edge is declared across that range — the
+`0.6.0 -> 0.7.0` edge covers every consumer pinned anywhere from v0.4.0 up, and a window such as
+`--from 0.4.0 --to 0.8.0` selects both edges in ascending order.
 
 ### Find your current version
 
@@ -72,7 +74,7 @@ An edge is selected when it falls inside the requested window, so any starting t
 through `0.6.0` selects the edge above:
 
 ```bash
-seihou agent migrate adopt-architecture-decisions --from 0.4.0 --to 0.7.0
+seihou agent migrate adopt-architecture-decisions --from 0.4.0 --to 0.8.0
 ```
 
 ### Preview first
@@ -81,26 +83,44 @@ seihou agent migrate adopt-architecture-decisions --from 0.4.0 --to 0.7.0
 order, contacts no provider, and writes nothing.
 
 ```bash
-seihou agent --debug migrate adopt-architecture-decisions --from 0.4.0 --to 0.7.0
+seihou agent --debug migrate adopt-architecture-decisions --from 0.4.0 --to 0.8.0
 ```
 
-### What the edge changes
+### What the edges change
 
-It moves the pin to v0.7.0 and reclassifies `supersedes`, `supersededBy`, and `originatingPlan`
-from `recommended` to `optional` in one step. Both halves are required together: under `--strict`
-an absent recommended field is an error, and essentially every real corpus lacks all three, so
-bumping the pin alone turns a green bundle red.
+**`0.6.0 -> 0.7.0`** moves the pin to v0.7.0 and reclassifies `supersedes`, `supersededBy`, and
+`originatingPlan` from `recommended` to `optional` in one step. Both halves are required together:
+under `--strict` an absent recommended field is an error, and essentially every real corpus lacks
+all three, so bumping the pin alone turns a green bundle red. It then repairs whatever the newly
+enforced formats reject — most often `timestamp` values carrying a UTC offset instead of `Z`.
+Those are converted preserving the instant rather than restamped, so `okf log` coverage survives.
 
-It then repairs whatever the newly enforced formats reject — most often `timestamp` values
-carrying a UTC offset instead of `Z`. Those are converted preserving the instant rather than
-restamped, so `okf log` coverage survives.
+**`0.7.0 -> 0.8.0`** moves the profile from OKF v0.1 to **OKF v0.2**. Every concept must gain a
+`generated` mapping whose `by` is an OKF §7 actor — `human:<id>`, `process:<id>`, or
+`<producer>/<version>` — and whose `at` is reused from the document's existing `timestamp` rather
+than restamped to now. The bundle root must declare `okf_version: "0.2"`, written with
+`okf index docs/adr --write --okf-version 0.2`. `timestamp` is demoted to `optional` rather than
+removed: keep it, its format is still checked, and its absence is never reported. `verified`
+becomes available and is demanded nowhere.
+
+That edge also retires this blueprint's own presence override. v0.8.0 folds the `supersedes` /
+`supersededBy` / `originatingPlan` reclassification into the upstream profile, so the local `//`
+override installed at v0.7.0 is now a no-op and the edge deletes it, leaving the descriptor a
+plain pinned import.
+
+One thing the v0.2 edge deliberately does **not** do: rewrite `status`. An ADR's
+`status: Accepted` is this profile's house lifecycle vocabulary. OKF v0.2 §5.4 defines a `status`
+key with the values `draft` / `stable` / `deprecated`, and this profile does not adopt it — the
+key name is shared, the meaning is not.
 
 Customizations layered on top of the imported profile are preserved. Only the pinned tag, its
-hash, and those three presence classifications are the edge's to change.
+hash, and the presence classifications described above are an edge's to change.
 
-The edge covers the architecture-decision bundle only. Other OKF bundles in the same repository —
-research documents, improvement requests, use cases — have their own profiles and are explicitly
-out of scope.
+Both edges cover the architecture-decision bundle only. Other OKF bundles in the same repository —
+research documents, improvement requests, use cases, a pattern catalog, a PostgreSQL description —
+have their own profiles and are explicitly out of scope. They need the same v0.2 migration, and
+the blueprint that does it is [`migrate-okf-bundles-to-v0-2`](../migrate-okf-bundles-to-v0-2/),
+which detects whichever profiled bundles a repository has and migrates them all.
 
 ### Prerequisites
 
@@ -112,7 +132,7 @@ out of scope.
   an empty instruction, so pass the optional prompt argument if the session fails to start:
 
   ```bash
-  seihou agent migrate adopt-architecture-decisions --from 0.4.0 --to 0.7.0 \
+  seihou agent migrate adopt-architecture-decisions --from 0.4.0 --to 0.8.0 \
     "Follow the edge instructions for this repository." --provider claude-cli
   ```
 
