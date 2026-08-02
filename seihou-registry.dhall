@@ -19,11 +19,25 @@
            }
 , blueprints =
   [ { name = "adopt-architecture-decisions"
-    , version = Some "0.7.0"
+    , version = Some "0.8.0"
     , path = "blueprints/adopt-architecture-decisions"
     , description = Some
         "Adapt an existing docs/adr corpus to the shared OKF architecture-decision profile, stable ADR-N handles, enforced profile validation, and Mori bundle addressing"
     , tags = [ "adr", "documentation", "migration", "mori", "okf" ]
+    }
+  , { name = "migrate-okf-bundles-to-v0-2"
+    , version = Some "0.8.0"
+    , path = "blueprints/migrate-okf-bundles-to-v0-2"
+    , description = Some
+        "Detect whichever profiled OKF bundles a repository has and migrate each to Open Knowledge Format v0.2: add the generated provenance family, declare okf_version in each bundle root, reshape sources where the shape changed, and repin local descriptors"
+    , tags =
+      [ "coordination"
+      , "documentation"
+      , "migration"
+      , "mori"
+      , "okf"
+      , "postgresql"
+      ]
     }
   ]
 , prompts =

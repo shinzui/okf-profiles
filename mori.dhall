@@ -49,15 +49,58 @@ in  Schema.Project::{
             Schema.DocLocation.LocalFile
               "blueprints/adopt-architecture-decisions/README.md"
         }
+      , Schema.DocRef::{
+        , key = "migrate-okf-bundles-to-v0-2-blueprint"
+        , kind = Schema.DocKind.Runbook
+        , audience = Schema.DocAudience.User
+        , description = Some
+            "How the cross-family blueprint detects a repository's profiled OKF bundles and migrates each to OKF v0.2"
+        , location =
+            Schema.DocLocation.LocalFile
+              "blueprints/migrate-okf-bundles-to-v0-2/README.md"
+        }
+      , Schema.DocRef::{
+        , key = "okf-profiles-changelog"
+        , kind = Schema.DocKind.Reference
+        , audience = Schema.DocAudience.User
+        , description = Some
+            "Release history, with what breaks for a consumer corpus in each release and how to migrate"
+        , location = Schema.DocLocation.LocalFile "CHANGELOG.md"
+        }
       ]
     , templates =
       [ Schema.SeihouTemplate::{
         , name = "adopt-architecture-decisions"
-        , version = Some "0.1.3"
+        , version = Some "0.8.0"
         , description = Some
             "Adapt an existing docs/adr corpus to the shared OKF architecture-decision profile, stable ADR-N handles, enforced profile validation, and Mori bundle addressing"
         , modulePath = "blueprints/adopt-architecture-decisions"
         , tags = [ "adr", "documentation", "migration", "mori", "okf" ]
+        }
+      , Schema.SeihouTemplate::{
+        , name = "migrate-okf-bundles-to-v0-2"
+        , version = Some "0.8.0"
+        , description = Some
+            "Detect whichever profiled OKF bundles a repository has and migrate each to Open Knowledge Format v0.2: add the generated provenance family, declare okf_version in each bundle root, reshape sources where the shape changed, and repin local descriptors"
+        , modulePath = "blueprints/migrate-okf-bundles-to-v0-2"
+        , tags =
+          [ "coordination"
+          , "documentation"
+          , "migration"
+          , "mori"
+          , "okf"
+          , "postgresql"
+          ]
+        }
+      ]
+    , okfBundles =
+      [ Schema.OkfBundle::{
+        , name = "adrs"
+        , path = "docs/adr"
+        , okfVersion = "0.2"
+        , profile = Some "docs/adr/profile.dhall"
+        , description = Some
+            "Decisions governing this catalog: the house status divergence, the atomic v0.2 flip, presence-class policy, and what makes a rejection fixture a test"
         }
       ]
     }
