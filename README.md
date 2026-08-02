@@ -176,9 +176,14 @@ decoding breaks at load time. Two rules keep them aligned:
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
-The schema is pinned to the `okf` 0.4.0.0 release commit. Every profile in this
-checkout uses 0.4 rules, including optional top-level and nested fields, so the
-catalog must be decoded with okf-core 0.4.0.0 or later. The existing
+The schema is pinned to the `okf` 0.5.0.0 release commit, which implements OKF
+v0.2. The catalog therefore exports the full v0.2 descriptor vocabulary —
+`Profile.requireBundleVersion`, `FieldRule.objectFields`, `FieldRule.path` with
+its `PathReferenceRule` record, and the `actor`, `human-actor`, `integer`,
+`non-negative-integer`, and `boolean` field formats — so a downstream author can
+write a v0.2 rule by importing this package alone. Every profile in this checkout
+still uses 0.4 rules and so still decodes with okf-core 0.4.0.0 or later, but
+anything using the v0.2 vocabulary above needs okf-core 0.5.0.0. The existing
 `postgresql` and `tanPostgresql` fields remain stable flat exports; new profile
 families should use a namespaced directory and package field.
 

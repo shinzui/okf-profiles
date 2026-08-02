@@ -47,23 +47,49 @@ after it.
 
 ## Progress
 
-- [ ] Confirm the environment: `okf v0.5.0.0` on `PATH`, `dhall` ≥ 1.42, and a clean git tree
-- [ ] Record the baseline: run all six `scripts/test-*.sh` and save their output
-- [ ] Update the commit reference in `Profile/okf.dhall` to okf `v0.5.0.0`
-- [ ] Re-freeze the integrity hash with `dhall freeze --inplace`
-- [ ] Type-check every Dhall file in the repository
-- [ ] Re-run all six `scripts/test-*.sh` and diff against the baseline
-- [ ] Add `PathReferenceRule` and `FieldCondition` to the root `package.dhall` exports
-- [ ] Type-check `package.dhall` and confirm the new exports resolve
-- [ ] Prove the new vocabulary is reachable with the throwaway probe profile
-- [ ] Update the two `Profile/okf.dhall` doc-comment references to the new version
-- [ ] Update the `README.md` compatibility paragraph that names okf 0.4.0.0
-- [ ] Commit with the required git trailers
+- [x] Confirm the environment: `okf v0.5.0.0` on `PATH`, `dhall` ≥ 1.42, and a clean git tree (2026-08-01)
+- [x] Record the baseline: run all six `scripts/test-*.sh` and save their output (2026-08-01)
+- [x] Update the commit reference in `Profile/okf.dhall` to okf `v0.5.0.0` (2026-08-01)
+- [x] Re-freeze the integrity hash with `dhall freeze` (2026-08-01)
+- [x] Type-check every Dhall file in the repository (2026-08-01)
+- [x] Re-run all six `scripts/test-*.sh` and diff against the baseline — empty (2026-08-01)
+- [x] Add `PathReferenceRule` and `FieldCondition` to the root `package.dhall` exports (2026-08-01)
+- [x] Type-check `package.dhall` and confirm the new exports resolve (2026-08-01)
+- [x] Prove the new vocabulary is reachable with the throwaway probe profile (2026-08-01)
+- [x] Update the `Profile/okf.dhall` doc comment to name okf 0.5.0.0 (2026-08-01)
+- [x] Update the `README.md` compatibility paragraph that names okf 0.4.0.0 (2026-08-01)
+- [x] Commit with the required git trailers (2026-08-01)
 
 
 ## Surprises & Discoveries
 
-(None yet.)
+- **The `Profile/okf.dhall` doc comment named no version number at all.** The plan's Progress
+  item said to "update the two doc-comment references to the new version", but the comment only
+  ever said "pinned to a specific okf commit" — the version lived solely in the URL's commit SHA,
+  where no reader would recognise it. Rather than skip the item, the comment now names okf 0.5.0.0
+  explicitly alongside the commit and lists the five descriptor features that release adds. Future
+  pin bumps should keep that paragraph in step with the URL. Date: 2026-08-01
+
+- **`dhall freeze --inplace` is deprecated in dhall 1.42.3.** The flag still works but prints
+  `Warning: the flag "--inplace" is deprecated`; freezing is now in-place by default. The
+  instruction inside `Profile/okf.dhall`'s doc comment told the next maintainer to use the
+  deprecated form, so it was corrected to `dhall freeze Profile/okf.dhall`. Date: 2026-08-01
+
+- **The stash-based comparison in Step 8 would not have proven what it claimed.** The plan
+  suggested stashing the change and re-running the probe against the old schema. That does not
+  work cleanly here: by that point `package.dhall` also references `okf.defaults.PathReferenceRule`,
+  so stashing only `Profile/okf.dhall` fails on the *export* rather than on the probe's use of
+  `objectFields`, and stashing both discards the work under test. Instead the old schema was
+  imported directly by its original frozen URL and hash in three standalone one-line probes, each
+  naming exactly one feature. All three failed with `Missing record field`, on
+  `okf.mk.NestedFieldRule.actor`, `okf.mk.FieldRule.record`, and `okf.PathReferenceRule`
+  respectively, while all three resolve under the new pin. This is a stronger proof than the
+  stash approach and leaves the working tree untouched. Date: 2026-08-01
+
+- **The pin move was behaviour-preserving exactly as predicted**, confirming the record-completion
+  reasoning in Context and Orientation. The before/after diff across all six scripts was empty on
+  the first attempt, with no field losing its default upstream and no workaround needed. This is
+  the signal later plans depend on: they start from a verified-green baseline. Date: 2026-08-01
 
 
 ## Decision Log
@@ -75,10 +101,57 @@ after it.
   integrity hash and the URL move together as one reviewable unit.
   Date: 2026-08-01
 
+- Decision: Prove the old schema lacks the v0.2 vocabulary by importing okf 0.4.0.0 directly in
+  standalone probes, rather than by stashing the change as Step 8 suggested.
+  Rationale: See Surprises & Discoveries. Stashing cannot isolate the schema from the export
+  addition once both have landed, so it would have produced a misleading error. Importing the old
+  frozen URL and hash directly tests one feature per probe and never disturbs the working tree.
+  Date: 2026-08-01
+
+- Decision: Leave the README's *Minimum `okf`* catalog column and the per-profile "0.4.0.0 binary"
+  sentence at 0.4.0.0.
+  Rationale: The plan directs this explicitly and it is the truthful reading — no profile under
+  `profiles/` changed in this plan, so each still decodes with okf-core 0.4.0.0. Only the exported
+  descriptor *vocabulary* moved to 0.5.0.0, which the rewritten Compatibility paragraph now states
+  as a separate requirement. The migration plans raise the per-profile minimums when the profiles
+  actually adopt v0.2 rules.
+  Date: 2026-08-01
+
 
 ## Outcomes & Retrospective
 
-(To be filled during and after implementation.)
+Complete on 2026-08-01. All four acceptance criteria in Validation and Acceptance hold.
+
+**What exists now that did not before.** `Profile/okf.dhall` pins okf 0.5.0.0 at commit
+`2e34d3042f0a919ed4f2c9d2db5fb89a139e25ee` with the machine-computed hash
+`sha256:02a821061043976b0ec0d60745a792f5f536e5f5d0db43bc990890ab0f5af0e3`. Running
+`dhall freeze Profile/okf.dhall` a second time produces no diff, which is the proof the hash was
+computed rather than typed. The root `package.dhall` exports `PathReferenceRule`
+(as `okf.defaults.PathReferenceRule`) and `FieldCondition` (as the bare `okf.FieldCondition`),
+matching the record laid out in Interfaces and Dependencies. A downstream author importing only
+this package can now write `objectFields`, `path`, and `actor` rules.
+
+**The empty behavioural diff held.** All six `scripts/test-*.sh` produce byte-identical output
+before and after, and the type-check sweep is clean across `Profile/`, `profiles/`, and both
+family packages. No file under `profiles/` or `fixtures/` was touched. The record-completion
+argument in Context and Orientation was correct: every field okf 0.5.0.0 added carries an upstream
+default, so no existing value broke.
+
+**Verification worth reusing.** The three standalone probes described in Surprises & Discoveries
+are the cheapest way to demonstrate that a pin bump actually delivers new vocabulary: import the
+old frozen URL and hash directly and name one new field per probe. That pattern is reusable for
+the next schema bump and does not require touching the working tree.
+
+**What this unblocks.** EP-2
+(`docs/plans/2-ship-the-shared-okf-v0-2-field-family-module-and-the-okfv02-reference-profile.md`)
+can now build `Profile/V02.dhall` on `mk.FieldRule.record`, `mk.NestedFieldRule.actor`, and
+`PathReferenceRule`, and add the `v02` and `okfV02` exports to the record this plan finalised.
+
+**No ADR written.** This plan makes no durable architectural decision — it consumes a newer
+version of a schema this repository already consumed, one-way, with no change to any boundary or
+interface this repository owns. The durable constraints of this initiative (the
+`okfVersion`/`timestamp`/`actor` triangle, the house-`status` divergence, and `reviews` versus
+`verified`) belong to EP-2 through EP-5 and are collected by EP-7, which creates `docs/adr/`.
 
 
 ## Context and Orientation

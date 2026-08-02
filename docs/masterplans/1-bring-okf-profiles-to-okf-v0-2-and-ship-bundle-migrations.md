@@ -198,7 +198,7 @@ v0.2 conformance.
 
 | # | Title | Path | Hard Deps | Soft Deps | Status |
 |---|-------|------|-----------|-----------|--------|
-| 1 | Move the profile schema pin to okf 0.5.0.0 and widen the exported descriptor surface | docs/plans/1-move-the-profile-schema-pin-to-okf-0-5-0-0-and-widen-the-exported-descriptor-surface.md | None | None | Not Started |
+| 1 | Move the profile schema pin to okf 0.5.0.0 and widen the exported descriptor surface | docs/plans/1-move-the-profile-schema-pin-to-okf-0-5-0-0-and-widen-the-exported-descriptor-surface.md | None | None | Complete |
 | 2 | Ship the shared OKF v0.2 field-family module and the okfV02 reference profile | docs/plans/2-ship-the-shared-okf-v0-2-field-family-module-and-the-okfv02-reference-profile.md | EP-1 | None | Not Started |
 | 3 | Migrate the documentation profiles to OKF v0.2 | docs/plans/3-migrate-the-documentation-profiles-to-okf-v0-2.md | EP-2 | None | Not Started |
 | 4 | Migrate the coordination profiles to OKF v0.2 | docs/plans/4-migrate-the-coordination-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Not Started |
@@ -338,9 +338,9 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
 
 ## Progress
 
-- [ ] EP-1: `Profile/okf.dhall` pins okf 0.5.0.0 with a freshly frozen hash
-- [ ] EP-1: `PathReferenceRule` and `FieldCondition` re-exported from the root `package.dhall`
-- [ ] EP-1: all seven existing profiles type-check and all six `scripts/test-*.sh` pass unchanged
+- [x] EP-1: `Profile/okf.dhall` pins okf 0.5.0.0 with a freshly frozen hash (2026-08-01)
+- [x] EP-1: `PathReferenceRule` and `FieldCondition` re-exported from the root `package.dhall` (2026-08-01)
+- [x] EP-1: all seven existing profiles type-check and all six `scripts/test-*.sh` pass unchanged (2026-08-01)
 - [ ] EP-2: `Profile/V02.dhall` defines the six shared v0.2 field families
 - [ ] EP-2: `okfV02` reference profile exported and covered by a fixture plus a test script
 - [ ] EP-2: `status`-collision and `reviews`-versus-`verified` policies written down
@@ -391,6 +391,29 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
   and absent. The `adopt-architecture-decisions` blueprint already ships a consumer-side
   override to work around this. That override is evidence the shipped profile is wrong;
   EP-3 should fix it upstream.
+
+- **EP-1 confirmed the pin move is behaviour-preserving, in practice and not only in theory.**
+  The before/after diff across all six test scripts was empty on the first attempt and the
+  type-check sweep was clean, with no field losing its upstream default. The gate EP-2 through
+  EP-7 build on is therefore verified green, and the exact `package.dhall` export record
+  promised in EP-1's Interfaces and Dependencies is the one that landed —
+  `PathReferenceRule` as `okf.defaults.PathReferenceRule`, `FieldCondition` as the bare
+  `okf.FieldCondition`. EP-2 adds `v02` and `okfV02` to that record and must not disturb the
+  rest of it. Verified 2026-08-01.
+
+- **The stash-based "prove the old schema fails" technique in EP-1 Step 8 does not work once
+  the export addition has landed**, because stashing only `Profile/okf.dhall` leaves
+  `package.dhall` referencing `okf.defaults.PathReferenceRule` and the resulting error names
+  the export, not the feature under test. Any later plan wanting to demonstrate that a pin bump
+  delivered new vocabulary should instead import the old frozen URL and hash directly in a
+  standalone one-line probe per feature. EP-1 did this and got three clean
+  `Missing record field` errors on `okf.mk.NestedFieldRule.actor`, `okf.mk.FieldRule.record`,
+  and `okf.PathReferenceRule`. This leaves the working tree untouched. Discovered 2026-08-01.
+
+- **`dhall freeze --inplace` is deprecated as of dhall 1.42.3** — freezing is in-place by
+  default and the flag now prints a warning. Every plan in this initiative that re-freezes an
+  import should use plain `dhall freeze <file>`. EP-1 corrected the instruction embedded in
+  `Profile/okf.dhall`'s own doc comment. Discovered 2026-08-01.
 
 - **`mori.dhall` and `seihou-registry.dhall` disagree about the blueprint version** —
   `0.1.3` versus `0.7.0` for the same `adopt-architecture-decisions` blueprint. The
