@@ -53,26 +53,101 @@ bundle root declaring its dialect.
 
 ## Progress
 
-- [ ] Confirm EP-3, EP-4, and EP-5 are all complete
-- [ ] Read all three plans' Outcomes sections and build the change inventory
-- [ ] Build a deliberately-unmigrated test corpus and capture real diagnostics
-- [ ] Write `blueprints/adopt-architecture-decisions/migrations/0-7-to-0-8.md`
-- [ ] Update the blueprint's shipped `files/architecture-decisions-profile.dhall` to v0.8.0
-- [ ] Declare the new edge in `blueprints/adopt-architecture-decisions/blueprint.dhall`
-- [ ] Bump that blueprint's version to 0.8.0
-- [ ] Update `blueprints/adopt-architecture-decisions/README.md` with the new edge
-- [ ] Scaffold `blueprints/migrate-okf-bundles-to-v0-2/`
-- [ ] Write its detection-and-migration prompt
-- [ ] Write its reference files
-- [ ] Write its README
-- [ ] Validate both blueprints with `seihou validate-blueprint --lint`
-- [ ] Dry-run both with `seihou agent --debug`
-- [ ] Commit with the required git trailers
+- [x] Confirm EP-3, EP-4, and EP-5 are all complete (2026-08-02)
+- [x] Read all three plans' Outcomes sections and build the change inventory (2026-08-02)
+- [x] Build a deliberately-unmigrated test corpus and capture real diagnostics (2026-08-02)
+- [x] Write `blueprints/adopt-architecture-decisions/migrations/0-7-to-0-8.md` (2026-08-02)
+- [x] Update the blueprint's shipped `files/architecture-decisions-profile.dhall` to v0.8.0 (2026-08-02)
+- [x] Declare the new edge in `blueprints/adopt-architecture-decisions/blueprint.dhall` (2026-08-02)
+- [x] Bump that blueprint's version to 0.8.0 (2026-08-02)
+- [x] Update `blueprints/adopt-architecture-decisions/README.md` with the new edge (2026-08-02)
+- [x] Scaffold `blueprints/migrate-okf-bundles-to-v0-2/` (2026-08-02)
+- [x] Write its detection-and-migration prompt (2026-08-02)
+- [x] Write its reference files (2026-08-02)
+- [x] Write its README (2026-08-02)
+- [x] Validate both blueprints with `seihou validate-blueprint --lint` (2026-08-02)
+- [x] Dry-run both with `seihou agent --debug` (2026-08-02)
+- [x] Rehearse the new blueprint by hand against an unmigrated corpus (2026-08-02)
+- [x] Commit with the required git trailers (2026-08-02)
 
 
 ## Surprises & Discoveries
 
-(None yet.)
+- **`seihou agent --debug` renders the *installed* copy of a blueprint, not the working tree, so
+  the plan's Step 6 dry-run silently tested the wrong thing.** The first run of
+  `seihou agent --debug migrate adopt-architecture-decisions --from 0.7.0 --to 0.8.0` reported
+  `No blueprint migrations are declared inside the requested version window`, and a wide
+  `--from 0.4.0 --to 0.8.0` window rendered only the old `0.6.0 -> 0.7.0` edge. Nothing was wrong
+  with the new edge: `seihou agent migrate` resolves a blueprint by name from
+  `~/.config/seihou/installed/<name>/`, which still held the v0.7.0 copy with one migration file.
+  There is no `--path` flag.
+
+  This is a trap for any future maintainer, because the failure looks exactly like a
+  wrongly-keyed edge. The workaround used here was to back up the installed directory, copy the
+  working tree over it, dry-run, and restore — verified byte-identical afterwards with `diff -r`.
+  With the working tree staged, selection is correct:
+
+  ```text
+  0.7.0 -> 0.8.0     # Upgrade the ADR bundle to okf-profiles v0.8.0
+  0.4.0 -> 0.8.0     # Upgrade the ADR bundle to okf-profiles v0.7.0; # Upgrade the ADR bundle to okf-profiles v0.8.0
+  0.6.0 -> 0.8.0     # Upgrade the ADR bundle to okf-profiles v0.7.0; # Upgrade the ADR bundle to okf-profiles v0.8.0
+  0.4.0 -> 0.7.0     # Upgrade the ADR bundle to okf-profiles v0.7.0
+  ```
+
+  Both edges select, in ascending order, from every window a real consumer would pass. The new
+  blueprint's README records the staging caveat in its maintainer section. Date: 2026-08-02
+
+- **`seihou agent --debug` is not a pure dry run: it writes a blueprint receipt into
+  `.seihou/manifest.json`.** The plan's Idempotence and Recovery section states that `--debug`
+  "renders every pending session, contacts no provider, and writes nothing". The first two are
+  true; the third is not. `seihou agent --debug run migrate-okf-bundles-to-v0-2` added
+
+  ```json
+  "blueprint":{"appliedAt":"2026-08-02T21:27:10.866973Z","baselineModules":[],"name":"migrate-okf-bundles-to-v0-2","noBaseline":false,"version":"0.8.0"}
+  ```
+
+  to *this* repository's manifest, recording that a blueprint had been applied here when none had.
+  Reverted with `git checkout -- .seihou/manifest.json`. Anyone dry-running a blueprint should
+  check `git status` afterwards and revert the manifest. Worth raising upstream against
+  `mori://shinzui/seihou` alongside IR-1. Date: 2026-08-02
+
+- **The rehearsal found two real gaps in the new blueprint's prompt, and both were fixed.** This is
+  what Step 10 exists for, and it earned its place.
+
+  First, **a bulk textual substitution of `timestamp:` corrupts the house `reviews` family**,
+  because `timestamp:` is a substring of `document_timestamp:`. Rewriting every occurrence into a
+  `generated:` block produced not a profile advisory but a YAML parse error, which is a much more
+  confusing failure:
+
+  ```text
+  runtime-survey.md: invalid YAML frontmatter: YAML parse exception at line 17, column 2,
+  while parsing a block collection:
+  did not find expected '-' indicator
+  ```
+
+  The prompt now says to edit key by key and names `document_timestamp`, `last_modified`, and
+  `reviewed_at` as the adjacent hazards.
+
+  Second, **the prompt stated that `reviews` stays `recommended` on `researchDocuments` but never
+  said what to do about it.** After a correct migration the corpus still reported
+  `missing profile-recommended field: reviews` on a concept that had been failing that check
+  before v0.8.0 too. An agent with no guidance would either manufacture a review entry to make it
+  green — the worst possible outcome — or report the migration as failed. The prompt now has a
+  paragraph in Phase 1 on separating inherited failures from ones the migration creates, an
+  explicit instruction not to invent content to silence them, and a line in the final report
+  asking for them to be listed separately. Date: 2026-08-02
+
+- **The scaffolded blueprint pins the same Seihou schema commit as the existing one**, so there is
+  no divergence for EP-7 to reconcile: both sit on
+  `seihou-schema/0e1b875efcf2b4e4b98d93595ea627290459e3ad`. The plan anticipated a possible
+  mismatch and told this plan not to fix it unilaterally; there is nothing to fix.
+  Date: 2026-08-02
+
+- **An untracked `.mina/` cache directory appeared in the working tree during this plan** —
+  `.mina/cache/plandigest/…` — written by tooling outside this initiative and not covered by
+  `.gitignore`. It was left untracked and uncommitted rather than absorbed into an EP-6 commit.
+  **EP-7 should decide whether to add it to `.gitignore`** while it is reconciling the release
+  surface. Date: 2026-08-02
 
 
 ## Decision Log
@@ -96,10 +171,168 @@ bundle root declaring its dialect.
   blueprint may still declare migration edges for its *own* future versions.
   Date: 2026-08-01
 
+- Decision: EP-3 folded the ADR presence-class override upstream, so the shipped descriptor is now
+  a plain pinned import with no `//` override at all.
+  Rationale: The plan's Step 2 check —
+  `dhall <<< '(./profiles/documentation/architecture-decisions.dhall).frontmatter.recommended'` —
+  prints an empty list, confirming `supersedes`, `supersededBy`, and `originatingPlan` are
+  `optional` in the shipped profile. The local reclassification the blueprint installed at v0.7.0
+  is therefore a no-op. `files/architecture-decisions-profile.dhall` drops it, and the
+  `0.7.0 -> 0.8.0` edge tells adopters who carry it that they can delete it and that deleting it
+  changes nothing about which documents pass.
+  Date: 2026-08-02
+
+- Decision: Ship the v0.8.0 descriptor and pin reference with the tag URL and **no `sha256:` hash
+  at all**, marked with a loud comment, rather than handing those files to EP-7 entirely.
+  Rationale: The plan required this to be decided up front rather than discovered. Three options
+  existed: invent a hash (forbidden, and the plan says so twice), leave the file pinned at v0.7.0
+  (ships a blueprint whose version says 0.8.0 and whose descriptor says 0.7.0 — wrong but
+  resolvable, which is the more dangerous failure because nothing complains), or name v0.8.0 with
+  no hash. The third is chosen because an absent hash is honest where a wrong one is not, and
+  because the window in which an unfrozen file is reachable by a consumer is exactly zero: a
+  blueprint is only installable once it is listed in `seihou-registry.dhall`, which EP-7 owns and
+  which EP-7 edits in the same change that cuts the tag and runs `dhall freeze`. Both files carry
+  an explicit "UNFROZEN IMPORT — MUST BE FROZEN BEFORE RELEASE" marker naming the exact freeze
+  command, and both are listed by full path in this plan's Outcomes for EP-7.
+  Date: 2026-08-02
+
+- Decision: Give the new blueprint the tags
+  `coordination`, `documentation`, `migration`, `mori`, `okf`, `postgresql`.
+  Rationale: The existing blueprint uses `adr`, `documentation`, `migration`, `mori`, `okf`. The
+  new one is cross-family, so it replaces the family-specific `adr` with the three families it
+  actually covers and keeps the four shared tags, which is what makes both discoverable under a
+  single `okf` or `migration` search.
+  Date: 2026-08-02
+
 
 ## Outcomes & Retrospective
 
-(To be filled during and after implementation.)
+Complete on 2026-08-02, in two commits — one per blueprint, as the plan directed.
+
+### The headline result
+
+Two blueprints ship. Both pass `seihou validate-blueprint --lint`, both render under
+`seihou agent --debug`, and the new one was rehearsed by hand end to end against a real unmigrated
+corpus.
+
+```bash
+seihou agent migrate adopt-architecture-decisions --from 0.7.0 --to 0.8.0   # one bundle
+seihou agent run migrate-okf-bundles-to-v0-2                                # every bundle
+```
+
+The rehearsal took an unmigrated research-document corpus, followed the new blueprint's prompt by
+hand, and reached:
+
+```text
+OK: 2 concepts (okf_version 0.2)
+```
+
+The migration touched seven frontmatter lines across two files plus two generated index files, and
+`document_timestamp` inside the `reviews` block was left intact. The one remaining `--strict`
+advisory — `missing profile-recommended field: reviews` — was present in the pre-migration
+baseline too, and the prompt now tells the agent to report it as inherited rather than silence it.
+
+Every `profile:` line quoted in either prompt or in `v0-2-migration-reference.md` was produced by
+running the v0.8.0 profiles against the pre-migration fixtures extracted from commit `48b627e`, the
+last commit before the migration series. Nothing is paraphrased.
+
+All eight profile scripts still pass, and nothing outside `blueprints/` changed — with two
+exceptions recorded in Surprises & Discoveries: a `--debug` run wrote a blueprint receipt into
+`.seihou/manifest.json`, which was reverted, and an untracked `.mina/` cache directory appeared,
+which was left alone.
+
+### 1. What EP-7 must register
+
+The new blueprint's record, for `seihou-registry.dhall` and `mori.dhall`'s `templates` list,
+without re-reading the Dhall:
+
+- **`name`**: `migrate-okf-bundles-to-v0-2`
+- **`version`**: `0.8.0` — aligned with the `okf-profiles` tag, matching the convention
+  `adopt-architecture-decisions` states in its README, because that tag is the only version a
+  consumer can read off their own repository.
+- **`tags`**: `coordination`, `documentation`, `migration`, `mori`, `okf`, `postgresql`
+- **`description`**:
+
+  > Detect whichever profiled OKF bundles a repository has and migrate each to Open Knowledge
+  > Format v0.2 for okf-profiles v0.8.0: add the generated provenance family with an actor-checked
+  > by member derived from existing timestamps or git history, declare okf_version in each bundle
+  > root, reshape sources on the two profiles whose shape changed, and repin local descriptors --
+  > while leaving house status vocabularies untouched.
+
+- **Path**: `blueprints/migrate-okf-bundles-to-v0-2`
+- **Reference files**: `files/v0-2-migration-reference.md`, `files/profile-pins.md`
+- **Migration edges**: none. It is new at 0.8.0, so there is no earlier version of itself to
+  migrate from.
+
+`adopt-architecture-decisions` moves from `0.7.0` to **`0.8.0`** in both files. Note that the two
+files disagree today — `mori.dhall` says `0.1.3` and `seihou-registry.dhall` says `0.7.0` — and the
+blueprint's own README states the version is deliberately aligned with the `okf-profiles` tag, so
+`0.8.0` is correct for both and `mori.dhall` is the stale one.
+
+### 2. Files shipping a v0.8.0 pin that EP-7 must freeze
+
+Both carry an explicit `UNFROZEN IMPORT — MUST BE FROZEN BEFORE RELEASE` marker naming the command.
+Getting this list wrong ships a blueprint that cannot resolve its own descriptor.
+
+```text
+blueprints/adopt-architecture-decisions/files/architecture-decisions-profile.dhall
+```
+
+This one is real Dhall and must be frozen immediately after the tag is cut:
+
+```bash
+dhall freeze blueprints/adopt-architecture-decisions/files/architecture-decisions-profile.dhall
+```
+
+```text
+blueprints/migrate-okf-bundles-to-v0-2/files/profile-pins.md
+```
+
+This one is Markdown, not Dhall, so `dhall freeze` does not apply to it. It documents the v0.8.0
+import line deliberately *without* a hash and tells the reader to run `dhall freeze` after copying
+a descriptor into their own repository. **EP-7 should leave it hashless** — a hash written into
+prose would go stale and be copied by hand, which is the failure the file exists to prevent — but
+should re-read it after tagging to confirm the tag URL is right.
+
+No other file in `blueprints/` references a v0.8.0 tag.
+
+### 3. Does the ADR blueprint's shipped descriptor still carry the presence override? — NO
+
+EP-3 folded the reclassification upstream;
+`(./profiles/documentation/architecture-decisions.dhall).frontmatter.recommended` evaluates to an
+empty list. `files/architecture-decisions-profile.dhall` is now a plain pinned import:
+
+```dhall
+let Profiles =
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.8.0/package.dhall
+
+in  Profiles.documentation.architectureDecisions
+```
+
+The `0.7.0 -> 0.8.0` edge tells adopters carrying the old override that they can delete it, and
+that deleting it changes nothing about which documents pass.
+
+### What went differently from the plan
+
+Three things, all recorded in full above. The plan's Step 6 dry-run tested an installed copy rather
+than the working tree, which made a correct edge look wrongly keyed. The plan's claim that
+`seihou agent --debug` "writes nothing" is wrong — it records a blueprint receipt in the manifest.
+And the rehearsal earned its keep by finding two prompt gaps that no amount of re-reading would
+have surfaced: the `document_timestamp` substring hazard, and the absence of any instruction for
+handling advisories the migration did not cause.
+
+### ADR
+
+No ADR was written here, for the reason EP-2 through EP-5 recorded: `docs/adr/` does not exist and
+creating it is EP-7's deliverable. This plan contributes two items to EP-7's distillation pass:
+
+- **The blueprint version is deliberately aligned with the `okf-profiles` tag.** Both blueprints
+  now state this, and it is the rule that resolves the `mori.dhall` / `seihou-registry.dhall`
+  disagreement. It is durable project context, not a fact about this release.
+- **A migration prompt quotes real diagnostics, never paraphrases.** Every `profile:` line in both
+  prompts and in the shipped reference came from running the new profiles against a corpus
+  extracted from git at the last pre-migration commit. A prompt that paraphrases the error its
+  reader is staring at is a prompt they will not trust.
 
 
 ## Context and Orientation
