@@ -204,7 +204,7 @@ v0.2 conformance.
 | 4 | Migrate the coordination profiles to OKF v0.2 | docs/plans/4-migrate-the-coordination-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Complete |
 | 5 | Migrate the PostgreSQL profiles to OKF v0.2 | docs/plans/5-migrate-the-postgresql-profiles-to-okf-v0-2.md | EP-2 | EP-3 | Complete |
 | 6 | Ship Seihou blueprint migrations for consumer OKF bundles | docs/plans/6-ship-seihou-blueprint-migrations-for-consumer-okf-bundles.md | EP-3, EP-4, EP-5 | None | Complete |
-| 7 | Release okf-profiles v0.8.0 and dogfood the migrated ADR profile | docs/plans/7-release-okf-profiles-v0-8-0-and-dogfood-the-migrated-adr-profile.md | EP-6 | None | Not Started |
+| 7 | Release okf-profiles v0.8.0 and dogfood the migrated ADR profile | docs/plans/7-release-okf-profiles-v0-8-0-and-dogfood-the-migrated-adr-profile.md | EP-6 | None | Complete |
 
 Status values: Not Started, In Progress, Complete, Cancelled.
 Hard Deps and Soft Deps reference other rows by their # prefix (e.g., EP-1, EP-3).
@@ -358,9 +358,10 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
 - [x] EP-6: `migrate-okf-bundles-to-v0-2` blueprint authored and validated (2026-08-02)
 - [x] EP-6: both blueprints dry-run cleanly with `seihou agent --debug` (2026-08-02)
 - [x] EP-6: the new blueprint rehearsed by hand against an unmigrated corpus (2026-08-02)
-- [ ] EP-7: `docs/adr/` exists as a profile-governed bundle holding this initiative's ADRs
-- [ ] EP-7: README, catalog table, `mori.dhall`, and `seihou-registry.dhall` reconciled
-- [ ] EP-7: v0.8.0 release notes written and the tag cut
+- [x] EP-7: `docs/adr/` exists as a profile-governed bundle holding this initiative's ADRs (2026-08-02)
+- [x] EP-7: README, catalog table, `mori.dhall`, and `seihou-registry.dhall` reconciled (2026-08-02)
+- [x] EP-7: v0.8.0 release notes written and the tag cut (2026-08-02)
+- [x] EP-7: the released package verified to resolve from outside the repository (2026-08-02)
 
 
 ## Surprises & Discoveries
@@ -666,4 +667,120 @@ EP-7 must reconcile). EP-6 adds the new blueprint; EP-7 registers it in both fil
 
 ## Outcomes & Retrospective
 
-(To be filled during and after implementation.)
+**Complete on 2026-08-02.** All seven child plans landed, in dependency order, across sixteen
+commits over two days. `v0.8.0` is tagged, pushed, and verified to resolve from outside the
+repository.
+
+### What a consumer gets
+
+```dhall
+let Profiles =
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.8.0/package.dhall
+        sha256:0d66bb25b99e74a10598be06eef30356f331ff9c1c557e8578daf48cbd50d8d3
+
+in  Profiles.documentation.architectureDecisions
+```
+
+Every promise in Vision & Scope was kept:
+
+- `Profile/okf.dhall` pins okf 0.5.0.0 and the root `package.dhall` exports the full v0.2
+  descriptor vocabulary — nineteen names, verified against the file.
+- **All seven profiles declare `okfVersion = "0.2"`**, require or recommend `generated` with an
+  `actor`-checked `by`, demote `timestamp` to `optional`, and set
+  `requireBundleVersion = Some "0.2"`.
+- `okfV02` ships as a format-level reference profile for a team with no house conventions.
+- Every fixture bundle carries a root `index.md` declaring `okf_version: "0.2"`, and every script
+  runs `--strict` in addition to `--profile-enforce`.
+- Two Seihou blueprints migrate a consumer's bundles: a `0.7.0 -> 0.8.0` edge on
+  `adopt-architecture-decisions`, and the cross-family `migrate-okf-bundles-to-v0-2`.
+- `docs/adr/` is a profile-governed OKF bundle holding nine decision records.
+
+Two things the initiative delivered that the plan did not promise: the base `postgresql`
+profile — the most-consumed export in the catalog — got its first fixture and test script, and
+`CHANGELOG.md` now exists. **The catalog went from six test scripts to nine, all passing.**
+
+The three exclusions held: no `Attested Computation` type, no house `status` rename, and `reviews`
+was not replaced by `verified`. Each is now an ADR rather than a line in a plan that will be
+archived.
+
+### The decomposition worked, and one part of it worked better than expected
+
+The dependency structure the plan derived from Dhall and okf's compile-time checks was correct.
+EP-1's "prove the pin move changes nothing" gate came back empty on the first attempt, which is
+what made EP-2 through EP-7 safe to build on. EP-2's shared `Profile/V02.dhall` was consumed
+read-only by all three migration plans exactly as specified — none of them needed to change a
+shared value, so the drift the module exists to prevent never happened.
+
+The soft dependency on EP-3 earned its place. EP-4 and EP-5 copied an established fixture and
+script pattern rather than inventing three variants, and EP-3's warnings about invalid fixtures and
+`index.md` files arrived before they were needed rather than after.
+
+### The thread that ran through the whole initiative
+
+Every plan from EP-2 onward independently discovered the same class of defect: **a test that passes
+without testing anything.**
+
+EP-2 found two rules with no invalid fixture at all. EP-3 found new fixtures failing for two
+reasons, so they would have passed with the rule under test deleted. EP-4 found that promoting
+`generated` to required silently voided all fourteen *pre-existing* rejection fixtures in its two
+trees, while every script stayed green. EP-5 found that a load-bearingness sweep is inconclusive
+when two rules govern the same value. Twenty-seven rejection fixtures were written or repaired
+across the initiative, against a plan budget of roughly ten.
+
+That is now [ADR-9](../adr/0009-a-rejection-fixture-must-fail-for-exactly-one-reason.md), with the
+presence-class trade-off that governs it in
+[ADR-8](../adr/0008-recommended-means-a-well-run-corpus-carries-it.md). If this initiative leaves
+one durable lesson, it is that a rejection loop checking only exit status answers "is this rejected?"
+when the question is "is this rejected *by the rule it was written for?*" — and the two diverge
+silently and often.
+
+### What was harder than the plans expected
+
+Tooling behaviour, three times, and each cost real debugging:
+
+- `seihou agent --debug` renders the **installed** copy of a blueprint, not the working tree, so a
+  correct new migration edge presented as a wrongly-keyed one.
+- `seihou agent --debug` is not a pure dry run — it writes a blueprint receipt into
+  `.seihou/manifest.json`.
+- `okf index --write` does not notice that a previously indexed file has moved.
+
+None was in any plan. All three are recorded in Surprises & Discoveries above and the first two in
+[ADR-7](../adr/0007-blueprint-versions-track-the-catalog-tag.md), because they will recur every
+release.
+
+The single most valuable step in the whole initiative was EP-6's rehearsal — following a
+migration prompt by hand against a real unmigrated corpus. It found two gaps that no amount of
+re-reading would have surfaced: that a bulk substitution of `timestamp:` also matches
+`document_timestamp:` inside the `reviews` family and corrupts the YAML, and that the prompt gave
+no instruction at all for an advisory the migration did not cause. A prompt that cannot be followed
+by its author cannot be followed by an agent.
+
+### ADR distillation
+
+Nine records in `docs/adr/`, distilled from the Decision Logs, Surprises & Discoveries, and
+Outcomes of this MasterPlan and all seven child plans:
+
+| | Decision |
+|---|---|
+| [ADR-1](../adr/0001-house-status-diverges-from-okf-v0-2.md) | The house `status` key diverges from OKF v0.2 |
+| [ADR-2](../adr/0002-a-profile-flips-to-okf-v0-2-atomically.md) | A profile flips to OKF v0.2 atomically |
+| [ADR-3](../adr/0003-timestamp-is-demoted-not-deleted.md) | `timestamp` is demoted to `optional`, not deleted |
+| [ADR-4](../adr/0004-reviews-and-verified-coexist.md) | The house `reviews` family and OKF `verified` coexist |
+| [ADR-5](../adr/0005-v0-2-field-families-are-defined-once.md) | The v0.2 field families are defined once |
+| [ADR-6](../adr/0006-attested-computation-is-excluded.md) | `Attested Computation` is deliberately excluded |
+| [ADR-7](../adr/0007-blueprint-versions-track-the-catalog-tag.md) | Blueprint versions track the catalog tag |
+| [ADR-8](../adr/0008-recommended-means-a-well-run-corpus-carries-it.md) | `recommended` means a well-run corpus carries it |
+| [ADR-9](../adr/0009-a-rejection-fixture-must-fail-for-exactly-one-reason.md) | A rejection fixture must fail for exactly one reason |
+
+Task-local execution detail was deliberately left in the plans. The seven ExecPlans remain the
+record of *how* this was done; the ADRs are the record of *what was decided and why*.
+
+### Loose ends
+
+- An untracked `.mina/cache/plandigest/` directory is not covered by `.gitignore`. A one-line
+  follow-up.
+- `origin/master` already carried EP-4 and EP-5 before EP-7 pushed anything, by a mechanism this
+  work could not account for — no git hook is installed and no settings hook references `push`.
+  Worth finding before a release goes out unreviewed.
+- The two `seihou agent --debug` behaviours above are worth raising upstream against
+  `mori://shinzui/seihou`, alongside its existing IR-1.

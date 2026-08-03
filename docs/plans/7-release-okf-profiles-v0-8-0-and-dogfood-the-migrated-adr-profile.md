@@ -47,30 +47,75 @@ it, install either blueprint by name, and read why each design decision was made
 
 ## Progress
 
-- [ ] Confirm EP-6 is complete and read its Outcomes section
-- [ ] Collect the placeholder-hash file list from EP-6's Outcomes
-- [ ] Create `docs/adr/` as a profile-governed OKF bundle
-- [ ] Write the initiative's ADRs and allocate their `ADR-N` handles
-- [ ] Add `scripts/test-adr-bundle.sh` wiring the ADR bundle into the checks
-- [ ] Rewrite the README's Compatibility and Schema evolution sections
-- [ ] Update the README's Profile catalog table, including a v0.2 column
-- [ ] Update the README's Validating this repo section with every script
-- [ ] Document the two blueprints in the README
-- [ ] Reconcile `mori.dhall` and `seihou-registry.dhall` blueprint versions
-- [ ] Register the new blueprint in both files
-- [ ] Add `DocRef` entries for the new documentation
-- [ ] Add a bundle declaration for `docs/adr` to `mori.dhall`
-- [ ] Write the v0.8.0 release notes
-- [ ] Run the full check sweep
-- [ ] Cut the `v0.8.0` tag and push it
-- [ ] Freeze every placeholder hash against the real tag
-- [ ] Verify a pinned remote import resolves end to end
-- [ ] Distil the initiative's ADRs and close the MasterPlan
+- [x] Confirm EP-6 is complete and read its Outcomes section (2026-08-02)
+- [x] Collect the placeholder-hash file list from EP-6's Outcomes (2026-08-02)
+- [x] Create `docs/adr/` as a profile-governed OKF bundle (2026-08-02)
+- [x] Write the initiative's ADRs and allocate their `ADR-N` handles (2026-08-02)
+- [x] Add `scripts/test-adr-bundle.sh` wiring the ADR bundle into the checks (2026-08-02)
+- [x] Rewrite the README's Compatibility and Schema evolution sections (2026-08-02)
+- [x] Update the README's Profile catalog table, including a v0.2 column (2026-08-02)
+- [x] Update the README's Validating this repo section with every script (2026-08-02)
+- [x] Document the two blueprints in the README (2026-08-02)
+- [x] Reconcile `mori.dhall` and `seihou-registry.dhall` blueprint versions (2026-08-02)
+- [x] Register the new blueprint in both files (2026-08-02)
+- [x] Add `DocRef` entries for the new documentation (2026-08-02)
+- [x] Add a bundle declaration for `docs/adr` to `mori.dhall` (2026-08-02)
+- [x] Write the v0.8.0 release notes (2026-08-02)
+- [x] Run the full check sweep (2026-08-02)
+- [x] Cut the `v0.8.0` tag and push it (2026-08-02)
+- [x] Freeze every placeholder hash against the real tag (2026-08-02)
+- [x] Verify a pinned remote import resolves end to end (2026-08-02)
+- [x] Distil the initiative's ADRs and close the MasterPlan (2026-08-02)
 
 
 ## Surprises & Discoveries
 
-(None yet.)
+- **Only one file needed freezing, not two.** EP-6 recorded two files shipping a `v0.8.0` pin.
+  `grep -rn 'okf-profiles/v0.8.0' blueprints/` found five occurrences across three files, but only
+  `blueprints/adopt-architecture-decisions/files/architecture-decisions-profile.dhall` is Dhall.
+  The others are prose — the migration edge quotes the import line as an instruction, and
+  `blueprints/migrate-okf-bundles-to-v0-2/files/profile-pins.md` documents it deliberately without
+  a hash so nobody copies a stale one by hand. EP-6 anticipated this and said so; the cross-check
+  the plan asked for confirmed it rather than contradicting it. Date: 2026-08-02
+
+- **Moving the tag did not invalidate the frozen hash, and this was verified rather than
+  assumed.** The freeze commit changed only a blueprint file, so `package.dhall` and everything it
+  imports were byte-identical at both tag positions, and Dhall's semantic hash is over the resolved
+  expression. Confirmed by evaluating the shipped frozen import against the moved tag in a
+  throwaway directory with a cold cache:
+
+  ```text
+  the shipped blueprint's frozen hash matches the moved tag
+  ```
+
+  Had the freeze commit touched anything under `Profile/` or `profiles/`, the hash computed before
+  the move would have been wrong after it, and the sequencing would need a third step. Worth
+  knowing before the next release. Date: 2026-08-02
+
+- **`origin/master` already carried EP-4 and EP-5 before this plan pushed anything**, by a
+  mechanism this session could not account for — no git hook is installed in `.git/hooks` and no
+  settings hook references `push`. Six commits (EP-6 and this plan's first three milestones) were
+  genuinely unpushed and were pushed here with the user's approval. Flagged rather than explained
+  away; if something is auto-pushing this repository, it is worth finding before a release goes out
+  unreviewed. Date: 2026-08-02
+
+- **The README carried three stale consumer-facing pins that were not on the plan's list of four
+  wrong sections.** Its worked examples told a consumer to import `v0.1.0` and `v0.2.0`, one with a
+  concrete `sha256:` that no longer corresponds to anything a reader should use. The plan named
+  Compatibility, Schema evolution, Validating this repo, and Profile catalog; the pin examples sit
+  in "Consuming a profile", which the plan did not flag. They were updated to `v0.8.0` with a
+  `dhall freeze` placeholder rather than a literal hash, so the README cannot go stale the same way
+  again. The plan's own acceptance criterion — spot-check claims against reality rather than
+  reading for plausibility — is what surfaced them. Date: 2026-08-02
+
+- **Nine ADRs were written, not the seven the plan sketched.** The two extra are
+  [ADR-8](../adr/0008-recommended-means-a-well-run-corpus-carries-it.md) and
+  [ADR-9](../adr/0009-a-rejection-fixture-must-fail-for-exactly-one-reason.md), promoted from
+  findings EP-3, EP-4, and EP-5 each recorded and explicitly flagged for this plan: what
+  `recommended` means under `--strict`, and what makes a rejection fixture an actual test. Both are
+  durable rules about how any future profile in this catalog is written and tested, so they were
+  written during Milestone 1 rather than deferred to the distillation pass — same result, one fewer
+  round of churn. Date: 2026-08-02
 
 
 ## Decision Log
@@ -93,10 +138,94 @@ it, install either blueprint by name, and read why each design decision was made
   repository.
   Date: 2026-08-01
 
+- Decision: Take the tag-freeze-retag sequencing rather than releasing a `v0.8.1`.
+  Rationale: The plan required this to be chosen deliberately and offered both. Confirmed with the
+  user, and confirmed against the remote first — `git ls-remote --tags origin | grep v0.8.0`
+  returned nothing, so nothing had consumed the tag and moving it could not break a consumer. The
+  alternative costs a version number and leaves a `v0.8.0` in the wild whose shipped blueprint
+  descriptor cannot resolve, which is a worse artifact than a briefly-moved tag nobody fetched.
+  Date: 2026-08-02
+
+- Decision: Write nine ADRs rather than the seven the plan sketched, and write the two extra
+  during Milestone 1 rather than in the closing distillation pass.
+  Rationale: EP-3, EP-4, and EP-5 each recorded a finding and explicitly asked this plan to promote
+  it — the presence-class rule and the rejection-fixture rule. Both are durable constraints on how
+  any future profile in this catalog is written and tested, which is exactly the promotion test in
+  `agents/skills/exec-plan/ADR.md`. Writing them with the other seven avoided allocating handles
+  twice and re-running the bundle checks for no gain.
+  Date: 2026-08-02
+
 
 ## Outcomes & Retrospective
 
-(To be filled during and after implementation.)
+Complete on 2026-08-02, in five commits: the ADR bundle, the README, the registries and changelog,
+the descriptor freeze, and this closure.
+
+### The release
+
+**`v0.8.0` is tagged, pushed, and verified from outside the repository.** The acceptance test that
+matters — a consumer's exact workflow, run in a throwaway directory with a cold Dhall cache:
+
+```text
+$ dhall type --file pinned.dhall        # (…/v0.8.0/package.dhall).documentation.architectureDecisions
+remote import resolves
+$ okf validate ./bundle --strict --profile pinned.dhall --profile-enforce --log-enforce
+OK: 2 concepts (okf_version 0.2)
+```
+
+The shipped blueprint descriptor is frozen at
+`sha256:0d66bb25b99e74a10598be06eef30356f331ff9c1c557e8578daf48cbd50d8d3`, and re-running
+`dhall freeze` on it produces no diff — the check that proves a hash was computed rather than
+typed. Nothing in the repository matches `sha256:0{16,}`, `PLACEHOLDER`, or `TODO`.
+
+### This repository now uses its own profile
+
+`docs/adr/` holds nine decision records governed by
+`profiles/documentation/architectureDecisions` through a **relative** import of
+`../../package.dhall` — the one place that form is correct, since a remote pin here would be
+circular and would govern these decisions with the previous release.
+
+```text
+$ okf validate docs/adr --strict --profile docs/adr/profile.dhall --profile-enforce --log-enforce
+OK: 9 concepts (okf_version 0.2)
+```
+
+Every handle was allocated with `okf id next`, never by counting: `ADR-1` through `ADR-9`,
+unpadded, no duplicates, no gaps. The bundle is addressable as
+`mori://shinzui/okf-profiles/okf/adrs`.
+
+`scripts/test-adr-bundle.sh` makes this a **regression test** rather than documentation: it
+validates a real corpus against the profile under development, so a profile change that would break
+a live ADR corpus fails here before it reaches a consumer. That is the property the two-concept
+fixture never had.
+
+### Final state
+
+- **Nine test scripts, all passing** — six at the start of the initiative, plus `okfV02` (EP-2),
+  `postgresql` (EP-5), and the ADR bundle (this plan).
+- **Type-check sweep clean** across `package.dhall`, `mori.dhall`, `seihou-registry.dhall`,
+  `docs/adr/profile.dhall`, `Profile/`, `profiles/`, and both `blueprint.dhall` files.
+- **Both blueprints lint valid and are registered at `0.8.0` in both registry files**, resolving a
+  `0.1.3`-against-`0.7.0` disagreement that predated this initiative.
+- **`package.dhall` exports exactly the nineteen names** the plan listed, verified against the file
+  rather than reproduced from the plan: `Profile`, `TypeRule`, `FrontmatterRules`, `FieldRule`,
+  `NestedRules`, `NestedFieldRule`, `HandleReferenceRule`, `PathReferenceRule`, `FieldCondition`,
+  `Cardinality`, `FieldFormat`, `mk`, `reviewRule`, `v02`, `coordination`, `documentation`,
+  `okfV02`, `postgresql`, `tanPostgresql`.
+- **`CHANGELOG.md` exists**, which it did not before, with a `0.8.0` entry leading with the
+  migration commands.
+
+### What went differently from the plan
+
+Four things, all recorded above in full. Only one of EP-6's two flagged files actually needed
+freezing — the other is prose that is deliberately hashless. Moving the tag turned out to be safe
+for the frozen hash, and that was verified rather than assumed. The README carried three stale
+consumer pins in a section the plan did not flag, found by the plan's own instruction to spot-check
+claims against reality. And nine ADRs were written rather than seven.
+
+One loose end is left deliberately: an untracked `.mina/cache/plandigest/` directory, written by
+tooling outside this initiative. It is not gitignored and was not absorbed into a release commit.
+Adding it to `.gitignore` is a one-line follow-up that does not belong in a release.
 
 
 ## Context and Orientation
