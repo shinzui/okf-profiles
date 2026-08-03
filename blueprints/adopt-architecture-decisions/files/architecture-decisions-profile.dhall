@@ -15,17 +15,16 @@
 -- `timestamp` key is `optional`: keep it if you have it, its format is still
 -- checked, and its absence is never reported.
 --
--- !! UNFROZEN IMPORT -- MUST BE FROZEN BEFORE RELEASE !!
---
--- This import has no `sha256:` integrity hash because the v0.8.0 tag does not
--- exist on the remote until the release is cut. Freeze it immediately after
--- tagging:
+-- The integrity hash below was computed by `dhall freeze` against the real
+-- v0.8.0 tag. When bumping to a future release, change the tag, delete the hash
+-- line, and re-run:
 --
 --     dhall freeze blueprints/adopt-architecture-decisions/files/architecture-decisions-profile.dhall
 --
--- Never hand-write a `sha256:` value to fill this in, and never delete a hash
--- from a frozen import to make it resolve.
+-- Never hand-write a `sha256:` value, and never delete a hash from a frozen
+-- import to make it resolve.
 let Profiles =
       https://raw.githubusercontent.com/shinzui/okf-profiles/v0.8.0/package.dhall
+        sha256:0d66bb25b99e74a10598be06eef30356f331ff9c1c557e8578daf48cbd50d8d3
 
 in  Profiles.documentation.architectureDecisions
