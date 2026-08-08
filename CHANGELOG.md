@@ -6,6 +6,26 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Consumers pin a tag, so every entry states what breaks for a corpus governed by
 these profiles and how to migrate it.
 
+## [0.9.3] — 2026-08-08
+
+### Changed
+
+- **`adopt-capabilities`: a decidable test for when growth earns a new record.**
+  0.9.1 said to record material growth as a new capability but never said where
+  minor growth ends and material growth begins, so two runs answered
+  differently: one split a reintroduced feature into its own record, another kept
+  `since` at the earliest form and described the evolution in the body.
+
+  The test is now one question — *could a consumer pinned to the older release
+  still do the thing this record describes?* If the thing is impossible for them,
+  split; if they can do it just less well, keep one record and describe the
+  evolution in the body. Ties go to the same record: an over-split catalog reads
+  as a changelog with handles.
+
+  Both earlier judgments are defensible under this test, so no existing corpus is
+  invalidated. Blueprint-only; the profile is unchanged from 0.9.0 and no bundle
+  needs repinning.
+
 ## [0.9.2] — 2026-08-08
 
 ### Changed

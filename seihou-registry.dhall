@@ -19,7 +19,7 @@
            }
 , blueprints =
   [ { name = "adopt-capabilities"
-    , version = Some "0.9.2"
+    , version = Some "0.9.3"
     , path = "blueprints/adopt-capabilities"
     , description = Some
         "Author a profile-governed capability catalog describing what a repository provides to a consumer today, with stable CAP-N handles, a compatibility promise separate from availability, required evidence, enforced profile validation, and Mori bundle addressing"

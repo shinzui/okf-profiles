@@ -109,12 +109,28 @@ history in the body.
 
 ## Capabilities that grew
 
-Record material growth as a **new** capability that `requires` the older one. Do not move an older
-record's `since` forward, and do not claim an early `since` for behavior that arrived later — both
-misinform a consumer pinning an older version.
+Never move an older record's `since` forward, and never claim an early `since` for behavior that
+arrived later. Both misinform a consumer pinning an older version. What remains is deciding whether
+growth earns a new record, and there is one test:
 
-A capability that was removed and later reintroduced is the same case: the returning form takes its
-own record with the reintroducing release as `since`, and the body explains the gap.
+> **Could a consumer pinned to the older release still do the thing this record describes?**
+>
+> - **No — the thing is impossible for them.** Split. The grown form takes its own record with the
+>   later release as `since`, and `requires` the older one.
+> - **Yes, just less well** — fewer checks, weaker guarantees, more manual work, narrower coverage.
+>   Same record. Keep the original `since` and describe the evolution in the body.
+
+Worked examples:
+
+- Concurrent prefetch removed in one release and reintroduced in a later one → **split**. A consumer
+  on the intervening release cannot prefetch at all.
+- Four extra validation checks added to an existing validator → **same record**. A consumer on the
+  earlier release still validates, just less thoroughly. Note it in the body.
+- A capability that gains a second backend → **same record**, unless the backend is separately
+  adoptable and separately evidenced, in which case it was always its own capability.
+
+When the test is genuinely ambiguous, prefer the same record with a body note. An over-split catalog
+reads as a changelog with handles; an under-split one loses information a body paragraph can carry.
 
 ## Mori declaration
 
