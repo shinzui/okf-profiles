@@ -6,6 +6,31 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Consumers pin a tag, so every entry states what breaks for a corpus governed by
 these profiles and how to migrate it.
 
+## [0.9.1] — 2026-08-08
+
+### Added
+
+- **`adopt-capabilities` blueprint** — agent-driven adoption of
+  `coordination.capabilities` in a target repository:
+
+  ```bash
+  seihou agent run adopt-capabilities
+  ```
+
+  Unlike `adopt-architecture-decisions`, which adapts an existing corpus, this
+  blueprint **authors** from repository evidence — source, tests, docs, release
+  history. Fabrication is therefore the central risk, and the prompt is built
+  around three containment rules: evidence or it does not exist; provision, not
+  composition; and one capability is one thing a consumer adopts *and* verifies
+  independently.
+
+  A repository with no consumer-facing surface finishes successfully without
+  creating a bundle, so plan-module upgrades can invoke it across a fleet.
+  Re-running against an adopted repository is an idempotent reconciliation.
+
+  The profile itself is unchanged from 0.9.0; the pinned descriptor the blueprint
+  installs points at the 0.9.0 profile.
+
 ## [0.9.0] — 2026-08-08
 
 **Adds `coordination.capabilities`: a catalog of what a repository provides

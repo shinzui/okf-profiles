@@ -18,7 +18,14 @@
            , tags : List Text
            }
 , blueprints =
-  [ { name = "adopt-architecture-decisions"
+  [ { name = "adopt-capabilities"
+    , version = Some "0.9.1"
+    , path = "blueprints/adopt-capabilities"
+    , description = Some
+        "Author a profile-governed capability catalog describing what a repository provides to a consumer today, with stable CAP-N handles, a compatibility promise separate from availability, required evidence, enforced profile validation, and Mori bundle addressing"
+    , tags = [ "capabilities", "coordination", "mori", "okf" ]
+    }
+  , { name = "adopt-architecture-decisions"
     , version = Some "0.8.0"
     , path = "blueprints/adopt-architecture-decisions"
     , description = Some
