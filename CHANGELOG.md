@@ -6,6 +6,54 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Consumers pin a tag, so every entry states what breaks for a corpus governed by
 these profiles and how to migrate it.
 
+## [0.9.0] — 2026-08-08
+
+**Adds `coordination.capabilities`: a catalog of what a repository provides
+today.** Nothing existing changes — this release is purely additive, so a corpus
+governed by 0.8.0 needs no migration and can repin at leisure.
+
+### Added
+
+- **`coordination.capabilities`** — one concept per capability, with a
+  bundle-scoped `CAP-N` handle, the `mori://` project that provides it, the
+  release it arrived in, and **required `evidence`**: artifacts a reader can open
+  to check the claim. It completes the coordination family's triangle — a use
+  case states what a consumer needs, a capability states what a producer
+  provides, and an improvement request states the gap between them.
+
+  Three decisions are load-bearing and worth knowing before adopting it:
+
+  - **There is no `planned` status.** `status` is `shipped` / `deprecated` /
+    `withdrawn` only. A capability that does not exist yet is an improvement
+    request, not a capability record with a hopeful label. Combined with required
+    `evidence`, this is what stops the catalog drifting into a roadmap.
+  - **`stability` is separate from `status`.** Availability and compatibility are
+    different questions: a shipped capability in a pre-1.0 project is usable
+    *and* unstable, and a consumer choosing a dependency needs both answers.
+  - **`replacedBy` is required once `status` is `deprecated` or `withdrawn`**,
+    via a `when` condition. A retirement with no forward path is the failure mode
+    worth catching; a live capability has nothing to say there.
+
+  Two notes for authors. `evidence[].resource` is an unchecked scalar rather than
+  an okf `path` rule, because a path rule resolves against the bundle's own
+  concept tree and capability evidence is inherently repository-wide — test
+  modules, package targets, guides outside the bundle; resolve them with a
+  repository-local check. And `requires` produces no graph edge on its own, since
+  okf derives edges from Markdown body links only, so mirror each entry as a body
+  link.
+
+  The profile was shaken out against three repositories before release — a
+  standalone framework, a portfolio service, and a large multi-package CLI — and
+  needed no new field across the three.
+
+- `scripts/test-capabilities-profile.sh` plus `fixtures/capabilities/` and
+  thirteen single-reason rejection fixtures, one per load-bearing rule.
+
+### Migration
+
+None. `coordination.capabilities` is a new export; every existing export is
+untouched.
+
 ## [0.8.0] — 2026-08-02
 
 **The catalog moves from Open Knowledge Format v0.1 to v0.2 and now requires
