@@ -6,6 +6,26 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Consumers pin a tag, so every entry states what breaks for a corpus governed by
 these profiles and how to migrate it.
 
+## [0.9.2] — 2026-08-08
+
+### Changed
+
+- **`adopt-capabilities`: `since` now has a fixed three-value vocabulary** —
+  a bare version, `unreleased`, or `unknown` with the reason explained in the
+  record body. The profile cannot constrain the field (it is free text), and the
+  first two independent authors produced two different spellings for the same
+  situation: one wrote `undetermined`, the other picked a conservative release
+  and explained it in prose. Neither is wrong; having both is.
+
+  The reference now also forbids commentary appended to a version — a value like
+  `"0.10.0.0 (reintroduced; removed in 0.9.0.0)"` is accurate but destroys the one
+  field a consumer compares mechanically. That history belongs in the body, and a
+  reintroduced capability takes its own record with the reintroducing release as
+  `since`.
+
+  Blueprint-only; the profile is unchanged from 0.9.0 and no bundle needs
+  repinning.
+
 ## [0.9.1] — 2026-08-08
 
 ### Added

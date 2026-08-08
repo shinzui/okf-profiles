@@ -52,7 +52,7 @@ evidence:                         # required, at least one entry
 | `provider` | Must be a `mori://` URI. Redundant inside one bundle, load-bearing once capabilities are aggregated across repositories. |
 | `status` | Closed vocabulary. **There is no `planned`** — see below. |
 | `stability` | Closed vocabulary: `experimental` or `stable`. Orthogonal to `status`. |
-| `since` | Free text. Use `unreleased` when the capability exists only on the default branch. |
+| `since` | Free text, but use the fixed vocabulary below — do not invent a spelling. |
 | `packages` | List. What a consumer adds to depend on this. |
 | `evidence[].kind` | Closed vocabulary: `test`, `conformance`, `example`, `benchmark`, `module`, `guide`. |
 | `evidence[].resource` | **Not checked by okf.** A path rule resolves only within the bundle's concept tree, and capability evidence is repository-wide, so verify existence yourself. |
@@ -91,14 +91,30 @@ subcommand without the feature.
 Split when a consumer genuinely chooses one without the other, when the two arrived in different
 releases, or when different evidence proves each.
 
-## `since` and capabilities that grew
+## `since`
+
+Derive it from release history. The profile cannot constrain the value — it is free text — so use
+exactly one of these three spellings and **do not invent a fourth**. Two authors independently
+inventing `undetermined` and a prose hedge for the same situation is what this vocabulary prevents:
+
+| Value | Use when |
+|---|---|
+| `"1.2.0"` | The capability arrived in an identifiable release. Bare version, no commentary. |
+| `unreleased` | It exists only on the default branch and is in no release. |
+| `unknown` | Release history does not record it. **Explain in the record body why it could not be established** — that sentence is the point of the value. |
+
+Never append commentary to a version (`"0.10.0 (reintroduced…)"`). `since` is the one field a
+consumer compares mechanically across capabilities, and free-text decoration destroys that. Put the
+history in the body.
+
+## Capabilities that grew
 
 Record material growth as a **new** capability that `requires` the older one. Do not move an older
 record's `since` forward, and do not claim an early `since` for behavior that arrived later — both
 misinform a consumer pinning an older version.
 
-Derive `since` from release history. If it cannot be established, say so in the record rather than
-guessing.
+A capability that was removed and later reintroduced is the same case: the returning form takes its
+own record with the reintroducing release as `since`, and the body explains the gap.
 
 ## Mori declaration
 

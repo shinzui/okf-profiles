@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-capabilities"
-    , version = Some "0.9.1"
+    , version = Some "0.9.2"
     , description = Some
         "Author a profile-governed capability catalog at docs/capabilities/ describing what a repository provides to a consumer today: stable CAP-N handles, a compatibility promise separate from availability, required evidence a reader can open, enforced profile validation, and Mori bundle registration."
     , prompt = ./prompt.md as Text
