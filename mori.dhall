@@ -1,6 +1,6 @@
 let Schema =
-      https://raw.githubusercontent.com/shinzui/mori-schema/93104153ecf8817547229a867302a70a25c4b3d8/package.dhall
-        sha256:5e00bba267f27069df1d3caadfec2ec6a8c4e797ce652d78c09528f981b71b42
+      https://raw.githubusercontent.com/shinzui/mori-schema/8560d0b0b1167dc9f6a2aa91c28f98258ef9f175/package.dhall
+        sha256:cb21190627093d2c2b44a1f5cb7b812e52ab46d62224ee57f4eeb228bed45d5c
 
 in  Schema.Project::{
     , project = Schema.ProjectIdentity::{
@@ -91,6 +91,62 @@ in  Schema.Project::{
           , "okf"
           , "postgresql"
           ]
+        }
+      ]
+    , profiles =
+      [ Schema.OkfProfile::{
+        , name = "capabilities"
+        , export = "coordination.capabilities"
+        , path = Some "profiles/coordination/capabilities.dhall"
+        , version = Some "v0.9.0"
+        }
+      , Schema.OkfProfile::{
+        , name = "improvement-requests"
+        , export = "coordination.improvementRequests"
+        , path = Some "profiles/coordination/improvement-requests.dhall"
+        , version = Some "v0.8.0"
+        }
+      , Schema.OkfProfile::{
+        , name = "use-cases"
+        , export = "coordination.useCases"
+        , path = Some "profiles/coordination/use-cases.dhall"
+        , version = Some "v0.8.0"
+        }
+      , Schema.OkfProfile::{
+        , name = "architecture-decisions"
+        , export = "documentation.architectureDecisions"
+        , path = Some "profiles/documentation/architecture-decisions.dhall"
+        , version = Some "v0.8.0"
+        }
+      , Schema.OkfProfile::{
+        , name = "pattern-catalog"
+        , export = "documentation.patternCatalog"
+        , path = Some "profiles/documentation/pattern-catalog.dhall"
+        , version = Some "v0.8.0"
+        }
+      , Schema.OkfProfile::{
+        , name = "research-documents"
+        , export = "documentation.researchDocuments"
+        , path = Some "profiles/documentation/research-documents.dhall"
+        , version = Some "v0.8.0"
+        }
+      , Schema.OkfProfile::{
+        , name = "okf-v0-2"
+        , export = "okfV02"
+        , path = Some "profiles/okf-v0-2.dhall"
+        , version = Some "v0.8.0"
+        }
+      , Schema.OkfProfile::{
+        , name = "postgresql"
+        , export = "postgresql"
+        , path = Some "profiles/postgresql.dhall"
+        , version = Some "v0.8.0"
+        }
+      , Schema.OkfProfile::{
+        , name = "tan-postgresql"
+        , export = "tanPostgresql"
+        , path = Some "profiles/tan-postgresql.dhall"
+        , version = Some "v0.8.0"
         }
       ]
     , okfBundles =
