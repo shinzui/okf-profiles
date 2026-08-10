@@ -158,5 +158,12 @@ in  Schema.Project::{
         , description = Some
             "Decisions governing this catalog: the house status divergence, the atomic v0.2 flip, presence-class policy, and what makes a rejection fixture a test"
         }
+      , Schema.OkfBundle::{
+        , name = "improvement-requests"
+        , path = "docs/improvement-requests"
+        , okfVersion = "0.2"
+        , profile = Some "docs/improvement-requests/profile.dhall"
+        , description = Some "OKF Profiles-owned improvement requests"
+        }
       ]
     }
