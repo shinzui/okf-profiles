@@ -1,0 +1,25 @@
+---
+type: Bug Report
+title: Rejection fixture
+description: duplicateOf names a handle that does not exist.
+generated:
+  by: human:nadeem
+  at: "2026-08-11T00:00:00Z"
+bugId: BUG-1
+status: duplicate
+severity: unusable
+origin: mori://example/warehouse
+affects: mori://example/platform
+affectedVersion: "1.2.0"
+duplicateOf: BUG-99
+observed: The export exits without writing a file.
+expected: The export writes the file, as the user guide's walkthrough shows.
+reproduction:
+  - Request a whole-file export to a writable destination.
+  - Observe that no file appears there.
+---
+
+# Rejection fixture
+
+`duplicateOf` names BUG-99, which is not a report in this bundle. An external
+duplicate would be a `mori://` URI, which okf accepts without resolving.

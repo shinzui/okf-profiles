@@ -66,11 +66,11 @@ in  Profile::{
           , format = Some (FieldFormat.UriWithScheme "postgresql")
           }
         ]
-      , -- Unlike the five profiles that carry a house lifecycle vocabulary on
-        -- the `status` key, neither PostgreSQL profile declares one, so there is
-        -- no collision and OKF v0.2 §5.4 `status` and §5.5 `stale_after` are
-        -- adopted in full. See the header of ../Profile/V02.dhall for the policy
-        -- and why the other five take the opposite branch.
+      , -- Unlike the profiles that carry a house lifecycle vocabulary on the
+        -- `status` key, neither PostgreSQL profile declares one, so there is no
+        -- collision and OKF v0.2 §5.4 `status` and §5.5 `stale_after` are
+        -- adopted in full. See the header of ../Profile/V02.dhall for the policy,
+        -- the current list, and why those profiles take the opposite branch.
         optional =
         [     v02.verified
           //  { description = Some

@@ -57,6 +57,7 @@ profiles/
     research-documents.dhall  # nested research corpus with stable RES-N handles
   coordination/
     package.dhall             # namespaced coordination-profile exports
+    bug-reports.dhall         # defects in behavior a repository already provides
     capabilities.dhall        # what a repository provides today, with evidence
     improvement-requests.dhall
                               # cross-repository improvement-request conventions
@@ -274,6 +275,7 @@ OK: architecture-decision profile acceptance and rejection fixtures
 |---|---|
 | `test-adr-bundle.sh` | **This repository's own `docs/adr` corpus** — see below |
 | `test-architecture-decisions-profile.sh` | `documentation.architectureDecisions` |
+| `test-bug-reports-profile.sh` | `coordination.bugReports` |
 | `test-capabilities-profile.sh` | `coordination.capabilities` |
 | `test-improvement-requests-profile.sh` | `coordination.improvementRequests` |
 | `test-okf-v0-2-profile.sh` | `okfV02`, the format-level reference profile |
@@ -383,6 +385,7 @@ Every profile targets OKF v0.2, declares `okfVersion = "0.2"`, sets
 
 | Export | Purpose | `generated` | Also demands |
 |---|---|---|---|
+| `coordination.bugReports` | Defects in behavior a repository already provides, with `BUG-N` handles, a severity scale graded by observable consequence, and a reproduction a reader can follow | required | `reviews`; `resolution` once a report reaches a terminal status; `workaround` once severity is `degraded` |
 | `coordination.capabilities` | What a repository provides today, with `CAP-N` handles, a compatibility promise separate from availability, and required evidence | required | `reviews`; `interface`; `replacedBy` once a capability is deprecated or withdrawn |
 | `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles, completion state, and structured review provenance | required | `reviews`; `resolution` once a request reaches a terminal state |
 | `coordination.useCases` | JTBD use cases with `UC-N` handles, typed feature delivery, and repository-owned request references | required (profile-wide, so themes too) | `reviews`; `themes` on a use case |

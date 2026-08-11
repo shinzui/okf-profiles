@@ -6,6 +6,59 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Consumers pin a tag, so every entry states what breaks for a corpus governed by
 these profiles and how to migrate it.
 
+## [0.10.0] — 2026-08-11
+
+**Adds `coordination.bugReports`: defects in behavior a repository already
+provides.** Nothing existing changes — this release is purely additive, so a
+corpus governed by 0.9.x needs no migration and can repin at leisure.
+
+### Added
+
+- **`coordination.bugReports`** — one concept per defect, with a bundle-scoped
+  `BUG-N` handle, the `mori://` projects that observed it and that own it, the
+  version it was seen in, an `observed` / `expected` pair, and **required
+  `reproduction`**: ordered steps a reader can follow. It is the fourth corner of
+  the coordination family — a use case states what a consumer needs, a capability
+  states what a producer provides, an improvement request states the gap, and a
+  bug report states that a capability which is claimed does not hold.
+
+  Four decisions are load-bearing and worth knowing before adopting it:
+
+  - **Behavior that was never provided is not a bug.** It is an improvement
+    request. This is the line that keeps the two profiles apart, and it is why
+    `expected` asks on whose authority the expectation rests — a guide, a
+    capability, a test.
+  - **`severity` is an observable consequence, not a priority.** `data-loss` /
+    `unusable` / `degraded` / `cosmetic`, assigned by what happens to a consumer
+    rather than by how much the reporter minds. `data-loss` outranks `unusable`
+    deliberately: an outage is visible and a silently wrong number is not.
+    Priority weighs severity against reach and schedule, differs per consumer,
+    and has no place in a cross-repository record.
+  - **Every terminal status demands `resolution` under `--strict`**, and
+    `status: fixed` additionally demands `fixedVersion` via a `when` condition. A
+    report whose closing reason lives only in a chat log is the failure mode
+    worth catching; `duplicate` likewise demands `duplicateOf`, which resolves as
+    a local `BUG-N` handle or an external `mori://` URI.
+  - **`workaround` is demanded once `severity` is `degraded`**, because
+    `degraded` is *defined* as the grade where one exists. A degraded report that
+    names none is either incomplete or mis-graded.
+
+  Two notes for authors. `origin` and `affects` are separate keys and differ in
+  exactly the case this family exists for — a consumer reporting a defect in a
+  dependency — so a corpus can be read from either end. And `capability` takes a
+  Mori URI rather than a `CAP-N` handle reference: okf resolves a local handle
+  against the bundle's own ID index and ties every reference prefix to a type the
+  profile declares, so a catalog in another repository is only ever addressable
+  externally.
+
+- `scripts/test-bug-reports-profile.sh` plus `fixtures/bug-reports/` and
+  twenty-six single-reason rejection fixtures.
+
+### Migration
+
+None. `coordination.bugReports` is a new export; every existing export is
+untouched.
+
 ## [0.9.3] — 2026-08-08
 
 ### Changed

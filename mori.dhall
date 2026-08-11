@@ -95,6 +95,12 @@ in  Schema.Project::{
       ]
     , profiles =
       [ Schema.OkfProfile::{
+        , name = "bug-reports"
+        , export = "coordination.bugReports"
+        , path = Some "profiles/coordination/bug-reports.dhall"
+        , version = Some "v0.10.0"
+        }
+      , Schema.OkfProfile::{
         , name = "capabilities"
         , export = "coordination.capabilities"
         , path = Some "profiles/coordination/capabilities.dhall"
