@@ -60,6 +60,14 @@ in  Schema.Project::{
               "blueprints/migrate-okf-bundles-to-v0-2/README.md"
         }
       , Schema.DocRef::{
+        , key = "okf-profiles-generated-profile-documentation"
+        , kind = Schema.DocKind.Reference
+        , audience = Schema.DocAudience.User
+        , description = Some
+            "One OKF bundle per published profile, generated from the profile itself: settings, profile-wide frontmatter rules, and per-type rules merged with them"
+        , location = Schema.DocLocation.LocalDir "docs/profiles"
+        }
+      , Schema.DocRef::{
         , key = "okf-profiles-changelog"
         , kind = Schema.DocKind.Reference
         , audience = Schema.DocAudience.User

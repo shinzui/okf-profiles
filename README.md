@@ -259,6 +259,17 @@ Every check lives under `scripts/`. Run them all:
 for s in scripts/*.sh; do bash "$s"; done
 ```
 
+There is a `justfile` front door onto the same checks — `just check` is what a
+release has to pass, and `just --list` shows the rest. Nothing is only runnable
+through `just`.
+
+```bash
+just check    # types + every script under scripts/
+just types    # dhall type sweep only
+just test     # every script under scripts/
+just docs     # regenerate docs/profiles/ (see below)
+```
+
 Each prints one `OK:` line per bundle it validates plus a summary line. A passing
 run looks like this — note the `(okf_version 0.2)` suffix, which is how you know
 the bundle's root `index.md` declares the dialect the profile requires:
@@ -274,6 +285,7 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | Script | Validates |
 |---|---|
 | `test-adr-bundle.sh` | **This repository's own `docs/adr` corpus** — see below |
+| `test-profile-docs.sh` | **`docs/profiles/` is current** — see below; `--regenerate` rewrites it |
 | `test-architecture-decisions-profile.sh` | `documentation.architectureDecisions` |
 | `test-bug-reports-profile.sh` | `coordination.bugReports` |
 | `test-capabilities-profile.sh` | `coordination.capabilities` |
@@ -325,6 +337,31 @@ reaches a consumer.
 okf validate docs/adr --strict --profile docs/adr/profile.dhall \
   --profile-enforce --log-enforce
 ```
+
+### Generated profile documentation
+
+`docs/profiles/<name>/` holds one OKF bundle per published profile, generated
+from the profile itself by `okf profile document`. Each has a `profile.md` with
+the settings and the profile-wide frontmatter rules, and a `types/<type>.md` per
+concept type showing that type's rules **merged** with the profile-wide ones —
+the form that actually applies to a concept. The directory names match
+`profiles/<family>/<name>.dhall`, `fixtures/<name>/`, and
+`scripts/test-<name>-profile.sh`.
+
+**Do not edit these by hand.** Every field description in them comes from the
+`description` on the rule, so the way to reword one is to reword the profile and
+regenerate:
+
+```bash
+just docs                                  # or: bash scripts/test-profile-docs.sh --regenerate
+```
+
+`scripts/test-profile-docs.sh` with no arguments regenerates into a temporary
+directory and diffs, so a profile change that lands without regenerated
+documentation fails in the same loop as everything else. That gate works only
+because generation is reproducible: it reads no clock, `generated.at` is omitted
+by design, and `generated.by` is the tool's stable `process:` actor rather than a
+version that would churn every page on an okf bump.
 
 
 ## Migrating an existing corpus

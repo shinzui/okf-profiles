@@ -54,6 +54,24 @@ corpus governed by 0.9.x needs no migration and can repin at leisure.
 - `scripts/test-bug-reports-profile.sh` plus `fixtures/bug-reports/` and
   twenty-six single-reason rejection fixtures.
 
+- **`docs/profiles/`** — one OKF bundle per published profile, generated from
+  the profile itself by `okf profile document`: the settings, the profile-wide
+  frontmatter rules, and a page per concept type showing that type's rules
+  merged with the profile-wide ones, which is the form that actually applies.
+  Every field description comes from the `description` on the rule, so these are
+  regenerated rather than edited.
+
+  `scripts/test-profile-docs.sh` joins the `scripts/` loop as a staleness gate:
+  it regenerates into a temporary directory and diffs, so a profile change that
+  lands without regenerated documentation goes red. Generation reads no clock —
+  `generated.at` is omitted and `generated.by` is the tool's stable `process:`
+  actor — which is what makes the diff meaningful.
+
+- **A `justfile`** as a front door onto the existing checks: `just check` is what
+  a release has to pass, `just docs` regenerates the documentation, and
+  `just types` / `just test` are the two halves. Nothing is only runnable through
+  `just`.
+
 ### Migration
 
 None. `coordination.bugReports` is a new export; every existing export is
