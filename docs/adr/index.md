@@ -17,4 +17,5 @@ okf_version: "0.2"
 - [Blueprint versions track the catalog tag](0007-blueprint-versions-track-the-catalog-tag.md) - A blueprint is versioned to the okf-profiles tag it targets, because that tag is the only version a consumer can read off their own repository.
 - [Recommended means a well-run corpus actually carries it](0008-recommended-means-a-well-run-corpus-carries-it.md) - A field whose absence is ordinary belongs in optional; recommended is reserved for fields whose absence is a real deficiency.
 - [A rejection fixture must fail for exactly one reason](0009-a-rejection-fixture-must-fail-for-exactly-one-reason.md) - A fixture that fails twice tests nothing, and a passing rejection loop is not evidence that any rule is load-bearing.
+- [A review is an artifact, not only an annotation](0010-a-review-is-an-artifact-not-only-an-annotation.md) - Review records get their own assurance family and do not splice the house reviews frontmatter key, because the document is the review.
 

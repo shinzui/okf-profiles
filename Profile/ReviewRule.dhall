@@ -1,7 +1,15 @@
 --| Shared rule for optional review provenance used by coordination and research
 -- profiles. When `reviews` is present, every element has a bounded record shape;
 -- model reviews additionally require provider, model, and effort metadata.
+--
+-- This describes a review *of the document that carries it*. Where a review is
+-- the artifact rather than an annotation on one — a record of what was examined,
+-- at which commit, by which model, and what came of it — the profile to use is
+-- `assurance.reviews`, and the two share their model vocabulary through
+-- `./ModelReview.dhall` so the grades cannot drift apart.
 let okf = ./okf.dhall
+
+let modelReview = ./ModelReview.dhall
 
 let FieldRule = okf.defaults.FieldRule
 
@@ -74,20 +82,20 @@ in  FieldRule::{
           }
         , NestedFieldRule::{
           , field = "provider"
-          , description = Some "Serving provider for a model review."
+          , description = Some modelReview.providerDescription
           , cardinality = Cardinality.Scalar
           , when = modelOnly
           }
         , NestedFieldRule::{
           , field = "model"
-          , description = Some "Most specific available model identifier."
+          , description = Some modelReview.modelDescription
           , cardinality = Cardinality.Scalar
           , when = modelOnly
           }
         , NestedFieldRule::{
           , field = "effort"
-          , description = Some "Provider-reported reasoning or thinking effort."
-          , allowedValues = [ "low", "medium", "high", "xhigh", "unspecified" ]
+          , description = Some modelReview.effortDescription
+          , allowedValues = modelReview.efforts
           , cardinality = Cardinality.Scalar
           , when = modelOnly
           }

@@ -47,8 +47,12 @@ Profile/
   TypeRule.dhall              # re-export of okf's per-type completion module
   FrontmatterRules.dhall      # re-export of okf's frontmatter completion module
   ReviewRule.dhall            # shared nested review-provenance contract
+  ModelReview.dhall           # the model-review vocabulary shared by ReviewRule and assurance.reviews
   V02.dhall                   # the six OKF v0.2 field families, defined once for the catalog
 profiles/
+  assurance/
+    package.dhall             # namespaced assurance-profile exports
+    reviews.dhall             # what was reviewed, at which commit, by whom, at what effort
   documentation/
     package.dhall             # namespaced documentation-profile exports
     architecture-decisions.dhall
@@ -294,6 +298,7 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-pattern-catalog-profile.sh` | `documentation.patternCatalog` |
 | `test-postgresql-profile.sh` | `postgresql` |
 | `test-research-documents-profile.sh` | `documentation.researchDocuments` |
+| `test-reviews-profile.sh` | `assurance.reviews` |
 | `test-tan-postgresql-profile.sh` | `tanPostgresql` |
 | `test-use-cases-profile.sh` | `coordination.useCases` |
 
@@ -422,6 +427,7 @@ Every profile targets OKF v0.2, declares `okfVersion = "0.2"`, sets
 
 | Export | Purpose | `generated` | Also demands |
 |---|---|---|---|
+| `assurance.reviews` | Records of an artifact having been reviewed, with `REV-N` handles: a stable `subject` + `component` identity, the commit examined, whether the reading was `full` or `incremental` and from which `baseSha`, the reviewer as an OKF §7 actor, and provider / model / effort once the reviewer is a model | required | `previousReview` once `coverage` is `incremental` |
 | `coordination.bugReports` | Defects in behavior a repository already provides, with `BUG-N` handles, a severity scale graded by observable consequence, and a reproduction a reader can follow | required | `reviews`; `resolution` once a report reaches a terminal status; `workaround` once severity is `degraded` |
 | `coordination.capabilities` | What a repository provides today, with `CAP-N` handles, a compatibility promise separate from availability, and required evidence | required | `reviews`; `interface`; `replacedBy` once a capability is deprecated or withdrawn |
 | `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles, completion state, and structured review provenance | required | `reviews`; `resolution` once a request reaches a terminal state |
@@ -435,13 +441,23 @@ Every profile targets OKF v0.2, declares `okfVersion = "0.2"`, sets
 
 `verified` is `optional` on every profile above and demanded by none.
 
+`assurance.reviews` is the one profile declaring neither a house `status` nor
+OKF's, which is a deliberate departure from
+[ADR-1](./docs/adr/0001-house-status-diverges-from-okf-v0-2.md)'s branch rule: a
+review is an event rather than a document with a lifecycle, and a later review of
+the same subject supersedes it by existing. It is also the one profile that does
+**not** splice the house `reviews` family, because the document *is* a review —
+sign-off from a person goes to `verified` under a `human:` actor. See
+[ADR-10](./docs/adr/0010-a-review-is-an-artifact-not-only-an-annotation.md).
+
 The package also exports building blocks a profile *author* imports, which are
 not profiles a consumer selects:
 
 | Export | What it is |
 |---|---|
 | `v02` | The six OKF v0.2 field families, defined once. Splice `v02.generated`, `v02.verified`, `v02.legacyTimestamp`, `v02.status`, `v02.staleAfter`, `v02.sources`, `v02.usageWindow` into your own presence lists. See [ADR-5](./docs/adr/0005-v0-2-field-families-are-defined-once.md) |
-| `reviewRule` | The house `reviews` family: reviewer identity, scope, outcome, and model metadata |
+| `reviewRule` | The house `reviews` family: reviewer identity, scope, outcome, and model metadata. Use it where a review is an annotation on a document; use `assurance.reviews` where the review is the artifact |
+| `modelReview` | The model-review vocabulary both of those read from — the `effort` grades and the shared wording — so the two cannot drift apart |
 | `Profile`, `TypeRule`, `FrontmatterRules`, `FieldRule`, `NestedRules`, `NestedFieldRule`, `HandleReferenceRule`, `PathReferenceRule`, `FieldCondition`, `Cardinality`, `FieldFormat`, `mk` | okf's schema records and constructors, re-exported so a profile never imports okf directly |
 
 

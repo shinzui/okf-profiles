@@ -219,7 +219,7 @@ Chronological human or model review provenance for this document revision.
 - Element fields:
     - `context` — required; allowed values: any; cardinality: scalar; format: none — Evidence and repository context used for the review.
     - `document_timestamp` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — Document revision timestamp covered by the review.
-    - `effort` — required when `kind` is `model`; allowed values: `low`, `medium`, `high`, `xhigh`, `unspecified`; cardinality: scalar; format: none — Provider-reported reasoning or thinking effort.
+    - `effort` — required when `kind` is `model`; allowed values: `low`, `medium`, `high`, `xhigh`, `max`, `unspecified`; cardinality: scalar; format: none — Reasoning or thinking effort the review was run at.
     - `kind` — required; allowed values: `human`, `model`; cardinality: scalar; format: none — Whether a human or model performed the review.
     - `model` — required when `kind` is `model`; allowed values: any; cardinality: scalar; format: none — Most specific available model identifier.
     - `outcome` — required; allowed values: `approved`, `changes-requested`, `commented`; cardinality: scalar; format: none — Result recorded by the reviewer.

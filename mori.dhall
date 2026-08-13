@@ -103,6 +103,12 @@ in  Schema.Project::{
       ]
     , profiles =
       [ Schema.OkfProfile::{
+        , name = "reviews"
+        , export = "assurance.reviews"
+        , path = Some "profiles/assurance/reviews.dhall"
+        , version = Some "v0.11.0"
+        }
+      , Schema.OkfProfile::{
         , name = "bug-reports"
         , export = "coordination.bugReports"
         , path = Some "profiles/coordination/bug-reports.dhall"

@@ -6,6 +6,82 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Consumers pin a tag, so every entry states what breaks for a corpus governed by
 these profiles and how to migrate it.
 
+## [0.11.0] — 2026-08-13
+
+**Adds `assurance.reviews`: what was reviewed, at which commit, by whom, and at
+what effort.** One existing vocabulary widens — `effort` gains `max` — which is a
+pure relaxation for a corpus already governed by 0.10.x, so nothing needs
+migrating and a repin can wait.
+
+### Added
+
+- **`assurance.reviews`** — one concept per review, with a bundle-scoped `REV-N`
+  handle. It is a new family: a coordination profile states a claim, a
+  documentation profile states an explanation, and an assurance profile states
+  that someone checked. See
+  [ADR-10](./docs/adr/0010-a-review-is-an-artifact-not-only-an-annotation.md).
+
+  Four decisions are load-bearing and worth knowing before adopting it:
+
+  - **The identity of what was reviewed is `subject` plus `component`.**
+    `subject` is a Mori URI — the most specific canonical artifact where one
+    exists (`mori://…/plans/172-…`), the containing project where it does not —
+    and `component` carries the identifier the codebase uses for the part when
+    the URI names the container. `subjectKind` says which of the five kinds the
+    pair names: `project`, `component`, `aggregate`, `migration`, or `plan`.
+    Identity is matched, never inferred, so a second spelling of a component
+    silently starts a second history; `component` takes a module path or a
+    package name, never a prose description.
+  - **`reviewedSha` is required, and `coverage` says what was read at it.** A
+    date says someone looked; only the commit says what they looked at, and only
+    the commit lets the next review start from there instead of from nothing.
+    `coverage: incremental` demands `baseSha` via a `when` condition and
+    recommends `previousReview` under `--strict`, which is what turns a pile of
+    reviews into a chain. `coverage: full` claims the whole subject was read.
+  - **`reviewerKind` gates the model triple.** A model review demands `provider`,
+    `model`, and `effort`; a human review demands none of them. `reviewer` is an
+    OKF §7 actor, so mirroring it into `verified.by` is a copy rather than the
+    hand translation ADR-4 warns is easy to get wrong — and for a model review it
+    names the *harness*, with `provider` / `model` naming what ran inside it.
+  - **`dimensions` records what was looked for, not what was found.** An
+    approving correctness review says nothing about whether anyone considered
+    security, and that is not recoverable from the outcome. Entries are assigned
+    by observation from `correctness`, `security`, `performance`, `design`,
+    `test-coverage`, `documentation`, and `operability`.
+
+  Two notes for authors. The profile does **not** splice the house `reviews`
+  family, alone in the catalog: the document *is* a review, so a person's second
+  look is an OKF `verified` entry under a `human:` actor, which is what `okf
+  trust` reads. And it declares neither a house `status` nor OKF v0.2's — a
+  review is an event, and a later review of the same subject supersedes it by
+  existing.
+
+- **`Profile/ModelReview.dhall`**, exported as `modelReview` — the model-review
+  vocabulary read by both `Profile/ReviewRule.dhall` and the new profile, so the
+  `effort` grades cannot drift between the annotation shape and the artifact
+  shape.
+
+- `scripts/test-reviews-profile.sh` plus `fixtures/reviews/` — which demonstrates
+  a nested corpus, the full-then-incremental chain, and the human branch — and
+  thirty-nine single-reason rejection fixtures.
+
+### Changed
+
+- **`effort` gains `max`** in the house `reviews` family and in the new profile:
+  `low` < `medium` < `high` < `xhigh` < `max`, plus `unspecified` for a provider
+  that exposes no setting or a model that does no extended thinking. Its
+  description now says the grade is what the review was *asked* for, because that
+  is the only value a producer can state without inventing one.
+
+  Widening a closed vocabulary is backward compatible in one direction only: a
+  corpus written against the older list stays valid, and a corpus using `max`
+  fails against a pin older than v0.11.0.
+
+### Migration
+
+None. `assurance.reviews` is a new export, and the `effort` change only widens
+what an existing corpus may say.
+
 ## [0.10.0] — 2026-08-11
 
 **Adds `coordination.bugReports`: defects in behavior a repository already
