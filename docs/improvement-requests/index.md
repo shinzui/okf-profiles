@@ -9,3 +9,4 @@ okf_version: "0.2"
 # Improvement Request
 
 - [Add a shared architecture-asset profile family](add-shared-architecture-asset-profile-family.md) - Define reusable, profile-governed concepts for databases, domain events, integration events, standards, and their ownership, lifecycle, evidence, consumers, and conflicts.
+- [Model improvement-request dependencies and acceptance criteria](model-improvement-request-dependencies-and-acceptance-criteria.md) - Add typed canonical IR dependencies and stable acceptance criteria so fulfillment graphs can be validated and traversed instead of reconstructed from prose.
