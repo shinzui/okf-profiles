@@ -43,6 +43,7 @@ generate_into () {
     # its generated page with it instead of lingering as a stale concept.
     rm -rf "${root}/${dir}"
     "${okf_bin}" profile document \
+      --no-local \
       --registry "${registry}" \
       "${export_path}" \
       --out "${root}/${dir}" \

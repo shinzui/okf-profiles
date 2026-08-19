@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Consumers pin a tag, so every entry states what breaks for a corpus governed by
 these profiles and how to migrate it.
 
+## [Unreleased]
+
+### Added
+
+- **`adopt-improvement-request-contracts` Seihou blueprint** — an optional, repeatable playbook
+  that promotes only well-supported improvement-request dependencies and acceptance conditions
+  from prose into the structured frontmatter planned for v0.12.0. It preserves source prose and
+  stable handles, reports ambiguous material instead of inventing it, and has no migration edges
+  because existing bundles require no content remediation when they repin.
+
 ## [0.11.0] — 2026-08-13
 
 **Adds `assurance.reviews`: what was reviewed, at which commit, by whom, and at

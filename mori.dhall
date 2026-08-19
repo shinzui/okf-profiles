@@ -40,6 +40,16 @@ in  Schema.Project::{
         , location = Schema.DocLocation.LocalFile "README.md"
         }
       , Schema.DocRef::{
+        , key = "adopt-improvement-request-contracts-blueprint"
+        , kind = Schema.DocKind.Runbook
+        , audience = Schema.DocAudience.User
+        , description = Some
+            "How the optional improvement-request playbook promotes well-supported prose dependencies and acceptance conditions into v0.12.0 structured frontmatter"
+        , location =
+            Schema.DocLocation.LocalFile
+              "blueprints/adopt-improvement-request-contracts/README.md"
+        }
+      , Schema.DocRef::{
         , key = "adopt-architecture-decisions-blueprint"
         , kind = Schema.DocKind.Runbook
         , audience = Schema.DocAudience.User
@@ -78,6 +88,20 @@ in  Schema.Project::{
       ]
     , templates =
       [ Schema.SeihouTemplate::{
+        , name = "adopt-improvement-request-contracts"
+        , version = Some "0.12.0"
+        , description = Some
+            "Optionally promote explicit improvement-request dependencies and acceptance conditions from prose into the validated dependencies and acceptanceCriteria frontmatter introduced by okf-profiles v0.12.0, preserving stable handles and ambiguous material"
+        , modulePath = "blueprints/adopt-improvement-request-contracts"
+        , tags =
+          [ "adoption"
+          , "coordination"
+          , "improvement-requests"
+          , "mori"
+          , "okf"
+          ]
+        }
+      , Schema.SeihouTemplate::{
         , name = "adopt-architecture-decisions"
         , version = Some "0.8.0"
         , description = Some

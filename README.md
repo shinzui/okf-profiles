@@ -75,6 +75,9 @@ docs/
   adr/                        # this repository's own decisions, governed by its own profile
   masterplans/, plans/        # the initiative that produced this release
 blueprints/
+  adopt-improvement-request-contracts/
+                              # optional promotion of prose into structured IR contracts
+  adopt-capabilities/         # authors an evidence-backed capability catalog
   adopt-architecture-decisions/
                               # adaptive Seihou migration for existing ADR corpora
   migrate-okf-bundles-to-v0-2/
@@ -382,7 +385,7 @@ profile: bundle does not declare okf_version; this profile requires 0.2 or later
 profile: 0001-use-stable-identifiers: missing profile-required field: generated (§5.2. Who produced this decision record's current content, and when.)
 ```
 
-Two Seihou blueprints do the migration for you. Both are agent-driven: a Markdown
+Two Seihou blueprints do the required v0.8 migration for you. Both are agent-driven: a Markdown
 prompt plus reference files, run inside your repository by a tool-capable model
 that reads the actual corpus and repairs it.
 
@@ -391,11 +394,22 @@ that reads the actual corpus and repairs it.
 | [`adopt-architecture-decisions`](./blueprints/adopt-architecture-decisions/) | `seihou agent migrate adopt-architecture-decisions --from 0.7.0 --to 0.8.0` | One adopted `docs/adr` bundle: moves the pin to v0.8.0, adds provenance, retires the presence override this blueprint used to install |
 | [`migrate-okf-bundles-to-v0-2`](./blueprints/migrate-okf-bundles-to-v0-2/) | `seihou agent run migrate-okf-bundles-to-v0-2` | **Every** profiled bundle it can find — improvement requests, use cases, a pattern catalog, research documents, a PostgreSQL description — detected from `mori.dhall`, a local `profile.dhall`, or a check target |
 
-Preview either without touching your repository:
+Preview the rendered prompt without contacting a provider:
 
 ```bash
 seihou agent --debug run migrate-okf-bundles-to-v0-2
 ```
+
+`agent run --debug` may still record applied-blueprint provenance in `.seihou/manifest.json`, so
+use a clean or disposable checkout when the manifest must remain untouched.
+
+Starting with v0.12.0, a third blueprint is available for optional enrichment rather than required
+migration. [`adopt-improvement-request-contracts`](./blueprints/adopt-improvement-request-contracts/)
+runs with `seihou agent run adopt-improvement-request-contracts`. It promotes only explicit,
+well-supported dependencies and acceptance conditions from prose into the new structured fields,
+preserves ambiguous prose for human resolution, and safely does nothing when no governed
+improvement-request bundle exists. It has no migration edges because a consumer can repin to
+v0.12.0 without changing any document.
 
 Doing it by hand is four changes per bundle:
 

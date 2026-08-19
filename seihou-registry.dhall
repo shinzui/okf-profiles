@@ -18,7 +18,20 @@
            , tags : List Text
            }
 , blueprints =
-  [ { name = "adopt-capabilities"
+  [ { name = "adopt-improvement-request-contracts"
+    , version = Some "0.12.0"
+    , path = "blueprints/adopt-improvement-request-contracts"
+    , description = Some
+        "Optionally promote explicit improvement-request dependencies and acceptance conditions from prose into the validated dependencies and acceptanceCriteria frontmatter introduced by okf-profiles v0.12.0, preserving stable handles and ambiguous material"
+    , tags =
+      [ "adoption"
+      , "coordination"
+      , "improvement-requests"
+      , "mori"
+      , "okf"
+      ]
+    }
+  , { name = "adopt-capabilities"
     , version = Some "0.9.3"
     , path = "blueprints/adopt-capabilities"
     , description = Some

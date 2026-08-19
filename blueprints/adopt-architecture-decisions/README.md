@@ -39,7 +39,9 @@ seihou agent run adopt-architecture-decisions \
   "Keep our supersession fields and wire validation into just docs-check."
 ```
 
-Preview the complete rendered prompt without changing the target:
+Preview the complete rendered prompt without contacting a provider. Seihou may still record
+applied-blueprint provenance in `.seihou/manifest.json`, so use a clean or disposable checkout
+when the manifest must remain untouched:
 
 ```bash
 seihou agent --debug run adopt-architecture-decisions

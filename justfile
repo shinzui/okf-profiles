@@ -20,7 +20,8 @@ types:
     set -euo pipefail
     status=0
     for f in package.dhall mori.dhall seihou-registry.dhall docs/adr/profile.dhall \
-             Profile/*.dhall profiles/*.dhall profiles/*/*.dhall; do
+             Profile/*.dhall profiles/*.dhall profiles/*/*.dhall \
+             blueprints/*/blueprint.dhall; do
       dhall type --file "$f" > /dev/null || { echo "FAILED: $f" >&2; status=1; }
     done
     exit "$status"

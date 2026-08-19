@@ -29,13 +29,21 @@ wrong or malformed URIs, invalid dependency records, duplicate criterion handles
 criteria are rejected. Generated profile documentation will show the same nested rule and
 reference metadata that a registry consumer such as Mori can inspect.
 
-The full acceptance contract cannot be expressed by the currently released dependency. As of
-2026-08-19, the authoritative upstream tag and Hackage release are `okf-core` 0.7.0.0, while this
-repository still pins the 0.5.0.0 schema in `Profile/okf.dhall`. Upstream 0.7.0.0 has neither a
-`reference` member on `NestedFieldRule` nor a way to prohibit local handles, constrain the path of
-an external reference, or require unique values for one member across a list of records. The first
-milestone is therefore a release gate: do not approximate away any IR-2 acceptance criterion and
-do not pin an unreleased checkout.
+The release also ships an optional Seihou blueprint named
+`adopt-improvement-request-contracts`. Running `seihou agent run
+adopt-improvement-request-contracts` in a consumer repository inspects its existing improvement
+requests and promotes only well-supported prose dependencies and acceptance conditions into the
+new structured fields. The blueprint is an opt-in playbook, not a blueprint migration edge:
+crossing the v0.12.0 profile version does not require content remediation, because both fields are
+optional and existing bundles remain valid.
+
+The first implementation attempt stopped because the then-current `okf-core` 0.7.0.0 release could
+not express this contract. The required additive support has since shipped as `okf-core` 0.8.0.0
+under the immutable upstream tag `v0.8.0.0`, implementing
+`mori://shinzui/okf/plans/64-add-nested-reference-policies-and-record-list-uniqueness`. This
+repository still pins the 0.5.0.0 schema in `Profile/okf.dhall`, so Milestone 1 now adopts that
+released contract before the profile begins using it. Do not approximate away any IR-2 acceptance
+criterion and do not pin an unreleased checkout.
 
 
 ## Progress
@@ -44,13 +52,18 @@ do not pin an unreleased checkout.
       upstream Git: `okf-core` 0.7.0.0 at commit
       `fb5b1811b359db7aa295aa4f3d3f81ed319905d5` remains the newest release and does not supply
       the required nested-reference or nested-uniqueness contract. No dependency pin was edited.
-- [ ] Milestone 1 remaining: wait for one qualifying `okf-core` version to be published on
-      Hackage and under a matching immutable upstream tag, then repin `Profile/okf.dhall` and
-      prove old catalog fixtures still validate. This is the current release-gate blocker.
+- [x] (2026-08-19 21:34Z) Rechecked the authoritative release sources: Hackage lists
+      `okf-core` 0.8.0.0 and upstream tag `v0.8.0.0` resolves to release commit
+      `1b61d1d7adbdf8d90488805dc972801e45562c02`. The dependency release gate is open.
+- [ ] Milestone 1 remaining: inspect the released 0.8.0.0 source at the Mori-located checkout,
+      repin `Profile/okf.dhall`, and prove old catalog fixtures still validate.
 - [ ] Milestone 2: add optional `dependencies` and `acceptanceCriteria` rules, one rich valid
       fixture, and focused single-reason rejection fixtures.
-- [ ] Milestone 3: regenerate the public profile documentation, update the catalog guidance and
-      changelog, and prove compiled reference metadata is visible.
+- [x] (2026-08-19 21:33Z) Authored and registered the optional
+      `adopt-improvement-request-contracts` Seihou blueprint with no migration edges, added a
+      repository-wide blueprint lint gate, and confirmed `just types` and `just test` pass.
+- [ ] Milestone 3 remaining: regenerate the public profile documentation, update the catalog
+      guidance and v0.12.0 changelog, and prove compiled reference metadata is visible.
 - [ ] Milestone 4: dogfood the new fields in IR-2, pass all repository gates, release
       `okf-profiles` v0.12.0 with a reproducible semantic hash, and distill durable decisions.
 
@@ -74,6 +87,31 @@ do not pin an unreleased checkout.
   compiled nested rule assigns `reference = Nothing`. The released top-level `FieldRule` has no
   member for a record-list uniqueness key. These source facts independently confirm that 0.7.0.0
   cannot express the contract required here.
+
+- Observation: `okf-core` 0.8.0.0 is now available from both authoritative release channels.
+  Evidence:
+
+  ```text
+  Hackage preferred version: 0.8.0.0
+  Upstream tag:               v0.8.0.0 -> 1b61d1d7adbdf8d90488805dc972801e45562c02
+  ```
+
+- Observation: Seihou distinguishes a version-window migration edge from a standalone blueprint
+  run. An edge records work a consumer needs when crossing a release boundary; a standalone run is
+  an explicitly selected, repeatable playbook. Because v0.12.0 adds only optional document fields,
+  the structured-frontmatter adoption workflow belongs in the latter category.
+
+- Observation: `seihou agent --debug run` suppresses provider launch but may still record
+  applied-blueprint provenance in `.seihou/manifest.json`.
+  Evidence: the Mori-located Seihou `docs/cli/agent.md` explicitly says debug runs of `agent run`
+  record provenance; only `agent migrate --debug` is a true no-write dry run. Blueprint runbooks
+  must therefore recommend a clean or disposable checkout when the manifest must remain untouched.
+
+- Observation: the profile-documentation script's explicit `--registry ./package.dhall` became
+  ambiguous after local profile discovery was added to `okf`.
+  Evidence: `just test` reported both `./package.dhall` and `profiles/postgresql.dhall` as publishers
+  of `postgresql`; the Mori-located CLI reference says scripted registry-only resolution must add
+  `--no-local`. The generator now selects only its declared package registry.
 
 
 ## Decision Log
@@ -131,16 +169,30 @@ do not pin an unreleased checkout.
   explicitly forbids an unreleased pin and a partial executable contract.
   Date: 2026-08-19.
 
+- Decision: Ship `adopt-improvement-request-contracts` from `okf-profiles` as a standalone Seihou
+  blueprint with no migration edges.
+  Rationale: `okf` owns the generic descriptor and validator capabilities, while `okf-profiles`
+  owns the meanings of improvement-request dependencies and acceptance criteria. Existing
+  consumer bundles need no repair to cross v0.12.0, so putting this playbook in a required
+  version-window migration would misrepresent an optional adoption as mandatory upgrade work.
+  Date: 2026-08-19.
+
+- Decision: Use the released `okf-core` 0.8.0.0 contract for Milestone 1.
+  Rationale: Hackage publishes 0.8.0.0 and the matching immutable upstream tag `v0.8.0.0` resolves
+  to commit `1b61d1d7adbdf8d90488805dc972801e45562c02`. This satisfies the plan's two-channel release
+  gate; direct tagged-source inspection and semantic hashing still precede the actual pin edit.
+  Date: 2026-08-19.
+
 
 ## Outcomes & Retrospective
 
-Implementation reached the dependency release gate and stopped as designed. Mori located the
-authoritative upstream checkout, Hackage and Git established 0.7.0.0 as the newest jointly
-published version, and direct source inspection proved that it cannot model the requested nested
-reference policy or request-local acceptance-criterion uniqueness. No schema, profile, fixture,
-documentation, request, or release state was changed. Work can resume from the second Progress
-item after the required additive upstream contract is released on Hackage and under a matching
-Git tag.
+The initial implementation reached the dependency release gate and stopped as designed. That gate
+is now open: `okf-core` 0.8.0.0 is published on Hackage and under a matching immutable Git tag. A
+later design discussion added the optional `adopt-improvement-request-contracts` Seihou blueprint,
+and that independently implementable artifact now exists with no migration edges. Its Dhall
+definition and all other published blueprints pass Seihou lint, and both `just types` and `just
+test` pass. The profile pin, executable rules, fixtures, generated documentation, dogfooding, and
+v0.12.0 release remain to be implemented.
 
 
 ## Context and Orientation
@@ -167,16 +219,14 @@ therefore affects every catalog export even though only the improvement-request 
 the new rules. Keep one pin; do not create a private one-profile schema fork.
 
 The upstream owner is `mori://shinzui/okf`. Discover its checkout and releases through Mori before
-reading source. In that project, the 0.7.0.0 source at project-relative path
+reading source. In that project, the historical 0.7.0.0 source at project-relative path
 `okf-core/dhall/NestedFieldRule.dhall` explicitly omits `reference`; project-relative path
 `okf-core/src/Okf/Profile.hs` consequently hard-codes nested references to `Nothing`, and its
 nested validation walk checks vocabulary, format, and path only. The same module checks
-bundle-wide top-level document IDs but has no uniqueness rule over sibling records in a list. No
-registered upstream improvement request currently owns these additions. If the needed upstream
-release still does not exist when implementation begins, stop after recording the missing
-capability in Progress. Create and execute separately governed upstream work in
-`mori://shinzui/okf`; the artifact-level URI is pending until that project allocates its own
-request or plan handle.
+bundle-wide top-level document IDs but has no uniqueness rule over sibling records in a list. The
+released 0.8.0.0 implementation is governed by
+`mori://shinzui/okf/plans/64-add-nested-reference-policies-and-record-list-uniqueness`; inspect the
+tagged source directly before repinning rather than relying only on this summary.
 
 The minimum upstream behavioral contract is one additive profile-schema generation with these
 capabilities. `NestedFieldRule` can carry the existing `HandleReferenceRule`. That policy can
@@ -210,6 +260,16 @@ prepared. `README.md` describes the catalog-wide minimum `okf` version and the p
 purpose. `CHANGELOG.md` uses Keep a Changelog sections and must explain both document migration
 (`none`, because the new fields are optional) and tool migration (a consumer repinning to v0.12.0
 must use the newly released decoder).
+
+`blueprints/adopt-improvement-request-contracts/` will contain the optional Seihou playbook. Its
+`blueprint.dhall` declares version 0.12.0, imports `prompt.md`, mounts a concise contract reference
+from `files/`, and sets `migrations` to an explicitly empty list. The prompt detects improvement-
+request bundles from Mori metadata, local descriptors, and validation commands; preserves local
+descriptor customizations; repins shared descriptors only to the released v0.12.0 catalog; and
+adds structured data only when repository evidence makes the dependency kind, reason, criterion
+statement, and verification procedure unambiguous. It never deletes the source prose or invents
+missing criteria. `README.md`, `seihou-registry.dhall`, and `mori.dhall` expose the blueprint as an
+optional `seihou agent run` workflow, not as `seihou agent migrate`.
 
 Two local ADRs constrain this work. ADR-8, linked in the Decision Log, defines the distinction
 between optional and recommended fields. ADR-9 defines rejection-fixture isolation and the
@@ -305,6 +365,24 @@ kinds, reference and uniqueness enforcement, generated documentation, and the ra
 the upstream version adopted in Milestone 1. Change only the improvement-request profile's version
 in `mori.dhall` to v0.12.0. Run `just check`; the documentation staleness test and every generated
 bundle must pass.
+
+Create `blueprints/adopt-improvement-request-contracts/blueprint.dhall`, `prompt.md`, `README.md`,
+and `files/contract-reference.md`. The blueprint has no base modules and no migration edges. Its
+playbook first discovers whether the repository has a bundle governed by
+`coordination.improvementRequests`; a repository without one finishes successfully without
+changes. For each applicable bundle, it preserves stable `IR-N` handles and prose, upgrades a
+shared profile descriptor to v0.12.0 while preserving local overlays, and structures only evidence
+already present in the request, its linked plan, or another repository artifact. A dependency
+without an explicit kind or reason and an acceptance condition without an explicit verification
+procedure remain prose and are reported for human resolution rather than completed by guesswork.
+
+Register the blueprint at version 0.12.0 in both `seihou-registry.dhall` and the `templates` list in
+`mori.dhall`, and add its runbook to `mori.dhall`'s docs list. Update the blueprint table in
+`README.md` so the command is `seihou agent run adopt-improvement-request-contracts` and so the
+text says explicitly that this is optional enrichment, not the migration required to consume the
+profile release. Validate the artifact with `seihou validate-blueprint ... --lint`; add that check
+to the repository's normal blueprint validation path if no existing script covers newly published
+blueprints.
 
 ### Milestone 4: dogfood, release, and close the request
 
@@ -427,6 +505,7 @@ just docs
 rg -n 'dependencies|acceptanceCriteria|hard|soft|integration|live.*block|unique|Reference' \
   docs/profiles/improvement-requests
 okf profile document \
+  --no-local \
   --registry package.dhall \
   coordination.improvementRequests \
   --out /tmp/okf-profiles-ir2-docs \
@@ -438,6 +517,24 @@ just check
 
 The recursive diff prints nothing. The generated `dependencies.ref` entry reports reference
 metadata, and the acceptance-criteria entry reports uniqueness by `id`.
+
+Validate the optional playbook, then preview it from a clean or disposable checkout without
+launching a provider. A debug `agent run` can still update `.seihou/manifest.json`, so it is not a
+no-write validation command:
+
+```bash
+seihou validate-blueprint blueprints/adopt-improvement-request-contracts --lint
+seihou registry validate
+seihou agent --debug run adopt-improvement-request-contracts
+rg -n 'adopt-improvement-request-contracts|migrations = \[\]' \
+  README.md mori.dhall seihou-registry.dhall \
+  blueprints/adopt-improvement-request-contracts
+```
+
+Blueprint and registry validation exit zero with no errors or version mismatches. When run from an
+installed copy in a disposable checkout, the debug rendering identifies version 0.12.0, includes
+the contract reference, tells the agent not to invent frontmatter, and does not list a migration
+edge.
 
 Update and validate this repository's own improvement-request bundle whenever IR-2 frontmatter
 or timestamp changes:
@@ -542,6 +639,13 @@ the canonical external reference constraint on `dependencies.ref`, and show uniq
 registry succeeds. `just check` passes every Dhall type check, acceptance bundle, rejection loop,
 ADR bundle check, profile-documentation staleness check, and strict generated-bundle validation.
 
+`seihou validate-blueprint blueprints/adopt-improvement-request-contracts --lint` and `seihou
+registry validate` succeed. A debug run renders a standalone version-0.12.0 playbook with no
+migrations. Its prompt treats a repository with no improvement-request bundle as a successful
+no-op, preserves prose and stable handles, and refuses to synthesize a dependency kind, dependency
+reason, acceptance statement, or verification procedure that repository evidence does not
+establish.
+
 The released v0.12.0 remote export evaluates, freezes, and yields the same semantic hash as the
 pre-tag local export. `mori registry show shinzui/okf-profiles --full` reports the
 improvement-request profile at v0.12.0. IR-2 records the target plan, its dogfooded dependency and
@@ -564,6 +668,12 @@ is likewise deterministic for a fixed bundle.
 fails, retain the last released pin and retry; never delete the old hash in a commit merely to make
 network evaluation proceed. Scratch directories created by `mktemp -d` contain no source of truth
 and may be removed after comparing hashes.
+
+The adoption blueprint is designed to be idempotent. A repeated run preserves already-valid
+`dependencies` and `acceptanceCriteria`, adds only newly supported records, and leaves ambiguous
+prose untouched. It must not renumber `IR-N` or `AC-N` handles, duplicate an existing record, or
+rewrite conforming documents merely for formatting. Because `migrations` is empty, Seihou never
+records this optional playbook as a required release edge.
 
 Every invalid fixture is additive. If one accidentally fails for more than its target rule, fix
 the fixture's otherwise-valid frontmatter before trusting the loop. During a rule-deletion negative
@@ -590,10 +700,10 @@ metadata before the artifact exists creates a false current-version claim.
 
 The repository depends on `mori://shinzui/okf` for profile decoding, compilation, validation, and
 generated documentation. Resolve the source with Mori and verify the chosen released version
-against both Hackage and upstream tags. The research baseline is `okf-core` 0.7.0.0; it is
-insufficient. Do not guess a future version bound. Once a qualifying release exists, record its
-exact tag, commit, Hackage version, and semantic hash in this plan's Decision Log and update
-`Profile/okf.dhall` to that immutable commit.
+against both Hackage and upstream tags. The historical research baseline, `okf-core` 0.7.0.0, is
+insufficient. The qualifying release is 0.8.0.0 under tag `v0.8.0.0`, at release commit
+`1b61d1d7adbdf8d90488805dc972801e45562c02`; inspect that tagged source, record its semantic hash in
+the Decision Log, and update `Profile/okf.dhall` to the immutable commit.
 
 The required upstream data contract is additive. In Dhall terms, it is equivalent to extending
 `NestedFieldRule` with an optional `HandleReferenceRule`, extending that reference policy with
@@ -633,11 +743,25 @@ accessors supplied by `okf-core`, but this repository does not change Mori's dat
 or event schemas. Kikan IR-11 and UC-23 are integration references only. Their exact canonical
 URIs remain durable even while a local registry is behind and cannot resolve them.
 
-No new Seihou blueprint is required because existing bundles remain valid and there is no
-mechanical content migration. No new local profile export is required. The release changes the
-existing `coordination.improvementRequests` behavior and the catalog-wide minimum decoder version.
+No Seihou blueprint migration edge is required because existing bundles remain valid and there is
+no mandatory content remediation. The standalone `adopt-improvement-request-contracts` blueprint
+is nevertheless useful as an optional playbook for repositories that choose to promote existing
+prose into the new structured fields. It belongs to `mori://shinzui/okf-profiles`, whose catalog
+defines those fields' domain meanings, rather than to `mori://shinzui/okf`, which owns only the
+generic schema and validator machinery. No new local profile export is required. The release
+changes the existing `coordination.improvementRequests` behavior and the catalog-wide minimum
+decoder version.
 
 
 Revision note (2026-08-19): Recorded the implementation preflight, the exact upstream release
 blocker, and the deliberate no-edit stopping decision so the next session can resume from the
 release gate without repeating or weakening the dependency check.
+
+Revision note (2026-08-19): Added `adopt-improvement-request-contracts` as an optional standalone
+Seihou blueprint in the v0.12.0 deliverables. It has no migration edges because existing bundles
+remain valid; the playbook is explicitly selected by repositories that want to structure evidence
+already present in their improvement requests.
+
+Revision note (2026-08-19): Implemented and registered the optional blueprint, added blueprint
+linting to the normal repository gate, corrected registry-only profile documentation generation,
+and recorded that the authoritative `okf-core` 0.8.0.0 release has opened the dependency gate.

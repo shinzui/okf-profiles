@@ -38,7 +38,9 @@ seihou agent run migrate-okf-bundles-to-v0-2 \
   "Use human:ops for anything under docs/runbooks and skip the vendored bundle."
 ```
 
-Preview the complete rendered prompt without changing the target:
+Preview the complete rendered prompt without contacting a provider. Seihou may still record
+applied-blueprint provenance in `.seihou/manifest.json`, so use a clean or disposable checkout
+when the manifest must remain untouched:
 
 ```bash
 seihou agent --debug run migrate-okf-bundles-to-v0-2
