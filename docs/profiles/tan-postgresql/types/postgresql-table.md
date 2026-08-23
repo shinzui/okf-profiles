@@ -36,6 +36,7 @@ How the table's data is produced.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -49,6 +50,7 @@ Whether the table stores domain state.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -62,6 +64,7 @@ Whether the table is durable or disposable.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -75,6 +78,7 @@ Event-stream categories feeding a projection table.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: applies only when `derivation` is `projection`
 - Object fields: none
 - Element fields: none
@@ -88,6 +92,7 @@ Human-readable name of the database object.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -101,6 +106,7 @@ The exact PostgreSQL concept type governed by this profile.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -116,6 +122,7 @@ One or two sentences explaining the object's purpose.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -130,6 +137,7 @@ One or two sentences explaining the object's purpose.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -146,6 +154,7 @@ postgresql:// URI locating the live object.
 - Format: uri-with-scheme(postgresql)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -162,6 +171,7 @@ postgresql:// URI locating the live object.
 - Format: date
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -175,6 +185,7 @@ postgresql:// URI locating the live object.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -188,6 +199,7 @@ Superseded v0.1 confirmation timestamp. Prefer `generated.at`.
 - Format: rfc3339-utc
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -201,6 +213,7 @@ Superseded v0.1 confirmation timestamp. Prefer `generated.at`.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.

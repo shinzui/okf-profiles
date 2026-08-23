@@ -36,6 +36,7 @@ UTC time at which acceptance evidence proved the request complete.
 - Format: rfc3339-utc
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: applies only when `status` is `completed`
 - Object fields: none
 - Element fields: none
@@ -49,6 +50,7 @@ Concise explanation of the problem and desired outcome.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -62,6 +64,7 @@ Concise explanation of the problem and desired outcome.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -77,6 +80,7 @@ Mori URI of the project or artifact raising the request.
 - Format: uri-with-scheme(mori)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -90,6 +94,7 @@ Bundle-scoped stable IR-N handle.
 - Format: document-handle(IR)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -103,6 +108,7 @@ Lifecycle decision for the request.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -114,8 +120,9 @@ Later request that replaces this request.
 - Allowed values: any
 - Cardinality: scalar
 - Format: none
-- Reference: local handles with prefix `IR`; external URIs with scheme `mori`; self-reference not allowed
+- Reference: local handles with prefix `IR`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
+- Unique by: none
 - Condition: applies only when `status` is `superseded`
 - Object fields: none
 - Element fields: none
@@ -129,6 +136,7 @@ Short statement of the requested improvement.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -142,6 +150,7 @@ The Improvement Request concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -157,6 +166,7 @@ Evidence or rationale recorded when a request reaches a terminal state.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: applies only when `status` is one of `completed`, `rejected`, `withdrawn`, `superseded`
 - Object fields: none
 - Element fields: none
@@ -171,6 +181,7 @@ Chronological human or model review provenance for this document revision.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -197,6 +208,7 @@ Repository-relative path or Mori URI of the implementation plan.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -210,6 +222,7 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Format: rfc3339-utc
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -223,6 +236,7 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.

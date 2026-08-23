@@ -37,6 +37,7 @@ Concise statement of the use case or theme.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -50,6 +51,7 @@ Concise statement of the use case or theme.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -65,6 +67,7 @@ Human-readable title.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -78,6 +81,7 @@ The Use Case or Use Case Theme concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -93,6 +97,7 @@ Chronological human or model review provenance for this document revision.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -119,6 +124,7 @@ Additional navigation links retained as producer metadata.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -132,6 +138,7 @@ Producer-defined search and grouping tags.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -145,6 +152,7 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Format: rfc3339-utc
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -158,6 +166,7 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.

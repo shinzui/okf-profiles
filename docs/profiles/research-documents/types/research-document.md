@@ -37,6 +37,7 @@ Concise statement of the research purpose.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -50,6 +51,7 @@ Concise statement of the research purpose.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -65,6 +67,7 @@ Bundle-scoped stable RES-N handle.
 - Format: document-handle(RES)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -78,6 +81,7 @@ Question boundary and evidence considered by the research.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -91,6 +95,7 @@ Lifecycle state of the research record.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -102,8 +107,9 @@ Later research replacing this record.
 - Allowed values: any
 - Cardinality: scalar
 - Format: none
-- Reference: local handles with prefix `RES`; external URIs with scheme `mori`; self-reference not allowed
+- Reference: local handles with prefix `RES`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
+- Unique by: none
 - Condition: applies only when `status` is `superseded`
 - Object fields: none
 - Element fields: none
@@ -117,6 +123,7 @@ Human-readable research title.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -130,6 +137,7 @@ The Research Document concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -145,6 +153,7 @@ Chronological human or model review provenance for this document revision.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -171,6 +180,7 @@ Architecture decisions informed by this research.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -184,6 +194,7 @@ Plans informed by this research.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -197,6 +208,7 @@ Plans informed by this research.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -214,8 +226,9 @@ Earlier research replaced by this record.
 - Allowed values: any
 - Cardinality: any
 - Format: none
-- Reference: local handles with prefix `RES`; external URIs with scheme `mori`; self-reference not allowed
+- Reference: local handles with prefix `RES`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -229,6 +242,7 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Format: rfc3339-utc
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -242,6 +256,7 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.

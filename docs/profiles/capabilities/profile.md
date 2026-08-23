@@ -39,6 +39,7 @@ One sentence a consumer can evaluate without reading the body.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -52,6 +53,7 @@ One sentence a consumer can evaluate without reading the body.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -67,6 +69,7 @@ Additional navigation links retained as producer metadata.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -80,6 +83,7 @@ Chronological human or model review provenance for this document revision.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -104,6 +108,7 @@ Producer-defined search and grouping tags.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -117,6 +122,7 @@ Human-readable capability name.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -130,6 +136,7 @@ The Capability concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -143,6 +150,7 @@ The Capability concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.

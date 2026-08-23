@@ -36,6 +36,7 @@ Commit the examined range starts after. Demanded once `coverage` is `incremental
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: applies only when `coverage` is `incremental`
 - Object fields: none
 - Element fields: none
@@ -49,6 +50,7 @@ Whether the whole subject was read at `reviewedSha`, or only the range since `ba
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -62,6 +64,7 @@ One sentence a reader can evaluate without opening the body.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -75,6 +78,7 @@ Concerns the review actually examined, one per entry. A concern nobody looked at
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -88,6 +92,7 @@ Reasoning or thinking effort the review was run at.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: applies only when `reviewerKind` is `model`
 - Object fields: none
 - Element fields: none
@@ -101,6 +106,7 @@ Reasoning or thinking effort the review was run at.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -116,6 +122,7 @@ Most specific available model identifier.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: applies only when `reviewerKind` is `model`
 - Object fields: none
 - Element fields: none
@@ -129,6 +136,7 @@ Result the reviewer recorded.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -142,6 +150,7 @@ Serving provider for a model review.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: applies only when `reviewerKind` is `model`
 - Object fields: none
 - Element fields: none
@@ -155,6 +164,7 @@ Bundle-scoped stable REV-N handle.
 - Format: document-handle(REV)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -168,6 +178,7 @@ UTC time at which the review completed.
 - Format: rfc3339-utc
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -181,6 +192,7 @@ Full 40-character commit SHA of the state reviewed. Never a branch or tag name, 
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -194,6 +206,7 @@ Full 40-character commit SHA of the state reviewed. Never a branch or tag name, 
 - Format: actor
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -207,6 +220,7 @@ Whether a person or a model performed the review. Gates the provider, model, and
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -220,6 +234,7 @@ Mori URI of what was reviewed: the most specific artifact that has one, else the
 - Format: uri-with-scheme(mori)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -233,6 +248,7 @@ What `subject` and `component` name, assigned by what was read.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -246,6 +262,7 @@ Short statement of what was reviewed and how it went.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -259,6 +276,7 @@ The Review concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -272,8 +290,9 @@ The review this one continues from, as a local REV-N handle or an external Mori 
 - Allowed values: any
 - Cardinality: scalar
 - Format: none
-- Reference: local handles with prefix `REV`; external URIs with scheme `mori`; self-reference not allowed
+- Reference: local handles with prefix `REV`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
+- Unique by: none
 - Condition: applies only when `coverage` is `incremental`
 - Object fields: none
 - Element fields: none
@@ -290,6 +309,7 @@ Identifier the codebase uses for the part reviewed, when `subject` names the con
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -303,6 +323,7 @@ What the reviewer could see and how the review was run, where it bounds the resu
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -316,6 +337,7 @@ Mori URIs of records this review caused to exist: bug reports, improvement reque
 - Format: uri-with-scheme(mori)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -329,6 +351,7 @@ Mori URI of the repository `reviewedSha` belongs to, when `subject` alone does n
 - Format: uri-with-scheme(mori)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -342,6 +365,7 @@ Mori URI of the repository `reviewedSha` belongs to, when `subject` alone does n
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.

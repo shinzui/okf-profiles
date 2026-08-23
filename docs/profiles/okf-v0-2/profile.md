@@ -34,6 +34,7 @@ One or two sentences on what this concept is.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -47,6 +48,7 @@ One or two sentences on what this concept is.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -62,6 +64,7 @@ One or two sentences on what this concept is.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -81,6 +84,7 @@ One or two sentences on what this concept is.
 - Format: date
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -94,6 +98,7 @@ One or two sentences on what this concept is.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -107,6 +112,7 @@ Human-readable name of the concept, as a reader would say it.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -120,6 +126,7 @@ The concept type. This profile constrains no vocabulary, because OKF defines no 
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -133,6 +140,7 @@ The concept type. This profile constrains no vocabulary, because OKF defines no 
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `from` — optional; allowed values: any; cardinality: any; format: date — §5.1. Calendar date the window opens.
@@ -148,6 +156,7 @@ The concept type. This profile constrains no vocabulary, because OKF defines no 
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.

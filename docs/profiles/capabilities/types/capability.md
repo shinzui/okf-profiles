@@ -37,6 +37,7 @@ Bundle-scoped stable CAP-N handle.
 - Format: document-handle(CAP)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -50,6 +51,7 @@ One sentence a consumer can evaluate without reading the body.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -63,6 +65,7 @@ Artifacts proving this capability works today. A record with no evidence is an i
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -79,6 +82,7 @@ Artifacts proving this capability works today. A record with no evidence is an i
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -94,6 +98,7 @@ Packages, artifacts, or deployables a consumer depends on to get this capability
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -107,6 +112,7 @@ Mori project URI that provides this capability. Redundant within one bundle, loa
 - Format: uri-with-scheme(mori)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -118,8 +124,9 @@ Where a consumer should go instead. Demanded once `status` is `deprecated` or `w
 - Allowed values: any
 - Cardinality: list
 - Format: none
-- Reference: local handles with prefix `CAP`; external URIs with scheme `mori`; self-reference not allowed
+- Reference: local handles with prefix `CAP`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
+- Unique by: none
 - Condition: applies only when `status` is one of `deprecated`, `withdrawn`
 - Object fields: none
 - Element fields: none
@@ -133,6 +140,7 @@ Released version in which this first became available to a consumer. `unreleased
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -146,6 +154,7 @@ Compatibility promise. `experimental` may change without a major bump.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -159,6 +168,7 @@ Whether a consumer can use this capability right now.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -172,6 +182,7 @@ Human-readable capability name.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -185,6 +196,7 @@ The Capability concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -200,6 +212,7 @@ Entry points a consumer actually touches: module names, endpoints, or commands.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -214,6 +227,7 @@ Chronological human or model review provenance for this document revision.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -240,6 +254,7 @@ Additional navigation links retained as producer metadata.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -251,8 +266,9 @@ Capabilities this one builds on, as local CAP-N handles or external Mori capabil
 - Allowed values: any
 - Cardinality: list
 - Format: none
-- Reference: local handles with prefix `CAP`; external URIs with scheme `mori`; self-reference not allowed
+- Reference: local handles with prefix `CAP`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -266,6 +282,7 @@ Producer-defined search and grouping tags.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -279,6 +296,7 @@ Producer-defined search and grouping tags.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.

@@ -187,12 +187,10 @@ decoding breaks at load time. Two rules keep them aligned:
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
-**This catalog targets OKF v0.2 and requires okf-core 0.5.0.0 or later.** The
-schema is pinned to the `okf` 0.5.0.0 release commit, and the package exports the
-full v0.2 descriptor vocabulary — `Profile.requireBundleVersion`,
-`FieldRule.objectFields`, `FieldRule.path` with its `PathReferenceRule` record,
-and the `actor`, `human-actor`, `integer`, `non-negative-integer`, and `boolean`
-field formats — so a downstream author can write a v0.2 rule by importing this
+**This catalog targets OKF v0.2 and requires okf-core 0.8.0.0 or later.** The
+schema is pinned to the `okf` 0.8.0.0 release commit, and the package exports the
+full v0.2 descriptor vocabulary plus nested reference policies and record-list
+uniqueness — so a downstream author can write these rules by importing this
 package alone. The existing `postgresql` and `tanPostgresql` fields remain stable
 flat exports; new profile families should use a namespaced directory and package
 field.
@@ -437,7 +435,7 @@ reshape `sources` from a list of strings into the v0.2 list of records:
 ## Profile catalog
 
 Every profile targets OKF v0.2, declares `okfVersion = "0.2"`, sets
-`requireBundleVersion = Some "0.2"`, and requires **okf 0.5.0.0 or later**.
+`requireBundleVersion = Some "0.2"`, and requires **okf 0.8.0.0 or later**.
 
 | Export | Purpose | `generated` | Also demands |
 |---|---|---|---|

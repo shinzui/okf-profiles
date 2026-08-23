@@ -55,8 +55,11 @@ criterion and do not pin an unreleased checkout.
 - [x] (2026-08-19 21:34Z) Rechecked the authoritative release sources: Hackage lists
       `okf-core` 0.8.0.0 and upstream tag `v0.8.0.0` resolves to release commit
       `1b61d1d7adbdf8d90488805dc972801e45562c02`. The dependency release gate is open.
-- [ ] Milestone 1 remaining: inspect the released 0.8.0.0 source at the Mori-located checkout,
-      repin `Profile/okf.dhall`, and prove old catalog fixtures still validate.
+- [x] (2026-08-23) Inspected the released 0.8.0.0 source at the Mori-located checkout, repinned
+      `Profile/okf.dhall` to release commit `1b61d1d7adbdf8d90488805dc972801e45562c02`
+      with semantic hash `sha256:0589682fe0acc109e523eeb4ef7ed2bdfa6f67185183e926f3a138cc071ac009`,
+      refreshed the generated docs for the widened schema defaults, and proved all old catalog
+      fixtures still validate with `okf` 0.8.0.0.
 - [ ] Milestone 2: add optional `dependencies` and `acceptanceCriteria` rules, one rich valid
       fixture, and focused single-reason rejection fixtures.
 - [x] (2026-08-19 21:33Z) Authored and registered the optional
@@ -112,6 +115,18 @@ criterion and do not pin an unreleased checkout.
   Evidence: `just test` reported both `./package.dhall` and `profiles/postgresql.dhall` as publishers
   of `postgresql`; the Mori-located CLI reference says scripted registry-only resolution must add
   `--no-local`. The generator now selects only its declared package registry.
+
+- Observation: repinning the schema is behavior-preserving for authored profiles, but not
+  byte-preserving for generated profile documentation. The 0.8.0.0 renderer exposes defaulted
+  `uniqueBy = None` and `allowLocal = True` values that the 0.7.0.0 renderer could not display.
+  Evidence: every pre-existing acceptance/rejection fixture passed under the 0.8.0.0 CLI before
+  regeneration, while the staleness gate differed only on `Unique by: none` and `local handles
+  allowed`; `just docs` followed by `just test` passed.
+
+- Observation: the globally installed `okf` remained at 0.7.0.0 even though 0.8.0.0 was released.
+  Its closed Dhall decoder rejected the widened schema before validation began. Building the
+  tagged Mori-located source and putting that 0.8.0.0 executable first on `PATH` made the expected
+  backward-compatible profile tests pass.
 
 
 ## Decision Log
@@ -182,6 +197,14 @@ criterion and do not pin an unreleased checkout.
   to commit `1b61d1d7adbdf8d90488805dc972801e45562c02`. This satisfies the plan's two-channel release
   gate; direct tagged-source inspection and semantic hashing still precede the actual pin edit.
   Date: 2026-08-19.
+
+- Decision: Refresh generated profile documentation in the schema-pin milestone instead of
+  deferring every generated change to Milestone 3.
+  Rationale: the 0.8.0.0 documentation renderer makes newly defaulted schema members visible for
+  every profile, so a working schema-pin commit cannot leave the deterministic staleness gate red.
+  Milestone 3 will still regenerate and inspect the improvement-request-specific contract after
+  its rules exist.
+  Date: 2026-08-23.
 
 
 ## Outcomes & Retrospective
@@ -290,7 +313,8 @@ rather than replacing them with checkout paths or bare handles.
 
 ### Milestone 1: adopt a released dependency contract
 
-This milestone changes only the schema pin and compatibility documentation. First compare Mori's
+This milestone changes the schema pin, compatibility documentation, and any deterministic
+generated documentation needed to keep the repository gate current. First compare Mori's
 registered checkout with the authoritative Hackage release and upstream Git tags. Inspect the
 released source directly and confirm the behavioral contract described above, including compiled
 nested reference inspection and duplicate-key validation. An untagged commit, a sibling working
@@ -304,9 +328,10 @@ that profile authors need, re-export it from `package.dhall` alongside `HandleRe
 not re-author the upstream type locally. Update the blanket minimum-version language in
 `README.md`, but leave the v0.12.0 release note until Milestone 3.
 
-At the end, `just types` and every pre-existing script pass before IR-2 fields exist. This isolates
-schema adoption from profile behavior and proves the upstream compatibility decoder still accepts
-the catalog's existing descriptors.
+At the end, `just types` and every pre-existing script pass before IR-2 fields exist. If the newer
+decoder renders its new defaulted fields, run `just docs` and commit that deterministic refresh in
+this milestone. This isolates schema adoption from profile behavior and proves the upstream
+compatibility decoder still accepts the catalog's existing descriptors.
 
 ### Milestone 2: make the IR-2 shape executable
 
@@ -765,3 +790,8 @@ already present in their improvement requests.
 Revision note (2026-08-19): Implemented and registered the optional blueprint, added blueprint
 linting to the normal repository gate, corrected registry-only profile documentation generation,
 and recorded that the authoritative `okf-core` 0.8.0.0 release has opened the dependency gate.
+
+Revision note (2026-08-23): Completed the released-schema adoption and moved the deterministic
+generated-doc refresh into Milestone 1 after the 0.8.0.0 renderer exposed its new default fields
+across every compiled profile. Recorded that validation must use the matching 0.8.0.0 CLI rather
+than the stale globally installed 0.7.0.0 decoder.

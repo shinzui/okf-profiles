@@ -38,6 +38,7 @@ Released version the defect was observed in; `unreleased` or `unknown` otherwise
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -51,6 +52,7 @@ Mori URI of the project or artifact whose behavior is wrong.
 - Format: uri-with-scheme(mori)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -64,6 +66,7 @@ Bundle-scoped stable BUG-N handle.
 - Format: document-handle(BUG)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -77,6 +80,7 @@ Mori URI of the capability whose provision claim this defect contradicts.
 - Format: uri-with-scheme(mori)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -90,6 +94,7 @@ One sentence naming what is wrong, evaluable without the body.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -101,8 +106,9 @@ The report this one duplicates, as a local BUG-N handle or an external Mori URI.
 - Allowed values: any
 - Cardinality: scalar
 - Format: none
-- Reference: local handles with prefix `BUG`; external URIs with scheme `mori`; self-reference not allowed
+- Reference: local handles with prefix `BUG`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
+- Unique by: none
 - Condition: applies only when `status` is `duplicate`
 - Object fields: none
 - Element fields: none
@@ -116,6 +122,7 @@ Where the observation was made, when the defect does not reproduce everywhere.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -129,6 +136,7 @@ What should happen instead, and on whose authority — a guide, a capability, a 
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -142,6 +150,7 @@ Released version carrying the fix; `unreleased` while it is on the default branc
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: applies only when `status` is `fixed`
 - Object fields: none
 - Element fields: none
@@ -155,6 +164,7 @@ Released version carrying the fix; `unreleased` while it is on the default branc
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -170,6 +180,7 @@ Newest release where the behavior was correct. Its presence makes this a regress
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -183,6 +194,7 @@ What actually happens, stated as a fact.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -196,6 +208,7 @@ Mori URI of the project or artifact that observed the defect.
 - Format: uri-with-scheme(mori)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -209,6 +222,7 @@ Ordered steps a reader can follow to see it, one step per entry.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -222,6 +236,7 @@ Why this report closed the way it did, recorded when it reaches a terminal statu
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: applies only when `status` is one of `fixed`, `wont-fix`, `duplicate`, `not-a-bug`, `cannot-reproduce`
 - Object fields: none
 - Element fields: none
@@ -236,6 +251,7 @@ Chronological human or model review provenance for this document revision.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -260,6 +276,7 @@ Observable consequence for a consumer, most severe first.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -273,6 +290,7 @@ Where this report has got to. `confirmed` means the owning repository reproduced
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -286,6 +304,7 @@ Short statement of the wrong behavior.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -299,6 +318,7 @@ The Bug Report concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -312,6 +332,7 @@ The Bug Report concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -329,6 +350,7 @@ What a consumer can do meanwhile. Demanded once `severity` is `degraded`.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: applies only when `severity` is `degraded`
 - Object fields: none
 - Element fields: none

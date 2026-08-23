@@ -33,6 +33,7 @@ Original calendar date of the decision.
 - Format: date
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -46,6 +47,7 @@ One-sentence summary of the decision.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -59,6 +61,7 @@ Bundle-scoped stable ADR-N handle.
 - Format: document-handle(ADR)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -72,6 +75,7 @@ Bundle-scoped stable ADR-N handle.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -87,6 +91,7 @@ Plan that produced the decision, when recorded.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -100,6 +105,7 @@ Repository-native decision status.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -111,8 +117,9 @@ Later ADR handle replacing this decision.
 - Allowed values: any
 - Cardinality: scalar
 - Format: none
-- Reference: local handles with prefix `ADR`; external URIs with scheme `mori`; self-reference not allowed
+- Reference: local handles with prefix `ADR`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -124,8 +131,9 @@ Earlier ADR handles replaced by this decision.
 - Allowed values: any
 - Cardinality: any
 - Format: none
-- Reference: local handles with prefix `ADR`; external URIs with scheme `mori`; self-reference not allowed
+- Reference: local handles with prefix `ADR`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -139,6 +147,7 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Format: rfc3339-utc
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -152,6 +161,7 @@ Decision title without the ADR number.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -165,6 +175,7 @@ The Architecture Decision Record concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -178,6 +189,7 @@ The Architecture Decision Record concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.

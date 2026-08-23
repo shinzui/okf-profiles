@@ -37,6 +37,7 @@ Concise statement of the use case or theme.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -50,6 +51,7 @@ Capabilities whose delivery makes the use case possible, with ownership and requ
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -70,6 +72,7 @@ Capabilities whose delivery makes the use case possible, with ownership and requ
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
@@ -85,6 +88,7 @@ Jobs-to-be-Done statements describing the actor, situation, desired progress, an
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -103,6 +107,7 @@ Mori project URI that owns this use case.
 - Format: uri-with-scheme(mori)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -116,6 +121,7 @@ Lifecycle state of the use case.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -129,6 +135,7 @@ Human-readable title.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -142,6 +149,7 @@ The Use Case or Use Case Theme concept type.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -155,6 +163,7 @@ Bundle-scoped stable UC-N handle.
 - Format: document-handle(UC)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -170,6 +179,7 @@ Chronological human or model review provenance for this document revision.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -194,6 +204,7 @@ Theme slugs mirrored by body links to theme concepts.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -210,6 +221,7 @@ Stable Mori request URIs; mirror the union of feature-level request references.
 - Format: uri-with-scheme(mori)
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -223,6 +235,7 @@ Additional navigation links retained as producer metadata.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -234,8 +247,9 @@ Related local UC handles or external Mori use-case URIs.
 - Allowed values: any
 - Cardinality: list
 - Format: none
-- Reference: local handles with prefix `UC`; external URIs with scheme `mori`; self-reference not allowed
+- Reference: local handles with prefix `UC`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -249,6 +263,7 @@ Producer-defined search and grouping tags.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -262,6 +277,7 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Format: rfc3339-utc
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -275,6 +291,7 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Format: none
 - Reference: none
 - Path: none
+- Unique by: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
