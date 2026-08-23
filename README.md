@@ -442,7 +442,7 @@ Every profile targets OKF v0.2, declares `okfVersion = "0.2"`, sets
 | `assurance.reviews` | Records of an artifact having been reviewed, with `REV-N` handles: a stable `subject` + `component` identity, the commit examined, whether the reading was `full` or `incremental` and from which `baseSha`, the reviewer as an OKF §7 actor, and provider / model / effort once the reviewer is a model | required | `previousReview` once `coverage` is `incremental` |
 | `coordination.bugReports` | Defects in behavior a repository already provides, with `BUG-N` handles, a severity scale graded by observable consequence, and a reproduction a reader can follow | required | `reviews`; `resolution` once a report reaches a terminal status; `workaround` once severity is `degraded` |
 | `coordination.capabilities` | What a repository provides today, with `CAP-N` handles, a compatibility promise separate from availability, and required evidence | required | `reviews`; `interface`; `replacedBy` once a capability is deprecated or withdrawn |
-| `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles, completion state, and structured review provenance | required | `reviews`; `resolution` once a request reaches a terminal state |
+| `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles, typed canonical source dependencies, stable request-local acceptance criteria, completion state, and structured review provenance | required | `reviews`; `resolution` once a request reaches a terminal state |
 | `coordination.useCases` | JTBD use cases with `UC-N` handles, typed feature delivery, and repository-owned request references | required (profile-wide, so themes too) | `reviews`; `themes` on a use case |
 | `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles and checked supersession references | required | nothing recommended |
 | `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, and tag fields | required | nothing recommended; `sources` is the v0.2 record shape |
@@ -450,6 +450,12 @@ Every profile targets OKF v0.2, declares `okfVersion = "0.2"`, sets
 | `okfV02` | Format-level reference profile: the six v0.2 families and no house conventions, for a team with no established profile of its own | recommended | OKF `status` and `stale_after` |
 | `postgresql` | PostgreSQL schemas, tables, and views with typed resource URIs and `# Schema` column contracts | recommended | OKF `status` and `stale_after` |
 | `tanPostgresql` | `postgresql` plus per-table role vocabularies and conditional source streams | recommended | OKF `status` and `stale_after` |
+
+The improvement-request `dependencies` and `acceptanceCriteria` fields are optional shared
+vocabulary. A consumer may layer stricter organizational presence policy—for example, requiring
+criteria before accepting a request—but must preserve the shared meanings: `soft` never becomes a
+blocking relationship, and criteria remain completion conditions rather than tasks or evidence.
+Dependencies describe source fulfillment contracts, not live incident or scheduling blockers.
 
 `verified` is `optional` on every profile above and demanded by none.
 

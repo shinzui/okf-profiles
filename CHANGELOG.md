@@ -8,13 +8,59 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+
+## [0.12.0] — 2026-08-23
+
+**Adds typed source dependencies and stable acceptance criteria to
+`coordination.improvementRequests`.** Existing request documents remain valid because both fields
+are optional, but consumers repinning to this release must use `okf-core` 0.8.0.0 or later to
+decode and enforce the widened profile schema.
+
 ### Added
+
+- **Optional `dependencies` records** with required `ref`, `kind`, and `reason` members. `ref` is
+  an external-only reference to the canonical
+  `mori://<namespace>/<project>/okf/improvement-requests/concepts/IR-N` family: bare handles,
+  non-Mori schemes, wrong artifact paths, zero or padded numbers, queries, and fragments are
+  rejected. The three relationship kinds have fixed source-fulfillment meanings:
+
+  - `hard` gates source fulfillment on target fulfillment;
+  - `soft` informs or de-risks the source but never blocks by itself; and
+  - `integration` permits independent implementation but gates fulfillment on named joint
+    verification.
+
+  These are source relationships, not live incident, scheduling, reachability, or transitive
+  readiness state.
+
+- **Optional `acceptanceCriteria` records** with required `id`, `statement`, and `verification`
+  members. Each `id` is a request-local `AC-N` handle and must be unique inside that request's
+  list. A criterion records an observable completion condition and how it will be proved; it is
+  not a task, dependency, or evidence claim.
 
 - **`adopt-improvement-request-contracts` Seihou blueprint** — an optional, repeatable playbook
   that promotes only well-supported improvement-request dependencies and acceptance conditions
-  from prose into the structured frontmatter planned for v0.12.0. It preserves source prose and
+  from prose into the structured v0.12.0 frontmatter. It preserves source prose and
   stable handles, reports ambiguous material instead of inventing it, and has no migration edges
   because existing bundles require no content remediation when they repin.
+
+- Eight focused single-reason rejection fixtures, one rich acceptance fixture covering all three
+  dependency kinds and two criteria, and regenerated profile documentation that exposes the
+  compiled nested reference policy and uniqueness key to registry consumers.
+
+### Changed
+
+- **The minimum `okf-core` version moves from 0.5.0.0 to 0.8.0.0.** `Profile/okf.dhall` pins the
+  immutable 0.8.0.0 release commit. That decoder adds nested reference policies, whole-value
+  external URI patterns, and record-list uniqueness while retaining compatibility with older
+  profile descriptors.
+
+### Migration
+
+No document migration is required. A bundle valid under v0.11.0 remains valid when repinned to
+v0.12.0 without either new field. Upgrade the validating tool to `okf-core` 0.8.0.0 or later before
+repinning; an older decoder cannot load the widened Dhall records. Run
+`seihou agent run adopt-improvement-request-contracts` only when the repository chooses to promote
+well-supported prose into the optional structured contract.
 
 ## [0.11.0] — 2026-08-13
 

@@ -67,8 +67,10 @@ criterion and do not pin an unreleased checkout.
 - [x] (2026-08-19 21:33Z) Authored and registered the optional
       `adopt-improvement-request-contracts` Seihou blueprint with no migration edges, added a
       repository-wide blueprint lint gate, and confirmed `just types` and `just test` pass.
-- [ ] Milestone 3 remaining: regenerate the public profile documentation, update the catalog
-      guidance and v0.12.0 changelog, and prove compiled reference metadata is visible.
+- [x] (2026-08-23) Regenerated and reproduced the public profile documentation, updated catalog
+      guidance, the v0.12.0 changelog, and Mori profile metadata, proved compiled reference and
+      uniqueness metadata are visible in JSON, validated the standalone blueprint and registry,
+      and rendered the installed blueprint from an isolated configuration and project directory.
 - [ ] Milestone 4: dogfood the new fields in IR-2, pass all repository gates, release
       `okf-profiles` v0.12.0 with a reproducible semantic hash, and distill durable decisions.
 
@@ -137,6 +139,13 @@ criterion and do not pin an unreleased checkout.
   malformed-target fixtures pass; the other five new constraints each pass when their one field
   rule is relaxed. This confirms the Decision Log's earlier choice that external-only selection,
   scheme, and canonical target shape are one load-bearing policy rather than independent rules.
+
+- Observation: `seihou agent run` does not discover a blueprint from the current repository root;
+  it searches project-local, user, and installed artifact directories. The first disposable
+  preview therefore reported the blueprint missing. Installing the committed registry entry into
+  an isolated `XDG_CONFIG_HOME` and rerunning from an empty temporary project rendered version
+  0.12.0, its mounted contract reference, and the no-invention prompt without contacting a
+  provider or changing the real user configuration.
 
 
 ## Decision Log
@@ -817,3 +826,8 @@ than the stale globally installed 0.7.0.0 decoder.
 Revision note (2026-08-23): Completed the executable improvement-request contract and documented
 the combined reference policy as the correct unit for ADR-9 load-bearingness checks after
 subconstraint relaxation exposed the policy's intentional validation fallthrough.
+
+Revision note (2026-08-23): Completed the public contract and registry metadata, including an
+isolated installed-blueprint preview after documenting Seihou's installed-artifact discovery
+requirement. The v0.12.0 changelog now distinguishes optional document enrichment from the
+required 0.8.0.0 decoder upgrade.

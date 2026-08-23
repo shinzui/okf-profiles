@@ -148,7 +148,7 @@ in  Schema.Project::{
         , name = "improvement-requests"
         , export = "coordination.improvementRequests"
         , path = Some "profiles/coordination/improvement-requests.dhall"
-        , version = Some "v0.8.0"
+        , version = Some "v0.12.0"
         }
       , Schema.OkfProfile::{
         , name = "use-cases"
