@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-08-23
+* **Update**: ADR-9 clarifies that a composite rule is swept as one authored policy unit.
+
 ## 2026-08-13
 * **Addition**: ADR-10 records why a review record is a concept in a new assurance family rather than a fifth coordination profile or an extension of the house `reviews` frontmatter key.
 

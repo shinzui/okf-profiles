@@ -62,6 +62,16 @@ repinning; an older decoder cannot load the widened Dhall records. Run
 `seihou agent run adopt-improvement-request-contracts` only when the repository chooses to promote
 well-supported prose into the optional structured contract.
 
+### Release import
+
+```dhall
+https://raw.githubusercontent.com/shinzui/okf-profiles/v0.12.0/package.dhall
+  sha256:97867b2364b6f9604ad6678ba246b704e1e16054c1ecebecc64db4e92c33b754
+```
+
+This tool-produced semantic hash covers the package value imported by the profile selector. The
+published tag must reproduce it before IR-2 is marked complete.
+
 ## [0.11.0] — 2026-08-13
 
 **Adds `assurance.reviews`: what was reviewed, at which commit, by whom, and at

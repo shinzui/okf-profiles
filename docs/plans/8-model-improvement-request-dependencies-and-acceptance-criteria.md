@@ -71,6 +71,13 @@ criterion and do not pin an unreleased checkout.
       guidance, the v0.12.0 changelog, and Mori profile metadata, proved compiled reference and
       uniqueness metadata are visible in JSON, validated the standalone blueprint and registry,
       and rendered the installed blueprint from an isolated configuration and project directory.
+- [x] (2026-08-23) Dogfooded the new contract in IR-2, recorded review provenance for the complete
+      five-request live bundle, regenerated its previously stale index, and passed strict profile
+      and log enforcement over all five concepts.
+- [x] (2026-08-23) Distilled the composite-policy deletion rule into ADR-9 and computed the local
+      package import hash
+      `sha256:97867b2364b6f9604ad6678ba246b704e1e16054c1ecebecc64db4e92c33b754`
+      for publication and remote reproduction.
 - [ ] Milestone 4: dogfood the new fields in IR-2, pass all repository gates, release
       `okf-profiles` v0.12.0 with a reproducible semantic hash, and distill durable decisions.
 
@@ -146,6 +153,15 @@ criterion and do not pin an unreleased checkout.
   an isolated `XDG_CONFIG_HOME` and rerunning from an empty temporary project rendered version
   0.12.0, its mounted contract reference, and the no-invention prompt without contacting a
   provider or changing the real user configuration.
+
+- Observation: the live improvement-request bundle had grown from the two concepts assumed by the
+  plan to five, while its generated index still listed only IR-1 and IR-2 and all five concepts
+  lacked the profile's recommended review provenance. A release audit reviewed every concept,
+  resolved every concrete cross-repository Mori URI, recorded the resulting provenance, and
+  regenerated the index before strict validation.
+  Evidence: `okf validate docs/improvement-requests --strict --profile
+  docs/improvement-requests/profile.dhall --profile-enforce --log-enforce` reports `OK: 5 concepts
+  (okf_version 0.2)` with no diagnostics.
 
 
 ## Decision Log
@@ -233,16 +249,32 @@ criterion and do not pin an unreleased checkout.
   proves the three focused fixtures depend on the authored rule.
   Date: 2026-08-23.
 
+- Decision: Repair the live improvement-request bundle's release baseline rather than weakening
+  strict validation or excluding the three newer concepts.
+  Rationale: the profile intentionally recommends review provenance for a well-run coordination
+  corpus. The release audit actually reviewed all five concepts and resolved their concrete Mori
+  references, so recording that provenance and regenerating the complete index is truthful and
+  keeps the repository's own bundle subject to the same public contract it ships.
+  Date: 2026-08-23.
+
+- Decision: Record the semantic hash of the imported root package value, not a separately hashed
+  projection of the selected improvement-request profile.
+  Rationale: a consumer pins the remote `package.dhall` import before selecting
+  `coordination.improvementRequests`; Dhall's import integrity check therefore covers the package
+  value. The pre-release local `dhall freeze --all` hash must match the protected remote import
+  produced after the tag is published.
+  Date: 2026-08-23.
+
 
 ## Outcomes & Retrospective
 
-The initial implementation reached the dependency release gate and stopped as designed. That gate
-is now open: `okf-core` 0.8.0.0 is published on Hackage and under a matching immutable Git tag. A
-later design discussion added the optional `adopt-improvement-request-contracts` Seihou blueprint,
-and that independently implementable artifact now exists with no migration edges. Its Dhall
-definition and all other published blueprints pass Seihou lint, and both `just types` and `just
-test` pass. The profile pin, executable rules, fixtures, generated documentation, dogfooding, and
-v0.12.0 release remain to be implemented.
+The dependency gate opened with the matching Hackage and immutable Git releases of `okf-core`
+0.8.0.0. The catalog now pins that contract, implements the optional dependency and acceptance-
+criterion fields, proves them with focused fixtures and negative controls, publishes their
+compiled documentation, and ships an optional standalone Seihou adoption blueprint with no
+migration edges. IR-2 dogfoods the new shape and the complete five-concept live request bundle
+passes strict validation. The remaining outcome is the v0.12.0 tag, remote semantic-hash proof,
+post-release IR-2 closure, and Mori registry refresh.
 
 
 ## Context and Orientation
@@ -332,8 +364,8 @@ IR-2 names two downstream consumers. `mori://shinzui/mori/okf/improvement-reques
 resolved successfully during planning and owns projection of profile-declared references as typed
 concept edges. `mori://shinzui/kikan/okf/improvement-requests/concepts/IR-11` and
 `mori://shinzui/kikan/okf/use-cases/concepts/UC-23` are the request's integration and source-use-case
-references; the current local registry did not resolve them. Preserve the exact canonical URIs
-rather than replacing them with checkout paths or bare handles.
+references. All three targets resolved in the local registry during the release audit. Preserve
+the exact canonical URIs rather than replacing them with checkout paths or bare handles.
 
 
 ## Plan of Work
@@ -606,7 +638,7 @@ okf validate docs/improvement-requests \
 ```
 
 Use a message that accurately describes each stage rather than copying the illustrative message
-twice. The final validation currently has two concepts and must remain free of diagnostics.
+twice. The final validation currently has five concepts and must remain free of diagnostics.
 
 Before release, run the complete gate and compute the local semantic hash in a temporary directory:
 
@@ -619,13 +651,14 @@ printf '%s\n' '(./package.dhall).coordination.improvementRequests' \
   > "${release_scratch}/profile.dhall"
 cp package.dhall "${release_scratch}/package.dhall"
 cp -R Profile profiles "${release_scratch}/"
-dhall freeze --inplace "${release_scratch}/profile.dhall"
+dhall freeze --all --inplace "${release_scratch}/profile.dhall"
 sed -n '1,4p' "${release_scratch}/profile.dhall"
 ```
 
-Copy only the hash produced by `dhall freeze` into the release note; do not invent or hand-edit a
-hash. Because the local expression imports the same release commit, its normalized value must equal
-the later remote import.
+Copy only the hash produced by `dhall freeze --all` into the release note; do not invent or
+hand-edit a hash. `--all` is required because the pre-release import is local, while `dhall freeze`
+protects the later remote import by default. Both integrity checks cover the root package value,
+which must be identical.
 
 Every implementation commit includes the local plan trailer:
 
@@ -831,3 +864,8 @@ Revision note (2026-08-23): Completed the public contract and registry metadata,
 isolated installed-blueprint preview after documenting Seihou's installed-artifact discovery
 requirement. The v0.12.0 changelog now distinguishes optional document enrichment from the
 required 0.8.0.0 decoder upgrade.
+
+Revision note (2026-08-23): Dogfooded IR-2 and corrected the live bundle baseline after discovering
+three additional requests, a stale index, and missing review provenance. Promoted the composite-
+policy negative-control rule into ADR-9 because it applies to future profile tests, not only this
+release.

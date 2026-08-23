@@ -12,6 +12,23 @@ generated:
 requestId: IR-4
 status: proposed
 origin: mori://tan/tan-platform/plans/4-define-platform-architecture-assets-and-upstream-gaps
+reviews:
+  - kind: model
+    reviewer: process:openai-codex
+    reviewed_at: "2026-08-23T21:20:05Z"
+    document_timestamp: "2026-08-19T18:04:00Z"
+    scope: content-and-metadata
+    outcome: approved
+    provider: openai
+    model: gpt-5
+    effort: unspecified
+    context: >-
+      Reviewed for profile conformance, internal consistency, and canonical
+      cross-repository references; every concrete Mori URI resolved in the
+      registry during the v0.12.0 release audit.
+verified:
+  by: process:openai-codex
+  at: "2026-08-23T21:20:05Z"
 ---
 
 # Improvement Request: Add a Shared Deployment and Infrastructure Asset Profile

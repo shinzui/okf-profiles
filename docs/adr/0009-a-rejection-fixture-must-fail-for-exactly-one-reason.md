@@ -6,8 +6,8 @@ docId: ADR-9
 status: Accepted
 date: 2026-08-02
 generated:
-  by: human:nadeem
-  at: "2026-08-02T00:00:00Z"
+  by: openai-codex/gpt-5
+  at: "2026-08-23T21:20:05Z"
 ---
 
 # A rejection fixture must fail for exactly one reason
@@ -95,6 +95,13 @@ deleting either leaves `bad-resource-scheme` still rejected. Neither is
 individually load-bearing, and "the script fails when I delete the rule" proves
 nothing there. `requireSchemaSection` was swept the same way and is genuinely
 load-bearing.
+
+**A composite rule is swept as the authored policy unit.** A reference policy
+may short-circuit through local-handle permission, scheme selection, and a
+whole-value external pattern. Relaxing only an earlier member can expose the
+next member and leave the fixture rejected for the same intended policy. The
+negative control therefore removes the complete composite policy, while the
+one-advisory inspection still proves which branch rejected each fixture.
 
 A few fixtures deliberately fail for several reasons —
 `fixtures/improvement-requests-invalid/invalid-policy` is a kitchen sink with

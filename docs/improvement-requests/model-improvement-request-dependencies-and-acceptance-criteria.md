@@ -5,20 +5,64 @@ description: >-
   Add typed, canonical IR-to-IR dependencies and stable structured acceptance
   criteria to the shared improvement-request profile so cross-repository
   fulfillment graphs can be validated and traversed instead of reconstructed from prose.
-timestamp: "2026-08-19T17:22:39Z"
+timestamp: "2026-08-23T21:20:05Z"
 generated:
   by: openai-codex/gpt-5
-  at: "2026-08-19T17:22:39Z"
+  at: "2026-08-23T21:20:05Z"
 requestId: IR-2
-status: proposed
+status: in-progress
 origin: mori://shinzui/kikan
+targetPlan: docs/plans/8-model-improvement-request-dependencies-and-acceptance-criteria.md
+dependencies:
+  - ref: mori://shinzui/mori/okf/improvement-requests/concepts/IR-18
+    kind: soft
+    reason: Mori projects profile-declared nested references as typed concept edges.
+  - ref: mori://shinzui/kikan/okf/improvement-requests/concepts/IR-11
+    kind: integration
+    reason: Kikan owns the joint fulfillment-graph semantics and conformance proof.
+acceptanceCriteria:
+  - id: AC-1
+    statement: Existing valid improvement-request fixtures remain valid without either new field.
+    verification: Run the focused improvement-request fixture script and inspect the first fixture.
+  - id: AC-2
+    statement: The rich valid fixture covers all three dependency kinds and two stable criteria.
+    verification: Inspect the second fixture and run the focused improvement-request fixture script.
+  - id: AC-3
+    statement: Eight invalid fixtures each reject one load-bearing contract violation.
+    verification: Run the advisory loop, negative controls, and focused fixture script.
+  - id: AC-4
+    statement: Generated documentation defines dependency semantics and distinguishes live blockers.
+    verification: Run just docs and compare the generated improvement-request profile documentation.
+  - id: AC-5
+    statement: Compiled profile metadata exposes dependencies.ref as a typed reference field.
+    verification: Inspect the profile JSON from okf profile show and query the nested reference rule.
+  - id: AC-6
+    statement: The package, docs, fixtures, changelog, tag, and pinnable hash ship together.
+    verification: Run just check and compare the released remote import hash with the local hash.
+reviews:
+  - kind: model
+    reviewer: process:openai-codex
+    reviewed_at: "2026-08-23T21:20:05Z"
+    document_timestamp: "2026-08-23T21:20:05Z"
+    scope: content-and-metadata
+    outcome: approved
+    provider: openai
+    model: gpt-5
+    effort: unspecified
+    context: >-
+      Reviewed against the implemented profile contract, compiled rule metadata,
+      generated documentation, focused fixtures, and resolved dependency targets;
+      final tag and remote-hash evidence remain release-stage work.
+verified:
+  by: process:openai-codex
+  at: "2026-08-23T21:20:05Z"
 ---
 
 # Improvement Request: Model Improvement-Request Dependencies and Acceptance Criteria
 
 ## Status
 
-**Proposed.** This is the shared-vocabulary request for
+**In progress.** This is the shared-vocabulary request for
 `mori://shinzui/kikan/okf/use-cases/concepts/UC-23`. It is deliberately additive: existing request
 bundles remain valid, while repositories that declare fulfillment structure receive strict
 validation and typed reference metadata.
