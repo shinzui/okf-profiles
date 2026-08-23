@@ -78,8 +78,12 @@ criterion and do not pin an unreleased checkout.
       package import hash
       `sha256:97867b2364b6f9604ad6678ba246b704e1e16054c1ecebecc64db4e92c33b754`
       for publication and remote reproduction.
-- [ ] Milestone 4: dogfood the new fields in IR-2, pass all repository gates, release
+- [x] (2026-08-23) Milestone 4: dogfood the new fields in IR-2, pass all repository gates, release
       `okf-profiles` v0.12.0 with a reproducible semantic hash, and distill durable decisions.
+- [ ] Refresh Mori's local registry view of the published improvement-request profile. The
+      namespace-wide refresh was attempted after publication, but Mori v4.0.0.0 is compiled
+      against `okf-core` 0.5 and cannot decode the 0.8 schema; the released Mori source also bounds
+      `okf-core ^>=0.5.0.0`, so this requires a downstream Mori compatibility release.
 
 
 ## Surprises & Discoveries
@@ -162,6 +166,18 @@ criterion and do not pin an unreleased checkout.
   Evidence: `okf validate docs/improvement-requests --strict --profile
   docs/improvement-requests/profile.dhall --profile-enforce --log-enforce` reports `OK: 5 concepts
   (okf_version 0.2)` with no diagnostics.
+
+- Observation: the post-release Mori registry refresh cannot ingest this repository's widened
+  local profile descriptors. Installed Mori v4.0.0.0 was built against the 0.5 profile schema, and
+  current released Mori source still declares `okf-core ^>=0.5.0.0`; both reject the additive 0.8
+  members before indexing. The namespace refresh also reported four unrelated pre-existing
+  project failures, but `shinzui/okf-profiles` failed specifically at its ADR and improvement-
+  request descriptor annotations. The already-registered view consequently still reports the
+  improvement-request publisher at v0.8.0 even though the v0.12.0 Git tag and remote Dhall import
+  are valid.
+  Evidence: `mori registry reregister --namespace shinzui` ended `76 updated, 0 skipped, 5 failed`;
+  `mori registry show shinzui/okf-profiles --full` still reports v0.8.0; the canonical downstream
+  request `mori://shinzui/mori/okf/improvement-requests/concepts/IR-18` continues to resolve.
 
 
 ## Decision Log
@@ -265,16 +281,29 @@ criterion and do not pin an unreleased checkout.
   produced after the tag is published.
   Date: 2026-08-23.
 
+- Decision: Record the failed Mori refresh as a downstream compatibility gap instead of widening
+  Mori's `okf-core` dependency from this release plan.
+  Rationale: the v0.12.0 artifact evaluates with the released 0.8 decoder, the immutable remote
+  hash matches, and Mori IR-18 already owns consumption of the new compiled reference metadata.
+  Changing Mori's package bounds and proving its registry projections is cross-repository product
+  work, not a safe release workaround inside `okf-profiles`.
+  Date: 2026-08-23.
+
 
 ## Outcomes & Retrospective
 
-The dependency gate opened with the matching Hackage and immutable Git releases of `okf-core`
-0.8.0.0. The catalog now pins that contract, implements the optional dependency and acceptance-
-criterion fields, proves them with focused fixtures and negative controls, publishes their
-compiled documentation, and ships an optional standalone Seihou adoption blueprint with no
-migration edges. IR-2 dogfoods the new shape and the complete five-concept live request bundle
-passes strict validation. The remaining outcome is the v0.12.0 tag, remote semantic-hash proof,
-post-release IR-2 closure, and Mori registry refresh.
+The catalog now pins released `okf-core` 0.8.0.0, implements the optional dependency and
+acceptance-criterion fields, proves them with focused fixtures and negative controls, publishes
+their compiled documentation, and ships an optional standalone Seihou adoption blueprint with no
+migration edges. IR-2 dogfoods the new shape and is complete. The full gate passed, annotated tag
+v0.12.0 points to release commit `bf5bdd2`, and the remote package import reproduced
+`sha256:97867b2364b6f9604ad6678ba246b704e1e16054c1ecebecc64db4e92c33b754` exactly.
+
+The only incomplete plan outcome is local Mori registry observation. The refresh was attempted,
+but the current Mori release and source both remain on the 0.5 schema generation and cannot decode
+the 0.8 additive members this release requires. The existing registry entry therefore remains at
+v0.8.0 until the downstream compatibility work owned by Mori ships; the released artifact itself,
+Nagare adoption, and canonical IR-18 target are unaffected.
 
 
 ## Context and Orientation
@@ -869,3 +898,8 @@ Revision note (2026-08-23): Dogfooded IR-2 and corrected the live bundle baselin
 three additional requests, a stale index, and missing review provenance. Promoted the composite-
 policy negative-control rule into ADR-9 because it applies to future profile tests, not only this
 release.
+
+Revision note (2026-08-23): Published annotated tag v0.12.0 at `bf5bdd2`, reproduced the local
+package hash from the remote import, and closed IR-2. Recorded the failed Mori registry refresh as
+an explicit downstream compatibility gap after verifying that both installed and released Mori
+remain bound to the older 0.5 profile schema.

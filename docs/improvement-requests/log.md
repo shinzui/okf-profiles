@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-08-23
+* **Completion**: IR-2 completed after v0.12.0 publication, full validation, and remote semantic-hash verification.
 * **Update**: IR-2 enters implementation and dogfoods typed dependencies and acceptance criteria.
 
 ## 2026-08-19

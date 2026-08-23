@@ -5,13 +5,14 @@ description: >-
   Add typed, canonical IR-to-IR dependencies and stable structured acceptance
   criteria to the shared improvement-request profile so cross-repository
   fulfillment graphs can be validated and traversed instead of reconstructed from prose.
-timestamp: "2026-08-23T21:20:05Z"
+timestamp: "2026-08-23T21:25:26Z"
 generated:
   by: openai-codex/gpt-5
-  at: "2026-08-23T21:20:05Z"
+  at: "2026-08-23T21:25:26Z"
 requestId: IR-2
-status: in-progress
+status: completed
 origin: mori://shinzui/kikan
+completedAt: "2026-08-23T21:25:26Z"
 targetPlan: docs/plans/8-model-improvement-request-dependencies-and-acceptance-criteria.md
 dependencies:
   - ref: mori://shinzui/mori/okf/improvement-requests/concepts/IR-18
@@ -53,16 +54,35 @@ reviews:
       Reviewed against the implemented profile contract, compiled rule metadata,
       generated documentation, focused fixtures, and resolved dependency targets;
       final tag and remote-hash evidence remain release-stage work.
+  - kind: model
+    reviewer: process:openai-codex
+    reviewed_at: "2026-08-23T21:25:26Z"
+    document_timestamp: "2026-08-23T21:25:26Z"
+    scope: technical-accuracy
+    outcome: approved
+    provider: openai
+    model: gpt-5
+    effort: unspecified
+    context: >-
+      Reviewed after the annotated v0.12.0 tag resolved to release commit bf5bdd2,
+      the full repository gate passed, and the remote package import reproduced
+      sha256:97867b2364b6f9604ad6678ba246b704e1e16054c1ecebecc64db4e92c33b754.
+resolution: >-
+  Released by annotated tag v0.12.0 at commit bf5bdd2 after the full repository gate,
+  focused profile validation, generated-document reproduction, and remote Dhall import
+  reproduced sha256:97867b2364b6f9604ad6678ba246b704e1e16054c1ecebecc64db4e92c33b754.
 verified:
-  by: process:openai-codex
-  at: "2026-08-23T21:20:05Z"
+  - by: process:openai-codex
+    at: "2026-08-23T21:20:05Z"
+  - by: process:openai-codex
+    at: "2026-08-23T21:25:26Z"
 ---
 
 # Improvement Request: Model Improvement-Request Dependencies and Acceptance Criteria
 
 ## Status
 
-**In progress.** This is the shared-vocabulary request for
+**Completed in v0.12.0.** This is the shared-vocabulary request for
 `mori://shinzui/kikan/okf/use-cases/concepts/UC-23`. It is deliberately additive: existing request
 bundles remain valid, while repositories that declare fulfillment structure receive strict
 validation and typed reference metadata.
