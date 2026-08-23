@@ -24,7 +24,15 @@ for fixture in \
   bad-actor \
   missing-generated \
   bad-verified-actor \
-  bad-legacy-timestamp; do
+  bad-legacy-timestamp \
+  bare-dependency-handle \
+  wrong-dependency-scheme \
+  malformed-dependency-uri \
+  unknown-dependency-kind \
+  missing-dependency-reason \
+  duplicate-acceptance-criterion \
+  missing-acceptance-statement \
+  missing-acceptance-verification; do
   if "${okf_bin}" validate "fixtures/improvement-requests-invalid/${fixture}" \
     --profile "${profile}" \
     --profile-enforce >/dev/null 2>&1; then

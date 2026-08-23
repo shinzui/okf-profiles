@@ -9,6 +9,10 @@ let okf = ../../Profile/okf.dhall
 
 let FieldRule = okf.defaults.FieldRule
 
+let NestedRules = okf.defaults.NestedRules
+
+let NestedFieldRule = okf.defaults.NestedFieldRule
+
 let HandleReferenceRule = okf.defaults.HandleReferenceRule
 
 let Cardinality = okf.Cardinality
@@ -26,6 +30,15 @@ let scalar =
       \(name : Text) ->
       \(description : Text) ->
         FieldRule::{
+        , field = name
+        , description = Some description
+        , cardinality = Cardinality.Scalar
+        }
+
+let nestedScalar =
+      \(name : Text) ->
+      \(description : Text) ->
+        NestedFieldRule::{
         , field = name
         , description = Some description
         , cardinality = Cardinality.Scalar
@@ -112,7 +125,56 @@ in  Profile::{
           }
         ]
       , optional =
-        [ -- Ordinarily absent: a request that has not yet been planned has no
+        [ FieldRule::{
+          , field = "dependencies"
+          , description = Some
+              "Typed source relationships between improvement requests, not live operational blockers. `hard` gates source fulfillment on target fulfillment; `soft` informs or de-risks but never blocks by itself; `integration` allows independent implementation but gates source fulfillment on the named joint verification."
+          , cardinality = Cardinality.List
+          , elementFields = Some NestedRules::{
+            , required =
+              [     nestedScalar
+                    "ref"
+                    "Canonical external Mori URI of the target improvement request; local IR-N handles are ambiguous across repositories."
+                //  { reference = Some HandleReferenceRule::{
+                      , localPrefix = "IR"
+                      , externalUriSchemes = [ "mori" ]
+                      , allowLocal = False
+                      , externalUriPattern = Some
+                          "mori://[^/]+/[^/]+/okf/improvement-requests/concepts/IR-[1-9][0-9]*"
+                      }
+                    }
+              ,     nestedScalar
+                    "kind"
+                    "Source relationship kind: `hard` gates fulfillment on the target; `soft` never blocks by itself; `integration` permits independent implementation but gates fulfillment on named joint verification."
+                //  { allowedValues = [ "hard", "soft", "integration" ] }
+              , nestedScalar
+                  "reason"
+                  "Concise non-empty explanation of why this source relationship exists."
+              ]
+            }
+          }
+        , FieldRule::{
+          , field = "acceptanceCriteria"
+          , description = Some
+              "Stable request-local completion conditions, not tasks, dependencies, or evidence. Later evidence may cite a criterion id without rewriting the condition it proves."
+          , cardinality = Cardinality.List
+          , elementFields = Some NestedRules::{
+            , required =
+              [     nestedScalar
+                    "id"
+                    "Stable request-local AC-N handle for this acceptance condition."
+                //  { format = Some (FieldFormat.DocumentHandle "AC") }
+              , nestedScalar
+                  "statement"
+                  "Observable condition that must hold for the request to be complete."
+              , nestedScalar
+                  "verification"
+                  "Expected procedure or evidence that will prove the condition, without claiming that evidence already exists."
+              ]
+            }
+          , uniqueBy = Some "id"
+          }
+        , -- Ordinarily absent: a request that has not yet been planned has no
           -- target plan, so demanding it under `--strict` would report a normal
           -- state as a deficiency.
           FieldRule::{

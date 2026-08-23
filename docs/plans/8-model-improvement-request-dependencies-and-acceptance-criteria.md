@@ -60,8 +60,10 @@ criterion and do not pin an unreleased checkout.
       with semantic hash `sha256:0589682fe0acc109e523eeb4ef7ed2bdfa6f67185183e926f3a138cc071ac009`,
       refreshed the generated docs for the widened schema defaults, and proved all old catalog
       fixtures still validate with `okf` 0.8.0.0.
-- [ ] Milestone 2: add optional `dependencies` and `acceptanceCriteria` rules, one rich valid
-      fixture, and focused single-reason rejection fixtures.
+- [x] (2026-08-23) Added optional `dependencies` and `acceptanceCriteria` rules, extended the rich
+      valid fixture with all three dependency kinds and `AC-1` / `AC-2`, added eight focused
+      single-reason rejection fixtures, proved each new constraint load-bearing, regenerated the
+      affected public profile pages, and passed the full profile test suite.
 - [x] (2026-08-19 21:33Z) Authored and registered the optional
       `adopt-improvement-request-contracts` Seihou blueprint with no migration edges, added a
       repository-wide blueprint lint gate, and confirmed `just types` and `just test` pass.
@@ -127,6 +129,14 @@ criterion and do not pin an unreleased checkout.
   Its closed Dhall decoder rejected the widened schema before validation began. Building the
   tagged Mori-located source and putting that 0.8.0.0 executable first on `PATH` made the expected
   backward-compatible profile tests pass.
+
+- Observation: the nested document-reference policy intentionally short-circuits its checks.
+  Relaxing only `allowLocal` on the bare-handle fixture exposes local existence validation, and
+  adding `https` to the allowed schemes exposes the canonical whole-value pattern. Removing the
+  combined `dependencies.ref` reference policy makes each of the bare-handle, wrong-scheme, and
+  malformed-target fixtures pass; the other five new constraints each pass when their one field
+  rule is relaxed. This confirms the Decision Log's earlier choice that external-only selection,
+  scheme, and canonical target shape are one load-bearing policy rather than independent rules.
 
 
 ## Decision Log
@@ -204,6 +214,14 @@ criterion and do not pin an unreleased checkout.
   every profile, so a working schema-pin commit cannot leave the deterministic staleness gate red.
   Milestone 3 will still regenerate and inspect the improvement-request-specific contract after
   its rules exist.
+  Date: 2026-08-23.
+
+- Decision: Treat the complete `dependencies.ref` reference policy as the load-bearing unit in
+  the ADR-9 deletion audit.
+  Rationale: local-handle permission, external scheme selection, and the canonical target pattern
+  are evaluated in order within one upstream `HandleReferenceRule`. Relaxing an earlier member
+  correctly exposes the next member; deleting the combined policy is the negative control that
+  proves the three focused fixtures depend on the authored rule.
   Date: 2026-08-23.
 
 
@@ -795,3 +813,7 @@ Revision note (2026-08-23): Completed the released-schema adoption and moved the
 generated-doc refresh into Milestone 1 after the 0.8.0.0 renderer exposed its new default fields
 across every compiled profile. Recorded that validation must use the matching 0.8.0.0 CLI rather
 than the stale globally installed 0.7.0.0 decoder.
+
+Revision note (2026-08-23): Completed the executable improvement-request contract and documented
+the combined reference policy as the correct unit for ADR-9 load-bearingness checks after
+subconstraint relaxation exposed the policy's intentional validation fallthrough.

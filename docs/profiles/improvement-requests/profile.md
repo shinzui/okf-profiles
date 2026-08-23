@@ -27,6 +27,23 @@ These rules apply to every concept in a bundle governed by this profile,
 whatever its type. Each concept type's own page repeats them merged with that
 type's rules, which is the form that actually applies.
 
+### `acceptanceCriteria` — optional
+
+Stable request-local completion conditions, not tasks, dependencies, or evidence. Later evidence may cite a criterion id without rewriting the condition it proves.
+
+- Allowed values: any
+- Cardinality: list
+- Format: none
+- Reference: none
+- Path: none
+- Unique by: `id`
+- Condition: none
+- Object fields: none
+- Element fields:
+    - `id` — required; allowed values: any; cardinality: scalar; format: document-handle(AC) — Stable request-local AC-N handle for this acceptance condition.
+    - `statement` — required; allowed values: any; cardinality: scalar; format: none — Observable condition that must hold for the request to be complete.
+    - `verification` — required; allowed values: any; cardinality: scalar; format: none — Expected procedure or evidence that will prove the condition, without claiming that evidence already exists.
+
 ### `completedAt` — required when `status` is `completed`
 
 UTC time at which acceptance evidence proved the request complete.
@@ -40,6 +57,23 @@ UTC time at which acceptance evidence proved the request complete.
 - Condition: applies only when `status` is `completed`
 - Object fields: none
 - Element fields: none
+
+### `dependencies` — optional
+
+Typed source relationships between improvement requests, not live operational blockers. `hard` gates source fulfillment on target fulfillment; `soft` informs or de-risks but never blocks by itself; `integration` allows independent implementation but gates source fulfillment on the named joint verification.
+
+- Allowed values: any
+- Cardinality: list
+- Format: none
+- Reference: none
+- Path: none
+- Unique by: none
+- Condition: none
+- Object fields: none
+- Element fields:
+    - `kind` — required; allowed values: `hard`, `soft`, `integration`; cardinality: scalar; format: none — Source relationship kind: `hard` gates fulfillment on the target; `soft` never blocks by itself; `integration` permits independent implementation but gates fulfillment on named joint verification.
+    - `reason` — required; allowed values: any; cardinality: scalar; format: none — Concise non-empty explanation of why this source relationship exists.
+    - `ref` — required; allowed values: any; cardinality: scalar; format: none; reference: local handles with prefix `IR`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/improvement-requests/concepts/IR-[1-9][0-9]*` — Canonical external Mori URI of the target improvement request; local IR-N handles are ambiguous across repositories.
 
 ### `description` — required
 
