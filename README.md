@@ -78,6 +78,7 @@ docs/
 blueprints/
   adopt-improvement-request-contracts/
                               # optional promotion of prose into structured IR contracts
+  adopt-user-documentation/   # migrates docs/user and docs/guides as separate OKF bundles
   adopt-capabilities/         # authors an evidence-backed capability catalog
   adopt-architecture-decisions/
                               # adaptive Seihou migration for existing ADR corpora
@@ -410,6 +411,19 @@ well-supported dependencies and acceptance conditions from prose into the new st
 preserves ambiguous prose for human resolution, and safely does nothing when no governed
 improvement-request bundle exists. It has no migration edges because a consumer can repin to
 v0.12.0 without changing any document.
+
+Starting with v0.13.1, [`adopt-user-documentation`](./blueprints/adopt-user-documentation/) provides
+the repeatable first-adoption path for the `documentation.userDocumentation` profile introduced in
+v0.13.0:
+
+```bash
+seihou agent run adopt-user-documentation
+```
+
+It discovers `docs/user/` and `docs/guides/` independently, preserves prose and valid handles,
+classifies pages by reader intent, installs one frozen descriptor, creates OKF v0.2 indexes and
+logs, registers both bundles in Mori, and wires strict validation into the repository's existing
+checks. A repository with neither corpus completes without changes.
 
 Doing it by hand is four changes per bundle:
 

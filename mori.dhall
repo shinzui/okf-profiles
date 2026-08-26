@@ -60,6 +60,16 @@ in  Schema.Project::{
               "blueprints/adopt-architecture-decisions/README.md"
         }
       , Schema.DocRef::{
+        , key = "adopt-user-documentation-blueprint"
+        , kind = Schema.DocKind.Runbook
+        , audience = Schema.DocAudience.User
+        , description = Some
+            "How to adapt existing docs/user and docs/guides corpora to the shared user-documentation profile"
+        , location =
+            Schema.DocLocation.LocalFile
+              "blueprints/adopt-user-documentation/README.md"
+        }
+      , Schema.DocRef::{
         , key = "migrate-okf-bundles-to-v0-2-blueprint"
         , kind = Schema.DocKind.Runbook
         , audience = Schema.DocAudience.User
@@ -100,6 +110,14 @@ in  Schema.Project::{
           , "mori"
           , "okf"
           ]
+        }
+      , Schema.SeihouTemplate::{
+        , name = "adopt-user-documentation"
+        , version = Some "0.13.1"
+        , description = Some
+            "Adapt existing docs/user and docs/guides corpora to the shared user-documentation profile, preserving prose while adding reader-intent types, stable DOC-N handles, strict validation, and Mori bundle registration."
+        , modulePath = "blueprints/adopt-user-documentation"
+        , tags = [ "adoption", "documentation", "guides", "migration", "mori", "okf" ]
         }
       , Schema.SeihouTemplate::{
         , name = "adopt-architecture-decisions"

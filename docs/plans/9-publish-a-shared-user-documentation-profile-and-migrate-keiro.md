@@ -22,6 +22,11 @@ validation contract. After this change, any project can consume one published
 page can be found and linked through a stable bundle-scoped `DOC-N` handle even when its file is
 renamed or its documentation category changes.
 
+The catalog will also publish an `adopt-user-documentation` Seihou blueprint. A maintainer can run
+one adaptive playbook in another repository to discover existing `docs/user/` and `docs/guides/`
+corpora, preserve their prose, install the published profile, assign stable metadata, register
+separate bundles, and add repository-native validation without copying Keiro-specific choices.
+
 Keiro, the first consumer at `mori://shinzui/keiro`, will expose `docs/user/` and `docs/guides/`
 as two OKF bundles governed by that profile. A maintainer can run strict checks locally, use
 `mori registry concepts` after observation to search the corpus and traverse links, and resolve
@@ -41,10 +46,16 @@ This section must always reflect the actual current state of the work.
 - [x] (2026-08-26T12:48Z) Add and fully test the shared
   `documentation.userDocumentation` profile, publish its
   generated documentation, register it in Mori metadata, and record its durable taxonomy in an ADR.
-- [ ] Publish a tagged okf-profiles release containing the new export so consumers can use a
-  reproducible remote import.
+- [x] (2026-08-26T13:09Z) Publish the v0.13.0 okf-profiles release containing the new export and
+  verify its remote Dhall semantic hash.
+- [x] (2026-08-26T13:26Z) Add, register, document, lint, and fully catalog-check the
+  `adopt-user-documentation` Seihou blueprint and prepare v0.13.1 release notes.
+- [ ] Publish the immutable v0.13.1 follow-up, verify the shipped descriptor and an isolated
+  installed-blueprint rendering, and complete the first-consumer rehearsal through Keiro.
 - [ ] Migrate Keiro's `docs/user/` and `docs/guides/` corpora, add their shared pinned descriptor,
-  register both bundles, and wire strict validation into `just verify`.
+  register both bundles, and wire strict validation into `just verify`. The 52 concepts, indexes,
+  logs, manifest declarations, and validation target are complete locally; the published selector,
+  final validation, and commit remain.
 - [ ] Observe Keiro and prove stable-ID lookup, cross-document links, search, trust metadata, and
   strict validation end to end.
 - [ ] Complete the ADR distillation pass and record outcomes.
@@ -55,7 +66,7 @@ This section must always reflect the actual current state of the work.
 Document unexpected behaviors, bugs, optimizations, or insights discovered during
 implementation. Provide concise evidence.
 
-- Observation: Keiro's two target directories contain 50 existing Markdown pages, including two
+- Observation: Keiro's two target directories contain 52 existing Markdown pages, including two
   hand-curated `README.md` navigation pages and no YAML frontmatter. They are cleanly separable as
   two bundle roots; registering `docs/` itself would also ingest unrelated plans, ADRs, reviews,
   and research.
@@ -78,6 +89,16 @@ implementation. Provide concise evidence.
   Evidence: the negative-control profile failed compilation until `docId`, every type's `DOC`
   prefix, `idField`, and both DOC reference rules were removed as one composite policy unit. With
   that whole unit removed, `missing-doc-id` stopped rejecting as expected.
+- Observation: the user requested the reusable Seihou adoption path immediately after v0.13.0 was
+  published, so the immutable v0.13.0 tag cannot be amended to contain it.
+  Evidence: upstream `refs/tags/v0.13.0^{}` resolves to catalog commit `f0332df`, and its frozen
+  `package.dhall` hash is
+  `sha256:3be4c39d128ef8a21e39d7ae4eaef29097801b343ab5672caaf7e30186a8f91a`.
+- Observation: adding a Seihou blueprint, registry entries, and operator documentation does not
+  change the public Dhall package value, so v0.13.1 deliberately has the same semantic import hash
+  as v0.13.0.
+  Evidence: `dhall hash --file package.dhall` remains
+  `sha256:3be4c39d128ef8a21e39d7ae4eaef29097801b343ab5672caaf7e30186a8f91a` after the blueprint work.
 
 
 ## Decision Log
@@ -113,6 +134,19 @@ Record every decision made while working on the plan.
   incorrectly absorb unrelated documentation corpora, while moving 52 public pages would create
   needless link churn.
   Date: 2026-08-26
+- Decision: Publish a standalone Seihou blueprint named `adopt-user-documentation`, with no
+  version-window migration edges.
+  Rationale: repositories have not adopted an older version of this profile, so there is no prior
+  installed contract to migrate. The playbook must adapt an existing corpus once, reconcile an
+  already-adopted corpus idempotently, and succeed without changes when neither target corpus
+  exists.
+  Date: 2026-08-26
+- Decision: Version the new blueprint as 0.13.1 and ship a v0.13.1 patch release whose descriptor
+  imports that same catalog tag.
+  Rationale: [ADR-7](../adr/0007-blueprint-versions-track-the-catalog-tag.md) requires blueprint
+  versions to identify the catalog release they target. The already-published v0.13.0 tag is
+  immutable and does not contain the requested blueprint.
+  Date: 2026-08-26
 
 
 ## Outcomes & Retrospective
@@ -130,6 +164,17 @@ completed successfully, including `OK: 6 concepts (okf_version 0.2)` and
 `OK: user-documentation profile acceptance and rejection fixtures`. Negative controls confirmed
 that every authored policy unit is load-bearing; the stable identity plus supersession contract is
 one composite unit rather than separable rules.
+
+Milestone 2 published annotated tag v0.13.0 at commit `f0332df`. Fetching the tag through GitHub
+and freezing its public `package.dhall` produced the same semantic hash recorded in the release
+notes, proving that consumers can resolve the new export without a sibling checkout.
+
+Milestone 3's local artifact is complete. `adopt-user-documentation` version 0.13.1 ships an exact
+profile selector and migration reference, handles first adoption, reconciliation, conflicting
+profiles, provenance uncertainty, bundle-local identity, Mori schema variation, check integration,
+and no-applicable-corpus behavior. `seihou validate-blueprint --lint`, catalog registry validation,
+and the complete `just check` suite pass with five registered blueprints. Remote descriptor and
+installed-copy checks necessarily wait for the immutable v0.13.1 tag.
 
 
 ## Context and Orientation
@@ -165,6 +210,16 @@ a bundle declaration.
 inside one bundle: moving or renaming the Markdown file does not change the value. Two bundles may
 both own `DOC-1`; the canonical URI remains unambiguous because it includes project and bundle.
 
+This repository already distributes adaptive Seihou blueprints under `blueprints/`, registers
+them in `seihou-registry.dhall` and `mori.dhall`, and lints every blueprint from
+`scripts/test-blueprints.sh`. A blueprint is a prompt plus declared reference files that a
+tool-capable coding agent runs inside a consumer repository. The nearest adoption pattern is
+`blueprints/adopt-improvement-request-contracts/`: it is a standalone, idempotent playbook with no
+migration edges, has an operator README and a concise contract reference, and treats absence of an
+applicable corpus as a successful no-op. [ADR-7](../adr/0007-blueprint-versions-track-the-catalog-tag.md)
+requires its version in `blueprint.dhall`, `seihou-registry.dhall`, and `mori.dhall` to match the
+catalog tag it targets.
+
 
 ## Plan of Work
 
@@ -190,19 +245,32 @@ state change and requires explicit user approval immediately before push/tag pub
 milestone is complete when the immutable tag is visible upstream and a clean Dhall import of
 `documentation.userDocumentation` resolves by tag and hash.
 
-Milestone 3 migrates `mori://shinzui/keiro`. Add one frozen selector at
-`mori/user-documentation-profile.dhall` importing the release from Milestone 2. Add frontmatter to
-every target page without changing its body: preserve the H1 as `title`, assign one primary reader
-intent, write a concise description, allocate stable `DOC-N` handles independently per bundle,
-add useful search tags, and set `generated.by` to `human:nadeem`. Derive `generated.at` from each
-file's most recent meaningful Git commit and normalize it to UTC rather than pretending the
-metadata migration rewrote the prose. Generate `index.md` and add a scoped `log.md` to each
-bundle. Extend `mori.dhall` with both bundles and typed published-profile bindings. Add
-`user-documentation-validate` to `Justfile` and make `verify` depend on it. This milestone is
+Milestone 3 adds the reusable migration path. Create
+`blueprints/adopt-user-documentation/blueprint.dhall`, `prompt.md`, `README.md`, and reference files
+for the pinned v0.13.1 descriptor and exact profile contract. The prompt must discover
+`docs/user/` and `docs/guides/` independently, preserve bodies and existing valid handles, derive
+truthful authorship timestamps from Git evidence, classify by primary reader intent, allocate
+handles with `okf id next`, generate reserved indexes and logs, register one Mori bundle per
+corpus, and integrate strict validation into the repository's existing check system. It must never
+guess provenance, consume all of `docs/`, renumber a valid handle, or overwrite a locally authored
+profile. Register the blueprint and README in both catalogs, document it in the root README and
+CHANGELOG, rehearse it against a disposable legacy corpus and an already-conforming corpus, and
+prepare v0.13.1. The milestone is complete when blueprint lint, registry validation, the isolated
+preview, rehearsals, and `just check` pass.
+
+Milestone 4 migrates `mori://shinzui/keiro`. Add one frozen selector at
+`mori/user-documentation-profile.dhall` importing the compatible v0.13.1 follow-up. Add
+frontmatter to every target page without changing its body: preserve the H1 as `title`, assign one
+primary reader intent, write a concise description, allocate stable `DOC-N` handles independently
+per bundle, add useful search tags, and set `generated.by` to `human:nadeem`. Derive
+`generated.at` from each file's most recent meaningful Git commit and normalize it to UTC rather
+than pretending the metadata migration rewrote the prose. Generate `index.md` and add a scoped
+`log.md` to each bundle. Extend `mori.dhall` with both bundles and typed published-profile bindings.
+Add `user-documentation-validate` to `Justfile` and make `verify` depend on it. This milestone is
 complete when both bundles pass strict profile and log enforcement and existing documentation
 links still resolve.
 
-Milestone 4 proves the registry behavior. Run Mori's non-mutating manifest checks, then observe
+Milestone 5 proves the registry behavior. Run Mori's non-mutating manifest checks, then observe
 Keiro so the registry indexes the two new bundles. Demonstrate exact `DOC-N` lookup, search by a
 public topic, link traversal between the user and guide bundles where applicable, and canonical
 `mori path` resolution. Re-run the Keiro documentation gates and inspect the final diffs. Record
@@ -244,6 +312,21 @@ dhall freeze --inplace /tmp/user-documentation-profile.dhall
 dhall type --file /tmp/user-documentation-profile.dhall
 ```
 
+Author, register, and validate the reusable migration blueprint:
+
+```bash
+seihou validate-blueprint blueprints/adopt-user-documentation --lint
+seihou registry validate
+bash scripts/test-blueprints.sh
+seihou agent --debug run adopt-user-documentation
+just check
+```
+
+The blueprint rehearsal uses a disposable Git repository with `docs/user/` and `docs/guides/`
+pages lacking frontmatter. Following the rendered prompt must produce two independently valid
+bundles, preserve the original Markdown bodies byte-for-byte below inserted frontmatter, and make
+a second pass produce no content changes.
+
 From `/Users/shinzui/Keikaku/bokuno/keiro`, validate the migrated consumer:
 
 ```bash
@@ -277,6 +360,12 @@ The publication is accepted only when the tag is visible through upstream `git l
 semantic hash matches the consumer selector, and the selector type-checks without using a sibling
 checkout or mutable branch.
 
+The blueprint is accepted when its Dhall evaluates and lints, both catalogs agree on name,
+version, path, description, and tags, its shipped descriptor resolves through v0.13.1 and the
+recorded semantic hash, and an isolated rehearsal proves first-run migration, no-applicable-corpus
+success, and second-run idempotence. The rendered playbook must direct an agent to preserve bodies,
+valid handles, local profile customizations, unrelated changes, and repository-native checks.
+
 Keiro is accepted when every one of the 52 existing Markdown pages retains its original body,
 gains unique valid `DOC-N` metadata inside its bundle, both bundle indexes declare OKF 0.2, both
 logs cover the metadata adoption, and strict profile plus log enforcement succeeds. The existing
@@ -295,6 +384,11 @@ Profile documentation and bundle indexes are deterministic and may be regenerate
 `okf id next` only reports an ID and does not write, so record allocated handles in the patch
 before calling it again. Frontmatter migration must be additive: never regenerate document bodies
 or replace the curated `README.md` content.
+
+The blueprint is also idempotent: it validates an already-governed corpus before editing,
+preserves every conforming field, allocates only after the largest existing handle, and reports a
+repository without an applicable corpus as a successful no-op. Rehearsals live in a disposable
+directory and must never run against a user's uncommitted repository.
 
 If the catalog tests fail, fix the profile or focused fixture before publishing; do not weaken
 strict enforcement. If release publication is not approved, stop after a clean local catalog
@@ -332,3 +426,21 @@ Keiro's `mori.dhall` uses the already pinned Mori schema's
 `shinzui/okf-profiles`, export `documentation.userDocumentation`, the published version, and the
 semantic pin. The legacy `profile` path points at the frozen selector so okf and Mori can perform
 local enforcement; the typed binding provides registry identity and stale-pin reporting.
+
+The Seihou artifact interface is a standalone blueprint named `adopt-user-documentation`, version
+`0.13.1`, with no migration edges. It ships two readable references:
+
+```text
+user-documentation-profile.dhall
+migration-reference.md
+```
+
+Its canonical cross-repository reference is
+`mori://shinzui/okf-profiles/templates/adopt-user-documentation`. Consumers run it with
+`seihou agent run adopt-user-documentation`; it does not participate in `seihou agent migrate`
+because no earlier user-documentation profile contract exists.
+
+Revision note (2026-08-26): Expanded the plan after the user requested a reusable Seihou blueprint
+for migrating subsequent repositories. Added the adaptive blueprint milestone, v0.13.1 release
+decision, registration and rehearsal acceptance, and updated Keiro to consume the compatible
+follow-up tag.

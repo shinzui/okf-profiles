@@ -31,6 +31,13 @@
       , "okf"
       ]
     }
+  , { name = "adopt-user-documentation"
+    , version = Some "0.13.1"
+    , path = "blueprints/adopt-user-documentation"
+    , description = Some
+        "Adapt existing docs/user and docs/guides corpora to the shared user-documentation profile, preserving prose while adding reader-intent types, stable DOC-N handles, strict validation, and Mori bundle registration."
+    , tags = [ "adoption", "documentation", "guides", "migration", "mori", "okf" ]
+    }
   , { name = "adopt-capabilities"
     , version = Some "0.9.3"
     , path = "blueprints/adopt-capabilities"

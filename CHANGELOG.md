@@ -9,6 +9,42 @@ these profiles and how to migrate it.
 ## [Unreleased]
 
 
+## [0.13.1] — 2026-08-26
+
+**Adds the repeatable adoption path for the v0.13.0 user-documentation profile.** The profile value
+is unchanged, so an existing v0.13.0 consumer does not need to repin or modify its corpus.
+
+### Added
+
+- **`adopt-user-documentation` Seihou blueprint** — discovers existing `docs/user/` and
+  `docs/guides/` corpora independently, preserves their prose and valid handles, installs one
+  frozen profile descriptor, adds reader-intent metadata and stable `DOC-N` identity, generates
+  OKF v0.2 indexes and logs, registers Mori bundles, and integrates strict validation with the
+  repository's existing check system.
+- A shipped migration reference covering truthful Git-derived provenance, deterministic handle
+  allocation, typed published-profile bindings, body-preservation checks, no-applicable-corpus
+  behavior, and second-run idempotence.
+
+### Migration
+
+Existing bundles require no migration. To adopt the profile in another repository, install the
+blueprint from this catalog and run:
+
+```bash
+seihou agent run adopt-user-documentation
+```
+
+### Release import
+
+```dhall
+https://raw.githubusercontent.com/shinzui/okf-profiles/v0.13.1/package.dhall
+  sha256:3be4c39d128ef8a21e39d7ae4eaef29097801b343ab5672caaf7e30186a8f91a
+```
+
+The semantic hash matches v0.13.0 because the public Dhall profile value is unchanged; v0.13.1
+adds catalog tooling and documentation around that value.
+
+
 ## [0.13.0] — 2026-08-26
 
 **Adds a shared profile for user-facing product documentation.** This is a new export, so existing
@@ -473,3 +509,4 @@ and `tanPostgresql` take OKF's vocabulary, because neither declares a house
 
 [0.8.0]: https://github.com/shinzui/okf-profiles/releases/tag/v0.8.0
 [0.13.0]: https://github.com/shinzui/okf-profiles/releases/tag/v0.13.0
+[0.13.1]: https://github.com/shinzui/okf-profiles/releases/tag/v0.13.1
