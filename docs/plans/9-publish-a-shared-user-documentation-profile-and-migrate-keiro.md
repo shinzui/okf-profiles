@@ -51,13 +51,13 @@ This section must always reflect the actual current state of the work.
 - [x] (2026-08-26T13:26Z) Add, register, document, lint, and fully catalog-check the
   `adopt-user-documentation` Seihou blueprint and prepare v0.13.1 release notes.
 - [ ] Publish the immutable v0.13.1 follow-up, verify the shipped descriptor and an isolated
-  installed-blueprint rendering, and complete the first-consumer rehearsal through Keiro.
-- [ ] Migrate Keiro's `docs/user/` and `docs/guides/` corpora, add their shared pinned descriptor,
-  register both bundles, and wire strict validation into `just verify`. The 52 concepts, indexes,
-  logs, manifest declarations, and validation target are complete locally; the published selector,
-  final validation, and commit remain.
-- [ ] Observe Keiro and prove stable-ID lookup, cross-document links, search, trust metadata, and
-  strict validation end to end.
+  installed-blueprint descriptor, and remote catalog availability. The isolated installed-copy
+  rendering already succeeds from local commit `c108cab`.
+- [x] (2026-08-26T13:35Z) Migrate Keiro's `docs/user/` and `docs/guides/` corpora, install their
+  shared v0.13.0 pinned descriptor, register both bundles, wire strict validation into `just
+  verify`, and commit the first consumer as `acb9ee6c`.
+- [x] (2026-08-26T13:38Z) Register Keiro locally and prove stable-ID lookup, cross-document links,
+  fleet search, producer metadata, typed profile provenance, and strict validation end to end.
 - [ ] Complete the ADR distillation pass and record outcomes.
 
 
@@ -99,6 +99,11 @@ implementation. Provide concise evidence.
   as v0.13.0.
   Evidence: `dhall hash --file package.dhall` remains
   `sha256:3be4c39d128ef8a21e39d7ae4eaef29097801b343ab5672caaf7e30186a8f91a` after the blueprint work.
+- Observation: Mori indexes and resolves the two new bundles even though `mori registry show
+  shinzui/keiro --full` currently prints `Bundles (0)` in its summary section.
+  Evidence: bundle-scoped concept queries return 25 and 27 concepts, exact handle URIs resolve to
+  the correct files, and both typed pins appear as `current (observed)`. This presentation mismatch
+  does not block concept queries or profile provenance.
 
 
 ## Decision Log
@@ -147,6 +152,11 @@ Record every decision made while working on the plan.
   versions to identify the catalog release they target. The already-published v0.13.0 tag is
   immutable and does not contain the requested blueprint.
   Date: 2026-08-26
+- Decision: Keep Keiro pinned to v0.13.0 while the blueprint and later adopters use v0.13.1.
+  Rationale: v0.13.0 is the immutable release that first published the profile and is already
+  verified remotely. v0.13.1 adds only adoption tooling; both tags expose the same semantic Dhall
+  value, so repinning the completed first consumer would create churn without changing policy.
+  Date: 2026-08-26
 
 
 ## Outcomes & Retrospective
@@ -174,7 +184,23 @@ profile selector and migration reference, handles first adoption, reconciliation
 profiles, provenance uncertainty, bundle-local identity, Mori schema variation, check integration,
 and no-applicable-corpus behavior. `seihou validate-blueprint --lint`, catalog registry validation,
 and the complete `just check` suite pass with five registered blueprints. Remote descriptor and
-installed-copy checks necessarily wait for the immutable v0.13.1 tag.
+catalog checks necessarily wait for the immutable v0.13.1 tag; an isolated install from local
+commit `c108cab` renders the expected version, references, prompt, and safety rules.
+
+Milestone 4 completed the first consumer without changing any original documentation body.
+Keiro commit `acb9ee6c` adds 25 `docs/user` concepts, 27 `docs/guides` concepts, two deterministic
+indexes, two migration logs, a frozen v0.13.0 selector, typed Mori bindings, and a strict
+`user-documentation-validate` target in `just verify`. Both bundle validations pass, 52 body
+comparisons against pre-migration Git content are identical, and regenerating both indexes changes
+nothing.
+
+Milestone 5's local registry proof resolves
+`mori://shinzui/keiro/okf/user-documentation/concepts/DOC-1` to `docs/user/README.md` and
+`mori://shinzui/keiro/okf/guides/concepts/DOC-17` to `docs/guides/durable-workflows.md`. Exact
+`DOC-1` lookup returns both bundle-qualified navigation pages; fleet search for `durable workflow`
+returns the tutorial, reference, related reviews, and cross-project runtime-pattern entries; a
+producer query returns all 52 adopted pages. OKF graph output contains 84 user-documentation edges
+and 78 guide edges. Mori reports both v0.13.0 profile pins as current.
 
 
 ## Context and Orientation
@@ -259,7 +285,7 @@ prepare v0.13.1. The milestone is complete when blueprint lint, registry validat
 preview, rehearsals, and `just check` pass.
 
 Milestone 4 migrates `mori://shinzui/keiro`. Add one frozen selector at
-`mori/user-documentation-profile.dhall` importing the compatible v0.13.1 follow-up. Add
+`mori/user-documentation-profile.dhall` importing the verified v0.13.0 profile release. Add
 frontmatter to every target page without changing its body: preserve the H1 as `title`, assign one
 primary reader intent, write a concise description, allocate stable `DOC-N` handles independently
 per bundle, add useful search tags, and set `generated.by` to `human:nadeem`. Derive
@@ -442,5 +468,5 @@ because no earlier user-documentation profile contract exists.
 
 Revision note (2026-08-26): Expanded the plan after the user requested a reusable Seihou blueprint
 for migrating subsequent repositories. Added the adaptive blueprint milestone, v0.13.1 release
-decision, registration and rehearsal acceptance, and updated Keiro to consume the compatible
-follow-up tag.
+decision, registration and rehearsal acceptance, and kept Keiro on the semantically identical
+v0.13.0 profile release that was already published and remotely verified.
