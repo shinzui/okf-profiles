@@ -8,6 +8,9 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+
+## [0.13.0] — 2026-08-26
+
 **Adds a shared profile for user-facing product documentation.** This is a new export, so existing
 consumer corpora do not change. A project adopts it deliberately by adding OKF frontmatter and
 pinning the release that first publishes `documentation.userDocumentation`.
@@ -29,6 +32,16 @@ Existing profiles and bundles require no migration. A new consumer creates a bun
 0.2, allocates unique `DOC-N` values inside that bundle, classifies each page by reader intent, and
 runs strict profile and log enforcement. `generated.at` should preserve the page's last meaningful
 content date rather than the metadata-adoption date.
+
+### Release import
+
+```dhall
+https://raw.githubusercontent.com/shinzui/okf-profiles/v0.13.0/package.dhall
+  sha256:3be4c39d128ef8a21e39d7ae4eaef29097801b343ab5672caaf7e30186a8f91a
+```
+
+The semantic hash is computed from the complete local `package.dhall` value. Publication must
+verify the tagged remote import reproduces it before Keiro pins this release.
 
 
 ## [0.12.0] — 2026-08-23
@@ -459,3 +472,4 @@ and `tanPostgresql` take OKF's vocabulary, because neither declares a house
   told consumers to pin `v0.1.0`.
 
 [0.8.0]: https://github.com/shinzui/okf-profiles/releases/tag/v0.8.0
+[0.13.0]: https://github.com/shinzui/okf-profiles/releases/tag/v0.13.0
