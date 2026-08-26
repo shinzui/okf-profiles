@@ -175,6 +175,12 @@ in  Schema.Project::{
         , version = Some "v0.8.0"
         }
       , Schema.OkfProfile::{
+        , name = "user-documentation"
+        , export = "documentation.userDocumentation"
+        , path = Some "profiles/documentation/user-documentation.dhall"
+        , version = Some "v0.13.0"
+        }
+      , Schema.OkfProfile::{
         , name = "okf-v0-2"
         , export = "okfV02"
         , path = Some "profiles/okf-v0-2.dhall"

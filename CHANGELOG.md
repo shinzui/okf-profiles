@@ -8,6 +8,28 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+**Adds a shared profile for user-facing product documentation.** This is a new export, so existing
+consumer corpora do not change. A project adopts it deliberately by adding OKF frontmatter and
+pinning the release that first publishes `documentation.userDocumentation`.
+
+### Added
+
+- **`documentation.userDocumentation`** — user-facing pages organized by the reader's primary
+  intent: `Navigation`, `Tutorial`, `Guide`, `Explanation`, `Reference`, or `Runbook`. Every page
+  carries a stable bundle-scoped `DOC-N` handle, title, description, search tags, and OKF v0.2
+  generation provenance. The shared prefix preserves identity when a page changes category.
+- Optional OKF lifecycle, expiry, source, usage-window, and verification metadata, plus typed local
+  or canonical-Mori `supersedes` / `supersededBy` relationships.
+- A six-type acceptance corpus, twenty focused rejection fixtures, generated profile
+  documentation, and Keiro as the first consumer at `mori://shinzui/keiro`.
+
+### Migration
+
+Existing profiles and bundles require no migration. A new consumer creates a bundle declaring OKF
+0.2, allocates unique `DOC-N` values inside that bundle, classifies each page by reader intent, and
+runs strict profile and log enforcement. `generated.at` should preserve the page's last meaningful
+content date rather than the metadata-adoption date.
+
 
 ## [0.12.0] — 2026-08-23
 

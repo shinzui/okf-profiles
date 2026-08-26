@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-08-26
+* **Addition**: ADR-11 establishes the shared reader-intent taxonomy and bundle-scoped DOC-N identity for user-facing documentation.
+
 ## 2026-08-23
 * **Update**: ADR-9 clarifies that a composite rule is swept as one authored policy unit.
 

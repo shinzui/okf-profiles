@@ -59,6 +59,7 @@ profiles/
                               # flat ADR corpus with stable ADR-N handles
     pattern-catalog.dhall     # implementation-pattern catalog conventions
     research-documents.dhall  # nested research corpus with stable RES-N handles
+    user-documentation.dhall  # user-facing pages with stable DOC-N handles
   coordination/
     package.dhall             # namespaced coordination-profile exports
     bug-reports.dhall         # defects in behavior a repository already provides
@@ -299,6 +300,7 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-pattern-catalog-profile.sh` | `documentation.patternCatalog` |
 | `test-postgresql-profile.sh` | `postgresql` |
 | `test-research-documents-profile.sh` | `documentation.researchDocuments` |
+| `test-user-documentation-profile.sh` | `documentation.userDocumentation` |
 | `test-reviews-profile.sh` | `assurance.reviews` |
 | `test-tan-postgresql-profile.sh` | `tanPostgresql` |
 | `test-use-cases-profile.sh` | `coordination.useCases` |
@@ -447,6 +449,7 @@ Every profile targets OKF v0.2, declares `okfVersion = "0.2"`, sets
 | `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles and checked supersession references | required | nothing recommended |
 | `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, and tag fields | required | nothing recommended; `sources` is the v0.2 record shape |
 | `documentation.researchDocuments` | Nested research corpora with `RES-N` handles, structured reviews, and conditional supersession | required | `reviews`; `sources` is the v0.2 record shape |
+| `documentation.userDocumentation` | User-facing navigation, tutorials, guides, explanations, references, and runbooks with stable `DOC-N` handles | required | required discovery tags; optional lifecycle, sources, verification, and typed supersession |
 | `okfV02` | Format-level reference profile: the six v0.2 families and no house conventions, for a team with no established profile of its own | recommended | OKF `status` and `stale_after` |
 | `postgresql` | PostgreSQL schemas, tables, and views with typed resource URIs and `# Schema` column contracts | recommended | OKF `status` and `stale_after` |
 | `tanPostgresql` | `postgresql` plus per-table role vocabularies and conditional source streams | recommended | OKF `status` and `stale_after` |
