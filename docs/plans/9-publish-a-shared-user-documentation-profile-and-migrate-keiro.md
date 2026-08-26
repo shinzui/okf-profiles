@@ -50,15 +50,15 @@ This section must always reflect the actual current state of the work.
   verify its remote Dhall semantic hash.
 - [x] (2026-08-26T13:26Z) Add, register, document, lint, and fully catalog-check the
   `adopt-user-documentation` Seihou blueprint and prepare v0.13.1 release notes.
-- [ ] Publish the immutable v0.13.1 follow-up, verify the shipped descriptor and an isolated
-  installed-blueprint descriptor, and remote catalog availability. The isolated installed-copy
-  rendering already succeeds from local commit `c108cab`.
+- [x] (2026-08-26T17:24Z) Publish immutable v0.13.1 at `0bef757`, verify its remote descriptor and
+  semantic hash, and install and render `adopt-user-documentation` from the public GitHub catalog.
 - [x] (2026-08-26T13:35Z) Migrate Keiro's `docs/user/` and `docs/guides/` corpora, install their
   shared v0.13.0 pinned descriptor, register both bundles, wire strict validation into `just
   verify`, and commit the first consumer as `acb9ee6c`.
 - [x] (2026-08-26T13:38Z) Register Keiro locally and prove stable-ID lookup, cross-document links,
   fleet search, producer metadata, typed profile provenance, and strict validation end to end.
-- [ ] Complete the ADR distillation pass and record outcomes.
+- [x] (2026-08-26T17:25Z) Complete the ADR distillation pass, extend ADR-11 with the standard
+  blueprint adoption path, and record final outcomes.
 
 
 ## Surprises & Discoveries
@@ -104,6 +104,10 @@ implementation. Provide concise evidence.
   Evidence: bundle-scoped concept queries return 25 and 27 concepts, exact handle URIs resolve to
   the correct files, and both typed pins appear as `current (observed)`. This presentation mismatch
   does not block concept queries or profile provenance.
+- Observation: a blueprint committed after v0.13.0 can safely import v0.13.1 with the v0.13.0
+  semantic hash because non-Dhall catalog artifacts do not affect `package.dhall` normalization.
+  Evidence: the public v0.13.1 descriptor type-checks and freezing the remote v0.13.1 package emits
+  `sha256:3be4c39d128ef8a21e39d7ae4eaef29097801b343ab5672caaf7e30186a8f91a`.
 
 
 ## Decision Log
@@ -157,6 +161,13 @@ Record every decision made while working on the plan.
   verified remotely. v0.13.1 adds only adoption tooling; both tags expose the same semantic Dhall
   value, so repinning the completed first consumer would create churn without changing policy.
   Date: 2026-08-26
+- Decision: Use Keiro as the first-run migration rehearsal and isolated Seihou debug runs as the
+  distribution rehearsal rather than launching a second provider against a synthetic repository.
+  Rationale: Keiro exercised the complete 52-page workflow against real history, links, a typed
+  Mori manifest, and repository checks. Deterministic index regeneration and strict revalidation
+  prove reconciliation safety, while local and public-catalog debug installs prove Seihou renders
+  the exact artifact without causing another model to rewrite a disposable approximation.
+  Date: 2026-08-26
 
 
 ## Outcomes & Retrospective
@@ -201,6 +212,14 @@ Milestone 5's local registry proof resolves
 returns the tutorial, reference, related reviews, and cross-project runtime-pattern entries; a
 producer query returns all 52 adopted pages. OKF graph output contains 84 user-documentation edges
 and 78 guide edges. Mori reports both v0.13.0 profile pins as current.
+
+The initiative is complete. The profile is public at v0.13.0, the reusable adoption blueprint is
+public at v0.13.1, and Keiro is the first validated consumer. The most useful additional benefits
+beyond update targeting are now observable: rename-stable canonical references, fleet-wide search,
+reader-intent filtering, link graphs, producer and trust queries, and typed visibility into which
+profile release governs each bundle. Structural conformance still does not prove prose matches
+code; projects should add meaningful `sources`, `verified`, and domain-specific drift checks where
+they have evidence to support them.
 
 
 ## Context and Orientation
@@ -470,3 +489,7 @@ Revision note (2026-08-26): Expanded the plan after the user requested a reusabl
 for migrating subsequent repositories. Added the adaptive blueprint milestone, v0.13.1 release
 decision, registration and rehearsal acceptance, and kept Keiro on the semantically identical
 v0.13.0 profile release that was already published and remotely verified.
+
+Revision note (2026-08-26): Closed the plan after publishing v0.13.1, verifying a public Seihou
+install and frozen descriptor, completing the Keiro registry proof, and distilling the reusable
+adoption-path decision into ADR-11.

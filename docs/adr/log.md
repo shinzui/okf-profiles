@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-08-26
+* **Update**: ADR-11 designates the standalone, idempotent Seihou blueprint as the standard first-adoption path for user documentation.
 * **Addition**: ADR-11 establishes the shared reader-intent taxonomy and bundle-scoped DOC-N identity for user-facing documentation.
 
 ## 2026-08-23

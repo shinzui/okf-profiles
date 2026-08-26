@@ -8,7 +8,7 @@ date: 2026-08-26
 originatingPlan: docs/plans/9-publish-a-shared-user-documentation-profile-and-migrate-keiro.md
 generated:
   by: openai-codex/gpt-5
-  at: 2026-08-26T12:42:51Z
+  at: 2026-08-26T17:25:21Z
 ---
 
 # User documentation shares reader-intent types and DOC handles
@@ -49,6 +49,11 @@ Require the metadata every complete page can truthfully provide: `type`, `title`
 `supersedes`, `supersededBy`, and legacy `timestamp` optional. Local supersession references use
 `DOC-N`; cross-project supersession uses canonical `mori://` URIs.
 
+Publish `adopt-user-documentation` as the standard first-adoption Seihou blueprint. It is a
+standalone, idempotent playbook rather than a version-window migration: no earlier shared
+user-documentation contract exists. It discovers `docs/user/` and `docs/guides/` independently,
+preserves prose and valid handles, and succeeds without changes when neither corpus exists.
+
 ## Rationale
 
 Reader intent is more stable and useful than directory names. It distinguishes learning from
@@ -81,3 +86,9 @@ on top of this shared structural contract.
 Keiro at `mori://shinzui/keiro` is the first consumer and keeps its two existing directories as
 separate bundles. Its curated `README.md` pages remain `Navigation` concepts; generated
 `index.md` files provide inventory without replacing those reading routes.
+
+Subsequent repositories use the
+[`adopt-user-documentation`](../../blueprints/adopt-user-documentation/) blueprint rather than
+copying Keiro's metadata or treating its document classifications as universal. The blueprint
+applies this shared contract while deriving titles, provenance, tags, check integration, and Mori
+schema details from the consumer repository's own evidence.
