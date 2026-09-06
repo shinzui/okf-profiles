@@ -6,4 +6,10 @@
 -- at which commit, for which concerns, and what came of it. That is a different
 -- kind of statement, and it is why `reviews` is not a fifth corner of the
 -- coordination family.
-{ reviews = ./reviews.dhall }
+-- `failureModes` sits here for the same reason: it records that a mechanism was
+-- driven to ground — which explanations were tested, which check settled it —
+-- rather than describing the system or coordinating work on it. A defect one
+-- repository owns is a `coordination.bugReports` entry; what recurs across
+-- repositories, or lives in a toolchain rather than in anybody's source, is a
+-- failure mode.
+{ reviews = ./reviews.dhall, failureModes = ./failure-modes.dhall }

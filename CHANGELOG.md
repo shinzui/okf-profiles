@@ -9,6 +9,50 @@ these profiles and how to migrate it.
 ## [Unreleased]
 
 
+## [0.14.0] — 2026-09-06
+
+**Adds a shared profile for recurring failure modes.** This is a new export, so existing consumer
+corpora do not change. A project adopts it deliberately by adding a bundle and pinning the release
+that first publishes `assurance.failureModes`.
+
+### Added
+
+- **`assurance.failureModes`** — diagnoses that outlive their incident, with stable bundle-scoped
+  `FM-N` handles. A `signature` a reader matches against a live symptom in seconds, kept separate
+  from the ordered `diagnosis` checks that confirm it; `occurrences` carrying the recurrence that
+  justifies the record at all; and `scope` — `project`, `fleet`, `toolchain` or `platform` — naming
+  the altitude at which a durable fix has to live, because a mode fixed at the wrong one recurs.
+- **`eliminated`**, the key the profile exists for: explanations tested and disproved, each naming
+  the check that disproved it. The expensive part of a recurring diagnosis is re-walking the wrong
+  theories, and a record that names only the cause leaves the next reader to re-test them.
+- A house `status` lifecycle — `observed`, `diagnosed`, `mitigated`, `prevented`, `accepted` —
+  which gates the demands: `rootCause` only once a mechanism is claimed, `control` and `detection`
+  only once one exists, `eliminated` only once diagnosed. An entry still at `observed` is not asked
+  for content it cannot honestly have, so suspicion cannot be dressed as diagnosis.
+- Optional `bugReport` for the case where a repository owns one instance of the mode, `cost` for
+  ranking the catalog by what is worth preventing, and `supersededBy` resolving as a local `FM-N`
+  handle or an external Mori URI.
+- A three-concept acceptance corpus, twenty-three focused rejection fixtures, and generated profile
+  documentation.
+
+### Migration
+
+Existing profiles and bundles require no migration. A new consumer creates a bundle declaring OKF
+0.2, allocates unique `FM-N` values inside it, and runs strict profile and log enforcement. Write
+an entry on the second sighting rather than the first: a single incident nobody expects to see
+again is a research document, and `occurrences` is what separates the two.
+
+### Release import
+
+```dhall
+https://raw.githubusercontent.com/shinzui/okf-profiles/v0.14.0/package.dhall
+  sha256:87d2e4076b2491ee608ac1c7a28b24156ba2634f2b09de49ad4ba79f039acf50
+```
+
+The semantic hash is computed from the complete local `package.dhall` value. Publication must
+verify the tagged remote import reproduces it before a consumer pins this release.
+
+
 ## [0.13.1] — 2026-08-26
 
 **Adds the repeatable adoption path for the v0.13.0 user-documentation profile.** The profile value

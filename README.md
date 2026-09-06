@@ -52,6 +52,8 @@ Profile/
 profiles/
   assurance/
     package.dhall             # namespaced assurance-profile exports
+    failure-modes.dhall       # recurring failure modes: signature, confirming checks,
+                              # explanations already ruled out, and the control that stops it
     reviews.dhall             # what was reviewed, at which commit, by whom, at what effort
   documentation/
     package.dhall             # namespaced documentation-profile exports
@@ -297,6 +299,7 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-bug-reports-profile.sh` | `coordination.bugReports` |
 | `test-capabilities-profile.sh` | `coordination.capabilities` |
 | `test-improvement-requests-profile.sh` | `coordination.improvementRequests` |
+| `test-failure-modes-profile.sh` | `assurance.failureModes` |
 | `test-okf-v0-2-profile.sh` | `okfV02`, the format-level reference profile |
 | `test-pattern-catalog-profile.sh` | `documentation.patternCatalog` |
 | `test-postgresql-profile.sh` | `postgresql` |
@@ -455,6 +458,7 @@ Every profile targets OKF v0.2, declares `okfVersion = "0.2"`, sets
 
 | Export | Purpose | `generated` | Also demands |
 |---|---|---|---|
+| `assurance.failureModes` | Recurring failure modes with `FM-N` handles: the `signature` that identifies one on sight, the `diagnosis` checks that confirm it, the `eliminated` explanations already disproved with the check that killed each, the `occurrences` that justify the record, and the `scope` saying at what altitude a durable fix has to live | required | `reviews`; `rootCause` once a mechanism is claimed; `control` and `detection` once one exists; `eliminated` once diagnosed |
 | `assurance.reviews` | Records of an artifact having been reviewed, with `REV-N` handles: a stable `subject` + `component` identity, the commit examined, whether the reading was `full` or `incremental` and from which `baseSha`, the reviewer as an OKF §7 actor, and provider / model / effort once the reviewer is a model | required | `previousReview` once `coverage` is `incremental` |
 | `coordination.bugReports` | Defects in behavior a repository already provides, with `BUG-N` handles, a severity scale graded by observable consequence, and a reproduction a reader can follow | required | `reviews`; `resolution` once a report reaches a terminal status; `workaround` once severity is `degraded` |
 | `coordination.capabilities` | What a repository provides today, with `CAP-N` handles, a compatibility promise separate from availability, and required evidence | required | `reviews`; `interface`; `replacedBy` once a capability is deprecated or withdrawn |
