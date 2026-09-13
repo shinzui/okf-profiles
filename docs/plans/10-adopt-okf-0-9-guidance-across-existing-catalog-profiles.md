@@ -85,9 +85,14 @@ repairs known catalog metadata drift, and publishes the result.
 - [x] (2026-09-13 17:08Z) Metadata validation: `mori show --full` reports Docs (8), Templates (5),
   OKF Profiles (13); `seihou registry validate` reports 5 blueprints with versions in sync; all
   five blueprints lint valid. Committed blueprints and manifests as `6fe34ab`.
-- [ ] Release commit, annotated `v0.15.0` tag, push, remote tag verification.
-- [ ] Post-publication: freeze remote root and capabilities imports and compare hashes,
-  type-check shipped blueprint descriptors, rerun `just check`, `mori register --local`.
+- [x] (2026-09-13 17:14Z) Release commit `ba236882aaa3d2a2a4a3ed3b158a711e0a52aedf`
+  (`chore(release): prepare okf-profiles 0.15.0`); pushed `master` and annotated tag `v0.15.0`
+  (tag object `d95076c1`), whose remote `^{}` peels to the release commit.
+- [x] (2026-09-13 17:16Z) Post-publication: `dhall freeze` of the remote root package and direct
+  capabilities profile reproduced `sha256:e1e7eaac…2dc0` and `sha256:d02b2944…d809` exactly; the
+  remote package type-checks; the three shipped `.dhall` descriptors type-check; `just check`
+  exited 0 again; `mori register --local` succeeded and the registry projection shows 13
+  published profiles at v0.15.0, five Seihou templates at v0.15.0, and eight docs.
 
 
 ## Surprises & Discoveries
@@ -113,6 +118,20 @@ repairs known catalog metadata drift, and publishes the result.
   `### Profile-wide` subsection.
   Evidence: a scratch `okf profile document` of the PostgreSQL override produced `profile.md:16:
   ## Guidance` and `types/postgresql-table.md:17: ### Profile-wide`.
+
+- Observation: the installed Mori (`mori v5.0.0.0`, built on the pre-0.9 `okf-core`) cannot decode
+  a profile built on the 0.9 schema. Registering this repository now warns for its own
+  `docs/adr` and `docs/improvement-requests` bundles and skips their document-ID indexing and
+  observation-time profile checks.
+  Evidence: `mori register --local` printed `could not load OKF profile …
+  docs/improvement-requests/profile.dhall … Expression doesn't match annotation { + guidance : … ,
+  types : … { + guidance : … , … } , … }` and the same for `docs/adr/profile.dhall`. The
+  repository's own strict `okf validate` with 0.9.0.0 passes, so this affects Mori's advisory
+  indexing only.
+
+- Observation: Mori reports a `documentation.architectureDecisions v0.8.0 → v0.15.0 [stale]`
+  pinned import for this repository. Its source is the example comment on line 7 of
+  `docs/adr/profile.dhall`, not a real import; the descriptor imports `../../package.dhall`.
 
 - Observation: the plan's `dhall freeze --all --inplace` still works with dhall 1.42.3 but prints
   `Warning: the flag "--inplace" is deprecated`; freezing is in place by default.
@@ -220,7 +239,33 @@ repairs known catalog metadata drift, and publishes the result.
 
 ## Outcomes & Retrospective
 
-(To be filled during and after implementation.)
+v0.15.0 is published. The catalog pins okf 0.9.0.0, so the public `Profile` and `TypeRule`
+records carry optional `guidance`, and every one of the 13 exports and 30 type rules leaves it
+absent. The proof is the one the plan asked for: text and JSON inspection show absent guidance, a
+temporary override prints a hint without changing any rule, generated documentation did not
+change by a byte, every fixture kept its result, and the normalized JSON of all 13 exports equals
+v0.14.0 once the null members are removed. The remote tag reproduces both locally computed
+semantic hashes.
+
+The sparse-use policy is durable in
+[ADR-12](../adr/0012-guidance-is-an-evidence-backed-exception.md) and explained for consumers in
+`README.md`, with the consumer upgrade order (CLI, then repin, then strict validation). All five
+blueprints install or recommend v0.15.0 and require okf 0.9.0.0 without any new migration edge.
+`mori.dhall` now publishes the previously missing failure-modes profile and adopt-capabilities
+template and guide.
+
+Remaining rollout gaps, deliberately outside this plan: Mori must move to `okf-core` 0.9.0.0
+before it can index document IDs or run observation-time profile checks for any bundle governed
+by a v0.15.0 profile, including this repository's own two bundles; until then those are
+warnings, not failures. The 86 downstream profile pins remain on earlier tags and may repin
+opt-in after upgrading `okf`. The globally installed `okf` is still 0.8.0.0, so running
+`just check` in this repository now requires `OKF_BIN` pointing at a 0.9 executable (or a global
+upgrade). The misleading v0.8.0 example comment in `docs/adr/profile.dhall` could be refreshed.
+
+Lessons: adopting a defaulted upstream field through completion really is a one-line pin change
+here, and the JSON-normalized comparison against the previous tag is a cheap, convincing proof of
+it. Building the tool from its tagged source in the dependency's own development shell was far
+faster than either Hackage (missing C library outside Nix) or a cold `nix build`.
 
 
 ## Context and Orientation
@@ -823,3 +868,6 @@ optimizer hint. Removed blanket guidance authoring, type-helper changes, generat
 coverage targets, and the permanent coverage test. The plan now preserves `None Text` across all
 existing profiles and types, demonstrates the capability with a temporary override, and records
 an evidence-backed, minimally scoped exception policy in the proposed ADR.
+
+2026-09-13 (implementation): Recorded progress through publication, the build-route and
+README-placement decisions, the Mori decoder gap and rendering observations, and the outcomes.
