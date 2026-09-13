@@ -9,14 +9,14 @@ seihou agent run adopt-improvement-request-contracts
 ```
 
 This is deliberately a standalone blueprint, not a blueprint migration. A repository can consume
-v0.12.0 without running it: `dependencies` and `acceptanceCriteria` are optional, and existing
+v0.12.0 or later without running it: `dependencies` and `acceptanceCriteria` are optional, and existing
 bundles remain valid. Run the playbook only when the repository wants the new relationships and
 completion contracts to be machine-validated and available to registry consumers.
 
 ## What it does
 
 The playbook discovers bundles governed by `coordination.improvementRequests` from Mori metadata,
-local profile descriptors, and validation commands. It can repin a shared descriptor to v0.12.0
+local profile descriptors, and validation commands. It can repin a shared descriptor to v0.15.0
 while preserving local overlays, then structures only information the repository already states:
 
 - canonical cross-repository `mori://` improvement-request dependencies with explicit `hard`,
@@ -38,8 +38,8 @@ changes. Re-running the playbook preserves valid structured records and adds no 
 
 ## Prerequisites
 
-- the released `okf-profiles` v0.12.0 catalog;
-- `okf` 0.8.0.0 or later and `dhall`; and
+- the released `okf-profiles` v0.15.0 catalog (the structured fields were introduced in v0.12.0);
+- `okf` 0.9.0.0 or later and `dhall`; and
 - a tool-capable Seihou provider such as `codex-cli` or `claude-cli`.
 
 Preview the rendered playbook without contacting a provider:

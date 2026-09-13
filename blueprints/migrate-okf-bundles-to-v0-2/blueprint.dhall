@@ -7,9 +7,9 @@ in  S.Blueprint::{
     , -- Aligned with the okf-profiles tag this blueprint migrates to, matching
       -- the convention adopt-architecture-decisions states: that tag is the only
       -- version a consumer can read off their own repository.
-      version = Some "0.8.0"
+      version = Some "0.15.0"
     , description = Some
-        "Detect whichever profiled OKF bundles a repository has and migrate each to Open Knowledge Format v0.2 for okf-profiles v0.8.0: add the generated provenance family with an actor-checked by member derived from existing timestamps or git history, declare okf_version in each bundle root, reshape sources on the two profiles whose shape changed, and repin local descriptors -- while leaving house status vocabularies untouched."
+        "Detect whichever profiled OKF bundles a repository has and migrate each to Open Knowledge Format v0.2, the transition introduced by okf-profiles v0.8.0, pinning descriptors to the current v0.15.0 release: add the generated provenance family with an actor-checked by member derived from existing timestamps or git history, declare okf_version in each bundle root, reshape sources on the two profiles whose shape changed, and repin local descriptors -- while leaving house status vocabularies untouched."
     , prompt = ./prompt.md as Text
     , files =
       [ S.Blueprint.BlueprintFile::{
@@ -24,8 +24,10 @@ in  S.Blueprint::{
         }
       ]
     , -- No edges: this blueprint is new at 0.8.0, so there is no earlier version
-      -- of it to migrate from. A future release that changes what it installs
-      -- adds an edge keyed at the last release before that change.
+      -- of it to migrate from. 0.15.0 only moves the destination pin onto the
+      -- okf 0.9 schema and changes no concept document, so it needs no edge
+      -- either. A future release that changes what a corpus must contain adds an
+      -- edge keyed at the last release before that change.
       migrations = [] : List S.BlueprintMigration.Type
     , allowedTools = Some
       [ "Read"

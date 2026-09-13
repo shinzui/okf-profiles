@@ -4,7 +4,8 @@ The authoritative contract for migrating a bundle governed by any okf-profiles p
 Knowledge Format v0.1 to v0.2. Every diagnostic quoted here was produced by running the v0.8.0
 profiles against a real unmigrated corpus; the wording is exact.
 
-Requires `okf` 0.5.0.0 or later.
+The v0.2 contract below was introduced in v0.8.0 and is unchanged in the current v0.15.0 release.
+Loading a v0.15.0 descriptor requires `okf` 0.9.0.0 or later.
 
 ## The actor convention (OKF v0.2 §7)
 

@@ -1,5 +1,9 @@
 --| Shared ADR profile. Bump the tag and semantic hash together when upgrading.
 --
+-- Loading this v0.15.0 descriptor requires `okf` 0.9.0.0 or later, whose schema
+-- adds optional profile and type `guidance`. The shared profile leaves guidance
+-- absent; v0.15.0 changes no rule this bundle is validated against.
+--
 -- This descriptor is a plain pinned import. It carries no override, because
 -- v0.8.0 folded the one this file used to layer into the upstream profile:
 -- `supersedes`, `supersededBy`, and `originatingPlan` are `optional` as
@@ -15,8 +19,7 @@
 -- `timestamp` key is `optional`: keep it if you have it, its format is still
 -- checked, and its absence is never reported.
 --
--- The integrity hash below was computed by `dhall freeze` against the real
--- v0.8.0 tag. When bumping to a future release, change the tag, delete the hash
+-- The integrity hash below is the semantic hash of the v0.15.0 package. When bumping to a future release, change the tag, delete the hash
 -- line, and re-run:
 --
 --     dhall freeze blueprints/adopt-architecture-decisions/files/architecture-decisions-profile.dhall
@@ -24,7 +27,7 @@
 -- Never hand-write a `sha256:` value, and never delete a hash from a frozen
 -- import to make it resolve.
 let Profiles =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.8.0/package.dhall
-        sha256:0d66bb25b99e74a10598be06eef30356f331ff9c1c557e8578daf48cbd50d8d3
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
+        sha256:e1e7eaac9d08fd3409fe0d19057dba5634a4186733ccbf28323e9aa2a2512dc0
 
 in  Profiles.documentation.architectureDecisions

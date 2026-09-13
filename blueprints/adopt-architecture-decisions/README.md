@@ -48,7 +48,12 @@ seihou agent --debug run adopt-architecture-decisions
 ```
 
 A freshly adopted bundle lands on whatever tag the shipped descriptor pins — currently
-**v0.8.0** — so a new adopter needs no migration afterwards.
+**v0.15.0** — so a new adopter needs no migration afterwards. Loading that descriptor requires
+**`okf` 0.9.0.0 or later**.
+
+A bundle already upgraded to v0.8.0 needs no edge to reach v0.15.0: no release since has changed
+what the architecture-decision profile demands of a document. Repin the descriptor to v0.15.0,
+re-freeze it, and upgrade `okf` to 0.9.0.0 or later first.
 
 ## Upgrading an adopted bundle
 

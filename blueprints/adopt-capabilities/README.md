@@ -61,6 +61,12 @@ they have a surface to describe.
 Re-running against an adopted repository is an idempotent reconciliation: valid `CAP-N` handles are
 preserved and conforming records are not rewritten.
 
+## Requirements
+
+The shipped descriptor pins okf-profiles **v0.15.0**, which requires **`okf` 0.9.0.0 or later** to
+load. The capability contract itself was introduced in v0.9.0 and is unchanged since; v0.15.0 only
+widens the profile schema with optional `guidance`, which the shared profile leaves absent.
+
 ## References
 
 Two files ship with the blueprint and are read before any edit:

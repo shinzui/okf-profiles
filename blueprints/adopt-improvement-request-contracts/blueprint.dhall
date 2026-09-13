@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-improvement-request-contracts"
-    , version = Some "0.12.0"
+    , version = Some "0.15.0"
     , description = Some
         "Optionally promote explicit improvement-request dependencies and acceptance conditions from prose into the validated dependencies and acceptanceCriteria frontmatter introduced by okf-profiles v0.12.0, preserving stable handles, source prose, and ambiguous material for human resolution."
     , prompt = ./prompt.md as Text
@@ -12,11 +12,11 @@ in  S.Blueprint::{
       [ S.Blueprint.BlueprintFile::{
         , src = "contract-reference.md"
         , description = Some
-            "The v0.12.0 structured dependency and acceptance-criterion contract, safe promotion rules, descriptor pin, and validation commands."
+            "The structured dependency and acceptance-criterion contract introduced in v0.12.0, safe promotion rules, the v0.15.0 descriptor pin, and validation commands."
         }
       ]
     , -- This is an optional adoption playbook, not work required when crossing
-      -- a profile release boundary. Existing bundles remain valid at v0.12.0.
+      -- a profile release boundary. Existing bundles remain valid at v0.12.0 and later.
       migrations = [] : List S.BlueprintMigration.Type
     , allowedTools = Some
       [ "Read"
