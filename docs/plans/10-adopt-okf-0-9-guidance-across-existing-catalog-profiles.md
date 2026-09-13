@@ -5,6 +5,13 @@ title: "Adopt the okf 0.9 optional-guidance schema"
 kind: exec-plan
 created_at: 2026-09-13T15:45:35Z
 intention: "intention_01m2dg6wsre5jr07176yk9yejp"
+provenance:
+  revisions:
+    - model: "claude-opus-5"
+      harness: "claude-code"
+      at: 2026-09-13T16:37:53Z
+      mode: "implement"
+      note: "Implemented schema adoption, docs, ADR, metadata repair, blueprints, and v0.15.0 release"
 ---
 
 # Adopt the okf 0.9 optional-guidance schema
@@ -40,7 +47,47 @@ repairs known catalog metadata drift, and publishes the result.
 
 ## Progress
 
-(No implementation work has started.)
+- [x] (2026-09-13 16:36Z) Rechecked the dependency gate: tag `v0.9.0.0` peels to
+  `bdf8893ccf0dfbd77fd68fe3c58348b5e49809c7`; Hackage lists `0.9.0.0` as a normal version of both
+  `okf-core` and `okf-cli`.
+- [x] (2026-09-13 16:39Z) Repinned `Profile/okf.dhall` to the 0.9.0.0 commit; `dhall freeze`
+  reproduced `sha256:6bdf781d…7fc3` and `package.dhall` type-checks.
+- [x] (2026-09-13 16:44Z) Computed the local semantic hashes: root package
+  `sha256:e1e7eaac9d08fd3409fe0d19057dba5634a4186733ccbf28323e9aa2a2512dc0`, direct capabilities
+  profile `sha256:d02b2944e85109c06e7a095a81de2e7ef7c6f607b225ec99622e60810889d809`. The same
+  command on the stashed v0.14.0 tree reproduced v0.14.0's published hash.
+- [x] (2026-09-13 16:46Z) Repaired `mori.dhall` (failure-modes profile, adopt-capabilities
+  template and DocRef, family description, all versions at v0.15.0/0.15.0) and set all five
+  blueprint and Seihou registry versions to 0.15.0.
+- [x] (2026-09-13 16:50Z) Retargeted the five blueprints' current descriptors, prompts, READMEs,
+  and references to v0.15.0 and `okf` 0.9.0.0, keeping historical introduction statements and
+  existing migration edges.
+- [x] (2026-09-13 16:55Z) Updated `README.md` (compatibility, consumer upgrade order,
+  description/rules/guidance split, schema evolution, generated docs, catalog, authoring),
+  `package.dhall` and `profiles/okf-v0-2.dhall` example comments, and drafted the v0.15.0
+  `CHANGELOG.md` entry. Drafted the ADR text outside the bundle pending ID allocation.
+- [x] (2026-09-13 17:02Z) Obtained `okf v0.9.0.0 (bdf8893)`: Hackage install failed and a full
+  Nix build was too slow, so the exact tagged commit was built with cabal from a shared local
+  clone in a scratch directory (see Surprises & Discoveries).
+- [x] (2026-09-13 17:03Z) Milestone 1 validation: `okf profile list` reports 13 profiles and 30
+  types; regeneration left `docs/profiles/` unchanged; `OKF_BIN=… just check` exited 0. Committed
+  the pin as `6b3e41c`.
+- [x] (2026-09-13 17:04Z) Milestone 2 probes: text inspection prints `guidance: (none)` at profile
+  and all six type scopes of `documentation.userDocumentation`; JSON shows null at `.guidance`
+  and on all six types; the `env:OKF_GUIDANCE_PROBE` override printed the one sentence and its
+  JSON equals `postgresql` once `guidance` is deleted. A scratch `okf profile document` of the
+  override showed where hints render (used to correct the README).
+- [x] (2026-09-13 17:05Z) Normalized JSON comparison of all 13 exports against v0.14.0: every
+  `guidance` null across 30 types, no other diff.
+- [x] (2026-09-13 17:07Z) `okf id next` returned `ADR-12`; added
+  `docs/adr/0012-guidance-is-an-evidence-backed-exception.md`, reindexed, logged, and strict
+  validation reported `OK: 12 concepts (okf_version 0.2)`. Committed as `6a32f9b`.
+- [x] (2026-09-13 17:08Z) Metadata validation: `mori show --full` reports Docs (8), Templates (5),
+  OKF Profiles (13); `seihou registry validate` reports 5 blueprints with versions in sync; all
+  five blueprints lint valid. Committed blueprints and manifests as `6fe34ab`.
+- [ ] Release commit, annotated `v0.15.0` tag, push, remote tag verification.
+- [ ] Post-publication: freeze remote root and capabilities imports and compare hashes,
+  type-check shipped blueprint descriptors, rerun `just check`, `mori register --local`.
 
 
 ## Surprises & Discoveries
@@ -51,6 +98,24 @@ repairs known catalog metadata drift, and publishes the result.
   Evidence: the direct probe failed with `registry path ... does not exist`; placing the same
   expression in the task-specific `OKF_GUIDANCE_PROBE` environment variable and passing
   `env:OKF_GUIDANCE_PROBE` loaded the temporary registry successfully.
+
+- Observation: `cabal install okf-cli-0.9.0.0` outside a Nix development shell fails because the
+  Haskell `zlib` package cannot find the system C library.
+  Evidence: `Failed to build zlib-0.7.1.1. The failure occurred during the configure step.
+  Missing (or bad) C library: z`. A `nix build` of the tagged flake then started compiling
+  the whole Haskell package set from source (dozens of library derivations after ten minutes).
+  Building the tag with `cabal build exe:okf` inside `nix develop /Users/shinzui/Keikaku/bokuno/okf`
+  from a `git clone --shared` checkout of `bdf8893` reused the cached cabal store and linked in
+  about a minute.
+
+- Observation: generated documentation renders profile guidance in two places, not only on type
+  pages. `profile.md` gains `## Guidance`; each type page gains `## Guidance` with a
+  `### Profile-wide` subsection.
+  Evidence: a scratch `okf profile document` of the PostgreSQL override produced `profile.md:16:
+  ## Guidance` and `types/postgresql-table.md:17: ### Profile-wide`.
+
+- Observation: the plan's `dhall freeze --all --inplace` still works with dhall 1.42.3 but prints
+  `Warning: the flag "--inplace" is deprecated`; freezing is in place by default.
 
 
 ## Decision Log
@@ -130,6 +195,28 @@ repairs known catalog metadata drift, and publishes the result.
   model, or enforcement policy before those questions have been worked through.
   Date: 2026-09-13
 
+
+- Decision: Build the 0.9.0.0 executable from the tagged commit with cabal inside the okf
+  checkout's development shell, using a `git clone --shared` of the checkout in a scratch
+  directory, rather than wait for `nix build`.
+  Rationale: the plan's Hackage route failed on a missing C library, and `nix build` of the
+  flake began compiling the entire Haskell package set from source. The shared clone checks out
+  exactly `bdf8893` without touching the dependency checkout's branch, worktree list, or build
+  products, and the resulting binary reports `okf v0.9.0.0 (bdf8893)`.
+  Date: 2026-09-13
+
+- Decision: Tell ADR-blueprint adopters already at v0.8.0 that reaching v0.15.0 needs no edge,
+  only a repin after upgrading `okf`.
+  Rationale: the normalized JSON of `documentation.architectureDecisions` at v0.8.0 equals the
+  local value once `guidance` is removed, so an edge would invent work.
+  Date: 2026-09-13
+
+- Decision: Place the description/rules/guidance explanation in `README.md` as a subsection at the
+  end of Compatibility, with the optimizer-hint analogy and a PostgreSQL override explicitly
+  labeled as an illustration.
+  Rationale: the compatibility section is where a consumer learns the 0.9.0.0 floor, and the
+  example must not read as a recommended hint.
+  Date: 2026-09-13
 
 ## Outcomes & Retrospective
 

@@ -9,6 +9,55 @@ these profiles and how to migrate it.
 ## [Unreleased]
 
 
+## [0.15.0] — 2026-09-13
+
+**Adopts okf 0.9's optional profile guidance schema; every export deliberately leaves it absent.**
+The public `Profile` and `TypeRule` records gain `guidance : Optional Text`, defaulted to
+`None Text`. No validation rule, description, or export name changes, and the generated profile
+documentation is byte-for-byte unchanged. Loading a v0.15.0 descriptor requires `okf` 0.9.0.0 or
+later.
+
+### Changed
+
+- **`Profile/okf.dhall` pins okf 0.9.0.0** (commit `bdf8893ccf0dfbd77fd68fe3c58348b5e49809c7`). The
+  widened record lets a profile or type carry optional Markdown authoring guidance that okf
+  prints, documents, and never validates or executes. Profile-wide guidance applies to every type;
+  type guidance is added after it.
+- **All five Seihou blueprints target v0.15.0** and require `okf` 0.9.0.0. None gains a migration
+  edge, because no concept document changes. Historical statements about when a contract was
+  introduced are preserved.
+- **`mori.dhall` publication metadata is complete**: it now lists `assurance.failureModes`, the
+  `adopt-capabilities` template, and its README, so discovery reports 13 profiles, five templates,
+  and eight docs.
+
+### Guidance policy
+
+Guidance is an evidence-backed exception, not a coverage target. The catalog adds a hint only after
+repeated, observed authoring failures show that the structured rules, descriptions, repository
+evidence, and ordinary task context cannot make the right choice inferable — and then at the
+narrowest scope, with an observable improvement criterion. Absence needs no justification. See
+[ADR-12](./docs/adr/0012-guidance-is-an-evidence-backed-exception.md).
+
+### Migration
+
+**Documents:** none. Every existing concept file remains valid exactly as it was under v0.14.0.
+
+**Tools:** upgrade `okf` to 0.9.0.0 or later *before* repinning. An older decoder rejects the
+widened profile record, which surfaces as a profile load failure rather than a document
+deviation. Then change the descriptor's tag to `v0.15.0`, delete its old hash, run `dhall freeze`,
+and run the repository's strict validation.
+
+### Release import
+
+```dhall
+https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
+  sha256:e1e7eaac9d08fd3409fe0d19057dba5634a4186733ccbf28323e9aa2a2512dc0
+```
+
+The semantic hash is computed from the complete local `package.dhall` value. Publication must
+verify the tagged remote import reproduces it before a consumer pins this release.
+
+
 ## [0.14.0] — 2026-09-06
 
 **Adds a shared profile for recurring failure modes.** This is a new export, so existing consumer
@@ -554,3 +603,4 @@ and `tanPostgresql` take OKF's vocabulary, because neither declares a house
 [0.8.0]: https://github.com/shinzui/okf-profiles/releases/tag/v0.8.0
 [0.13.0]: https://github.com/shinzui/okf-profiles/releases/tag/v0.13.0
 [0.13.1]: https://github.com/shinzui/okf-profiles/releases/tag/v0.13.1
+[0.15.0]: https://github.com/shinzui/okf-profiles/releases/tag/v0.15.0
