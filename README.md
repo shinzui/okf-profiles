@@ -108,7 +108,7 @@ changes a consumer's conventions.
 ```dhall
 -- your-project/okf-profile.dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.8.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -119,7 +119,7 @@ an implementation-pattern corpus consumes the documentation catalog profile as:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.8.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
 
 in  okf.documentation.patternCatalog
 ```
@@ -131,7 +131,7 @@ Override an existing profile without copying — `//` replaces fields on the val
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.8.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -144,7 +144,7 @@ fields you set; everything else takes the schema default:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.8.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.Profile::{
@@ -187,17 +187,28 @@ decoding breaks at load time. Two rules keep them aligned:
 
 - The `okfVersion` field declares the OKF **spec** version a profile targets.
   Every profile in this catalog declares `"0.2"`.
-- This repo's **tag** (`v0.8.0`, …) is what consumers pin. Treat any change to the
+- This repo's **tag** (`v0.15.0`, …) is what consumers pin. Treat any change to the
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
-**This catalog targets OKF v0.2 and requires okf-core 0.8.0.0 or later.** The
-schema is pinned to the `okf` 0.8.0.0 release commit, and the package exports the
-full v0.2 descriptor vocabulary plus nested reference policies and record-list
-uniqueness — so a downstream author can write these rules by importing this
-package alone. The existing `postgresql` and `tanPostgresql` fields remain stable
-flat exports; new profile families should use a namespaced directory and package
-field.
+**This catalog targets OKF v0.2 and, from v0.15.0, requires okf 0.9.0.0 or later.**
+The schema is pinned to the `okf` 0.9.0.0 release commit, and the package exports the
+full v0.2 descriptor vocabulary, nested reference policies, record-list uniqueness,
+and optional profile and type `guidance` — so a downstream author can write these
+rules by importing this package alone. An older `okf` cannot decode the widened
+v0.15.0 profile record and fails to load it, even though no rule changed. The
+existing `postgresql` and `tanPostgresql` fields remain stable flat exports; new
+profile families should use a namespaced directory and package field.
+
+To move a consumer repository onto v0.15.0, go in this order:
+
+1. **Upgrade the `okf` CLI** to 0.9.0.0 or later. An older CLI rejects the new
+   descriptor for the wrong reason, which looks like a broken profile.
+2. **Repin the descriptor** to the `v0.15.0` tag, delete the old hash line, and
+   re-run `dhall freeze`.
+3. **Run the repository's strict validation** (`okf validate --strict
+   --profile-enforce …` or its check target). No concept document needs editing:
+   v0.15.0 changes no validation rule, description, or export name.
 
 > **`okfVersion` is compile-checked against the rules a profile declares, in both
 > directions.** This is the thing most likely to surprise someone forking a
@@ -224,6 +235,48 @@ field.
 > defaults, while okf-profiles owns
 > the conventions. The import is one-way: okf depends on nothing here. To track a
 > newer okf, bump the commit ref in `Profile/okf.dhall` and re-run `dhall freeze`.
+
+### Descriptions, rules, and guidance
+
+A profile carries three kinds of content, and each has one job:
+
+- **Descriptions** say what a profile, type, or field *is*. They render into the
+  generated documentation and into validation messages.
+- **Structured rules** — presence lists, formats, paths, references — say what a
+  document must *satisfy*. `okf validate` checks them.
+- **`guidance`** is optional Markdown on a profile or on a type rule with advice on
+  *how* to author a document. okf never validates it and never executes anything
+  written in it. Profile-wide guidance applies to every type, and type guidance is
+  added after it rather than replacing it.
+
+**`guidance = None Text` is the normal state, and every export in this catalog
+leaves it absent.** Treat guidance like an index hint in SQL: an escape hatch for a
+demonstrated bad plan, not part of the ordinary query. A model authoring a document
+already has the structured rules, the descriptions, the repository, and its task;
+extra instructions constrain that reasoning and compound, because profile guidance
+is inherited by every type. Add guidance only when repeated, observed output shows
+a specific wrong authoring choice that those inputs cannot disambiguate — and then
+add the smallest nudge, at the narrowest scope (a single type rather than the whole
+profile), with a way to tell whether it helped. Do not use it to restate allowed
+values, required fields, path rules, descriptions, or general best practice, and
+remove it once the behavior no longer needs it. Absence needs no justification. See
+[ADR-12](./docs/adr/0012-guidance-is-an-evidence-backed-exception.md).
+
+A local descriptor can add such a hint without forking the shared profile:
+
+```dhall
+let okf =
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
+        sha256:… -- run `dhall freeze` to fill this in
+
+in  okf.postgresql
+    //  { guidance = Some
+            "Inspect the live database only when repository evidence cannot establish the deployed schema."
+        }
+```
+
+That is an illustration of the mechanism, not a recommended hint: write one only
+after you have the failure evidence for it.
 
 
 ## Schema evolution
@@ -258,6 +311,14 @@ an edit to keep compiling — the pin bump was verified behaviour-preserving bef
 any profile adopted the new vocabulary. That is the property completion buys, and
 it is why the schema pin moves in its own change, separately from anything that
 uses what the pin delivers.
+
+**Optional guidance is the second.** Moving the pin from okf 0.8.0.0 to 0.9.0.0
+added `guidance : Optional Text` to both `Profile` and `TypeRule`, defaulted to
+`None Text`. No profile source changed, every completed value inherited the
+default, and the generated documentation stayed byte-for-byte identical because
+okf omits absent guidance. The catalog's normalized JSON against v0.14.0 differs
+only by the new null members. The consumer-visible consequence is a tool floor,
+not a corpus migration: a v0.15.0 descriptor needs okf 0.9.0.0 to decode.
 
 
 ## Validating this repo
@@ -375,6 +436,13 @@ because generation is reproducible: it reads no clock, `generated.at` is omitted
 by design, and `generated.by` is the tool's stable `process:` actor rather than a
 version that would churn every page on an okf bump.
 
+When a profile carries `guidance`, `profile.md` gains a `## Guidance` section.
+When a profile or type carries it, each affected type page gains a `## Guidance`
+section with `### Profile-wide` text first and `### Type-specific` text after it,
+omitting whichever scope is blank. No export sets guidance today, so no
+generated page has that section; its absence is the expected result, not missing
+output.
+
 
 ## Migrating an existing corpus
 
@@ -454,7 +522,8 @@ reshape `sources` from a list of strings into the v0.2 list of records:
 ## Profile catalog
 
 Every profile targets OKF v0.2, declares `okfVersion = "0.2"`, sets
-`requireBundleVersion = Some "0.2"`, and requires **okf 0.8.0.0 or later**.
+`requireBundleVersion = Some "0.2"`, leaves `guidance` absent, and from v0.15.0
+requires **okf 0.9.0.0 or later**.
 
 | Export | Purpose | `generated` | Also demands |
 |---|---|---|---|
@@ -525,7 +594,11 @@ not profiles a consumer selects:
    `okf profile show --registry ./package.dhall <export>` must load without a
    `Failed to load profile` line — the `okfVersion` check runs at load time, not
    type-check time.
-7. Add a row describing it to this README and bump the tag on release.
+7. Leave `guidance` absent. Put what a type or field *is* in its `description`
+   and what a document must satisfy in structured rules. Add guidance later only
+   for observed, repeated authoring failures those cannot resolve, as described
+   under [Descriptions, rules, and guidance](#descriptions-rules-and-guidance).
+8. Add a row describing it to this README and bump the tag on release.
 
 
 ## License
