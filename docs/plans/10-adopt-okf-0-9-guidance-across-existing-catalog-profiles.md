@@ -1,13 +1,13 @@
 ---
 id: 10
 slug: adopt-okf-0-9-guidance-across-existing-catalog-profiles
-title: "Adopt okf 0.9 guidance across existing catalog profiles"
+title: "Adopt the okf 0.9 optional-guidance schema"
 kind: exec-plan
 created_at: 2026-09-13T15:45:35Z
 intention: "intention_01m2dg6wsre5jr07176yk9yejp"
 ---
 
-# Adopt okf 0.9 guidance across existing catalog profiles
+# Adopt the okf 0.9 optional-guidance schema
 
 This ExecPlan is a living document. The sections Progress, Surprises & Discoveries,
 Decision Log, and Outcomes & Retrospective must be kept up to date as work proceeds.
@@ -16,20 +16,20 @@ If durable project context changes, update or create ADRs in docs/adr/ in the sa
 
 ## Purpose / Big Picture
 
-The profile catalog currently tells a reader what each published profile and concept type is,
-but it cannot carry the longer procedural advice needed to author a useful document. After this
-change, a maintainer who imports the next catalog release can ask `okf profile show` how to write
-any of the catalog's 13 existing profiles, or read the same advice in the generated profile
-documentation. Profile-wide guidance will state the workflow common to a corpus, while each of
-the 30 declared type rules will add its own concrete authoring procedure.
+The profile catalog currently cannot use okf 0.9's optional `guidance` field when a model needs a
+small procedural hint that the structured profile cannot express. After this change, the public
+catalog schema will support that field, but every existing profile and type will continue to
+inherit `guidance = None Text`. A future profile author may add a narrow hint only after observed
+authoring behavior shows that the model cannot reliably infer the right approach from the profile's
+types, rules, descriptions, repository evidence, and ordinary context.
 
-The visible proof is deliberately end to end. With `okf` 0.9.0.0, showing
-`documentation.userDocumentation` will print non-empty multiline profile guidance and distinct
-guidance for `Navigation`, `Tutorial`, `Guide`, `Explanation`, `Reference`, and `Runbook`.
-`docs/profiles/user-documentation/profile.md` and every page below
-`docs/profiles/user-documentation/types/` will render the same prose under `## Guidance`.
-Existing acceptance and rejection fixtures will still produce the same validation results,
-because guidance is documentary data and never an executable or validating rule.
+The intended behavior resembles an index hint in SQL: it is an escape hatch for a demonstrated
+bad plan, not part of the normal query. Broad instructions, universal checklists, and duplicated
+field descriptions constrain a capable model's reasoning and can make results worse. The visible
+proof is therefore both positive and negative. With `okf` 0.9.0.0, a temporary local override can
+add guidance and `okf profile show` will print it; the unchanged catalog exports will still print
+`guidance: (none)`, their generated documentation will remain byte-for-byte unchanged, and all
+existing acceptance and rejection fixtures will retain their results.
 
 This plan does not add an assurance profile, choose a QA/runbook profile name, or promote the
 upstream QA fixture into the public catalog. That profile needs a separate design covering its
@@ -45,24 +45,47 @@ repairs known catalog metadata drift, and publishes the result.
 
 ## Surprises & Discoveries
 
-(None yet.)
+- Observation: Passing a Dhall `let` expression that contains `./package.dhall` directly to
+  `--registry` does not reach Dhall evaluation. The CLI's registry preflight sees the slash and
+  treats the entire argument as a nonexistent filesystem path.
+  Evidence: the direct probe failed with `registry path ... does not exist`; placing the same
+  expression in the task-specific `OKF_GUIDANCE_PROBE` environment variable and passing
+  `env:OKF_GUIDANCE_PROBE` loaded the temporary registry successfully.
 
 
 ## Decision Log
 
-- Decision: Publish the guidance-aware catalog as v0.15.0 and require `okf` 0.9.0.0 or later.
+- Decision: Publish the optional-guidance-capable catalog as v0.15.0 and require `okf` 0.9.0.0
+  or later.
   Rationale: `guidance` widens the public `Profile` and `TypeRule` Dhall record types. Record
   completion keeps this repository's values source-compatible, but a consumer needs the 0.9
   decoder to load the widened values. This repository's compatibility policy therefore calls
   for a minor catalog release rather than a patch release.
   Date: 2026-09-13
 
-- Decision: Give every existing published profile non-blank profile-wide guidance and every one
-  of its declared type rules non-blank type-specific guidance.
-  Rationale: a partial sample would prove that the schema can carry prose without making the
-  catalog reliably useful. Complete coverage gives a caller one predictable contract: selecting
-  any house profile or declared type returns authoring instructions. The `okfV02` reference
-  profile has no type rules, so only profile-wide guidance applies there.
+- Decision (superseded 2026-09-13): Give every existing published profile non-blank profile-wide
+  guidance and every one of its declared type rules non-blank type-specific guidance.
+  Rationale: this initially treated guidance coverage as catalog completeness. The user rejected
+  that premise because unnecessary instructions overconstrain model reasoning. The replacement
+  decision below governs implementation.
+  Date: 2026-09-13
+
+- Decision: Keep `guidance = None Text` as the catalog default and leave all 13 current profile
+  values and all 30 current type rules unhinted in v0.15.0.
+  Rationale: guidance is analogous to an optimizer hint. Add it only after a repeated, observable
+  authoring failure shows that a model cannot infer an important procedure from structured rules,
+  descriptions, repository evidence, and ordinary context. No such evidence has been established
+  for the existing catalog exports. Schema availability is useful now; speculative prompting is
+  not.
+  Date: 2026-09-13
+
+- Decision: A future guidance addition must be minimal, evidence-backed, and scoped to the
+  smallest profile or type where the ambiguity occurs.
+  Rationale: profile-wide guidance affects every declared type and type-specific guidance is added
+  to it. A broad hint can suppress otherwise useful model judgment. The author must record the
+  observed failure, explain why structured rules or descriptions cannot resolve it, state the
+  smallest corrective nudge, and define how improved behavior will be observed. Absence needs no
+  justification.
   Date: 2026-09-13
 
 - Decision: Preserve every v0.14.0 validation rule and description verbatim; add procedure only
@@ -72,19 +95,19 @@ repairs known catalog metadata drift, and publishes the result.
   migration, and a normalized JSON comparison can prove that no rule changed accidentally.
   Date: 2026-09-13
 
-- Decision: Reuse the released PostgreSQL example's guidance exactly where the catalog profile
-  has the same meaning, then specialize the Tan profile for its extra table roles and logical
-  event streams.
-  Rationale: `mori://shinzui/okf` and this repository intentionally ship a worked example and an
-  authoritative catalog profile with the same PostgreSQL model. Shared prose should not drift;
-  Tan-specific conventions belong only in the derived profile.
+- Decision (superseded 2026-09-13): Reuse the released PostgreSQL example's guidance and
+  specialize it for the Tan profile.
+  Rationale: matching examples seemed useful, but the upstream PostgreSQL file is a demonstration
+  of the mechanism, not evidence that models fail against either catalog profile. Copying it would
+  turn an example into a default prompt without a demonstrated need.
   Date: 2026-09-13
 
 - Decision: Refresh all five Seihou blueprints to target v0.15.0 without adding migration edges.
-  Rationale: new adopters should receive the guidance-aware descriptors and all blueprints change
-  what they install or recommend. Existing concept documents need no rewrite, so an agent-driven
-  corpus migration would invent work. Bumping the blueprint versions and their three registry
-  declarations follows the catalog-version rule in ADR-7.
+  Rationale: new adopters should receive descriptors compatible with the 0.9 schema and may later
+  add a narrow local hint if evidence requires one. All blueprints change what they install or
+  recommend. Existing concept documents need no rewrite, so an agent-driven corpus migration
+  would invent work. Bumping the blueprint versions and their three registry declarations follows
+  the catalog-version rule in ADR-7.
   Date: 2026-09-13
 
 - Decision: Repair all known `mori.dhall` publication drift in the same catalog release.
@@ -156,22 +179,31 @@ before type-specific guidance and omit blank scopes, as governed by
 plan artifact, so its artifact-level URI is pending. Everything necessary from it is restated
 here.
 
+The optional default is a design constraint, not merely a compatibility convenience. A profile
+and the model consuming it already have structured rules, concise descriptions, repository
+evidence, and the surrounding task. Those inputs should be allowed to do the work. Guidance is
+appropriate only when actual outputs reveal a recurring wrong choice that those inputs cannot
+disambiguate. It should then resemble an optimizer hint: the smallest stable nudge that corrects
+the bad plan. It is not a place to restate every rule, prescribe one universal workflow, or add a
+checklist because the field exists. Because profile guidance is inherited by every type and type
+guidance is additive, unnecessary prose compounds rather than replaces earlier constraints.
+
 The profile sources live below `profiles/`. `profiles/postgresql.dhall` is the authoritative
 catalog form of the worked PostgreSQL profile in okf. `profiles/tan-postgresql.dhall` starts from
 that value but replaces its name, description, and type list to add table-role rules and an
 `Event Stream` type. Helpers in `profiles/documentation/pattern-catalog.dhall` and
 `profiles/documentation/user-documentation.dhall` construct several type rules from their type
-name and description; they must be widened to take guidance as another argument. All remaining
-profile files construct their rules directly. `Profile/V02.dhall` defines shared frontmatter
-rules, not profiles or type rules, and must not gain guidance in this work.
+name and description; they should remain unchanged and inherit `None Text` like direct
+constructors. `Profile/V02.dhall` defines shared frontmatter rules, not profiles or type rules,
+and must not gain guidance in this work.
 
 `scripts/test-profile-docs.sh` enumerates all 13 public exports and regenerates one ordinary OKF
 bundle below `docs/profiles/` for each. A root `profile.md` explains profile-wide behavior; each
 `types/*.md` page explains the effective profile-wide and type-specific contract. The script's
 check mode generates a temporary copy, compares it byte for byte, and strictly validates every
 generated bundle. Because all guidance is currently absent, none of the checked-in pages has a
-guidance section. The matching 0.9 renderer will add `## Guidance`, `### Profile-wide`, and
-`### Type-specific` headings once the source values carry prose.
+guidance section. The matching 0.9 renderer continues to omit those sections for `None Text`, so
+adopting the schema without authoring hints must leave the generated tree unchanged.
 
 Every behavioral profile also has a conforming fixture and focused rejection fixtures exercised
 by `scripts/test-*-profile.sh`. `just check` type-checks the descriptor graph, runs all scripts,
@@ -189,9 +221,10 @@ than being smuggled into field descriptions. [ADR-7](../adr/0007-blueprint-versi
 requires a blueprint whose installed target changes to use the catalog tag in its own
 `blueprint.dhall`, `seihou-registry.dhall`, and `mori.dhall` entry.
 [ADR-9](../adr/0009-a-rejection-fixture-must-fail-for-exactly-one-reason.md) governs rule tests;
-because guidance adds no rule, this plan adds a positive coverage test instead of meaningless
-rejection fixtures. [ADR-11](../adr/0011-user-documentation-shares-reader-intent-types-and-doc-handles.md)
-defines the six user-documentation types whose procedures this plan must respect.
+because guidance adds no rule and this release authors no guidance, this plan adds neither a
+rejection fixture nor a permanent guidance-coverage test. [ADR-11](../adr/0011-user-documentation-shares-reader-intent-types-and-doc-handles.md)
+defines the six user-documentation types, but their taxonomy is not by itself evidence that each
+type needs an instruction prompt.
 
 `mori.dhall` is the discovery manifest. Its current `profiles` list omits
 `assurance.failureModes`, although `package.dhall` and `scripts/test-profile-docs.sh` already
@@ -217,164 +250,100 @@ the exact 0.9 commit and hash recorded above, and update its module comment to s
 required. Run `dhall freeze --all --inplace Profile/okf.dhall` after changing the URL and confirm
 that it reproduces the expected hash. Do not fork any schema type or default locally.
 
-Before authoring guidance, type-check `package.dhall`, list all profiles with the 0.9 executable,
-and regenerate the documentation once. At this intermediate point every completed value should
+After repinning, type-check `package.dhall`, list all profiles with the 0.9 executable, and
+regenerate the documentation once. Every completed value should
 contain `guidance = None Text`, the profile list should still report 13 profiles and 30 types, all
 existing validation scripts should pass, and regeneration should leave `docs/profiles/` unchanged
 because the 0.9 renderer omits absent guidance. This proves that the pin itself is compatible and
 separates schema effects from authored prose.
 
-### Milestone 2: Author guidance for every existing profile and type
+### Milestone 2: Preserve the no-guidance default and define the escape hatch
 
-Add a non-blank multiline `guidance = Some ''...''` value beside `description` in each of these
-sources: `profiles/assurance/failure-modes.dhall`, `profiles/assurance/reviews.dhall`, all four
-files under `profiles/coordination/`, all four files under `profiles/documentation/`,
-`profiles/okf-v0-2.dhall`, `profiles/postgresql.dhall`, and `profiles/tan-postgresql.dhall`.
-Do not change descriptions, field rules, allowed values, presence classifications, conditions,
-paths, identity prefixes, or schema-section requirements. Guidance may mention those rules when
-explaining how to work, but must not merely recite them.
+Do not add `guidance` to any value under `profiles/`. The completed values should all inherit
+`None Text` from okf 0.9. This includes profiles whose source headers contain useful background:
+comments and repository documentation can explain a contract without injecting that prose into
+every model invocation. Do not widen helper functions such as `rule` in
+`profiles/documentation/pattern-catalog.dhall` or `documentType` in
+`profiles/documentation/user-documentation.dhall`; they should continue to inherit the default.
 
-Use profile-wide prose for actions common to every type in that corpus, and type-specific prose
-for the work unique to one type. The content must cover these concrete authoring contracts:
+Document the threshold for a later hint. Guidance is justified only when all of these conditions
+are met:
 
-- `assurance.failureModes` starts from repeated evidence rather than a one-off incident, records
-  the recognizable signature separately from ordered diagnostic checks, preserves each eliminated
-  explanation with the check that disproved it, makes mechanism claims only when evidence supports
-  them, and places the control at the same scope as the failure mechanism. Its `Failure Mode`
-  guidance tells an author to compare occurrences, reproduce the signature, test cheapest
-  diagnoses first, and verify the control and standing detection.
-- `assurance.reviews` first fixes the exact subject, repository, immutable reviewed commit, and
-  full or incremental coverage. Its `Review` guidance tells the reviewer to examine only named
-  dimensions, record bounded context and evidence, make the outcome match the findings, link the
-  preceding review for incremental work, and create rather than bury any actionable bug report or
-  improvement request.
-- `coordination.bugReports` reproduces behavior from a version a consumer can actually use,
-  distinguishes a defect from a missing capability, names the authority for expected behavior,
-  grades severity by observed consequence, and keeps reproduction steps minimal and ordered. Its
-  `Bug Report` guidance requires rechecking status-dependent resolution, duplicate, version, and
-  workaround data as the report changes.
-- `coordination.capabilities` inspects shipped code and evidence before making a provision claim,
-  scopes one record to one independently adoptable and verifiable behavior, and separates current
-  availability from compatibility stability. Its `Capability` guidance tells an author to name
-  consumer entry points, cite evidence a reader can open, mirror requirements in the body graph,
-  and use replacement records without rewriting historical availability.
-- `coordination.improvementRequests` describes an observable gap owned by the target project,
-  keeps proposed solutions subordinate to the desired outcome, and derives dependencies and
-  acceptance criteria only from evidence. Its `Improvement Request` guidance states dependency
-  kinds from the source request's perspective, gives each criterion a stable local ID and a
-  reproducible verification method, and closes the request only with evidence satisfying those
-  criteria.
-- `coordination.useCases` begins with a real actor, situation, motivation, and observable outcome;
-  then connects cross-repository features to accountable owners and request records. `Use Case`
-  guidance distinguishes user progress from implementation tasks and keeps feature status and
-  acceptance current. `Use Case Theme` guidance is for a recurring cluster found across use cases,
-  not a speculative category, and must link the concrete cases that justify it.
-- `documentation.architectureDecisions` captures a durable decision only after its context,
-  alternatives, rationale, and consequences are known. Its type guidance says to update an
-  existing ADR when the decision is merely clarified, allocate a new stable ADR when the decision
-  changes, and record supersession in both directions without rewriting the historical decision.
-- `documentation.patternCatalog` verifies guidance against the current implementation and cites
-  sources before publication. Its eight type rules then specialize the job: `Navigation` curates
-  routes and prerequisites; `Overview` explains boundaries and relationships; `Standard` states
-  normative scope, conformance, and exceptions; `Guide` gives tested goal-oriented steps;
-  `Pattern` records recurring context, forces, solution, and trade-offs; `Runbook` includes ordered
-  operations, safety gates, verification, rollback, and recovery; `Reference` provides complete
-  current lookup facts; and `Gotcha` gives a recognizable symptom, cause, trigger conditions,
-  avoidance, and recovery.
-- `documentation.researchDocuments` starts from a bounded question, identifies sources and method,
-  separates observations from inference, and records limitations and contradictory evidence. Its
-  `Research Document` guidance tells an author to make findings traceable, link decisions or plans
-  the work informed, and supersede rather than silently rewrite a materially obsolete record.
-- `documentation.userDocumentation` chooses one primary reader intent, names audience,
-  prerequisites, and expected outcome, verifies claims against current product evidence, and uses
-  lifecycle metadata rather than leaving stale instructions apparently current. Its six type
-  rules follow ADR-11: `Navigation` curates a route; `Tutorial` creates a verified first success;
-  `Guide` completes one goal; `Explanation` develops a mental model and trade-offs; `Reference`
-  provides authoritative lookup organized for scanning; and `Runbook` includes preconditions,
-  ordered operations, safety checks, verification, rollback, and escalation.
-- `okfV02` explains that it checks the shape of v0.2 frontmatter families without choosing a
-  taxonomy or demanding optional metadata. It tells authors to record provenance, sources,
-  verification, lifecycle, and observation windows truthfully, and to create a house profile when
-  they need presence policy. It has no type-specific guidance because it declares no types.
-- `postgresql` copies the profile, schema, table, and view guidance from the released
-  `mori://shinzui/okf` file at project-relative path `docs/profiles/postgresql.dhall`. This keeps
-  the worked example and authoritative catalog wording aligned: inspect live DDL; document current
-  rather than intended state; explain namespace responsibility; inspect table columns, keys,
-  constraints, and indexes; and inspect each view definition, sources, filters, refresh, security,
-  and performance behavior.
-- `tanPostgresql` retains that live-database discipline and adds the Tan-specific distinction
-  between physical database objects and logical event streams. Its table guidance derives
-  `derivation`, `lifecycle`, `domain`, and conditional `sourceStreams` from real producer and
-  consumer behavior. Its `Event Stream` guidance inspects producer code and the message store,
-  explains aggregate identity, event categories, ordering and versioning assumptions, and names
-  downstream projections without pretending the logical stream is a physical table.
+- repeated or otherwise compelling output evidence shows a specific bad authoring choice;
+- the structured profile, its descriptions, repository evidence, and normal task context do not
+  already make the correct choice reliably inferable;
+- the correction is stable across consumers of the selected scope rather than local to one task;
+- the hint can be narrower than a replacement workflow or universal checklist; and
+- there is an observable way to tell whether the hint improves the failure it targets.
 
-Extend the two helper constructors rather than bypassing them.
-`profiles/documentation/pattern-catalog.dhall`'s `rule` function and
-`profiles/documentation/user-documentation.dhall`'s `documentType` function must each accept a
-third `Text` argument and set `guidance = Some guidance` in the completed `TypeRule`. Every call
-site then supplies the procedure for that type. This preserves one construction path for each
-taxonomy.
+When that evidence exists, choose the smallest scope. Use profile guidance only for ambiguity
+shared by every type. Use type guidance only for a type-specific ambiguity; it is added after any
+profile guidance rather than replacing it. Prefer one precise nudge over background education.
+Do not use guidance to repeat allowed values, required fields, path rules, descriptions, ordinary
+best practices, or instructions that belong in a task-specific runbook. Remove or reduce a hint
+when the model, structured schema, or surrounding context can infer the behavior without it.
 
-Add `scripts/test-profile-guidance.sh`. It should use `${OKF_BIN:-okf}`, enumerate the same 13
-public exports as `scripts/test-profile-docs.sh`, and call `okf profile show --no-local --registry
-./package.dhall EXPORT` for each. Fail if the root output contains `guidance: (none)` or any type
-block contains `  guidance: (none)`. Count lines beginning exactly `type:` across the outputs and
-require 30. On success print:
+Prove both sides of the interface without committing a hint. `okf profile show` and its JSON form
+must report absent guidance for every current export. Then construct a temporary registry
+expression that overrides only `postgresql.guidance`; showing that temporary value must print the
+hint while validation behavior remains identical. This demonstrates that the capability is ready
+for an evidence-backed exception without turning the exception into catalog policy.
 
-```text
-OK: 13 profiles and 30 type rules carry authoring guidance
-```
+Do not add a permanent test that counts guided profiles or types, and do not add rejection
+fixtures for prose. The existing generated-documentation drift test will cover any future hint
+once one is deliberately authored. This release's one-off audit records that every current scope
+is absent; it is release evidence, not a rule forbidding future evidence-backed additions.
 
-The existing `just test` loop will discover this script automatically. This is a positive
-coverage invariant, not a claim that prose can be validated for semantic correctness. Review the
-prose manually against the profile source headers and local ADRs before accepting the milestone.
+### Milestone 3: Publish the sparse-use policy, compatibility docs, ADR, and Mori metadata
 
-### Milestone 3: Publish generated docs, compatibility guidance, ADR, and Mori metadata
+Run `just docs` with `OKF_BIN` pointing to 0.9.0.0 and require no diff below `docs/profiles/`.
+Inspect the generated tree and confirm that it contains no `## Guidance`, `### Profile-wide`, or
+`### Type-specific` headings. The 0.9 renderer omits absent guidance, so this unchanged tree is the
+expected result rather than missing work. Run generation a second time as the ordinary
+reproducibility check. Never hand-edit anything below `docs/profiles/`.
 
-Run `just docs` with `OKF_BIN` pointing to 0.9.0.0. Inspect all 13 generated `profile.md` files and
-all 30 generated type pages. Every profile root must contain `## Guidance`; every type page must
-contain `### Profile-wide` followed by `### Type-specific`. Run generation a second time and
-require a clean diff to prove that multiline prose did not introduce nondeterministic output.
-Never hand-edit anything below `docs/profiles/`.
+Update `README.md` in the compatibility, schema-evolution, generated-documentation, and
+profile-authoring sections. State that v0.15.0 requires `okf` 0.9.0.0 or later, define the
+description/guidance/rules split, and make `None Text` the normal guidance state. Use the optimizer-
+hint analogy: add guidance only for demonstrated ambiguity, keep it minimal, and scope it as
+narrowly as possible. Show one short local override as an example, not a catalog default. Explain
+that generated guidance is profile-wide and then type-specific when present, while absent guidance
+produces no documentation section. Give a consumer the upgrade order: update the CLI first, repin
+and freeze the profile second, then run the repository's strict validation. Also update the stale
+version example in `profiles/okf-v0-2.dhall` and the public-package example comment in
+`package.dhall` when the final v0.15.0 hash is known.
 
-Update `README.md` in the compatibility, schema-evolution, generated-documentation, testing, and
-profile-catalog sections. State that v0.15.0 requires `okf` 0.9.0.0 or later, define the
-description/guidance/rules split, show a short completed Dhall example, explain effective
-profile-wide-then-type-specific rendering, name `scripts/test-profile-guidance.sh`, and give a
-consumer the upgrade order: update the CLI first, repin and freeze the profile second, then run
-the repository's strict validation. Also update the stale version example in
-`profiles/okf-v0-2.dhall` and the public-package example comment in `package.dhall` when the final
-v0.15.0 hash is known.
-
-Create a v0.15.0 entry in `CHANGELOG.md`. The release summary should say that all existing
-profiles gain authoring guidance and that no structured rules or export names change. The
-migration section must distinguish document migration from tool migration: existing concept
-files need no edits, but any consumer repinning to v0.15.0 must run `okf` 0.9.0.0 or later. Record
-the final remote package import and semantic hash in the same form as previous releases.
+Create a v0.15.0 entry in `CHANGELOG.md`. The release summary should say that the public authoring
+schema now supports optional profile and type guidance while all existing exports deliberately
+leave it absent. No structured rules, descriptions, or export names change. The migration section
+must distinguish document migration from tool migration: existing concept files need no edits,
+but any consumer repinning to v0.15.0 must run `okf` 0.9.0.0 or later. Record the final remote
+package import and semantic hash in the same form as previous releases.
 
 Record the lasting catalog policy in a new ADR. Ask the local bundle for the next ID with `okf id
 next docs/adr --profile docs/adr/profile.dhall ADR`; it is expected to return `ADR-12`, but use the
 command's result rather than assuming. Create the next four-digit file under `docs/adr/` with the
-title “Published profiles carry authoring guidance at both scopes.” The decision should preserve
-the three-way split: descriptions identify, structured rules validate, and guidance prescribes
-authoring work without execution. It should require non-blank profile guidance and non-blank
-guidance on every declared type for published house profiles, while recognizing that a
-type-less reference profile has no type scope. Add `originatingPlan` pointing to this file, update
-the bundle index with `okf index`, and add one dated `Addition` entry to `docs/adr/log.md` with
-`okf log add`.
+title “Guidance is an evidence-backed exception.” The decision should preserve the three-way
+split: descriptions identify, structured rules validate, and guidance narrowly corrects a
+demonstrated authoring ambiguity without execution. It must state that absence is the default and
+needs no justification, while an addition needs failure evidence, a reason other inputs are
+insufficient, the smallest applicable scope, and an observable improvement criterion. Add
+`originatingPlan` pointing to this file, update the bundle index with `okf index`, and add one
+dated `Addition` entry to `docs/adr/log.md` with `okf log add`.
 
 Repair `mori.dhall` while publishing the new behavior. Add the missing
 `assurance.failureModes` profile record, update all 13 profile `version` values to `v0.15.0`
-because every exported value gains guidance, add the missing `adopt-capabilities` template and
-guide DocRef, and make the package description name the assurance family. After the blueprint
-milestone, all five template versions must agree with their blueprint and Seihou registry values.
-The intended local projection is 13 published profiles, five templates, and eight docs.
+because the public record shape gains the optional field even though its value is absent, add the
+missing `adopt-capabilities` template and guide DocRef, and make the package description name the
+assurance family. After the blueprint milestone, all five template versions must agree with their
+blueprint and Seihou registry values. The intended local projection is 13 published profiles,
+five templates, and eight docs.
 
 ### Milestone 4: Refresh the reusable adoption blueprints
 
-Bring all five existing Seihou blueprints forward so a new adopter receives a guidance-aware
-profile. Set each `blueprints/*/blueprint.dhall` version, each corresponding entry in
+Bring all five existing Seihou blueprints forward so a new adopter receives the 0.9-compatible
+profile schema and may add a targeted local hint later if evidence warrants one. Set each
+`blueprints/*/blueprint.dhall` version, each corresponding entry in
 `seihou-registry.dhall`, and each corresponding template version in `mori.dhall` to `0.15.0`.
 Do not add a migration edge: there is no concept-frontmatter or body repair for guidance.
 
@@ -406,8 +375,9 @@ blueprint linting and every non-remote catalog check must already pass before pu
 
 Run the full test matrix with the selected 0.9 executable, compute both semantic hashes, and finish
 the changelog and embedded blueprint pins. Verify the public package's normalized JSON against
-v0.14.0 after deleting only the new `guidance` members; every export should otherwise compare
-equal. This is the load-bearing proof that the release changes documentation rather than policy.
+v0.14.0 after confirming every new `guidance` member is null and then deleting those members;
+every export should otherwise compare equal. This is the load-bearing proof that the release adds
+an optional schema capability rather than changing catalog policy.
 
 Commit in coherent, passing units using Conventional Commits. Every implementation and release
 commit must include both the `ExecPlan:` and `Intention:` trailers shown in Concrete Steps. The
@@ -471,28 +441,35 @@ OKF_BIN="$OKF_BIN" just check
 ```
 
 The list must contain 13 profiles and 30 types in aggregate. The generated-doc diff must be empty
-until guidance is authored. After Milestone 2, exercise the new data directly:
+and remains the expected final state because this release authors no guidance. After Milestone 2,
+exercise both the default and the escape hatch directly:
 
 ```bash
-OKF_BIN="$OKF_BIN" bash scripts/test-profile-guidance.sh
 "$OKF_BIN" profile show --no-local --registry package.dhall \
   documentation.userDocumentation
 "$OKF_BIN" profile show --no-local --registry package.dhall \
   documentation.userDocumentation --json \
   | jq '{guidance, types: [.types[] | {type, guidance}]}'
+export OKF_GUIDANCE_PROBE='let catalog = /Users/shinzui/Keikaku/bokuno/okf-profiles/package.dhall in { hinted = catalog.postgresql // { guidance = Some "Inspect the live database only when repository evidence cannot establish the deployed schema." } }'
+"$OKF_BIN" profile show --no-local --registry env:OKF_GUIDANCE_PROBE hinted
+unset OKF_GUIDANCE_PROBE
 ```
 
-The text output must show a multiline root `guidance:` block and six indented type guidance
-blocks. The JSON result must contain a string at `.guidance` and six objects whose `.guidance`
-members are strings, not null.
+The catalog text output must show `guidance: (none)` at profile and type scope. The JSON result
+must contain null at `.guidance` and on all six type objects. The temporary `hinted` value must
+print the one supplied sentence under `guidance:` while retaining the PostgreSQL rules. Keep the
+expression behind `env:OKF_GUIDANCE_PROBE`: passing it directly makes the registry preflight
+mistake its local import for a path to the registry itself.
 
-Generate, inspect, and prove coverage:
+Generate and prove that absent guidance remains absent:
 
 ```bash
 OKF_BIN="$OKF_BIN" just docs
-test "$(rg -l '^## Guidance$' docs/profiles/*/profile.md | wc -l | tr -d ' ')" = 13
-test "$(rg -l '^### Profile-wide$' docs/profiles/*/types/*.md | wc -l | tr -d ' ')" = 30
-test "$(rg -l '^### Type-specific$' docs/profiles/*/types/*.md | wc -l | tr -d ' ')" = 30
+if rg -n '^## Guidance$|^### Profile-wide$|^### Type-specific$' docs/profiles; then
+  echo "unexpected committed guidance; record its failure evidence or remove it" >&2
+  exit 1
+fi
+git diff --exit-code -- docs/profiles
 OKF_BIN="$OKF_BIN" just docs
 git diff --check
 OKF_BIN="$OKF_BIN" just check
@@ -505,7 +482,7 @@ Allocate and validate the ADR with the same 0.9 executable:
 "$OKF_BIN" id next docs/adr --profile docs/adr/profile.dhall ADR
 "$OKF_BIN" index docs/adr --write --okf-version 0.2
 "$OKF_BIN" log add docs/adr --kind Addition \
-  --message "Published profiles now carry authoring guidance at profile and type scope."
+  --message "Guidance is an evidence-backed exception and remains absent by default."
 "$OKF_BIN" validate docs/adr --strict \
   --profile docs/adr/profile.dhall --profile-enforce --log-enforce
 ```
@@ -534,8 +511,8 @@ Record those two outputs as `ROOT_HASH` and `CAPABILITIES_HASH` task-specific sh
 the same session. Use the root hash for every import that selects from v0.15.0 `package.dhall` and
 the direct hash only for the direct capabilities import.
 
-Before tagging, compare the new public values with v0.14.0 while ignoring only guidance. Run this
-loop over the same 13-export array used by `scripts/test-profile-guidance.sh`:
+Before tagging, confirm the current values leave guidance absent, then compare them with v0.14.0
+while ignoring only the new schema member. Run this loop over all 13 exports:
 
 ```bash
 profiles=(
@@ -555,6 +532,9 @@ profiles=(
 )
 old_registry='https://raw.githubusercontent.com/shinzui/okf-profiles/v0.14.0/package.dhall sha256:87d2e4076b2491ee608ac1c7a28b24156ba2634f2b09de49ad4ba79f039acf50'
 for export_name in "${profiles[@]}"; do
+  "$OKF_BIN" profile show --no-local --registry package.dhall \
+    "$export_name" --json \
+    | jq -e '.guidance == null and all(.types[]; .guidance == null)' >/dev/null
   diff -u \
     <("$OKF_BIN" profile show --no-local --registry "$old_registry" \
         "$export_name" --json \
@@ -565,13 +545,15 @@ for export_name in "${profiles[@]}"; do
 done
 ```
 
-The loop must print no diff. If it reports a change, either restore the v0.14 structured value or
+The null checks must all pass and the loop must print no diff. If a guidance value is present,
+either add its concrete failure evidence and narrow justification to this plan and the new ADR or
+remove it. If the comparison reports another change, restore the v0.14 structured value or
 explicitly revise this plan and the release's migration contract before continuing.
 
 Use Conventional Commits and the mandatory trailers. A representative implementation commit is:
 
 ```text
-feat(profiles): add authoring guidance to existing profiles
+feat(profiles): adopt the optional guidance schema
 
 ExecPlan: docs/plans/10-adopt-okf-0-9-guidance-across-existing-catalog-profiles.md
 Intention: intention_01m2dg6wsre5jr07176yk9yejp
@@ -582,7 +564,7 @@ trailers. Once every pre-publication check passes:
 
 ```bash
 git status --short
-git tag -a v0.15.0 -m "v0.15.0 — first-class profile guidance"
+git tag -a v0.15.0 -m "v0.15.0 — optional profile guidance"
 git push origin master
 git push origin v0.15.0
 git ls-remote --tags origin refs/tags/v0.15.0 'refs/tags/v0.15.0^{}'
@@ -620,28 +602,27 @@ First, dependency provenance is exact: the only schema URL and integrity hash in
 `sha256:6bdf781d3bafac7098196fc3ed152e94d34807bd79845d024a07fb94297c7fc3`.
 The selected executable prints version 0.9.0.0. The package and every profile type-check and load.
 
-Second, guidance coverage is complete. `scripts/test-profile-guidance.sh` reports exactly 13
-profiles and 30 guided type rules. `okf profile show` displays multiline guidance for a profile
-and each of its types, and the full JSON form preserves the same prose as strings. In particular,
-the user-documentation profile exposes six distinct procedures and `okfV02` exposes only its
-profile-wide procedure because it has no type rules.
+Second, the default is demonstrably sparse. Full JSON inspection reports `.guidance == null` for
+all 13 profiles and all 30 type rules. Text inspection renders `guidance: (none)` rather than
+inventing content. A temporary PostgreSQL override that changes only `guidance` renders the exact
+hint supplied, proving that an evidence-backed exception is available without making it the
+catalog default.
 
 Third, the change is documentary only. The v0.14.0-versus-local JSON comparison is byte-identical
 after deleting `guidance` at profile and type scope. Every pre-existing conforming fixture still
 passes; every focused rejection fixture still fails; and no fixture document is changed merely to
 adopt guidance. `OKF_BIN="$OKF_BIN" just check` exits zero and includes the existing profile,
-generated-doc, ADR-bundle, and blueprint success lines plus:
+generated-doc, ADR-bundle, and blueprint success lines, including:
 
 ```text
-OK: 13 profiles and 30 type rules carry authoring guidance
 OK: profile documentation is current and validates
 ```
 
-Fourth, generated documentation makes the feature visible. Exactly 13 root profile pages contain
-`## Guidance`, exactly 30 type pages contain `### Profile-wide`, and the same 30 contain
-`### Type-specific`. A second `just docs` run changes no byte. Spot-check PostgreSQL against the
-released upstream example and spot-check at least one profile in each of the assurance,
-coordination, and documentation families for clear separation between identity and procedure.
+Fourth, generated documentation respects omission. No committed page contains `## Guidance`,
+`### Profile-wide`, or `### Type-specific`, and a 0.9 regeneration changes no byte. The README,
+not every generated profile page, demonstrates how a local author can add a minimal hint after
+gathering evidence. The new ADR makes absence the unremarkable default and places the burden of
+justification on additions.
 
 Fifth, release and discovery metadata is complete. The README states the 0.9.0.0 minimum and the
 consumer upgrade order. The changelog says documents require no migration. The new ADR and its log
@@ -670,10 +651,11 @@ the disposable directory only after the release evidence is recorded. If `cabal 
 resolve Hackage, build the exact v0.9.0.0 tag from the Mori-located okf checkout in a separate
 temporary worktree; do not change branches or build products in the dependency's active checkout.
 
-If a guidance edit causes a validation change, use the normalized JSON comparison to identify the
-non-guidance field and restore it before proceeding. If generated documentation is surprising,
-fix the source `guidance` and regenerate twice. If the new ADR ID is no longer ADR-12, use the
-fresh value from `okf id next`; never fill a gap or recycle an ID.
+If guidance appears unexpectedly, use the normalized JSON comparison to identify its source and
+remove it unless its evidence and narrow justification have first been added to this plan and the
+new ADR. If any non-guidance field changes, restore it before proceeding. If generated
+documentation is surprising, inspect the source profiles and regenerate twice. If the new ADR ID
+is no longer ADR-12, use the fresh value from `okf id next`; never fill a gap or recycle an ID.
 
 Do not create or move the v0.15.0 tag until the release commit is final and every pre-publication
 check passes. Before pushing, a mistaken local tag is recoverable by deleting only that explicit
@@ -740,8 +722,17 @@ paths. Its normalized type widens because the nested profile values widen, which
 requires the new decoder. No new Haskell package or runtime service is introduced.
 
 The implementation uses the existing Dhall CLI 1.42 or later for type-checking, semantic hashing,
-and import freezing; `rg` for source and rendered-coverage checks; `jq` only for the release-time
+and import freezing; `rg` for source and rendered-omission checks; `jq` only for the release-time
 JSON equivalence audit; Seihou for blueprint linting and registry validation; and Mori for
 dependency discovery, local registration, and publication projections. Dependency source must be
 located through Mori before inspection, and release pins must continue to be checked against
 Hackage and upstream Git rather than chosen from local registry metadata alone.
+
+
+## Revision Note
+
+2026-09-13: Revised the plan after the user clarified that guidance should behave like an SQL
+optimizer hint. Removed blanket guidance authoring, type-helper changes, generated guidance
+coverage targets, and the permanent coverage test. The plan now preserves `None Text` across all
+existing profiles and types, demonstrates the capability with a temporary override, and records
+an evidence-backed, minimally scoped exception policy in the proposed ADR.
