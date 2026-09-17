@@ -1,8 +1,8 @@
 # Capability catalog authoring reference
 
 The authoritative contract for a bundle governed by `coordination.capabilities`
-(introduced in okf-profiles v0.9.0; the shipped descriptor pins v0.15.0). Follow it exactly; do
-not reconstruct it from memory. Loading the v0.15.0 descriptor requires `okf` 0.9.0.0 or later.
+(introduced in okf-profiles v0.9.0; the shipped descriptor pins v0.16.0). Follow it exactly; do
+not reconstruct it from memory. Loading the v0.16.0 descriptor requires `okf` 0.9.0.0 or later.
 
 ## Bundle layout
 

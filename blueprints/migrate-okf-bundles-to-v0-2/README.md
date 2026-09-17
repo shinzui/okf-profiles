@@ -2,7 +2,7 @@
 
 Agent-driven migration of every profile-governed Open Knowledge Format bundle in a repository from
 OKF v0.1 to **OKF v0.2**. The transition was introduced by okf-profiles **v0.8.0**; the run pins
-descriptors to the current release, **v0.15.0**.
+descriptors to the current release, **v0.16.0**.
 
 okf-profiles v0.8.0 moved all seven published profiles to OKF v0.2. v0.2 assumes a corpus written
 and maintained by agents and adds the frontmatter a reader needs to judge machine-written
@@ -119,14 +119,14 @@ unavailable:
   `sources` reshape, the house-`status` divergence, the `reviews`/`verified` mirroring rule, and
   full unmigrated-corpus transcripts showing exactly what a consumer sees the first time they pull
   v0.8.0.
-- **`profile-pins.md`** — the v0.15.0 pinned-import line for each of the seven profile exports, a
-  descriptor template, the repinning diff, and the freezing rules. v0.15.0 adds no corpus
+- **`profile-pins.md`** — the v0.16.0 pinned-import line for each of the seven profile exports, a
+  descriptor template, the repinning diff, and the freezing rules. v0.16.0 adds no corpus
   requirement beyond v0.8.0; it widens the profile schema with optional `guidance`, which is why
   it needs a newer `okf`.
 
 ## Prerequisites
 
-- **`okf` 0.9.0.0 or later** (required to load v0.15.0 descriptors) and **`dhall` 1.42 or later** in the target repository's environment.
+- **`okf` 0.9.0.0 or later** (required to load v0.16.0 descriptors) and **`dhall` 1.42 or later** in the target repository's environment.
 - **A tool-capable local CLI provider**, such as `claude-cli` or `codex-cli`. Some providers reject
   an empty instruction, so pass the optional prompt argument if the session fails to start:
 

@@ -61,6 +61,8 @@ profiles/
                               # flat ADR corpus with stable ADR-N handles
     pattern-catalog.dhall     # implementation-pattern catalog conventions
     research-documents.dhall  # nested research corpus with stable RES-N handles
+    specifications.dhall      # normative specifications with stable SPEC-N handles,
+                              # the boundary obliged to satisfy each one, and what binds
     user-documentation.dhall  # user-facing pages with stable DOC-N handles
   coordination/
     package.dhall             # namespaced coordination-profile exports
@@ -108,7 +110,7 @@ changes a consumer's conventions.
 ```dhall
 -- your-project/okf-profile.dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -119,7 +121,7 @@ an implementation-pattern corpus consumes the documentation catalog profile as:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
 
 in  okf.documentation.patternCatalog
 ```
@@ -131,7 +133,7 @@ Override an existing profile without copying — `//` replaces fields on the val
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -144,7 +146,7 @@ fields you set; everything else takes the schema default:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.Profile::{
@@ -187,7 +189,7 @@ decoding breaks at load time. Two rules keep them aligned:
 
 - The `okfVersion` field declares the OKF **spec** version a profile targets.
   Every profile in this catalog declares `"0.2"`.
-- This repo's **tag** (`v0.15.0`, …) is what consumers pin. Treat any change to the
+- This repo's **tag** (`v0.16.0`, …) is what consumers pin. Treat any change to the
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
@@ -200,15 +202,16 @@ v0.15.0 profile record and fails to load it, even though no rule changed. The
 existing `postgresql` and `tanPostgresql` fields remain stable flat exports; new
 profile families should use a namespaced directory and package field.
 
-To move a consumer repository onto v0.15.0, go in this order:
+To move a consumer repository onto v0.16.0, go in this order:
 
 1. **Upgrade the `okf` CLI** to 0.9.0.0 or later. An older CLI rejects the new
    descriptor for the wrong reason, which looks like a broken profile.
-2. **Repin the descriptor** to the `v0.15.0` tag, delete the old hash line, and
+2. **Repin the descriptor** to the `v0.16.0` tag, delete the old hash line, and
    re-run `dhall freeze`.
 3. **Run the repository's strict validation** (`okf validate --strict
    --profile-enforce …` or its check target). No concept document needs editing:
-   v0.15.0 changes no validation rule, description, or export name.
+   v0.16.0 adds the `documentation.specifications` export and changes no existing
+   validation rule, description, or export name.
 
 > **`okfVersion` is compile-checked against the rules a profile declares, in both
 > directions.** This is the thing most likely to surprise someone forking a
@@ -266,7 +269,7 @@ A local descriptor can add such a hint without forking the shared profile:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -536,6 +539,7 @@ requires **okf 0.9.0.0 or later**.
 | `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles and checked supersession references | required | nothing recommended |
 | `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, and tag fields | required | nothing recommended; `sources` is the v0.2 record shape |
 | `documentation.researchDocuments` | Nested research corpora with `RES-N` handles, structured reviews, and conditional supersession | required | `reviews`; `sources` is the v0.2 record shape |
+| `documentation.specifications` | Normative specifications with `SPEC-N` handles: the boundary obliged to satisfy the contract, the version ratified, which parts bind, and what proves conformance. A `Specification Pointer` records a subject specified authoritatively in another repository | required | nothing recommended; `specVersion` and `normativeScope` on a `Specification` once `status` is `ratified`; `authoritativeSpec` on a pointer; `supersededBy` once `status` is `superseded` |
 | `documentation.userDocumentation` | User-facing navigation, tutorials, guides, explanations, references, and runbooks with stable `DOC-N` handles | required | required discovery tags; optional lifecycle, sources, verification, and typed supersession |
 | `okfV02` | Format-level reference profile: the six v0.2 families and no house conventions, for a team with no established profile of its own | recommended | OKF `status` and `stale_after` |
 | `postgresql` | PostgreSQL schemas, tables, and views with typed resource URIs and `# Schema` column contracts | recommended | OKF `status` and `stale_after` |
@@ -548,6 +552,23 @@ blocking relationship, and criteria remain completion conditions rather than tas
 Dependencies describe source fulfillment contracts, not live incident or scheduling blockers.
 
 `verified` is `optional` on every profile above and demanded by none.
+
+`documentation.specifications` shares its subject matter with three siblings and
+answers a different question from each, so pick by what the document *does*, not
+by which directory it sits in:
+
+| If the document… | Use |
+|---|---|
+| records a choice and the rationale for it, finished the moment it was made | `documentation.architectureDecisions` |
+| weighs evidence and alternatives inside a bounded question, and concludes | `documentation.researchDocuments` |
+| describes an interface as it is built, for a reader looking something up | `documentation.userDocumentation` (`Reference`) |
+| states what an owning boundary must do, and stays true until superseded | `documentation.specifications` |
+
+A ratified specification must name `specVersion` and `normativeScope`, which is
+the practical test: a document that cannot say which of its parts bind, at which
+version, is not a specification yet — it is a decision, a piece of research, or a
+draft. Nothing else in the catalog demands those two fields, and nothing else has
+a place to put them.
 
 `assurance.reviews` is the one profile declaring neither a house `status` nor
 OKF's, which is a deliberate departure from

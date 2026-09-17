@@ -1,14 +1,14 @@
-# okf-profiles v0.15.0 pinned imports
+# okf-profiles v0.16.0 pinned imports
 
 Copy the descriptor for the bundle you are repinning rather than composing the import by hand.
 Every profile below targets Open Knowledge Format v0.2. The v0.2 contract was introduced in
-v0.8.0 and is unchanged in v0.15.0, which additionally widens the profile schema with optional
-`guidance`. Loading a v0.15.0 descriptor requires `okf` 0.9.0.0 or later.
+v0.8.0 and is unchanged in v0.16.0, which additionally widens the profile schema with optional
+`guidance`. Loading a v0.16.0 descriptor requires `okf` 0.9.0.0 or later.
 
 ## Freezing
 
 > **The `sha256:` hashes below are deliberately absent.** They are added by
-> `dhall freeze` against the real v0.15.0 tag; this file ships with the import line only so that
+> `dhall freeze` against the real v0.16.0 tag; this file ships with the import line only so that
 > nobody hand-writes a hash. After copying a descriptor into a repository, always run:
 >
 > ```bash
@@ -27,7 +27,7 @@ v0.8.0 and is unchanged in v0.15.0, which additionally widens the profile schema
 The package root is:
 
 ```text
-https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
+https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
 ```
 
 A descriptor is that import plus the export the bundle uses:
@@ -50,7 +50,7 @@ conventions, for a bundle with no established profile of its own.
 ```dhall
 --| <Bundle kind> profile. Bump the tag and semantic hash together when upgrading.
 let Profiles =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
 
 in  Profiles.documentation.architectureDecisions
 ```
@@ -66,7 +66,7 @@ regenerated, never edited:
  let Profiles =
 -      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.7.0/package.dhall
 -        sha256:3a785b2ee66301e2bcd6466352e9480e71b7fafdca62256b4a2038cace5d0bb8
-+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.15.0/package.dhall
++      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
 ```
 
 ```bash

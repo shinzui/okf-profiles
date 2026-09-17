@@ -15,7 +15,7 @@ guidance weaken the shared profile, identity stability, provenance truthfulness,
 This blueprint ships two references. Read both before editing:
 
 - `user-documentation-profile.dhall` is the exact pinned descriptor to install once and share
-  across the adopted bundles. It pins okf-profiles v0.15.0, which requires `okf` 0.9.0.0 or later;
+  across the adopted bundles. It pins okf-profiles v0.16.0, which requires `okf` 0.9.0.0 or later;
   if the repository's `okf` is older, stop before editing and report the prerequisite.
 - `migration-reference.md` defines the required metadata, six reader-intent types, stable-handle
   allocation, Mori declaration, and validation sequence.

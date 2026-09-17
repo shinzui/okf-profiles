@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-09-17
+* **Addition**: ADR-13 separates normative specifications from decisions, research, and reference pages, and gives them their own profile and SPEC-N identity.
+
 ## 2026-09-13
 * **Addition**: ADR-12 makes guidance an evidence-backed exception that remains absent by default.
 

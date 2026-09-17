@@ -20,4 +20,5 @@ okf_version: "0.2"
 - [A review is an artifact, not only an annotation](0010-a-review-is-an-artifact-not-only-an-annotation.md) - Review records get their own assurance family and do not splice the house reviews frontmatter key, because the document is the review.
 - [User documentation shares reader-intent types and DOC handles](0011-user-documentation-shares-reader-intent-types-and-doc-handles.md) - One fleet-wide profile classifies user-facing pages by reader intent while preserving identity with bundle-scoped DOC-N handles.
 - [Guidance is an evidence-backed exception](0012-guidance-is-an-evidence-backed-exception.md) - Profile and type guidance stays absent by default and is added only as a minimal, narrowly scoped correction for a demonstrated authoring failure.
+- [A specification is not a decision, research, or a reference page](0013-a-specification-is-not-a-decision-or-a-reference.md) - Normative specifications get their own profile and SPEC-N handles, distinguished from three documentation siblings by a ratified version and an explicit normative scope.
 

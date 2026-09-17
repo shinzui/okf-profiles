@@ -9,6 +9,52 @@ these profiles and how to migrate it.
 ## [Unreleased]
 
 
+## [0.16.0] — 2026-09-17
+
+**Adds `documentation.specifications`, a profile for documents that state what an owning boundary
+must do.** No existing profile, rule, description, or export name changes, and no corpus governed by
+an earlier release needs editing. The package's semantic hash changes because the package gained an
+export, so a consumer repinning to this tag re-runs `dhall freeze`.
+
+### Added
+
+- **`documentation.specifications`** — normative specifications with bundle-scoped `SPEC-N` handles.
+  Every document carries `type`, `title`, `description`, `specId`, a house `status`
+  (`draft` / `proposed` / `ratified` / `superseded` / `withdrawn`), `owner` as one or more canonical
+  URIs naming the boundaries obliged to satisfy the contract, and OKF v0.2 `generated`. Two further
+  fields are demanded on a `Specification` once `status` is `ratified`: `specVersion`, the version
+  of the contract that was ratified, and `normativeScope`, the parts of the document that bind. A
+  ratified `Specification Pointer` carries neither, holding no text to version or scope. `conformance`,
+  `supersedes`, `reviews`, `sources`, `verified`, and the legacy `timestamp` are optional;
+  `supersededBy` is demanded once `status` is `superseded`. Nothing is recommended.
+- **A `Specification Pointer` type** for a boundary accepted in one repository whose authoritative
+  text is owned by another. It requires `authoritativeSpec` and shares the `SPEC-N` prefix with
+  `Specification`, so a document keeps its handle when its text is promoted out of a repository or
+  absorbed back into one.
+- **[ADR-13](./docs/adr/0013-a-specification-is-not-a-decision-or-a-reference.md)** records why this
+  is a new profile rather than an override on `documentation.architectureDecisions`,
+  `documentation.researchDocuments`, or `documentation.userDocumentation`, and the README gains a
+  routing table for choosing between the four.
+- **19 rejection fixtures** under `fixtures/specifications-invalid/`, each failing for exactly one
+  defect, covering every load-bearing rule including both ratification conditionals, the pointer's
+  `authoritativeSpec`, and the `owner` and `conformance` URI formats.
+
+### Changed
+
+- **Every blueprint targets v0.16.0** per
+  [ADR-7](./docs/adr/0007-blueprint-versions-track-the-catalog-tag.md). None gains a migration edge:
+  no existing profile changed, so no bundle needs one.
+- **`Profile/V02.dhall`'s status policy names eight profiles**, not seven. `specifications` keeps a
+  house ratification vocabulary and does not splice OKF `status` or `stale_after`, because
+  `ratified` is the state OKF v0.2 §5.4 has no word for.
+
+### Not included
+
+No Seihou adoption blueprint ships with this profile. `adopt-user-documentation` was published
+alongside its profile because the migration shape was known from two corpora; the equivalent here
+waits until a second repository adopts `specifications` and the shape is observed rather than
+guessed.
+
 ## [0.15.0] — 2026-09-13
 
 **Adopts okf 0.9's optional profile guidance schema; every export deliberately leaves it absent.**

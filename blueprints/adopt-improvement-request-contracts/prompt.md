@@ -30,7 +30,7 @@ For every applicable bundle, identify its existing validation command and run it
 Keep the output so inherited failures are not mistaken for changes made by this playbook.
 
 Read the local profile descriptor. If it is a plain or customized import of
-`coordination.improvementRequests` older than v0.15.0, change only the imported tag to v0.15.0,
+`coordination.improvementRequests` older than v0.16.0, change only the imported tag to v0.16.0,
 remove only the old import hash, and run `dhall freeze` on that descriptor. Preserve every local
 overlay. Do not replace a locally authored profile with the shared profile; report it separately
 because it may not declare the new fields. Do not weaken `--strict` or `--profile-enforce` to make
@@ -39,7 +39,7 @@ a bundle pass.
 Confirm that the repository uses `okf` 0.9.0.0 or later before repinning or authoring either new
 field. The fields themselves were introduced in v0.12.0; an `okf` older than 0.8.0.0 cannot
 understand their nested reference policy or record-list uniqueness rule, and one older than
-0.9.0.0 cannot load the v0.15.0 descriptor, whose schema adds optional `guidance`. If the
+0.9.0.0 cannot load the v0.16.0 descriptor, whose schema adds optional `guidance`. If the
 required released profile tag or decoder is unavailable, stop without editing documents and
 report the prerequisite.
 

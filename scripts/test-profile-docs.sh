@@ -28,6 +28,7 @@ profiles=(
   "documentation.architectureDecisions:architecture-decisions"
   "documentation.patternCatalog:pattern-catalog"
   "documentation.researchDocuments:research-documents"
+  "documentation.specifications:specifications"
   "documentation.userDocumentation:user-documentation"
   "okfV02:okf-v0-2"
   "postgresql:postgresql"

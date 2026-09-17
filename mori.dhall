@@ -108,7 +108,7 @@ in  Schema.Project::{
     , templates =
       [ Schema.SeihouTemplate::{
         , name = "adopt-improvement-request-contracts"
-        , version = Some "0.15.0"
+        , version = Some "0.16.0"
         , description = Some
             "Optionally promote explicit improvement-request dependencies and acceptance conditions from prose into the validated dependencies and acceptanceCriteria frontmatter introduced by okf-profiles v0.12.0, preserving stable handles and ambiguous material"
         , modulePath = "blueprints/adopt-improvement-request-contracts"
@@ -122,7 +122,7 @@ in  Schema.Project::{
         }
       , Schema.SeihouTemplate::{
         , name = "adopt-user-documentation"
-        , version = Some "0.15.0"
+        , version = Some "0.16.0"
         , description = Some
             "Adapt existing docs/user and docs/guides corpora to the shared user-documentation profile, preserving prose while adding reader-intent types, stable DOC-N handles, strict validation, and Mori bundle registration."
         , modulePath = "blueprints/adopt-user-documentation"
@@ -130,7 +130,7 @@ in  Schema.Project::{
         }
       , Schema.SeihouTemplate::{
         , name = "adopt-capabilities"
-        , version = Some "0.15.0"
+        , version = Some "0.16.0"
         , description = Some
             "Author a profile-governed capability catalog describing what a repository provides to a consumer today, with stable CAP-N handles, a compatibility promise separate from availability, required evidence, enforced profile validation, and Mori bundle addressing"
         , modulePath = "blueprints/adopt-capabilities"
@@ -138,7 +138,7 @@ in  Schema.Project::{
         }
       , Schema.SeihouTemplate::{
         , name = "adopt-architecture-decisions"
-        , version = Some "0.15.0"
+        , version = Some "0.16.0"
         , description = Some
             "Adapt an existing docs/adr corpus to the shared OKF architecture-decision profile, stable ADR-N handles, enforced profile validation, and Mori bundle addressing"
         , modulePath = "blueprints/adopt-architecture-decisions"
@@ -146,7 +146,7 @@ in  Schema.Project::{
         }
       , Schema.SeihouTemplate::{
         , name = "migrate-okf-bundles-to-v0-2"
-        , version = Some "0.15.0"
+        , version = Some "0.16.0"
         , description = Some
             "Detect whichever profiled OKF bundles a repository has and migrate each to Open Knowledge Format v0.2: add the generated provenance family, declare okf_version in each bundle root, reshape sources where the shape changed, and repin local descriptors"
         , modulePath = "blueprints/migrate-okf-bundles-to-v0-2"
@@ -165,79 +165,85 @@ in  Schema.Project::{
         , name = "failure-modes"
         , export = "assurance.failureModes"
         , path = Some "profiles/assurance/failure-modes.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "reviews"
         , export = "assurance.reviews"
         , path = Some "profiles/assurance/reviews.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "bug-reports"
         , export = "coordination.bugReports"
         , path = Some "profiles/coordination/bug-reports.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "capabilities"
         , export = "coordination.capabilities"
         , path = Some "profiles/coordination/capabilities.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "improvement-requests"
         , export = "coordination.improvementRequests"
         , path = Some "profiles/coordination/improvement-requests.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "use-cases"
         , export = "coordination.useCases"
         , path = Some "profiles/coordination/use-cases.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "architecture-decisions"
         , export = "documentation.architectureDecisions"
         , path = Some "profiles/documentation/architecture-decisions.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "pattern-catalog"
         , export = "documentation.patternCatalog"
         , path = Some "profiles/documentation/pattern-catalog.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "research-documents"
         , export = "documentation.researchDocuments"
         , path = Some "profiles/documentation/research-documents.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
+        }
+      , Schema.OkfProfile::{
+        , name = "specifications"
+        , export = "documentation.specifications"
+        , path = Some "profiles/documentation/specifications.dhall"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "user-documentation"
         , export = "documentation.userDocumentation"
         , path = Some "profiles/documentation/user-documentation.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "okf-v0-2"
         , export = "okfV02"
         , path = Some "profiles/okf-v0-2.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "postgresql"
         , export = "postgresql"
         , path = Some "profiles/postgresql.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       , Schema.OkfProfile::{
         , name = "tan-postgresql"
         , export = "tanPostgresql"
         , path = Some "profiles/tan-postgresql.dhall"
-        , version = Some "v0.15.0"
+        , version = Some "v0.16.0"
         }
       ]
     , okfBundles =

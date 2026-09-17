@@ -15,7 +15,7 @@ neither applicable directory completes successfully without changes.
 
 The playbook inventories each target directory independently and preserves page bodies, curated
 `README.md` navigation, valid metadata, and unrelated working-tree changes. It installs one frozen
-v0.15.0 descriptor, then adds or reconciles:
+v0.16.0 descriptor, then adds or reconciles:
 
 - one reader-intent type: `Navigation`, `Tutorial`, `Guide`, `Explanation`, `Reference`, or
   `Runbook`;
@@ -39,7 +39,7 @@ Duplicate pre-existing handles and incompatible local profiles are reported for 
 
 ## Prerequisites
 
-- the released `okf-profiles` v0.15.0 catalog (the shared taxonomy originated in v0.13.0);
+- the released `okf-profiles` v0.16.0 catalog (the shared taxonomy originated in v0.13.0);
 - `okf` 0.9.0.0 or later, `dhall`, `git`, and `rg`;
 - Mori when the target repository has a `mori.dhall`; and
 - a tool-capable Seihou provider such as `codex-cli` or `claude-cli`.
