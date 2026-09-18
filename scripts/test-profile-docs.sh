@@ -29,6 +29,7 @@ profiles=(
   "documentation.patternCatalog:pattern-catalog"
   "documentation.researchDocuments:research-documents"
   "documentation.specifications:specifications"
+  "documentation.terminology:terminology"
   "documentation.userDocumentation:user-documentation"
   "okfV02:okf-v0-2"
   "postgresql:postgresql"

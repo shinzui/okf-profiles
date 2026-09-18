@@ -8,9 +8,9 @@ description: >-
 timestamp: "2026-09-18T22:18:37Z"
 generated:
   by: anthropic-claude-code/claude-opus-5
-  at: "2026-09-18T22:18:37Z"
+  at: "2026-09-18T23:30:00Z"
 requestId: IR-6
-status: proposed
+status: in-progress
 origin: mori://shinzui/mori/plans/268-specify-the-shared-terminology-contract-and-request-it-upstream
 acceptanceCriteria:
   - id: AC-1
@@ -55,7 +55,11 @@ reviews:
 
 ## Status
 
-**Proposed.** Requested by
+**In progress.** The profile shipped in v0.17.0 (AC-1 through AC-5 and AC-7). The
+`adopt-terminology` blueprint (AC-6) is deferred until a first real adoption, the
+keiro catalog, shows its shape; see ADR-14 in this repository's ADR bundle.
+
+Requested by
 `mori://shinzui/mori/plans/268-specify-the-shared-terminology-contract-and-request-it-upstream`
 as the source contract for
 `mori://shinzui/mori/masterplans/36-publish-project-terminology-as-a-first-class-okf-catalog`.

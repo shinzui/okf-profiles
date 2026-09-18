@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-09-18
+* **Update**: IR-6 enters implementation; documentation.terminology ships in v0.17.0 and the adopt-terminology blueprint is deferred.
 * **Addition**: IR-6: add a shared terminology profile and adopt-terminology blueprint (requested by mori plan 268).
 
 ## 2026-08-23

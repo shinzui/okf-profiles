@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-improvement-request-contracts"
-    , version = Some "0.16.0"
+    , version = Some "0.17.0"
     , description = Some
         "Optionally promote explicit improvement-request dependencies and acceptance conditions from prose into the validated dependencies and acceptanceCriteria frontmatter introduced by okf-profiles v0.12.0, preserving stable handles, source prose, and ambiguous material for human resolution."
     , prompt = ./prompt.md as Text
@@ -12,7 +12,7 @@ in  S.Blueprint::{
       [ S.Blueprint.BlueprintFile::{
         , src = "contract-reference.md"
         , description = Some
-            "The structured dependency and acceptance-criterion contract introduced in v0.12.0, safe promotion rules, the v0.16.0 descriptor pin, and validation commands."
+            "The structured dependency and acceptance-criterion contract introduced in v0.12.0, safe promotion rules, the v0.17.0 descriptor pin, and validation commands."
         }
       ]
     , -- This is an optional adoption playbook, not work required when crossing

@@ -1,9 +1,9 @@
-# User-documentation migration reference for okf-profiles v0.16.0
+# User-documentation migration reference for okf-profiles v0.17.0
 
 The `documentation.userDocumentation` profile governs reader-facing product documentation. Its
 canonical profile URI is
 `mori://shinzui/okf-profiles/profiles/user-documentation`. It was introduced in okf-profiles v0.13.0,
-requires OKF v0.2, and, as pinned at v0.16.0, requires `okf` 0.9.0.0 or later.
+requires OKF v0.2, and, as pinned at v0.17.0, requires `okf` 0.9.0.0 or later.
 
 ## Required page contract
 
@@ -68,8 +68,8 @@ contains this frozen import:
 
 ```dhall
 let Profiles =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
-        sha256:746aecda3c11200e312ee68633e138a8104cbe7f3be8e18db7e2cd236fa10a4c
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.17.0/package.dhall
+        sha256:a947f6c753b6a41f33a5898de8dd25124037eb8420dcf4baf5822fbd43207bd1
 
 in  Profiles.documentation.userDocumentation
 ```
@@ -105,9 +105,9 @@ Schema.OkfBundle::{
         , publisherRef = Some
             Schema.MoriRef::{ namespace = "shinzui", name = "okf-profiles" }
         , export = Some "documentation.userDocumentation"
-        , version = Some "v0.16.0"
+        , version = Some "v0.17.0"
         , pin = Some
-            "sha256:746aecda3c11200e312ee68633e138a8104cbe7f3be8e18db7e2cd236fa10a4c"
+            "sha256:a947f6c753b6a41f33a5898de8dd25124037eb8420dcf4baf5822fbd43207bd1"
         }
     )
 , okfVersion = "0.2"

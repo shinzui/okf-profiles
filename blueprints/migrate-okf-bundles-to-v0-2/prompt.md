@@ -9,7 +9,7 @@ written and maintained by agents and adds the frontmatter a reader needs to judg
 knowledge: provenance (`generated`), trust (`verified`), and an explicit bundle dialect
 declaration. A repository that pins any of these profiles starts reporting deviations it never
 reported before, and under `--profile-enforce` its checks go red. This run pins descriptors to the
-current release, okf-profiles v0.16.0, which keeps that v0.2 contract and requires `okf` 0.9.0.0 or
+current release, okf-profiles v0.17.0, which keeps that v0.2 contract and requires `okf` 0.9.0.0 or
 later to load.
 
 This run requires a tool-capable local CLI provider such as `claude-cli` or `codex-cli`.
@@ -26,7 +26,7 @@ both before editing:
 - `v0-2-migration-reference.md` is the authoritative per-profile change contract: what each profile
   now demands, the actor convention, the `sources` reshape, and the exact wording of every new
   diagnostic.
-- `profile-pins.md` gives the v0.16.0 pinned-import line for each of the seven profile exports, to
+- `profile-pins.md` gives the v0.17.0 pinned-import line for each of the seven profile exports, to
   copy rather than compose when installing or repinning a local descriptor.
 
 If the references are unavailable, stop before editing and report that the blueprint cannot safely
@@ -264,7 +264,7 @@ anyone edits the document.
 
 ## Phase 3: Repin descriptors and validate
 
-If a bundle has a local descriptor pinning `okf-profiles`, move the pin to the v0.16.0 tag. Copy the
+If a bundle has a local descriptor pinning `okf-profiles`, move the pin to the v0.17.0 tag. Copy the
 import line from `profile-pins.md` rather than composing it, then re-freeze the integrity hash:
 
 ```bash

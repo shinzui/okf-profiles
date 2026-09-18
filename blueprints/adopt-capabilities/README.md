@@ -63,8 +63,8 @@ preserved and conforming records are not rewritten.
 
 ## Requirements
 
-The shipped descriptor pins okf-profiles **v0.16.0**, which requires **`okf` 0.9.0.0 or later** to
-load. The capability contract itself was introduced in v0.9.0 and is unchanged since; v0.16.0 only
+The shipped descriptor pins okf-profiles **v0.17.0**, which requires **`okf` 0.9.0.0 or later** to
+load. The capability contract itself was introduced in v0.9.0 and is unchanged since; v0.17.0 only
 widens the profile schema with optional `guidance`, which the shared profile leaves absent.
 
 ## References

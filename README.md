@@ -63,6 +63,8 @@ profiles/
     research-documents.dhall  # nested research corpus with stable RES-N handles
     specifications.dhall      # normative specifications with stable SPEC-N handles,
                               # the boundary obliged to satisfy each one, and what binds
+    terminology.dhall         # controlled project vocabulary with stable TERM-N handles,
+                              # preferred and discouraged wording, relations, and anchors
     user-documentation.dhall  # user-facing pages with stable DOC-N handles
   coordination/
     package.dhall             # namespaced coordination-profile exports
@@ -110,7 +112,7 @@ changes a consumer's conventions.
 ```dhall
 -- your-project/okf-profile.dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.17.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -121,7 +123,7 @@ an implementation-pattern corpus consumes the documentation catalog profile as:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.17.0/package.dhall
 
 in  okf.documentation.patternCatalog
 ```
@@ -133,7 +135,7 @@ Override an existing profile without copying — `//` replaces fields on the val
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.17.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -146,7 +148,7 @@ fields you set; everything else takes the schema default:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.17.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.Profile::{
@@ -189,7 +191,7 @@ decoding breaks at load time. Two rules keep them aligned:
 
 - The `okfVersion` field declares the OKF **spec** version a profile targets.
   Every profile in this catalog declares `"0.2"`.
-- This repo's **tag** (`v0.16.0`, …) is what consumers pin. Treat any change to the
+- This repo's **tag** (`v0.17.0`, …) is what consumers pin. Treat any change to the
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
@@ -202,15 +204,16 @@ v0.15.0 profile record and fails to load it, even though no rule changed. The
 existing `postgresql` and `tanPostgresql` fields remain stable flat exports; new
 profile families should use a namespaced directory and package field.
 
-To move a consumer repository onto v0.16.0, go in this order:
+To move a consumer repository onto v0.17.0, go in this order:
 
 1. **Upgrade the `okf` CLI** to 0.9.0.0 or later. An older CLI rejects the new
    descriptor for the wrong reason, which looks like a broken profile.
-2. **Repin the descriptor** to the `v0.16.0` tag, delete the old hash line, and
+2. **Repin the descriptor** to the `v0.17.0` tag, delete the old hash line, and
    re-run `dhall freeze`.
 3. **Run the repository's strict validation** (`okf validate --strict
    --profile-enforce …` or its check target). No concept document needs editing:
-   v0.16.0 adds the `documentation.specifications` export and changes no existing
+   v0.17.0 adds the `documentation.terminology` export (v0.16.0 added
+   `documentation.specifications`) and changes no existing
    validation rule, description, or export name.
 
 > **`okfVersion` is compile-checked against the rules a profile declares, in both
@@ -269,7 +272,7 @@ A local descriptor can add such a hint without forking the shared profile:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.16.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.17.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -368,7 +371,8 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-pattern-catalog-profile.sh` | `documentation.patternCatalog` |
 | `test-postgresql-profile.sh` | `postgresql` |
 | `test-research-documents-profile.sh` | `documentation.researchDocuments` |
-| `test-user-documentation-profile.sh` | `documentation.userDocumentation` |
+| `test-user-documentation-profile.sh` | `documentation.terminology` | Controlled project vocabulary with `TERM-N` handles: the canonical term, a one-sentence definition, aliases, discouraged wording, `broader`/`related`/`replaces` relations to local or `mori://` terms, external-only `sameAs`, and anchors to what embodies the term. A controlled vocabulary, not an ontology | required | nothing recommended; `replacedBy` once `status` is `deprecated` |
+| `documentation.userDocumentation` |
 | `test-reviews-profile.sh` | `assurance.reviews` |
 | `test-tan-postgresql-profile.sh` | `tanPostgresql` |
 | `test-use-cases-profile.sh` | `coordination.useCases` |

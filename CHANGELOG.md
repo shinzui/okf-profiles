@@ -9,6 +9,42 @@ these profiles and how to migrate it.
 ## [Unreleased]
 
 
+## [0.17.0] — 2026-09-18
+
+**Adds `documentation.terminology`, a profile for controlled project vocabularies.** No existing
+profile, rule, description, or export name changes, and no corpus governed by an earlier release
+needs editing. The package's semantic hash changes because the package gained an export, so a
+consumer repinning to this tag re-runs `dhall freeze`.
+
+### Added
+
+- **`documentation.terminology`** — one `Term` per file at the bundle root, with bundle-scoped
+  `TERM-N` handles in `termId`. Every term carries `type`, `title` (the canonical term, exactly as
+  it should be written), `description` (a one-sentence definition), OKF v0.2 `generated`, and a
+  house `status` (`current` / `deprecated`); `replacedBy` is demanded once `status` is
+  `deprecated`. Optional: `abbreviation`, `scope`, `aliases`, `discouraged`, `tags`, `verified`;
+  `broader`, `related`, and `replaces` as local `TERM-N` handles or canonical `mori://` concept
+  URIs; `sameAs` as external `mori://…/concepts/TERM-N` URIs only; and `anchors`, records of
+  `{ kind, resource, note? }` naming the module, type, function, file, document, or URI that
+  embodies the term. Nothing is recommended. Requested by IR-6.
+- **[ADR-14](./docs/adr/0014-a-term-defines-a-word-and-derives-its-inverse-relations.md)** records
+  why `narrower` is derived rather than authored, why `sameAs` is external only, and why
+  corpus-wide checks belong to a consumer gate.
+- **14 rejection fixtures** under `fixtures/terminology-invalid/`, each failing for exactly one
+  defect.
+
+### Changed
+
+- **Every blueprint targets v0.17.0** per
+  [ADR-7](./docs/adr/0007-blueprint-versions-track-the-catalog-tag.md). None gains a migration edge.
+- **`Profile/V02.dhall`'s status policy names nine profiles.**
+
+### Not included
+
+No `adopt-terminology` blueprint ships yet. As with `documentation.specifications`, its shape waits
+for a first real adoption, so the blueprint is written from an observed corpus rather than guessed.
+
+
 ## [0.16.0] — 2026-09-17
 
 **Adds `documentation.specifications`, a profile for documents that state what an owning boundary

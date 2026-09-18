@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-09-18
+* **Addition**: ADR-14 gives project vocabulary its own terminology profile with TERM-N identity, derived narrower relations, and external-only sameAs.
+
 ## 2026-09-17
 * **Addition**: ADR-13 separates normative specifications from decisions, research, and reference pages, and gives them their own profile and SPEC-N identity.
 

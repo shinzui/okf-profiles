@@ -16,7 +16,7 @@ completion contracts to be machine-validated and available to registry consumers
 ## What it does
 
 The playbook discovers bundles governed by `coordination.improvementRequests` from Mori metadata,
-local profile descriptors, and validation commands. It can repin a shared descriptor to v0.16.0
+local profile descriptors, and validation commands. It can repin a shared descriptor to v0.17.0
 while preserving local overlays, then structures only information the repository already states:
 
 - canonical cross-repository `mori://` improvement-request dependencies with explicit `hard`,
@@ -38,7 +38,7 @@ changes. Re-running the playbook preserves valid structured records and adds no 
 
 ## Prerequisites
 
-- the released `okf-profiles` v0.16.0 catalog (the structured fields were introduced in v0.12.0);
+- the released `okf-profiles` v0.17.0 catalog (the structured fields were introduced in v0.12.0);
 - `okf` 0.9.0.0 or later and `dhall`; and
 - a tool-capable Seihou provider such as `codex-cli` or `claude-cli`.
 
