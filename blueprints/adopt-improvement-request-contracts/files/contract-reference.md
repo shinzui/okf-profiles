@@ -54,12 +54,12 @@ statement, or verification procedure. Leave ambiguous material unchanged and rep
 ## Shared descriptor
 
 A repository using the shared profile may install or repin this descriptor. The structured fields
-were introduced in v0.12.0; the current release is v0.17.0:
+were introduced in v0.12.0; the current release is v0.18.0:
 
 ```dhall
 --| Shared cross-repository improvement-request profile.
 let Profiles =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.17.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.18.0/package.dhall
 
 in  Profiles.coordination.improvementRequests
 ```
@@ -73,7 +73,7 @@ dhall freeze <bundle>/profile.dhall
 Preserve any project-specific record overlay around the import. A locally authored profile should
 not be replaced automatically.
 
-The v0.17.0 profile requires `okf` 0.9.0.0 or later. Validate with the repository's own check, or use:
+The v0.18.0 profile requires `okf` 0.9.0.0 or later. Validate with the repository's own check, or use:
 
 ```bash
 dhall type --file <bundle>/profile.dhall

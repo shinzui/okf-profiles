@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-architecture-decisions"
-    , version = Some "0.17.0"
+    , version = Some "0.18.0"
     , description = Some
         "Adapt an existing docs/adr corpus to the shared OKF architecture-decision profile, preserving project-specific history while adding stable ADR-N handles, enforced profile validation, Mori bundle registration, and rename-stable cross-repository references."
     , prompt = ./prompt.md as Text

@@ -1,7 +1,7 @@
 # Terminology authoring reference
 
 The governing profile is `mori://shinzui/okf-profiles/profiles/terminology`, exported as
-`documentation.terminology`. The shipped selector pins v0.17.0 and requires `okf` 0.9.0.0 or later.
+`documentation.terminology`. The shipped selector pins v0.18.0 and requires `okf` 0.9.0.0 or later.
 Keep the profile intact: it describes a controlled vocabulary, not an ontology, API inventory,
 capability catalog, or tutorial collection.
 
@@ -103,7 +103,7 @@ established equivalent location. Never replace its remote hash with a guess. The
 the package hash:
 
 ```text
-sha256:a947f6c753b6a41f33a5898de8dd25124037eb8420dcf4baf5822fbd43207bd1
+sha256:7d3a4a22be12fd0e697d6012ed1eb2efe4cb5dc4700d08fd49aa5e4c0e523df8
 ```
 
 When the project's pinned schema supports this shape, reconcile one entry in `mori.dhall`:
@@ -120,9 +120,9 @@ Schema.OkfBundle::{
         , publisherRef = Some
             Schema.MoriRef::{ namespace = "shinzui", name = "okf-profiles" }
         , export = Some "documentation.terminology"
-        , version = Some "v0.17.0"
+        , version = Some "v0.18.0"
         , pin = Some
-            "sha256:a947f6c753b6a41f33a5898de8dd25124037eb8420dcf4baf5822fbd43207bd1"
+            "sha256:7d3a4a22be12fd0e697d6012ed1eb2efe4cb5dc4700d08fd49aa5e4c0e523df8"
         }
     )
 , okfVersion = "0.2"

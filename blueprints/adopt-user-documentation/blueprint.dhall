@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-user-documentation"
-    , version = Some "0.17.0"
+    , version = Some "0.18.0"
     , description = Some
         "Adapt existing docs/user and docs/guides corpora to the shared user-documentation profile, preserving prose while adding reader-intent types, stable DOC-N handles, strict validation, and Mori bundle registration."
     , prompt = ./prompt.md as Text
@@ -17,7 +17,7 @@ in  S.Blueprint::{
       , S.Blueprint.BlueprintFile::{
         , src = "migration-reference.md"
         , description = Some
-            "The v0.17.0 profile contract, reader-intent taxonomy, identity policy, Mori declarations, and validation sequence."
+            "The v0.18.0 profile contract, reader-intent taxonomy, identity policy, Mori declarations, and validation sequence."
         }
       ]
     , -- This is first-time adoption or idempotent reconciliation. No earlier

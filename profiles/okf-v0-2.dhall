@@ -8,8 +8,8 @@
 -- Exported from this repository's root package as `okfV02`, so a consumer pins
 -- it by URL like any other profile in the catalog:
 --
---     let okf = https://raw.githubusercontent.com/shinzui/okf-profiles/v0.17.0/package.dhall
---                 sha256:a947f6c753b6a41f33a5898de8dd25124037eb8420dcf4baf5822fbd43207bd1
+--     let okf = https://raw.githubusercontent.com/shinzui/okf-profiles/v0.18.0/package.dhall
+--                 sha256:7d3a4a22be12fd0e697d6012ed1eb2efe4cb5dc4700d08fd49aa5e4c0e523df8
 --
 --     in  okf.okfV02
 --

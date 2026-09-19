@@ -7,9 +7,9 @@ in  S.Blueprint::{
     , -- Aligned with the okf-profiles tag this blueprint migrates to, matching
       -- the convention adopt-architecture-decisions states: that tag is the only
       -- version a consumer can read off their own repository.
-      version = Some "0.17.0"
+      version = Some "0.18.0"
     , description = Some
-        "Detect whichever profiled OKF bundles a repository has and migrate each to Open Knowledge Format v0.2, the transition introduced by okf-profiles v0.8.0, pinning descriptors to the current v0.17.0 release: add the generated provenance family with an actor-checked by member derived from existing timestamps or git history, declare okf_version in each bundle root, reshape sources on the two profiles whose shape changed, and repin local descriptors -- while leaving house status vocabularies untouched."
+        "Detect whichever profiled OKF bundles a repository has and migrate each to Open Knowledge Format v0.2, the transition introduced by okf-profiles v0.8.0, pinning descriptors to the current v0.18.0 release: add the generated provenance family with an actor-checked by member derived from existing timestamps or git history, declare okf_version in each bundle root, reshape sources on the two profiles whose shape changed, and repin local descriptors -- while leaving house status vocabularies untouched."
     , prompt = ./prompt.md as Text
     , files =
       [ S.Blueprint.BlueprintFile::{

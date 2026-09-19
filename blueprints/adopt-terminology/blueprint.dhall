@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-terminology"
-    , version = Some "0.17.0"
+    , version = Some "0.18.0"
     , description = Some
         "Audit project vocabulary and author a comprehensive, concept-first terminology catalog with stable TERM handles, topic tags, evidence-backed definitions, strict validation, and Mori discovery."
     , prompt = ./prompt.md as Text
@@ -12,7 +12,7 @@ in  S.Blueprint::{
       [ S.Blueprint.BlueprintFile::{
         , src = "terminology-profile.dhall"
         , description = Some
-            "Frozen documentation.terminology selector targeting the released v0.17.0 contract."
+            "Frozen documentation.terminology selector targeting the released v0.18.0 contract."
         }
       , S.Blueprint.BlueprintFile::{
         , src = "authoring-reference.md"

@@ -9,7 +9,7 @@ symbol or reaching a target number of terms.
 Use any additional operator instruction as audience, scope, naming, or categorization guidance.
 Read repository instructions and the three shipped references before editing:
 
-- `terminology-profile.dhall`: the exact released v0.17.0 selector;
+- `terminology-profile.dhall`: the exact released v0.18.0 selector;
 - `authoring-reference.md`: the metadata and authoring contract;
 - `coverage-review.md`: the audit rubric and acceptance scenarios.
 

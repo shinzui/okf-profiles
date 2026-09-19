@@ -18,7 +18,7 @@ If no settled vocabulary exists after inspection, it completes without creating 
   from an existing glossary; unresolved and omitted candidates remain visible in the final report.
 - Stable `TERM-N` handles, truthful provenance, evidence-backed aliases and relationships, and
   topic tags with a grouped index.
-- A frozen `documentation.terminology` descriptor targeting v0.17.0, bundle logs, Mori discovery
+- A frozen `documentation.terminology` descriptor targeting v0.18.0, bundle logs, Mori discovery
   metadata when applicable, and repository-native validation.
 
 The method comes from the first adoption in `mori://shinzui/keiro/okf/terminology`, where a separate
@@ -32,7 +32,7 @@ that project's vocabulary or category list. See the shipped
 Use `okf` 0.9.0.0 or later, `dhall`, `git`, `rg`, and a tool-capable Seihou provider. Mori is used
 for dependency lookup and existing project discovery; lack of its newer terminology command does
 not justify adding a broken check. The new blueprint is in the working catalog until the next
-release; its target contract is the already-released v0.17.0 profile. It has no migration edges.
+release; its target contract is the already-released v0.18.0 profile. It has no migration edges.
 
 Pass audience or project-specific guidance when useful:
 

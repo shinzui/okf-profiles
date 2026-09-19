@@ -8,9 +8,12 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+
+## [0.18.0] — 2026-09-19
+
 **Adds assessable patterns and `coordination.patternApplications`.** No existing rule for a
 narrative `Standard` or `Pattern` changes, and no corpus governed by an earlier release needs
-editing. The package's semantic hash changes because the package gained an export.
+editing.
 
 ### Added
 
@@ -35,15 +38,22 @@ editing. The package's semantic hash changes because the package gained an expor
 - **24 rejection fixtures** (10 assessable-pattern, 14 pattern-application), each failing for
   exactly one defect. Both test scripts also assert each fixture's expected diagnostic, so a
   fixture that fails for an unrelated reason no longer passes.
-
-- **`adopt-terminology` Seihou blueprint**, targeting the released v0.17.0 terminology profile.
+- **`adopt-terminology` Seihou blueprint**, for the terminology profile introduced in v0.17.0.
   Audits supported project surfaces before authoring, preserves stable TERM handles, writes
   concept-first definitions for domain-experienced newcomers, categorizes with profile-supported
   tags, and checks coverage independently from metadata validity. Ships a frozen descriptor,
   authoring reference, coverage rubric, and behavioral acceptance scenarios. Based on the observed
   adoption in `mori://shinzui/keiro/okf/terminology`; it imports the method, not Keiro's vocabulary.
   Supports no-op and repeat adoption without inventing terms, and detects unavailable Mori gates.
-  Registered in both discovery manifests. No profile changes or consumer repinning are required.
+  Registered in both discovery manifests.
+
+### Changed
+
+- **Every blueprint targets v0.18.0** per
+  [ADR-7](./docs/adr/0007-blueprint-versions-track-the-catalog-tag.md), and every frozen
+  descriptor carries the new package hash. None gains a migration edge.
+- **The package's semantic hash changes** because it gained an export, so a consumer repinning to
+  this tag re-runs `dhall freeze`.
 
 
 ## [0.17.0] — 2026-09-18
