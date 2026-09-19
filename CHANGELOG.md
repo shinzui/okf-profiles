@@ -8,7 +8,33 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+**Adds assessable patterns and `coordination.patternApplications`.** No existing rule for a
+narrative `Standard` or `Pattern` changes, and no corpus governed by an earlier release needs
+editing. The package's semantic hash changes because the package gained an export.
+
 ### Added
+
+- **Opt-in `Assessable Standard` and `Assessable Pattern` types in `documentation.patternCatalog`.**
+  Each carries a bundle-scoped `PAT-N` handle in `patternId`, an `applicability` record (a
+  required human `scope`, plus optional `projectTypes`, `languages`, and `dependenciesAny`
+  discovery hints as canonical `mori://` project URIs), and a non-empty `criteria` list of
+  `{ id, statement, evidenceKind, severity }` records unique by `id`. `evidenceKind` is `test`,
+  `report`, `static-check`, or `review`; `severity` is `required` or `advisory`. A criterion names
+  the evidence that settles it, never a command. The profile now declares `idField = patternId`,
+  but only the two new types declare the `PAT` prefix, so narrative documents still need no id.
+  Requested by `mori://shinzui/kikan/plans/34-prove-revision-aware-pattern-conformance-scorecards-end-to-end`.
+- **`coordination.patternApplications`** — one `Pattern Application` per file at the bundle root,
+  with bundle-scoped `PA-N` handles in `applicationId`. Requires `service` as a canonical
+  `mori://<namespace>/<project>` URI, `pattern` as a canonical `mori://…/concepts/PAT-N` URI (both
+  external only, and both indexed by Mori as typed edges), a `decision` of `applicable`,
+  `not-applicable`, `exception`, or `needs-triage`, and a `rationale`. Optional `checks` bind
+  criterion ids to service-owned check targets, unique by criterion. `exception` — a human
+  `authority`, `scope`, `reason`, and `reviewCondition` — is demanded once `decision` is
+  `exception`. Whether every criterion is bound is a registry-side projection concern: a missing
+  binding is an unassessed criterion, not a profile violation.
+- **24 rejection fixtures** (10 assessable-pattern, 14 pattern-application), each failing for
+  exactly one defect. Both test scripts also assert each fixture's expected diagnostic, so a
+  fixture that fails for an unrelated reason no longer passes.
 
 - **`adopt-terminology` Seihou blueprint**, targeting the released v0.17.0 terminology profile.
   Audits supported project surfaces before authoring, preserves stable TERM handles, writes

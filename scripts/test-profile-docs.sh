@@ -24,6 +24,7 @@ profiles=(
   "coordination.bugReports:bug-reports"
   "coordination.capabilities:capabilities"
   "coordination.improvementRequests:improvement-requests"
+  "coordination.patternApplications:pattern-applications"
   "coordination.useCases:use-cases"
   "documentation.architectureDecisions:architecture-decisions"
   "documentation.patternCatalog:pattern-catalog"

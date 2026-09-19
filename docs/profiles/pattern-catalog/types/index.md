@@ -1,5 +1,7 @@
 # OKF Profile Type
 
+- [Assessable Pattern](assessable-pattern.md) - A catalog pattern promoted to an assessable contract: stable PAT handle, applicability, and criteria a service can report conformance against.
+- [Assessable Standard](assessable-standard.md) - A catalog standard promoted to an assessable contract: stable PAT handle, applicability, and criteria a service can report conformance against.
 - [Gotcha](gotcha.md) - A catalog Gotcha document.
 - [Guide](guide.md) - A catalog Guide document.
 - [Navigation](navigation.md) - A catalog Navigation document.

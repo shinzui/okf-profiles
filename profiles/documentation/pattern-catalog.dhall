@@ -1,4 +1,31 @@
 --| Profile for a Mori-addressable catalog of implementation patterns and standards.
+--
+-- ## Narrative and assessable guidance
+--
+-- Most catalog documents are narrative: a `Standard` or `Pattern` whose
+-- requirements live in prose. Those types carry no handle and gain no new
+-- obligation from this profile.
+--
+-- A maintainer who wants services to report conformance against a document
+-- promotes it to `Assessable Standard` or `Assessable Pattern`. Only those two
+-- types carry the bundle-scoped `PAT-N` handle in `patternId`, a structured
+-- `applicability` scope, and a non-empty list of stable `criteria`. The types
+-- are opt-in because okf demands an id from every document of a type that
+-- declares an `idPrefix`: putting `PAT` on `Standard` and `Pattern` themselves
+-- would break every existing catalog at once.
+--
+-- A criterion declares the kind of evidence that settles it, never a command.
+-- A shared catalog is not authorized to execute code in an adopting service;
+-- the service binds criteria to its own allow-listed checks in a
+-- `coordination.patternApplications` record. Applicability hints help discover
+-- candidate services and never settle applicability: the service's
+-- application record does.
+--
+-- Checks that need more than one document — that every deterministic criterion
+-- of an applicable pattern has a check binding, that a retired criterion id is
+-- never reused for a new meaning — belong to a registry-side projection, not to
+-- the profile. A missing binding is an unassessed criterion, not a profile
+-- violation.
 let Profile = ../../Profile/Type.dhall
 
 let FrontmatterRules = ../../Profile/FrontmatterRules.dhall
@@ -13,6 +40,10 @@ let Cardinality = okf.Cardinality
 
 let FieldFormat = okf.FieldFormat
 
+let NestedRules = okf.defaults.NestedRules
+
+let NestedFieldRule = okf.defaults.NestedFieldRule
+
 let v02 = ../../Profile/V02.dhall
 
 let scalar =
@@ -24,6 +55,24 @@ let scalar =
         , cardinality = Cardinality.Scalar
         }
 
+let nestedScalar =
+      \(name : Text) ->
+      \(description : Text) ->
+        NestedFieldRule::{
+        , field = name
+        , description = Some description
+        , cardinality = Cardinality.Scalar
+        }
+
+let nestedList =
+      \(name : Text) ->
+      \(description : Text) ->
+        NestedFieldRule::{
+        , field = name
+        , description = Some description
+        , cardinality = Cardinality.List
+        }
+
 let rule =
       \(conceptType : Text) ->
       \(path : Text) ->
@@ -32,6 +81,93 @@ let rule =
         , description = Some ("A catalog " ++ conceptType ++ " document.")
         , pathPattern = Some path
         , resourceScheme = Some "mori"
+        }
+
+-- Whether a candidate service is in scope. `scope` is the human statement;
+-- the optional hints are deterministic discovery aids only.
+let applicability =
+      FieldRule::{
+      , field = "applicability"
+      , description = Some
+          "Where this guidance applies: a human scope statement plus optional deterministic discovery hints. Hints nominate candidate services; a service's pattern application decides."
+      , objectFields = Some NestedRules::{
+        , required =
+          [ nestedScalar
+              "scope"
+              "The services, components, or situations this guidance governs, in plain language."
+          ]
+        , recommended = [] : List NestedFieldRule.Type
+        , optional =
+          [ nestedList
+              "projectTypes"
+              "Mori project types that are candidates, such as `service` or `library`."
+          , nestedList
+              "languages"
+              "Implementation languages that are candidates, such as `haskell`."
+          ,     nestedList
+                  "dependenciesAny"
+                  "Canonical Mori project URIs; a project depending on any of them is a candidate."
+            //  { format = Some (FieldFormat.UriWithScheme "mori") }
+          ]
+        }
+      }
+
+-- One stable, separately reportable requirement. A criterion id is never
+-- reused for a different meaning; a changed requirement gets a new id.
+let criteria =
+      FieldRule::{
+      , field = "criteria"
+      , description = Some
+          "Stable, separately reportable requirements. Each names the kind of evidence that settles it, never a command to run."
+      , cardinality = Cardinality.List
+      , elementFields = Some NestedRules::{
+        , required =
+          [ nestedScalar
+              "id"
+              "Stable document-local criterion id in lowercase-hyphenated form, such as `separate-live-and-ready`. Never reused for a different meaning."
+          , nestedScalar
+              "statement"
+              "The observable requirement a conforming service satisfies."
+          ,     nestedScalar
+                  "evidenceKind"
+                  "What settles the criterion: `test` (an executable test outcome), `report` (a generated machine-readable report), `static-check` (a deterministic analysis), or `review` (human or agent judgment, never a deterministic pass)."
+            //  { allowedValues =
+                  [ "test", "report", "static-check", "review" ]
+                }
+          ,     nestedScalar
+                  "severity"
+                  "`required` for an obligation a conforming service must meet; `advisory` for one it should meet."
+            //  { allowedValues = [ "required", "advisory" ] }
+          ]
+        , recommended = [] : List NestedFieldRule.Type
+        , optional = [] : List NestedFieldRule.Type
+        }
+      , uniqueBy = Some "id"
+      }
+
+let assessableRule =
+      \(conceptType : Text) ->
+      \(description : Text) ->
+        TypeRule::{
+        , type = conceptType
+        , description = Some description
+        , frontmatter = FrontmatterRules::{
+          , required =
+            [ FieldRule::{
+              , field = "patternId"
+              , description = Some "Bundle-scoped stable PAT-N handle."
+              , cardinality = Cardinality.Scalar
+              , format = Some (FieldFormat.DocumentHandle "PAT")
+              }
+            , applicability
+            , criteria
+            ]
+          , recommended = [] : List FieldRule.Type
+          , optional = [] : List FieldRule.Type
+          }
+        , pathPattern = Some "*/**"
+        , resourceScheme = Some "mori"
+        , idPrefix = Some "PAT"
         }
 
 in  Profile::{
@@ -100,12 +236,22 @@ in  Profile::{
       -- ../../Profile/V02.dhall for the policy and its reasoning.
       okfVersion = "0.2"
     , requireBundleVersion = Some "0.2"
+    , -- Only the two assessable types declare an `idPrefix`, so only they are
+      -- required to carry `patternId`. A narrative `Standard` or `Pattern`
+      -- still validates without one.
+      idField = Some "patternId"
     , types =
       [ rule "Navigation" "getting-started"
       , rule "Overview" "*/overview"
       , rule "Standard" "*/**"
       , rule "Guide" "*/**"
       , rule "Pattern" "*/**"
+      , assessableRule
+          "Assessable Standard"
+          "A catalog standard promoted to an assessable contract: stable PAT handle, applicability, and criteria a service can report conformance against."
+      , assessableRule
+          "Assessable Pattern"
+          "A catalog pattern promoted to an assessable contract: stable PAT handle, applicability, and criteria a service can report conformance against."
       , rule "Runbook" "*/**"
       , rule "Reference" "*/**"
       , rule "Gotcha" "*/**"

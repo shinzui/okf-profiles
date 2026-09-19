@@ -59,7 +59,8 @@ profiles/
     package.dhall             # namespaced documentation-profile exports
     architecture-decisions.dhall
                               # flat ADR corpus with stable ADR-N handles
-    pattern-catalog.dhall     # implementation-pattern catalog conventions
+    pattern-catalog.dhall     # implementation-pattern catalog conventions, with
+                              # opt-in assessable types carrying PAT-N criteria
     research-documents.dhall  # nested research corpus with stable RES-N handles
     specifications.dhall      # normative specifications with stable SPEC-N handles,
                               # the boundary obliged to satisfy each one, and what binds
@@ -72,6 +73,8 @@ profiles/
     capabilities.dhall        # what a repository provides today, with evidence
     improvement-requests.dhall
                               # cross-repository improvement-request conventions
+    pattern-applications.dhall
+                              # a service's PA-N decisions about assessable patterns
     use-cases.dhall           # JTBD use cases and feature-delivery tracking
   okf-v0-2.dhall              # format-level v0.2 reference profile, no house conventions
   postgresql.dhall            # stable flat PostgreSQL export
@@ -369,6 +372,7 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-improvement-requests-profile.sh` | `coordination.improvementRequests` |
 | `test-failure-modes-profile.sh` | `assurance.failureModes` |
 | `test-okf-v0-2-profile.sh` | `okfV02`, the format-level reference profile |
+| `test-pattern-applications-profile.sh` | `coordination.patternApplications` |
 | `test-pattern-catalog-profile.sh` | `documentation.patternCatalog` |
 | `test-postgresql-profile.sh` | `postgresql` |
 | `test-research-documents-profile.sh` | `documentation.researchDocuments` |
@@ -553,9 +557,10 @@ requires **okf 0.9.0.0 or later**.
 | `coordination.bugReports` | Defects in behavior a repository already provides, with `BUG-N` handles, a severity scale graded by observable consequence, and a reproduction a reader can follow | required | `reviews`; `resolution` once a report reaches a terminal status; `workaround` once severity is `degraded` |
 | `coordination.capabilities` | What a repository provides today, with `CAP-N` handles, a compatibility promise separate from availability, and required evidence | required | `reviews`; `interface`; `replacedBy` once a capability is deprecated or withdrawn |
 | `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles, typed canonical source dependencies, stable request-local acceptance criteria, completion state, and structured review provenance | required | `reviews`; `resolution` once a request reaches a terminal state |
+| `coordination.patternApplications` | A service's decision about one assessable catalog pattern, with `PA-N` handles: the `service` and `pattern` as canonical `mori://` URIs, an `applicable` / `not-applicable` / `exception` / `needs-triage` decision with rationale, and `checks` binding criterion ids to service-owned targets. Records applicability, never conformance | required | nothing recommended; `exception` (human authority, scope, reason, review condition) once `decision` is `exception` |
 | `coordination.useCases` | JTBD use cases with `UC-N` handles, typed feature delivery, and repository-owned request references | required (profile-wide, so themes too) | `reviews`; `themes` on a use case |
 | `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles and checked supersession references | required | nothing recommended |
-| `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, and tag fields | required | nothing recommended; `sources` is the v0.2 record shape |
+| `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, and tag fields. Opt-in `Assessable Standard` and `Assessable Pattern` types carry a `PAT-N` handle, an `applicability` scope, and stable `criteria` naming the evidence kind that settles each | required | nothing recommended; `sources` is the v0.2 record shape; `patternId`, `applicability`, and `criteria` on the assessable types only |
 | `documentation.researchDocuments` | Nested research corpora with `RES-N` handles, structured reviews, and conditional supersession | required | `reviews`; `sources` is the v0.2 record shape |
 | `documentation.specifications` | Normative specifications with `SPEC-N` handles: the boundary obliged to satisfy the contract, the version ratified, which parts bind, and what proves conformance. A `Specification Pointer` records a subject specified authoritatively in another repository | required | nothing recommended; `specVersion` and `normativeScope` on a `Specification` once `status` is `ratified`; `authoritativeSpec` on a pointer; `supersededBy` once `status` is `superseded` |
 | `documentation.userDocumentation` | User-facing navigation, tutorials, guides, explanations, references, and runbooks with stable `DOC-N` handles | required | required discovery tags; optional lifecycle, sources, verification, and typed supersession |

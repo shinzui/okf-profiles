@@ -17,7 +17,7 @@ Mori-addressable implementation patterns, standards, guides, and operational doc
 - Required bundle version: `0.2`
 - Unknown concept types: allowed
 - Unknown frontmatter keys: allowed
-- Document ID field: none
+- Document ID field: `patternId`
 
 ## Frontmatter rules
 
@@ -198,6 +198,8 @@ The documentation category governed by a type rule.
 - [Standard](/types/standard.md) — A catalog Standard document.
 - [Guide](/types/guide.md) — A catalog Guide document.
 - [Pattern](/types/pattern.md) — A catalog Pattern document.
+- [Assessable Standard](/types/assessable-standard.md) — A catalog standard promoted to an assessable contract: stable PAT handle, applicability, and criteria a service can report conformance against.
+- [Assessable Pattern](/types/assessable-pattern.md) — A catalog pattern promoted to an assessable contract: stable PAT handle, applicability, and criteria a service can report conformance against.
 - [Runbook](/types/runbook.md) — A catalog Runbook document.
 - [Reference](/types/reference.md) — A catalog Reference document.
 - [Gotcha](/types/gotcha.md) — A catalog Gotcha document.
