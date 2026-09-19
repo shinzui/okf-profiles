@@ -8,6 +8,17 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+### Added
+
+- **`adopt-terminology` Seihou blueprint**, targeting the released v0.17.0 terminology profile.
+  Audits supported project surfaces before authoring, preserves stable TERM handles, writes
+  concept-first definitions for domain-experienced newcomers, categorizes with profile-supported
+  tags, and checks coverage independently from metadata validity. Ships a frozen descriptor,
+  authoring reference, coverage rubric, and behavioral acceptance scenarios. Based on the observed
+  adoption in `mori://shinzui/keiro/okf/terminology`; it imports the method, not Keiro's vocabulary.
+  Supports no-op and repeat adoption without inventing terms, and detects unavailable Mori gates.
+  Registered in both discovery manifests. No profile changes or consumer repinning are required.
+
 
 ## [0.17.0] — 2026-09-18
 

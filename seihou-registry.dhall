@@ -38,6 +38,13 @@
         "Adapt existing docs/user and docs/guides corpora to the shared user-documentation profile, preserving prose while adding reader-intent types, stable DOC-N handles, strict validation, and Mori bundle registration."
     , tags = [ "adoption", "documentation", "guides", "migration", "mori", "okf" ]
     }
+  , { name = "adopt-terminology"
+    , version = Some "0.17.0"
+    , path = "blueprints/adopt-terminology"
+    , description = Some
+        "Audit project vocabulary and author a comprehensive, concept-first terminology catalog with stable TERM handles, topic tags, evidence-backed definitions, strict validation, and Mori discovery."
+    , tags = [ "adoption", "documentation", "terminology", "mori", "okf" ]
+    }
   , { name = "adopt-capabilities"
     , version = Some "0.17.0"
     , path = "blueprints/adopt-capabilities"

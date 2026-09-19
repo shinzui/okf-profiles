@@ -85,6 +85,7 @@ blueprints/
   adopt-improvement-request-contracts/
                               # optional promotion of prose into structured IR contracts
   adopt-user-documentation/   # migrates docs/user and docs/guides as separate OKF bundles
+  adopt-terminology/          # audits vocabulary and authors a categorized terminology catalog
   adopt-capabilities/         # authors an evidence-backed capability catalog
   adopt-architecture-decisions/
                               # adaptive Seihou migration for existing ADR corpora
@@ -503,7 +504,20 @@ classifies pages by reader intent, installs one frozen descriptor, creates OKF v
 logs, registers both bundles in Mori, and wires strict validation into the repository's existing
 checks. A repository with neither corpus completes without changes.
 
-Doing it by hand is four changes per bundle:
+The working catalog also provides [`adopt-terminology`](./blueprints/adopt-terminology/), targeting
+the released v0.17.0 profile:
+
+```bash
+seihou agent run adopt-terminology
+```
+
+It audits supported features, guides, public interfaces, and examples before creating or extending
+a terminology catalog. Definitions explain concepts to domain-experienced newcomers; topic tags
+and a grouped index make them discoverable. It preserves stable handles, checks coverage separately
+from schema validity, and reports unresolved vocabulary. An unchanged adoption produces no edits;
+a project with no settled vocabulary produces no empty bundle.
+
+Doing the v0.2 metadata migration by hand is four changes per bundle:
 
 1. **Add `generated`** to every concept — `by` is an OKF §7 actor (`human:<id>`,
    `process:<id>`, or `<producer>/<version>`), and `at` reuses the document's

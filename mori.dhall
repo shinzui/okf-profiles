@@ -89,6 +89,15 @@ in  Schema.Project::{
               "blueprints/migrate-okf-bundles-to-v0-2/README.md"
         }
       , Schema.DocRef::{
+        , key = "adopt-terminology-blueprint"
+        , kind = Schema.DocKind.Runbook
+        , audience = Schema.DocAudience.User
+        , description = Some
+            "How to audit project vocabulary and adopt a comprehensive, categorized terminology catalog"
+        , location =
+            Schema.DocLocation.LocalFile "blueprints/adopt-terminology/README.md"
+        }
+      , Schema.DocRef::{
         , key = "okf-profiles-generated-profile-documentation"
         , kind = Schema.DocKind.Reference
         , audience = Schema.DocAudience.User
@@ -135,6 +144,14 @@ in  Schema.Project::{
             "Author a profile-governed capability catalog describing what a repository provides to a consumer today, with stable CAP-N handles, a compatibility promise separate from availability, required evidence, enforced profile validation, and Mori bundle addressing"
         , modulePath = "blueprints/adopt-capabilities"
         , tags = [ "capabilities", "coordination", "mori", "okf" ]
+        }
+      , Schema.SeihouTemplate::{
+        , name = "adopt-terminology"
+        , version = Some "0.17.0"
+        , description = Some
+            "Audit project vocabulary and author a comprehensive, concept-first terminology catalog with stable TERM handles, topic tags, evidence-backed definitions, strict validation, and Mori discovery."
+        , modulePath = "blueprints/adopt-terminology"
+        , tags = [ "adoption", "documentation", "terminology", "mori", "okf" ]
         }
       , Schema.SeihouTemplate::{
         , name = "adopt-architecture-decisions"
