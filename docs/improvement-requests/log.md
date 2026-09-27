@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-09-27
+* **Addition**: IR-7: request a shared verification evidence profile for the keiro-runtime-kenshou verification suite.
+
 ## 2026-09-18
 * **Update**: IR-6 enters implementation; documentation.terminology ships in v0.17.0 and the adopt-terminology blueprint is deferred.
 * **Addition**: IR-6: add a shared terminology profile and adopt-terminology blueprint (requested by mori plan 268).
