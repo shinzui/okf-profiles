@@ -6,9 +6,10 @@ description: >-
   records with digest-pinned data links and the computations that define their verdicts.
 generated:
   by: openai-codex/gpt-6-sol
-  at: "2026-09-27T14:28:16Z"
+  at: "2026-09-27T15:56:42Z"
 requestId: IR-7
-status: in-progress
+status: completed
+completedAt: "2026-09-27T15:56:42Z"
 origin: mori://shinzui/keiro-runtime-kenshou/masterplans/1-build-an-extensive-verification-suite-for-the-keiro-runtime
 targetPlan: mori://shinzui/keiro-runtime-kenshou/plans/19-publish-the-verification-evidence-profile-in-okf-profiles
 acceptanceCriteria:
@@ -46,14 +47,39 @@ reviews:
     context: >-
       Author self-check, not an independent review: checked the request against
       the existing corpus, its local descriptor, and the publication plan.
+resolution: >-
+  Released assurance.verificationEvidence in annotated tag v0.19.0 at commit
+  dff865bd560b58dda6f226f4b6f3e1042a399db9. The remote package.dhall import
+  reproduces sha256:85176d78369b6d73c9f13c30277903b629d6bf048a4c7d71fc26e68b99c3eaa6.
 ---
 
 # Add a shared verification evidence profile
 
 ## Status
 
-In progress. The working-tree profile, fixtures, generated documentation, and
-decision records are complete; release preparation and publication remain.
+Completed in [v0.19.0](https://github.com/shinzui/okf-profiles/releases/tag/v0.19.0).
+The annotated tag peels to `dff865bd560b58dda6f226f4b6f3e1042a399db9`.
+
+## Acceptance evidence
+
+- **AC-1:** `okf profile show` exposes `assurance.verificationEvidence` with
+  `Attested Computation`, `Verification Run`, and `Attestation`. Only computation
+  definitions have `VC-N` handles; the two event types use path patterns.
+- **AC-2:** The valid fixture bundle exercises all three types, all four run
+  kinds, comparison records, conditional rules, attestations, and optional fields.
+  The focused script passes strict profile and log enforcement.
+- **AC-3:** The focused script asserts diagnostics for 129 isolated rejection
+  fixtures. Relaxing each covered rule in turn made its matching fixture pass,
+  confirming the rule is responsible for that rejection.
+- **AC-4:** `just docs` generated `docs/profiles/verification-evidence/` from field
+  descriptions; the documentation reproduction gate passes.
+- **AC-5:** ADR-6 records that its condition was met by the requesting corpus;
+  ADR-15 defines immutable run events. The ADR bundle validates strictly.
+- **AC-6:** The requesting bundle's 17 concepts validate strictly against the
+  shared profile without editing any recorded concept.
+- **AC-7:** `just check` passed on the release commit. The remote
+  `v0.19.0/package.dhall` and local `package.dhall` both hash to
+  `sha256:85176d78369b6d73c9f13c30277903b629d6bf048a4c7d71fc26e68b99c3eaa6`.
 
 ## Problem
 

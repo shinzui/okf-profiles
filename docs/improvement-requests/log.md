@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-09-27
+* **Completion**: IR-7: published assurance.verificationEvidence in okf-profiles v0.19.0; remote package hash verified and all seven acceptance criteria met.
 * **Update**: IR-7 moves to in-progress after profile, fixture, documentation and ADR checks.
 * **Addition**: IR-7: request a shared verification evidence profile for the keiro-runtime-kenshou verification suite.
 
