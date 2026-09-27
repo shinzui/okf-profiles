@@ -9,7 +9,9 @@ profile="profiles/assurance/verification-evidence.dhall"
   --strict --profile "${profile}" --profile-enforce --log-enforce
 
 # A failure for some unrelated reason must never make a fixture pass.
+case_count=0
 while IFS='|' read -r fixture expected; do
+  case_count=$((case_count + 1))
   if output="$("${okf_bin}" validate "fixtures/verification-evidence-invalid/${fixture}" \
     --profile "${profile}" --profile-enforce 2>&1)"; then
     echo "expected profile enforcement to reject ${fixture}" >&2
@@ -141,6 +143,31 @@ run-missing-solverPlanHash|missing profile-required field: solverPlanHash
 run-missing-tier|missing profile-required field: tier
 run-non-integer-seed|frontmatter value at seed must match format non-negative-integer
 run-relative-known-defect|frontmatter value at knownDefects must match format uri
+attestation-scalar-data-digests|frontmatter cardinality at dataDigests must be list, found scalar: "abc"
+comparison-dangling-baseline-run|comparison.baselineRuns[0] references /runs/example/missing.md
+comparison-invalid-design|frontmatter value at comparison.design must be one of [abba, baab, sequential]
+comparison-invalid-factor|frontmatter value at comparison.factor must be one of [cohort, harness, dimension, knob]
+comparison-invalid-verdict|frontmatter value at comparison.verdict must be one of [pass, regression, inconclusive, infrastructure-failure]
+comparison-missing-baselineRuns|missing profile-required field: comparison.baselineRuns
+comparison-missing-baselineValue|missing profile-required field: comparison.baselineValue
+comparison-missing-candidateRuns|missing profile-required field: comparison.candidateRuns
+comparison-missing-candidateValue|missing profile-required field: comparison.candidateValue
+comparison-missing-design|missing profile-required field: comparison.design
+comparison-missing-factor|missing profile-required field: comparison.factor
+comparison-missing-verdict|missing profile-required field: comparison.verdict
+computation-bad-algorithm-version|frontmatter value at algorithmVersion must match format non-negative-integer
+computation-dangling-computation-path|computation references /references/missing.txt
+computation-missing-parameter-name|missing profile-required field: parameters[0].name
+computation-scalar-executor-receipt|frontmatter cardinality at executor.receipt must be list, found scalar: "run-spec.json"
+run-bad-finished-at|frontmatter value at finishedAt must match format rfc3339-utc
+run-invalid-environment-memory-bytes|frontmatter value at environment.memoryBytes must match format non-negative-integer
+run-unknown-measurement|frontmatter field not declared by profile: p99Millis
 FIXTURES
+
+fixture_dirs=(fixtures/verification-evidence-invalid/*/)
+if [[ "${#fixture_dirs[@]}" -ne "${case_count}" ]]; then
+  echo "rejection fixture directory count does not match asserted cases" >&2
+  exit 1
+fi
 
 echo "OK: verification-evidence profile acceptance and rejection fixtures"
