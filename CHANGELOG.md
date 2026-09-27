@@ -8,6 +8,38 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+## [0.19.0] — 2026-09-27
+
+**Adds `assurance.verificationEvidence` for observed, immutable verification
+evidence.** No existing profile, rule, or export name changes, and no governed
+corpus needs editing. The package semantic hash changes because it gains an
+export. Requested by
+`mori://shinzui/keiro-runtime-kenshou/masterplans/1-build-an-extensive-verification-suite-for-the-keiro-runtime`.
+
+### Added
+
+- **`assurance.verificationEvidence`** — `Attested Computation` definitions use
+  bundle-scoped VC-N handles; path-addressed `Verification Run` and
+  `Attestation` events record exact revisions, outcomes and independent checks.
+  Runs link to data by URI, SHA-256 digest, media type and byte count rather than
+  storing measurements. Runtime-specific layer and tier vocabularies are open
+  for consumer overlays. Definition records use OKF's lifecycle fields; event
+  records do not.
+- **129 rejection fixtures**, each asserting its own diagnostic, plus a
+  17-concept acceptance bundle covering four run kinds and a comparison.
+
+### Changed
+
+- **Every blueprint targets v0.19.0** per
+  [ADR-7](./docs/adr/0007-blueprint-versions-track-the-catalog-tag.md).
+  None gains a migration edge.
+- **The package semantic hash changes** because it gained an export; consumers
+  repinning to this tag re-run `dhall freeze`.
+
+### Not included
+
+An adoption blueprint waits for a second adopter.
+
 
 ## [0.18.0] — 2026-09-19
 

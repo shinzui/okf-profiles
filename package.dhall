@@ -4,12 +4,12 @@
 -- ready-made profiles. With a versioned, hash-pinned remote import:
 --
 --     let okf =
---           https://raw.githubusercontent.com/shinzui/okf-profiles/v0.18.0/package.dhall
---             sha256:7d3a4a22be12fd0e697d6012ed1eb2efe4cb5dc4700d08fd49aa5e4c0e523df8
+--           https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
+--             sha256:85176d78369b6d73c9f13c30277903b629d6bf048a4c7d71fc26e68b99c3eaa6
 --
 --     in  okf.postgresql // { name = "acme-warehouse" }
 --
--- v0.18.0 requires okf 0.9.0.0 or later. See README.md for how to generate the real hash (`dhall freeze`) and for the
+-- v0.19.0 requires okf 0.9.0.0 or later. See README.md for how to generate the real hash (`dhall freeze`) and for the
 -- public-repo / pinning rationale.
 let okf = ./Profile/okf.dhall
 

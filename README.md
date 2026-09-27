@@ -55,6 +55,9 @@ profiles/
     failure-modes.dhall       # recurring failure modes: signature, confirming checks,
                               # explanations already ruled out, and the control that stops it
     reviews.dhall             # what was reviewed, at which commit, by whom, at what effort
+    verification-evidence.dhall
+                              # definitions, immutable runs, and attestations
+                              # linking verification data by digest
   documentation/
     package.dhall             # namespaced documentation-profile exports
     architecture-decisions.dhall
@@ -116,7 +119,7 @@ changes a consumer's conventions.
 ```dhall
 -- your-project/okf-profile.dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.18.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -127,7 +130,7 @@ an implementation-pattern corpus consumes the documentation catalog profile as:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.18.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
 
 in  okf.documentation.patternCatalog
 ```
@@ -139,7 +142,7 @@ Override an existing profile without copying — `//` replaces fields on the val
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.18.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -152,7 +155,7 @@ fields you set; everything else takes the schema default:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.18.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.Profile::{
@@ -195,7 +198,7 @@ decoding breaks at load time. Two rules keep them aligned:
 
 - The `okfVersion` field declares the OKF **spec** version a profile targets.
   Every profile in this catalog declares `"0.2"`.
-- This repo's **tag** (`v0.18.0`, …) is what consumers pin. Treat any change to the
+- This repo's **tag** (`v0.19.0`, …) is what consumers pin. Treat any change to the
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
@@ -208,18 +211,17 @@ v0.15.0 profile record and fails to load it, even though no rule changed. The
 existing `postgresql` and `tanPostgresql` fields remain stable flat exports; new
 profile families should use a namespaced directory and package field.
 
-To move a consumer repository onto v0.18.0, go in this order:
+To move a consumer repository onto v0.19.0, go in this order:
 
 1. **Upgrade the `okf` CLI** to 0.9.0.0 or later. An older CLI rejects the new
    descriptor for the wrong reason, which looks like a broken profile.
-2. **Repin the descriptor** to the `v0.18.0` tag, delete the old hash line, and
+2. **Repin the descriptor** to the `v0.19.0` tag, delete the old hash line, and
    re-run `dhall freeze`.
 3. **Run the repository's strict validation** (`okf validate --strict
    --profile-enforce …` or its check target). No concept document needs editing:
-   v0.18.0 adds the `coordination.patternApplications` export and the opt-in
-   `Assessable Standard` / `Assessable Pattern` types in `documentation.patternCatalog`
-   (v0.17.0 added `documentation.terminology`) and changes no existing validation
-   rule for a narrative document, description, or export name.
+   v0.19.0 adds `assurance.verificationEvidence` and changes no existing
+   profile, rule, or export name. A repository adopting this new contract
+   separately validates its evidence bundle against the published profile.
 
 > **`okfVersion` is compile-checked against the rules a profile declares, in both
 > directions.** This is the thing most likely to surprise someone forking a
@@ -277,7 +279,7 @@ A local descriptor can add such a hint without forking the shared profile:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.18.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -377,9 +379,11 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-pattern-catalog-profile.sh` | `documentation.patternCatalog` |
 | `test-postgresql-profile.sh` | `postgresql` |
 | `test-research-documents-profile.sh` | `documentation.researchDocuments` |
-| `test-user-documentation-profile.sh` | `documentation.terminology` | Controlled project vocabulary with `TERM-N` handles: the canonical term, a one-sentence definition, aliases, discouraged wording, `broader`/`related`/`replaces` relations to local or `mori://` terms, external-only `sameAs`, and anchors to what embodies the term. A controlled vocabulary, not an ontology | required | nothing recommended; `replacedBy` once `status` is `deprecated` |
-| `documentation.userDocumentation` |
+| `test-specifications-profile.sh` | `documentation.specifications` |
+| `test-terminology-profile.sh` | `documentation.terminology` |
+| `test-user-documentation-profile.sh` | `documentation.userDocumentation` |
 | `test-reviews-profile.sh` | `assurance.reviews` |
+| `test-verification-evidence-profile.sh` | `assurance.verificationEvidence` |
 | `test-tan-postgresql-profile.sh` | `tanPostgresql` |
 | `test-use-cases-profile.sh` | `coordination.useCases` |
 
@@ -510,7 +514,7 @@ logs, registers both bundles in Mori, and wires strict validation into the repos
 checks. A repository with neither corpus completes without changes.
 
 The working catalog also provides [`adopt-terminology`](./blueprints/adopt-terminology/), targeting
-the released v0.18.0 profile:
+the released v0.19.0 profile:
 
 ```bash
 seihou agent run adopt-terminology
@@ -555,6 +559,7 @@ requires **okf 0.9.0.0 or later**.
 |---|---|---|---|
 | `assurance.failureModes` | Recurring failure modes with `FM-N` handles: the `signature` that identifies one on sight, the `diagnosis` checks that confirm it, the `eliminated` explanations already disproved with the check that killed each, the `occurrences` that justify the record, and the `scope` saying at what altitude a durable fix has to live | required | `reviews`; `rootCause` once a mechanism is claimed; `control` and `detection` once one exists; `eliminated` once diagnosed |
 | `assurance.reviews` | Records of an artifact having been reviewed, with `REV-N` handles: a stable `subject` + `component` identity, the commit examined, whether the reading was `full` or `incremental` and from which `baseSha`, the reviewer as an OKF §7 actor, and provider / model / effort once the reviewer is a model | required | `previousReview` once `coverage` is `incremental` |
+| `assurance.verificationEvidence` | Evidence of a system test: `Attested Computation` definitions with VC-N handles, path-addressed `Verification Run` and `Attestation` events, and digest-pinned links to external data | required | nothing recommended; run-only and comparison-only fields follow `recordKind` |
 | `coordination.bugReports` | Defects in behavior a repository already provides, with `BUG-N` handles, a severity scale graded by observable consequence, and a reproduction a reader can follow | required | `reviews`; `resolution` once a report reaches a terminal status; `workaround` once severity is `degraded` |
 | `coordination.capabilities` | What a repository provides today, with `CAP-N` handles, a compatibility promise separate from availability, and required evidence | required | `reviews`; `interface`; `replacedBy` once a capability is deprecated or withdrawn |
 | `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles, typed canonical source dependencies, stable request-local acceptance criteria, completion state, and structured review provenance | required | `reviews`; `resolution` once a request reaches a terminal state |
@@ -594,14 +599,17 @@ version, is not a specification yet — it is a decision, a piece of research, o
 draft. Nothing else in the catalog demands those two fields, and nothing else has
 a place to put them.
 
-`assurance.reviews` is the one profile declaring neither a house `status` nor
-OKF's, which is a deliberate departure from
+`assurance.reviews` declares neither a house `status` nor OKF's, which is a
+deliberate departure from
 [ADR-1](./docs/adr/0001-house-status-diverges-from-okf-v0-2.md)'s branch rule: a
 review is an event rather than a document with a lifecycle, and a later review of
 the same subject supersedes it by existing. It is also the one profile that does
 **not** splice the house `reviews` family, because the document *is* a review —
 sign-off from a person goes to `verified` under a `human:` actor. See
 [ADR-10](./docs/adr/0010-a-review-is-an-artifact-not-only-an-annotation.md).
+The `Verification Run` and `Attestation` event types in
+`assurance.verificationEvidence` follow the same lifecycle reasoning. Its
+`Attested Computation` definition type takes OKF's `status` and `stale_after`.
 
 The package also exports building blocks a profile *author* imports, which are
 not profiles a consumer selects:
