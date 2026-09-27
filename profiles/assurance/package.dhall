@@ -12,4 +12,9 @@
 -- repository owns is a `coordination.bugReports` entry; what recurs across
 -- repositories, or lives in a toolchain rather than in anybody's source, is a
 -- failure mode.
-{ reviews = ./reviews.dhall, failureModes = ./failure-modes.dhall }
+-- `verificationEvidence` records a claim about a system being put to the test
+-- and what the run and independent verifier concluded.
+{ reviews = ./reviews.dhall
+, failureModes = ./failure-modes.dhall
+, verificationEvidence = ./verification-evidence.dhall
+}
