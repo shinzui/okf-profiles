@@ -7,7 +7,7 @@ status: Accepted
 date: 2026-09-27
 generated:
   by: openai-codex/gpt-6-sol
-  at: "2026-09-27T14:27:08Z"
+  at: "2026-09-27T14:42:46Z"
 originatingPlan: mori://shinzui/keiro-runtime-kenshou/plans/19-publish-the-verification-evidence-profile-in-okf-profiles
 ---
 
@@ -40,7 +40,8 @@ only when a person actually supplies it. Event types take neither `status` nor
 `stale_after`, because they are not redrafted and do not decay. Baselines and
 trends are derived by readers and never stored as mutable records. The profile
 leaves runtime-specific `layer` and `tier` vocabularies open for a consumer's
-local overlay.
+local overlay. Data URIs may use any absolute scheme in the shared profile;
+each consumer checks that its chosen storage scheme is durable and reachable.
 
 ## Rationale
 

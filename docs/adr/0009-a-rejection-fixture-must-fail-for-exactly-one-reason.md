@@ -6,8 +6,8 @@ docId: ADR-9
 status: Accepted
 date: 2026-08-02
 generated:
-  by: openai-codex/gpt-5
-  at: "2026-08-23T21:20:05Z"
+  by: openai-codex/gpt-6-sol
+  at: "2026-09-27T14:42:46Z"
 ---
 
 # A rejection fixture must fail for exactly one reason
@@ -108,3 +108,18 @@ A few fixtures deliberately fail for several reasons —
 seven simultaneous violations, and a malformed identifier can trip both a format
 rule and an ID rule. Those are fine as long as the multiplicity is intended and
 the rules they cover are load-bearing somewhere.
+
+## Amendment — 2026-09-27
+
+The verification-evidence profile demonstrated a further trap in the second
+check: with `allowUnknownFields = False`, deleting a field rule can leave the
+fixture red because the formerly governed field is now unknown. To test that
+rule's load-bearing constraint, retain the field declaration and relax exactly
+the relevant policy: move a required rule to `optional` for a presence case,
+clear its allowed values for a vocabulary case, remove its format or reference
+policy for a shape or link case, or clear its uniqueness rule. The targeted
+fixture must turn green while the acceptance bundle stays green. Treat handle
+prefix plus handle format, and list cardinality plus nested element rules, as
+the composite policies described above. The 129 verification-evidence rejection
+cases passed this negative-control sweep after each authored constraint was
+relaxed in isolation.
