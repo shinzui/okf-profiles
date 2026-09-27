@@ -1,5 +1,9 @@
 # Bundle Update Log
 
+## 2026-09-27
+* **Addition**: ADR-15 records verification runs as immutable events that link to external data.
+* **Update**: ADR-6 is amended: assurance.verificationEvidence admits the observed Attested Computation type.
+
 ## 2026-09-18
 * **Addition**: ADR-14 gives project vocabulary its own terminology profile with TERM-N identity, derived narrower relations, and external-only sameAs.
 

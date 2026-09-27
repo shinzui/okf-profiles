@@ -1,13 +1,13 @@
 ---
 type: Architecture Decision Record
 title: OKF v0.2's Attested Computation concept type is excluded
-description: No profile in this catalog documents computations, so any convention written now would be invented rather than observed.
+description: The type was excluded until a consumer wrote it; assurance.verificationEvidence is its first observed admission.
 docId: ADR-6
 status: Accepted
 date: 2026-08-01
 generated:
-  by: human:nadeem
-  at: "2026-08-01T00:00:00Z"
+  by: openai-codex/gpt-6-sol
+  at: "2026-09-27T14:27:08Z"
 ---
 
 # OKF v0.2's Attested Computation concept type is excluded
@@ -48,3 +48,15 @@ does not require a new major version of this catalog.
 
 If a consumer does ask, the right first move is to look at what they are already
 writing, not at §10.
+
+## Amendment — 2026-09-27
+
+That condition has occurred. The bundle at
+`mori://shinzui/keiro-runtime-kenshou/okf/verification` contains three
+`Attested Computation` definitions, alongside recorded runs and attestations.
+The catalog now declares the type in `assurance.verificationEvidence` only; its
+`TypeRule` leaves every other profile without this demand. The fields and their
+presence classes were lifted from the consumer's existing descriptor and
+validated against its committed corpus. Section 10 supplied format context,
+not a guessed house convention. The exclusion in the original decision still
+applies to every other profile until an observed consumer needs otherwise.

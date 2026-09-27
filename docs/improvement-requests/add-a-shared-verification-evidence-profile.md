@@ -6,9 +6,9 @@ description: >-
   records with digest-pinned data links and the computations that define their verdicts.
 generated:
   by: openai-codex/gpt-6-sol
-  at: "2026-09-27T14:11:40Z"
+  at: "2026-09-27T14:28:16Z"
 requestId: IR-7
-status: proposed
+status: in-progress
 origin: mori://shinzui/keiro-runtime-kenshou/masterplans/1-build-an-extensive-verification-suite-for-the-keiro-runtime
 targetPlan: mori://shinzui/keiro-runtime-kenshou/plans/19-publish-the-verification-evidence-profile-in-okf-profiles
 acceptanceCriteria:
@@ -52,8 +52,8 @@ reviews:
 
 ## Status
 
-Proposed by the verification suite's producer repository. The observed contract
-has not yet been released from this catalog.
+In progress. The working-tree profile, fixtures, generated documentation, and
+decision records are complete; release preparation and publication remain.
 
 ## Problem
 

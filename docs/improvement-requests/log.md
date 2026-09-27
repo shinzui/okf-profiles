@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-09-27
+* **Update**: IR-7 moves to in-progress after profile, fixture, documentation and ADR checks.
 * **Addition**: IR-7: request a shared verification evidence profile for the keiro-runtime-kenshou verification suite.
 
 ## 2026-09-18

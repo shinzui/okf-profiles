@@ -21,6 +21,7 @@ out_root="docs/profiles"
 profiles=(
   "assurance.failureModes:failure-modes"
   "assurance.reviews:reviews"
+  "assurance.verificationEvidence:verification-evidence"
   "coordination.bugReports:bug-reports"
   "coordination.capabilities:capabilities"
   "coordination.improvementRequests:improvement-requests"
