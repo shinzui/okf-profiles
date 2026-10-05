@@ -18,3 +18,12 @@ creates bundle indexes/logs and a native strict enforcement gate. It does not ex
 operational commands, invent verification evidence, commit, publish or mutate a shared
 registry. Mixed deployment references remain references; independently usable procedures
 receive their own identity. Missing ownership is reported for resolution.
+
+Regenerate the standalone snapshot after changing the shared source:
+
+```bash
+python3 scripts/update-runbook-snapshot.py
+bash scripts/test-runbooks-profile.sh
+```
+
+The generator factors repeated schema types and checks semantic equality before writing.
