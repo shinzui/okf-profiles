@@ -18,7 +18,13 @@
            , tags : List Text
            }
 , blueprints =
-  [ { name = "adopt-improvement-request-contracts"
+  [ { name = "adopt-runbooks"
+    , version = None Text
+    , path = "blueprints/adopt-runbooks"
+    , description = Some "Adopt operational procedures with stable RB handles and explicit ownership, scope, triggers and effects"
+    , tags = [ "adoption", "documentation", "runbooks", "operations", "mori", "okf" ]
+    }
+  , { name = "adopt-improvement-request-contracts"
     , version = Some "0.19.0"
     , path = "blueprints/adopt-improvement-request-contracts"
     , description = Some

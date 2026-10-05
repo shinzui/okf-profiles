@@ -30,6 +30,7 @@ profiles=(
   "documentation.architectureDecisions:architecture-decisions"
   "documentation.patternCatalog:pattern-catalog"
   "documentation.researchDocuments:research-documents"
+  "documentation.runbooks:runbooks"
   "documentation.specifications:specifications"
   "documentation.terminology:terminology"
   "documentation.userDocumentation:user-documentation"

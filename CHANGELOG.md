@@ -8,6 +8,15 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+### Added
+
+- `documentation.runbooks`: operational procedures with stable `RB-N` handles,
+  required ownership, canonical project scope, environments, trigger, effect
+  classification and lifecycle. Procedures stay in Markdown; schema validation
+  does not certify operational execution. Existing profiles remain unchanged.
+- Acceptance and rejection coverage, generated profile documentation, and an
+  `adopt-runbooks` blueprint with a self-contained prerelease profile snapshot.
+
 ## [0.19.0] — 2026-09-27
 
 **Adds `assurance.verificationEvidence` for observed, immutable verification

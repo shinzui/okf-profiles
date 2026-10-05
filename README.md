@@ -69,6 +69,7 @@ profiles/
                               # the boundary obliged to satisfy each one, and what binds
     terminology.dhall         # controlled project vocabulary with stable TERM-N handles,
                               # preferred and discouraged wording, relations, and anchors
+    runbooks.dhall            # operational procedures with stable RB-N handles
     user-documentation.dhall  # user-facing pages with stable DOC-N handles
   coordination/
     package.dhall             # namespaced coordination-profile exports
@@ -90,6 +91,7 @@ docs/
 blueprints/
   adopt-improvement-request-contracts/
                               # optional promotion of prose into structured IR contracts
+  adopt-runbooks/             # adopts operating procedures with stable RB-N handles
   adopt-user-documentation/   # migrates docs/user and docs/guides as separate OKF bundles
   adopt-terminology/          # audits vocabulary and authors a categorized terminology catalog
   adopt-capabilities/         # authors an evidence-backed capability catalog
@@ -381,7 +383,9 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-research-documents-profile.sh` | `documentation.researchDocuments` |
 | `test-specifications-profile.sh` | `documentation.specifications` |
 | `test-terminology-profile.sh` | `documentation.terminology` |
-| `test-user-documentation-profile.sh` | `documentation.userDocumentation` |
+| `test-runbooks-profile.sh` | `documentation.runbooks` |
+| `test-user-documentation-profile.sh` | `documentation.runbooks` | Operational procedures with stable RB-N handles, ownership, project scope, environments, trigger, effects and lifecycle | required | optional sources, verification, freshness, supporting Mori references and typed supersession |
+| `documentation.userDocumentation` |
 | `test-reviews-profile.sh` | `assurance.reviews` |
 | `test-verification-evidence-profile.sh` | `assurance.verificationEvidence` |
 | `test-tan-postgresql-profile.sh` | `tanPostgresql` |
@@ -569,6 +573,7 @@ requires **okf 0.9.0.0 or later**.
 | `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, and tag fields. Opt-in `Assessable Standard` and `Assessable Pattern` types carry a `PAT-N` handle, an `applicability` scope, and stable `criteria` naming the evidence kind that settles each | required | nothing recommended; `sources` is the v0.2 record shape; `patternId`, `applicability`, and `criteria` on the assessable types only |
 | `documentation.researchDocuments` | Nested research corpora with `RES-N` handles, structured reviews, and conditional supersession | required | `reviews`; `sources` is the v0.2 record shape |
 | `documentation.specifications` | Normative specifications with `SPEC-N` handles: the boundary obliged to satisfy the contract, the version ratified, which parts bind, and what proves conformance. A `Specification Pointer` records a subject specified authoritatively in another repository | required | nothing recommended; `specVersion` and `normativeScope` on a `Specification` once `status` is `ratified`; `authoritativeSpec` on a pointer; `supersededBy` once `status` is `superseded` |
+| `documentation.runbooks` | Operational procedures with stable RB-N handles, ownership, project scope, environments, trigger, effects and lifecycle | required | optional sources, verification, freshness, supporting Mori references and typed supersession |
 | `documentation.userDocumentation` | User-facing navigation, tutorials, guides, explanations, references, and runbooks with stable `DOC-N` handles | required | required discovery tags; optional lifecycle, sources, verification, and typed supersession |
 | `okfV02` | Format-level reference profile: the six v0.2 families and no house conventions, for a team with no established profile of its own | recommended | OKF `status` and `stale_after` |
 | `postgresql` | PostgreSQL schemas, tables, and views with typed resource URIs and `# Schema` column contracts | recommended | OKF `status` and `stale_after` |
@@ -657,3 +662,17 @@ not profiles a consumer selects:
 ## License
 
 [BSD-3-Clause](./LICENSE) — (c) 2026 Nadeem Bitar.
+
+### Operational runbooks
+
+`documentation.runbooks` governs executable operating procedures. It complements
+`documentation.userDocumentation`, which also has a general Runbook reader intent.
+Use the dedicated profile when ownership, applicable environments, trigger and
+possible effects need a shared validated contract. An operations reference remains
+reference documentation, even when its directory is named `operations`.
+
+The procedure body names prerequisites, ordered steps and expected observations,
+completion checks, stop conditions, recovery and escalation. These are authoring
+requirements reviewed by people; OKF validates metadata and references, not the
+correctness of commands. `verified` records independent evidence and must not be
+invented from a schema validation result. See [the adoption blueprint](blueprints/adopt-runbooks/).

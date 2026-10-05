@@ -32,6 +32,13 @@ in  Schema.Project::{
     , dependencies = [ "shinzui/okf", "shinzui/seihou" ]
     , docs =
       [ Schema.DocRef::{
+        , key = "adopt-runbooks-blueprint"
+        , kind = Schema.DocKind.Runbook
+        , audience = Schema.DocAudience.User
+        , description = Some "How to adopt the shared operational runbook contract"
+        , location = Schema.DocLocation.LocalFile "blueprints/adopt-runbooks/README.md"
+        }
+      , Schema.DocRef::{
         , key = "okf-profiles-readme"
         , kind = Schema.DocKind.Guide
         , audience = Schema.DocAudience.User
@@ -116,6 +123,12 @@ in  Schema.Project::{
       ]
     , templates =
       [ Schema.SeihouTemplate::{
+        , name = "adopt-runbooks"
+        , description = Some "Adopt operational procedures with stable RB handles and explicit ownership, scope, triggers and effects"
+        , modulePath = "blueprints/adopt-runbooks"
+        , tags = [ "adoption", "documentation", "runbooks", "operations", "mori", "okf" ]
+        }
+      , Schema.SeihouTemplate::{
         , name = "adopt-improvement-request-contracts"
         , version = Some "0.19.0"
         , description = Some
@@ -179,6 +192,11 @@ in  Schema.Project::{
       ]
     , profiles =
       [ Schema.OkfProfile::{
+        , name = "runbooks"
+        , export = "documentation.runbooks"
+        , path = Some "profiles/documentation/runbooks.dhall"
+        }
+      , Schema.OkfProfile::{
         , name = "failure-modes"
         , export = "assurance.failureModes"
         , path = Some "profiles/assurance/failure-modes.dhall"

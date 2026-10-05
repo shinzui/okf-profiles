@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-10-05
+* **Addition**: Record operational runbook scope and the separation between metadata checks and execution evidence.
+
 ## 2026-09-27
 * **Update**: ADR-9 clarifies load-bearing sweeps under closed fields; ADR-15 records the shared URI relaxation and consumer durability check.
 * **Addition**: ADR-15 records verification runs as immutable events that link to external data.
