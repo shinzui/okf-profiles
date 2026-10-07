@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-10-07
+* **Addition**: IR-8: request coordination.transitions and adopt-transitions for mori://shinzui/mori/plans/293-specify-the-platform-transition-contract-and-request-it-upstream.
+
 ## 2026-09-27
 * **Completion**: IR-7: published assurance.verificationEvidence in okf-profiles v0.19.0; remote package hash verified and all seven acceptance criteria met.
 * **Update**: IR-7 moves to in-progress after profile, fixture, documentation and ADR checks.
