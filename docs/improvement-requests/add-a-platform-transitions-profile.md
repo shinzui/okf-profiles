@@ -3,12 +3,14 @@ type: Improvement Request
 title: Add a platform transitions profile and adoption blueprint
 description: >-
   Publish coordination.transitions for stable TR-N declared transition concepts with typed participants, responsibility dispositions, environment-scoped retirement requirements and accountable ownership, plus an adopt-transitions blueprint.
-timestamp: "2026-10-07T05:28:20Z"
+timestamp: "2026-10-07T07:31:06Z"
 generated:
   by: codex/gpt-6.1-sol
-  at: "2026-10-07T04:36:00Z"
+  at: "2026-10-07T07:31:06Z"
 requestId: IR-8
-status: in-progress
+status: completed
+completedAt: "2026-10-07T07:31:06Z"
+targetPlan: mori://shinzui/okf-profiles/plans/11-publish-the-platform-transitions-profile-and-adoption-blueprint
 origin: mori://shinzui/mori/plans/293-specify-the-platform-transition-contract-and-request-it-upstream
 reviews:
   - kind: model
@@ -26,7 +28,7 @@ reviews:
   - kind: model
     reviewer: process:openai-codex
     reviewed_at: "2026-10-07T05:28:20Z"
-    document_timestamp: "2026-10-07T05:28:20Z"
+    document_timestamp: "2026-10-07T07:31:06Z"
     scope: content-and-metadata
     outcome: commented
     provider: openai
@@ -36,6 +38,18 @@ reviews:
       Author self-check: reconcile optional timestamp with OKF 0.2 generated provenance;
       descriptor, focused fixtures, blueprint and complete catalog checks pass locally.
       Released remote pin and adoption rehearsal remain pending; not independent review.
+  - kind: model
+    reviewer: process:openai-codex
+    reviewed_at: "2026-10-07T07:31:06Z"
+    document_timestamp: "2026-10-07T07:31:06Z"
+    scope: content-and-metadata
+    outcome: commented
+    provider: openai
+    model: gpt-6.1-sol
+    effort: unspecified
+    context: >-
+      Author self-check: all five criteria have retained evidence, including released remote
+      pins and prompt-guided TAN adoption/no-intent/repeat rehearsal; not independent review.
 acceptanceCriteria:
   - id: AC-1
     statement: The package exports coordination.transitions for OKF type Transition with transitionId handles TR-N and one concept per root Markdown file.
@@ -235,3 +249,22 @@ key, even when `generated` is also required. The profile therefore keeps `timest
 optional and validates its format when present. Generated provenance remains required;
 existing fixture timestamps and log history remain intact. This presence adjustment is
 recorded in the owning Mori contract and does not change transition semantics.
+
+## Fulfillment evidence — 2026-10-07
+
+Completed by `mori://shinzui/okf-profiles/plans/11-publish-the-platform-transitions-profile-and-adoption-blueprint`.
+The profile and adoption blueprint ship in v0.20.0 at 47e75a6. Complete catalog checks,
+four accepted concepts and 31 focused rejections pass. Strict remote validation and
+semantic hashes match the released descriptor/package. Field defaults, reference grammar
+and bounded-engine semantic exclusions are documented.
+
+AC-4 is established by the published prompt's guided rehearsal under
+`mori://tan/tan-platform/plans/19-adopt-platform-transitions-and-immutable-retirement-evidence`:
+its known register becomes four strict-valid TR concepts, repetition preserves all handles
+and declaration bytes, and a scratch repository with no explicit intent publishes no
+transition or bundle. This is a prompt-guided rehearsal using the released files, not a
+claim that a Seihou provider session was run. Evidence is retained in
+`mori://tan/tan-platform/docs/transition-evidence`, project-relative
+`docs/assessments/evidence/transitions/adoption-rehearsal.json` (artifact URI pending).
+No runtime success or owner acceptance is invented. Historical source facts and the
+separate scratch-only caller proof preserve the declaration/evidence/verdict boundary.

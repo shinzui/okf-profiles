@@ -32,6 +32,7 @@ The user explicitly authorized upstream work and pushes during that initiative.
   four-transition consumer corpus is accepted and focused profile-level defects are rejected.
 - [x] Documentation and adopt-transitions blueprint explain defaults, reference grammars,
   engine limits, safe no-op adoption and stable handle preservation.
+- [x] Live prompt-guided TAN adoption, stable-handle rerun and no-intent no-op are retained.
 - [x] The catalog passes its release checks and the profile is available at a tagged,
   hash-pinnable version; remote strict validation reproduces local results.
 
@@ -57,8 +58,12 @@ The profile and blueprint are implemented. `just check` passes for the complete 
 including all existing profiles, blueprint lint and registry version agreement, generated docs,
 the standalone snapshot, four accepted transitions and 31 field-specific rejection cases.
 The profile ships at v0.20.0 (commit 47e75a6). Strict remote validation accepts the four
-concepts and its semantic hash equals the local source. Live adopter rehearsal remains
-pending under IR-8 AC-4; release availability is established.
+concepts and its semantic hash equals the local source. The live adopter rehearsal passes in
+`mori://tan/tan-platform/plans/19-adopt-platform-transitions-and-immutable-retirement-evidence`: the known
+register publishes four strict-valid concepts, repetition preserves all handles and declaration
+bytes, and a no-intent scratch project creates no transition. Its retained evidence is at
+`mori://tan/tan-platform/docs/transition-evidence`. IR-8 is completed; all five criteria are established. The native agent-plans catalog
+publishes this completed plan so its canonical targetPlan link resolves in Mori.
 
 ## Context and Orientation
 
@@ -92,6 +97,7 @@ Intention intention_01m49takqfe6stqd5b14j7dqxb, and the canonical Mori MasterPla
 All IR-8 acceptance criteria are checked explicitly. Shared consumer fixtures must remain
 byte identical: the profile consumes intent and never edits capability catalogs or DDD state.
 Strict remote validation and a real hash establish the release gate; a local descriptor cannot.
+AC-4 uses the released prompt in a guided live adopter rehearsal; no Seihou provider run is claimed.
 
 ## Idempotence and Recovery
 
@@ -101,8 +107,9 @@ and preserves handles on repeated runs. Avoid force pushes and do not move exist
 ## Artifacts
 
 Local profile semantic hash: `sha256:7c5e94174d546260f9c583dbf168510773678665ab31aa73a8b7bdd3f61e03b9`.
-The v0.20.0 candidate passed `just check` on 2026-10-07. IR-8 remains in-progress because
-its adoption rehearsal is not established by blueprint lint. Mori EP-5 supplies the live adopter.
+The v0.20.0 candidate passed `just check` on 2026-10-07. IR-8 is completed after prompt-guided live adoption/no-intent/repeat rehearsal.
+Blueprint lint alone was not treated as adoption proof. TAN retains the rehearsal artifact
+and separate scratch comparison; real runtime readiness remains outside this release.
 
 ## Interfaces and Dependencies
 
