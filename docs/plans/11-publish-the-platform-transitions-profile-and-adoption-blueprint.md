@@ -32,7 +32,7 @@ The user explicitly authorized upstream work and pushes during that initiative.
   four-transition consumer corpus is accepted and focused profile-level defects are rejected.
 - [x] Documentation and adopt-transitions blueprint explain defaults, reference grammars,
   engine limits, safe no-op adoption and stable handle preservation.
-- [ ] The catalog passes its release checks and the profile is available at a tagged,
+- [x] The catalog passes its release checks and the profile is available at a tagged,
   hash-pinnable version; remote strict validation reproduces local results.
 
 ## Surprises & Discoveries
@@ -56,7 +56,9 @@ be reverted or silently treated as this feature.
 The profile and blueprint are implemented. `just check` passes for the complete catalog,
 including all existing profiles, blueprint lint and registry version agreement, generated docs,
 the standalone snapshot, four accepted transitions and 31 field-specific rejection cases.
-Remote release verification and live adopter rehearsal remain pending.
+The profile ships at v0.20.0 (commit 47e75a6). Strict remote validation accepts the four
+concepts and its semantic hash equals the local source. Live adopter rehearsal remains
+pending under IR-8 AC-4; release availability is established.
 
 ## Context and Orientation
 
@@ -107,3 +109,9 @@ its adoption rehearsal is not established by blueprint lint. Mori EP-5 supplies 
 New export coordination.transitions; new stable handle field transitionId with TR prefix;
 new blueprint adopt-transitions. Uses the currently pinned OKF schema and requires no engine
 or Mori schema change. Evidence envelopes and verdicts remain entirely Mori-owned.
+
+Release evidence (2026-10-07): catalog package hash
+`sha256:079a5b3679dccafd2070535b3d59a0ffdf28e20bf9cacfe095dca96c8012879a`;
+selected transition profile hash
+`sha256:7c5e94174d546260f9c583dbf168510773678665ab31aa73a8b7bdd3f61e03b9`.
+Both were verified from the tagged remote import; no existing tag was moved.
