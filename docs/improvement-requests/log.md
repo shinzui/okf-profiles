@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-10-07
+* **Update**: IR-8 enters implementation; OKF 0.2 provenance requires generated and leaves timestamp optional. Local descriptor, focused fixtures and complete catalog checks pass.
 * **Addition**: IR-8: request coordination.transitions and adopt-transitions for mori://shinzui/mori/plans/293-specify-the-platform-transition-contract-and-request-it-upstream.
 
 ## 2026-09-27

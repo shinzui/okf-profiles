@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-terminology"
-    , version = Some "0.19.0"
+    , version = Some "0.20.0"
     , description = Some
         "Audit project vocabulary and author a comprehensive, concept-first terminology catalog with stable TERM handles, topic tags, evidence-backed definitions, strict validation, and Mori discovery."
     , prompt = ./prompt.md as Text

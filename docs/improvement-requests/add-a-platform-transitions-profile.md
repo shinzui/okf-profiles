@@ -3,12 +3,12 @@ type: Improvement Request
 title: Add a platform transitions profile and adoption blueprint
 description: >-
   Publish coordination.transitions for stable TR-N declared transition concepts with typed participants, responsibility dispositions, environment-scoped retirement requirements and accountable ownership, plus an adopt-transitions blueprint.
-timestamp: "2026-10-07T04:36:00Z"
+timestamp: "2026-10-07T05:28:20Z"
 generated:
   by: codex/gpt-6.1-sol
   at: "2026-10-07T04:36:00Z"
 requestId: IR-8
-status: proposed
+status: in-progress
 origin: mori://shinzui/mori/plans/293-specify-the-platform-transition-contract-and-request-it-upstream
 reviews:
   - kind: model
@@ -23,6 +23,19 @@ reviews:
     context: >-
       Author self-check against Mori MasterPlan 40, ExecPlan 293, the fixture corpus,
       and the owner repository's improvement-request profile; not an independent review.
+  - kind: model
+    reviewer: process:openai-codex
+    reviewed_at: "2026-10-07T05:28:20Z"
+    document_timestamp: "2026-10-07T05:28:20Z"
+    scope: content-and-metadata
+    outcome: commented
+    provider: openai
+    model: gpt-6.1-sol
+    effort: unspecified
+    context: >-
+      Author self-check: reconcile optional timestamp with OKF 0.2 generated provenance;
+      descriptor, focused fixtures, blueprint and complete catalog checks pass locally.
+      Released remote pin and adoption rehearsal remain pending; not independent review.
 acceptanceCriteria:
   - id: AC-1
     statement: The package exports coordination.transitions for OKF type Transition with transitionId handles TR-N and one concept per root Markdown file.
@@ -64,10 +77,10 @@ The conventional bundle is `transitions` at `docs/transitions`, OKF 0.2 with res
 `index.md` and `log.md`. Keep the Markdown body free prose; no body/frontmatter mirror
 is demanded. Use the shared generated and review rules.
 
-Required top-level fields are `type`, `title`, `description`, `timestamp`, `generated`,
+Required top-level fields are `type`, `title`, `description`, `generated`,
 `transitionId`, `coordinator`, `kind`, `phase`, `environments`, `accountable`,
-`predecessors`, `successors`, and `responsibilities`. `reviews` is recommended through
-the shared review rule. `phaseSource` and `requirements` are optional; an absent
+`predecessors`, `successors`, and `responsibilities`. `timestamp` is optional compatibility metadata under OKF 0.2; `generated` carries required production provenance.
+`reviews` is recommended through the shared review rule. `phaseSource` and `requirements` are optional; an absent
 requirements list produces unknown readiness, not a profile failure.
 
 All listed collections except requirements and optional reference lists are non-empty.
@@ -213,3 +226,12 @@ intent without recording runtime traffic or accepting requirements on an owner's
 Its verify recipe runs strict profile/log enforcement then Mori's semantic validate gate.
 Adoption depends on a Mori release shipping the command; profile validation alone does
 not prove the complete workflow.
+
+
+## Implementation compatibility note
+
+The pinned OKF 0.2 engine refuses a descriptor that requires the superseded `timestamp`
+key, even when `generated` is also required. The profile therefore keeps `timestamp`
+optional and validates its format when present. Generated provenance remains required;
+existing fixture timestamps and log history remain intact. This presence adjustment is
+recorded in the owning Mori contract and does not change transition semantics.

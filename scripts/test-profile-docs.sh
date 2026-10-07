@@ -27,6 +27,7 @@ profiles=(
   "coordination.improvementRequests:improvement-requests"
   "coordination.patternApplications:pattern-applications"
   "coordination.useCases:use-cases"
+  "coordination.transitions:transitions"
   "documentation.architectureDecisions:architecture-decisions"
   "documentation.patternCatalog:pattern-catalog"
   "documentation.researchDocuments:research-documents"

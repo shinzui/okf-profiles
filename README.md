@@ -80,6 +80,7 @@ profiles/
     pattern-applications.dhall
                               # a service's PA-N decisions about assessable patterns
     use-cases.dhall           # JTBD use cases and feature-delivery tracking
+    transitions.dhall         # declared platform responsibility movement and retirement requirements
   okf-v0-2.dhall              # format-level v0.2 reference profile, no house conventions
   postgresql.dhall            # stable flat PostgreSQL export
   tan-postgresql.dhall        # stable flat tan PostgreSQL export
@@ -95,6 +96,7 @@ blueprints/
   adopt-user-documentation/   # migrates docs/user and docs/guides as separate OKF bundles
   adopt-terminology/          # audits vocabulary and authors a categorized terminology catalog
   adopt-capabilities/         # authors an evidence-backed capability catalog
+  adopt-transitions/          # publishes declared platform responsibility movement
   adopt-architecture-decisions/
                               # adaptive Seihou migration for existing ADR corpora
   migrate-okf-bundles-to-v0-2/
@@ -121,7 +123,7 @@ changes a consumer's conventions.
 ```dhall
 -- your-project/okf-profile.dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.20.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -132,7 +134,7 @@ an implementation-pattern corpus consumes the documentation catalog profile as:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.20.0/package.dhall
 
 in  okf.documentation.patternCatalog
 ```
@@ -144,7 +146,7 @@ Override an existing profile without copying — `//` replaces fields on the val
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.20.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -157,7 +159,7 @@ fields you set; everything else takes the schema default:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.20.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.Profile::{
@@ -200,7 +202,7 @@ decoding breaks at load time. Two rules keep them aligned:
 
 - The `okfVersion` field declares the OKF **spec** version a profile targets.
   Every profile in this catalog declares `"0.2"`.
-- This repo's **tag** (`v0.19.0`, …) is what consumers pin. Treat any change to the
+- This repo's **tag** (`v0.20.0`, …) is what consumers pin. Treat any change to the
   schema types under `Profile/` as a breaking change: bump the major/minor tag and
   note the minimum `okf` version it requires in the release notes.
 
@@ -213,15 +215,15 @@ v0.15.0 profile record and fails to load it, even though no rule changed. The
 existing `postgresql` and `tanPostgresql` fields remain stable flat exports; new
 profile families should use a namespaced directory and package field.
 
-To move a consumer repository onto v0.19.0, go in this order:
+To move a consumer repository onto v0.20.0, go in this order:
 
 1. **Upgrade the `okf` CLI** to 0.9.0.0 or later. An older CLI rejects the new
    descriptor for the wrong reason, which looks like a broken profile.
-2. **Repin the descriptor** to the `v0.19.0` tag, delete the old hash line, and
+2. **Repin the descriptor** to the `v0.20.0` tag, delete the old hash line, and
    re-run `dhall freeze`.
 3. **Run the repository's strict validation** (`okf validate --strict
    --profile-enforce …` or its check target). No concept document needs editing:
-   v0.19.0 adds `assurance.verificationEvidence` and changes no existing
+   v0.20.0 adds `coordination.transitions` and `documentation.runbooks` and changes no existing
    profile, rule, or export name. A repository adopting this new contract
    separately validates its evidence bundle against the published profile.
 
@@ -281,7 +283,7 @@ A local descriptor can add such a hint without forking the shared profile:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.20.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -518,7 +520,7 @@ logs, registers both bundles in Mori, and wires strict validation into the repos
 checks. A repository with neither corpus completes without changes.
 
 The working catalog also provides [`adopt-terminology`](./blueprints/adopt-terminology/), targeting
-the released v0.19.0 profile:
+the released v0.20.0 profile:
 
 ```bash
 seihou agent run adopt-terminology
@@ -676,3 +678,28 @@ completion checks, stop conditions, recovery and escalation. These are authoring
 requirements reviewed by people; OKF validates metadata and references, not the
 correctness of commands. `verified` records independent evidence and must not be
 invented from a schema validation result. See [the adoption blueprint](blueprints/adopt-runbooks/).
+
+
+## Platform transitions
+
+`coordination.transitions` describes declared movement of responsibilities between projects.
+It uses stable `TR-N` handles in `transitionId`. The owner publishes one Transition Markdown
+concept per root file in a conventional docs/transitions bundle. A known successor uses a
+project-root Mori URI; an unsettled successor uses pendingIdentity. Phase is declared intent,
+not production migration evidence. Capabilities, DDD contexts and project lifecycles stay
+owned by their projects.
+
+Requirements default to all declared environments, requiresAcceptance=false, and itemized=true
+for consumer-migration, event-obligation and responsibility-transfer (false otherwise).
+Responsibility-transfer always covers an itemized duty inventory and has no responsibility field.
+An absent or empty requirements list is valid and means unknown readiness. Source inspection
+cannot prove runtime cutover. Owner acceptance names immutable observation facts through Mori;
+it is never authored by the adoption blueprint.
+
+Strict profile enforcement checks the expressible shape and vocabularies. `mori transitions
+validate --path .` additionally checks slugs, canonical project roots, coordinator ownership,
+exactly one successor identity, all cross-list joins, nested requirement owners, environment
+subsets, responsibility-transfer restrictions, fixed maxAge durations and typed registry links.
+The profile engine cannot express recursive requirements[].owner records, forbidden conditional
+fields or these semantic joins. See the generated profile documentation and
+[adopt-transitions](blueprints/adopt-transitions/README.md).

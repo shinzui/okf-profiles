@@ -8,14 +8,24 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+## [0.20.0] — 2026-10-07
+
+Adds opt-in transition and runbook contracts. Existing governed corpora need no edits;
+consumers repinning the package refresh its semantic hash. Requires okf 0.9.0.0 or later.
+Every blueprint targets 0.20.0 per ADR-7; none gains a migration edge.
+
 ### Added
+
+- `coordination.transitions`: declared responsibility movement with TR-N handles, typed
+  participants, scoped retirement requirements and an `adopt-transitions` blueprint.
+  Runtime observations and retirement verdicts remain Mori-owned.
 
 - `documentation.runbooks`: operational procedures with stable `RB-N` handles,
   required ownership, canonical project scope, environments, trigger, effect
   classification and lifecycle. Procedures stay in Markdown; schema validation
   does not certify operational execution. Existing profiles remain unchanged.
 - Acceptance and rejection coverage, generated profile documentation, and an
-  `adopt-runbooks` blueprint with a self-contained prerelease profile snapshot.
+  `adopt-runbooks` blueprint with a self-contained profile snapshot.
 
 ## [0.19.0] — 2026-09-27
 

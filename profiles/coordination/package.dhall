@@ -12,5 +12,6 @@
 , capabilities = ./capabilities.dhall
 , improvementRequests = ./improvement-requests.dhall
 , patternApplications = ./pattern-applications.dhall
+, transitions = ./transitions.dhall
 , useCases = ./use-cases.dhall
 }

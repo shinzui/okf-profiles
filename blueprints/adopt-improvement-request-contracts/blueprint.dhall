@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-improvement-request-contracts"
-    , version = Some "0.19.0"
+    , version = Some "0.20.0"
     , description = Some
         "Optionally promote explicit improvement-request dependencies and acceptance conditions from prose into the validated dependencies and acceptanceCriteria frontmatter introduced by okf-profiles v0.12.0, preserving stable handles, source prose, and ambiguous material for human resolution."
     , prompt = ./prompt.md as Text
@@ -30,10 +30,5 @@ in  S.Blueprint::{
       , "Bash(rg *)"
       ]
     , tags =
-      [ "adoption"
-      , "coordination"
-      , "improvement-requests"
-      , "mori"
-      , "okf"
-      ]
+      [ "adoption", "coordination", "improvement-requests", "mori", "okf" ]
     }
