@@ -13,7 +13,11 @@
 --     that omission is the profile's single most load-bearing decision.
 --   * A capability that only exists when several repositories cooperate is NOT a
 --     capability record either — no single repository can assert it or prove it.
---     It belongs to the consuming repository as a use-case feature.
+--     It belongs to the consumer as product behavior: a standalone feature
+--     (`coordination.features`) or an inline use-case feature. A feature may
+--     name the capabilities contributing to it through `capabilityRefs`; this
+--     profile stores no list of features in return, and a capability a
+--     feature still needs is an improvement request, not a planned capability.
 --   * Granularity: one capability is one thing a consumer can adopt AND verify
 --     independently. Where two candidates always ship together and are proven by
 --     the same evidence, they are one capability. A catalog with one record per
@@ -159,7 +163,7 @@ let evidence =
 in  Profile::{
     , name = "capabilities"
     , description = Some
-        "Consumer-facing catalog of what a repository provides today: stable CAP-N handles, an explicit compatibility promise, and evidence. Provision claims only — absent capabilities are improvement requests, and capabilities that span repositories are use-case features owned by the consumer. The house `reviews` family and OKF `verified` coexist: `reviews` records far more than `verified` can, so an approving `reviews` entry should also be mirrored into `verified` to keep the derived trust tier accurate."
+        "Consumer-facing catalog of what a repository provides today: stable CAP-N handles, an explicit compatibility promise, and evidence. Provision claims only — absent capabilities are improvement requests, and behavior that spans repositories is a feature owned by the consumer, standalone or inline in a use case. The house `reviews` family and OKF `verified` coexist: `reviews` records far more than `verified` can, so an approving `reviews` entry should also be mirrored into `verified` to keep the derived trust tier accurate."
     , okfVersion = "0.2"
     , requireBundleVersion = Some "0.2"
     , allowUnknownTypes = False

@@ -3,18 +3,18 @@ type: OKF Profile
 title: capabilities
 description: 'Consumer-facing catalog of what a repository provides today: stable
   CAP-N handles, an explicit compatibility promise, and evidence. Provision claims
-  only — absent capabilities are improvement requests, and capabilities that span
-  repositories are use-case features owned by the consumer. The house `reviews` family
-  and OKF `verified` coexist: `reviews` records far more than `verified` can, so an
-  approving `reviews` entry should also be mirrored into `verified` to keep the derived
-  trust tier accurate.'
+  only — absent capabilities are improvement requests, and behavior that spans repositories
+  is a feature owned by the consumer, standalone or inline in a use case. The house
+  `reviews` family and OKF `verified` coexist: `reviews` records far more than `verified`
+  can, so an approving `reviews` entry should also be mirrored into `verified` to
+  keep the derived trust tier accurate.'
 generated:
   by: process:okf-profile-document
 ---
 
 # capabilities
 
-Consumer-facing catalog of what a repository provides today: stable CAP-N handles, an explicit compatibility promise, and evidence. Provision claims only — absent capabilities are improvement requests, and capabilities that span repositories are use-case features owned by the consumer. The house `reviews` family and OKF `verified` coexist: `reviews` records far more than `verified` can, so an approving `reviews` entry should also be mirrored into `verified` to keep the derived trust tier accurate.
+Consumer-facing catalog of what a repository provides today: stable CAP-N handles, an explicit compatibility promise, and evidence. Provision claims only — absent capabilities are improvement requests, and behavior that spans repositories is a feature owned by the consumer, standalone or inline in a use case. The house `reviews` family and OKF `verified` coexist: `reviews` records far more than `verified` can, so an approving `reviews` entry should also be mirrored into `verified` to keep the derived trust tier accurate.
 
 ## Settings
 

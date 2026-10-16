@@ -6,6 +6,14 @@
 -- claimed but does not hold. Behavior that was never provided is an improvement
 -- request rather than a bug, which is the line that keeps the two apart.
 --
+-- Jobs and features give the consumer corner canonical identities. A job
+-- states the progress a customer seeks, independent of any solution; a feature
+-- is one product behavior with its own delivery lifecycle, reusable across use
+-- cases, and linked to the jobs it serves, the capabilities contributing to it,
+-- the specifications governing it, and the requests delivering it. A use case
+-- remains the scenario that ties them together. The research behind a job's
+-- support lives in `documentation.productResearch`.
+--
 -- A pattern application sits beside them: a service's decision about whether
 -- an assessable catalog pattern governs it and which of its own checks prove it.
 { bugReports = ./bug-reports.dhall

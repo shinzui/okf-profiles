@@ -8,6 +8,53 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+Adds three opt-in product-discovery profiles and canonical links from use cases to
+them. Existing governed corpora need no edits; no existing profile's schema changes
+except that a use case's inline `features` becomes optional. Consumers repinning the
+package refresh its semantic hash when they eventually repin. No version is published
+and no blueprint pin changes here.
+
+### Added
+
+- `coordination.jobs`: canonical Jobs-to-be-Done statements with `JOB-N` handles,
+  qualitative or measured outcomes, and a declared `validationStatus` backed by an
+  explicit `assessment` citing product-research findings.
+- `documentation.productResearch`: customer-discovery studies and findings sharing
+  `PR-N` handles. Findings keep observation apart from interpretation, assess named
+  claims about jobs, and record measurements of job outcomes. Distinct from technical
+  `documentation.researchDocuments`, which is unchanged.
+- `coordination.features`: independently addressable features with `FEAT-N` handles,
+  a discovery-to-delivery lifecycle, and optional external links to jobs, job
+  outcomes, capabilities (`capabilityRefs`), specifications (`specificationRefs`),
+  and improvement requests. Feature `acceptanceCriteria` reuse the
+  improvement-request shape (`AC-N`, `statement`, `verification`), scoped to the
+  feature: a feature's `AC-1` and a request's `AC-1` are unrelated.
+- `coordination.useCases` gains optional `jobs[].jobRef`, `jobs[].outcomeNames`,
+  `featureRefs`, and `features[].featureRef`.
+- `scripts/check-product-discovery.py`: an interim, opt-in relationship gate over a
+  manifest of bundles. Each of its rules names an intended owner, okf or Mori; the
+  upstream requests are `mori://shinzui/okf/okf/improvement-requests/concepts/IR-9`
+  and `mori://shinzui/mori/okf/improvement-requests/concepts/IR-38`. See ADR-17.
+
+### Changed
+
+- **`coordination.useCases`: inline `features` is optional.** An early scenario may
+  rely on no feature, and a canonical one names features through `featureRefs`.
+  Profile validation therefore no longer rejects a use case without features; a
+  consumer that relied on that must run the checker, whose
+  `delivery-stage-features` rule requires inline features or `featureRefs` on a
+  `planned`, `in-progress`, or `delivered` use case.
+- `coordination.capabilities` description and header recognize standalone features
+  as a home for behavior composed across repositories. No field, status, or rule
+  changes.
+
+### Follow-up for the next release
+
+- Align the "use-case feature" wording in `blueprints/adopt-capabilities/README.md`,
+  `blueprints/adopt-capabilities/prompt.md`, and
+  `blueprints/adopt-capabilities/files/authoring-reference.md` with the capability
+  profile, alongside the blueprint version bump ADR-7 requires.
+
 ## [0.20.0] — 2026-10-07
 
 Adds opt-in transition and runbook contracts. Existing governed corpora need no edits;

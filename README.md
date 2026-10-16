@@ -64,6 +64,7 @@ profiles/
                               # flat ADR corpus with stable ADR-N handles
     pattern-catalog.dhall     # implementation-pattern catalog conventions, with
                               # opt-in assessable types carrying PAT-N criteria
+    product-research.dhall    # customer-discovery studies and findings with PR-N handles
     research-documents.dhall  # nested research corpus with stable RES-N handles
     specifications.dhall      # normative specifications with stable SPEC-N handles,
                               # the boundary obliged to satisfy each one, and what binds
@@ -75,8 +76,10 @@ profiles/
     package.dhall             # namespaced coordination-profile exports
     bug-reports.dhall         # defects in behavior a repository already provides
     capabilities.dhall        # what a repository provides today, with evidence
+    features.dhall            # reusable product features with FEAT-N handles
     improvement-requests.dhall
                               # cross-repository improvement-request conventions
+    jobs.dhall                # canonical Jobs-to-be-Done statements with JOB-N handles
     pattern-applications.dhall
                               # a service's PA-N decisions about assessable patterns
     use-cases.dhall           # JTBD use cases and feature-delivery tracking
@@ -85,7 +88,8 @@ profiles/
   postgresql.dhall            # stable flat PostgreSQL export
   tan-postgresql.dhall        # stable flat tan PostgreSQL export
 fixtures/                     # one acceptance bundle and one -invalid/ tree per profile
-scripts/                      # one test-*.sh per profile, plus the ADR bundle check
+scripts/                      # one test-*.sh per profile, plus the ADR bundle check and
+                              # the opt-in check-product-discovery.py relationship gate
 docs/
   adr/                        # this repository's own decisions, governed by its own profile
   masterplans/, plans/        # the initiative that produced this release
@@ -376,6 +380,10 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-architecture-decisions-profile.sh` | `documentation.architectureDecisions` |
 | `test-bug-reports-profile.sh` | `coordination.bugReports` |
 | `test-capabilities-profile.sh` | `coordination.capabilities` |
+| `test-features-profile.sh` | `coordination.features` |
+| `test-jobs-profile.sh` | `coordination.jobs` |
+| `test-product-research-profile.sh` | `documentation.productResearch` |
+| `test-product-discovery.sh` | `scripts/check-product-discovery.py` and the product-discovery integration fixtures — see [Product discovery](#product-discovery-jobs-research-and-features) |
 | `test-improvement-requests-profile.sh` | `coordination.improvementRequests` |
 | `test-failure-modes-profile.sh` | `assurance.failureModes` |
 | `test-okf-v0-2-profile.sh` | `okfV02`, the format-level reference profile |
@@ -568,11 +576,14 @@ requires **okf 0.9.0.0 or later**.
 | `assurance.verificationEvidence` | Evidence of a system test: `Attested Computation` definitions with VC-N handles, path-addressed `Verification Run` and `Attestation` events, and digest-pinned links to external data | required | nothing recommended; run-only and comparison-only fields follow `recordKind` |
 | `coordination.bugReports` | Defects in behavior a repository already provides, with `BUG-N` handles, a severity scale graded by observable consequence, and a reproduction a reader can follow | required | `reviews`; `resolution` once a report reaches a terminal status; `workaround` once severity is `degraded` |
 | `coordination.capabilities` | What a repository provides today, with `CAP-N` handles, a compatibility promise separate from availability, and required evidence | required | `reviews`; `interface`; `replacedBy` once a capability is deprecated or withdrawn |
+| `coordination.features` | Independently addressable product features with `FEAT-N` handles: customer-visible `behavior`, a discovery-to-delivery lifecycle, and canonical links to jobs and their outcomes, contributing capabilities, governing specifications, and delivering requests. Delivery is not proof of outcome or conformance | required | nothing recommended; `owners` and feature-local `AC-N` `acceptanceCriteria` once `planned`, `in-progress`, `blocked`, or `delivered`; `deliveredAt` and `deliveryEvidence` once `delivered` |
 | `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles, typed canonical source dependencies, stable request-local acceptance criteria, completion state, and structured review provenance | required | `reviews`; `resolution` once a request reaches a terminal state |
+| `coordination.jobs` | Canonical Jobs-to-be-Done statements with `JOB-N` handles: actor, situation, motivation, qualitative or measured `outcomes`, and a declared `validationStatus` backed by an explicit `assessment` citing product-research findings. States customer progress, never a solution | required | nothing recommended; `assessment` once `validationStatus` is `supported`, `mixed`, or `challenged` |
 | `coordination.patternApplications` | A service's decision about one assessable catalog pattern, with `PA-N` handles: the `service` and `pattern` as canonical `mori://` URIs, an `applicable` / `not-applicable` / `exception` / `needs-triage` decision with rationale, and `checks` binding criterion ids to service-owned targets. Records applicability, never conformance | required | nothing recommended; `exception` (human authority, scope, reason, review condition) once `decision` is `exception` |
-| `coordination.useCases` | JTBD use cases with `UC-N` handles, typed feature delivery, and repository-owned request references | required (profile-wide, so themes too) | `reviews`; `themes` on a use case |
+| `coordination.useCases` | JTBD use cases with `UC-N` handles, typed feature delivery, and repository-owned request references. Inline jobs may link to canonical jobs (`jobRef`, `outcomeNames`); features may be referenced canonically (`featureRefs`) instead of inline | required (profile-wide, so themes too) | `reviews`; `themes` on a use case |
 | `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles and checked supersession references | required | nothing recommended |
 | `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, and tag fields. Opt-in `Assessable Standard` and `Assessable Pattern` types carry a `PAT-N` handle, an `applicability` scope, and stable `criteria` naming the evidence kind that settles each | required | nothing recommended; `sources` is the v0.2 record shape; `patternId`, `applicability`, and `criteria` on the assessable types only |
+| `documentation.productResearch` | Customer and product discovery research with `PR-N` handles shared by two types: a `Product Research Study` (question, method, population, context) and a `Product Research Finding` (observation kept apart from interpretation, assessments of named claims about jobs, and measurements of their outcomes) | required | nothing recommended; `completedAt` and `limitations` once a study is `complete`; `supersededBy` or `withdrawalReason` for a superseded or withdrawn finding |
 | `documentation.researchDocuments` | Nested research corpora with `RES-N` handles, structured reviews, and conditional supersession | required | `reviews`; `sources` is the v0.2 record shape |
 | `documentation.specifications` | Normative specifications with `SPEC-N` handles: the boundary obliged to satisfy the contract, the version ratified, which parts bind, and what proves conformance. A `Specification Pointer` records a subject specified authoritatively in another repository | required | nothing recommended; `specVersion` and `normativeScope` on a `Specification` once `status` is `ratified`; `authoritativeSpec` on a pointer; `supersededBy` once `status` is `superseded` |
 | `documentation.runbooks` | Operational procedures with stable RB-N handles, ownership, project scope, environments, trigger, effects and lifecycle | required | optional sources, verification, freshness, supporting Mori references and typed supersession |
@@ -703,3 +714,132 @@ subsets, responsibility-transfer restrictions, fixed maxAge durations and typed 
 The profile engine cannot express recursive requirements[].owner records, forbidden conditional
 fields or these semantic joins. See the generated profile documentation and
 [adopt-transitions](blueprints/adopt-transitions/README.md).
+
+
+## Product discovery: jobs, research, and features
+
+Three profiles give the consumer side of the coordination family stable,
+queryable identities, so a team (and later a product-management UI) can follow
+a customer need from evidence to delivery:
+
+| Concept | Profile | Answers |
+|---|---|---|
+| `Job` (`JOB-N`) | `coordination.jobs` | What progress is a customer trying to make, in what situation, and does research support that statement? |
+| `Product Research Study` / `Product Research Finding` (`PR-N`) | `documentation.productResearch` | What did we set out to learn, what did we observe, and what do we conclude from it? |
+| `Feature` (`FEAT-N`) | `coordination.features` | What product behavior are we proposing or delivering, who owns it, and how is it accepted? |
+| `Use Case` (`UC-N`) | `coordination.useCases` | In which scenario do these come together? |
+
+A capability is still a producer's claim about behavior that already exists,
+and an improvement request is still repository work to close a gap. Neither is
+replaced.
+
+**Product research is not technical research.** `documentation.researchDocuments`
+records investigations about building software (`RES-N`); `documentation.productResearch`
+records what was learned about customers (`PR-N`). Do not convert one into the
+other.
+
+**Support is a declaration.** A job's `validationStatus` is the authors'
+synthesis, recorded in `assessment` with the findings it rests on. It is never
+computed by counting finding stances, never inferred from `verified`, and never
+changed by a feature being delivered.
+
+### Authoring canonically and migrating
+
+A new use case links its inline job to the canonical job and names standalone
+features through `featureRefs`, without inline `features`:
+
+```yaml
+jobs:
+  - name: share-after-close
+    actor: finance lead at a pilot account
+    situation: the close finished overnight and the CFO asks for numbers at nine
+    motivation: send figures the CFO can trust before the morning meeting
+    outcome: the CFO opens current results before the meeting starts
+    jobRef: mori://example/product/okf/jobs/concepts/JOB-1
+    outcomeNames: [time-to-share]
+featureRefs:
+  - mori://example/product/okf/features/concepts/FEAT-1
+```
+
+An existing use case keeps its inline `features` unchanged. While migrating, an
+inline record can carry `featureRef` to the standalone feature; the standalone
+feature then owns the current status, owners, and acceptance, and the inline
+record is a scenario snapshot that a tool must not write back. Remove snapshots
+deliberately once their scenario-specific prose is preserved. A `draft` or
+`validated` use case may have no features at all. Handles never change on
+rename.
+
+All references between these bundles are canonical Mori concept URIs,
+`mori://<namespace>/<project>/okf/<bundle>/concepts/<HANDLE>`, with any
+producer-chosen bundle name. Each profile encodes them as external-only
+handle references (its own prefix, `allowLocal = False`, and a pattern naming
+the target prefix), so Mori indexes them as typed edges.
+
+### Links to existing profiles
+
+- `capabilityRefs` on a feature names producer capabilities contributing
+  behavior. It does not claim they deliver the whole feature; a missing piece is
+  an improvement request, never a planned capability.
+- `specificationRefs` names a `Specification` or `Specification Pointer` that
+  governs, or is proposed to govern, the feature. A draft specification is not a
+  ratified obligation, and delivery does not prove conformance.
+- `acceptanceCriteria` reuses the improvement-request shape: `id` (`AC-N`),
+  `statement`, `verification`. Criteria are scoped to their owner, so a
+  feature's `AC-1` and a request's `AC-1` are unrelated; cite a criterion as its
+  owner's URI plus its id.
+- Existing fields carry the other directions without schema changes: an
+  improvement request's `origin` can name the feature it serves, a bug report's
+  `affects` can name the feature whose behavior is wrong (its `capability` still
+  names the contradicted provision claim), and specifications and technical
+  research cite jobs, findings, or features in `sources`. A `sources` entry
+  records derivation; it never replaces `specificationRefs`.
+- No inverse lists are stored on capabilities, specifications, or features.
+  Standalone reviews (`assurance.reviews`) do not yet accept product concepts as
+  a `subjectKind`; use the optional inline `reviews` family until that is
+  extended.
+
+### Two validation layers
+
+Profile validation (`okf validate --strict --profile-enforce`) checks each
+concept's own shape: required fields, vocabularies, formats, handle patterns,
+conditional presence, uniqueness of outcome names and criterion ids, and that
+`relatedJobs`, `studyRef`, and `supersededBy` do not name the concept itself.
+It accepts a well-formed reference whose target does not exist.
+
+`scripts/check-product-discovery.py` is an interim, opt-in consumer gate for
+what profile validation cannot express. It reads a JSON manifest mapping
+canonical bundle URIs to local paths and descriptors, validates each bundle
+strictly, and checks relationships between them:
+
+```bash
+python3 scripts/check-product-discovery.py --list-rules
+python3 scripts/check-product-discovery.py --manifest fixtures/product-discovery/manifest.json
+```
+
+```json
+{ "bundles": [ { "uri": "mori://example/product/okf/jobs", "path": "../jobs",
+                 "profile": "../../profiles/coordination/jobs.dhall" } ] }
+```
+
+Paths resolve relative to the manifest. Every reference to a bundle the
+manifest does not map is an error; the checker never fetches anything. It exits
+0 when every rule passes, 1 on errors (each naming the source concept URI, the
+field path, and the rule id), and 2 on bad usage or an invalid manifest. Owner
+project URIs, improvement-request URIs, generic `sources`, related use cases,
+capability `requires`, and specification supersession are reported as outside
+its resolution domain.
+
+Each rule names its intended long-term owner. `okf` owns rules that read one
+concept's frontmatter (finite numbers, measurement completeness, period order,
+inline name resolution, the any-of presence of features on a delivery-stage use
+case); they are descriptor-language gaps. `mori` owns rules that follow a
+reference (target existence and type, outcome names, assessment evidence,
+current findings, supersession cycles), consistent with okf's ADR-1, which
+leaves cross-repository lookup to Mori. Each rule is deleted here once its owner
+ships equivalent support; the requests are
+`mori://shinzui/okf/okf/improvement-requests/concepts/IR-9` (descriptor features) and
+`mori://shinzui/mori/okf/improvement-requests/concepts/IR-38` (reference resolution).
+Importing the Dhall profiles does not run the checker;
+a consumer that wants these guarantees adopts the script and a manifest
+explicitly. See
+[ADR-17](./docs/adr/0017-product-discovery-separates-jobs-research-features-and-scenarios.md).

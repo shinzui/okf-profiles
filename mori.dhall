@@ -271,6 +271,22 @@ in  Schema.Project::{
         , path = Some "profiles/coordination/pattern-applications.dhall"
         , version = Some "v0.20.0"
         }
+      , -- Unreleased: no version until release work assigns the tag.
+        Schema.OkfProfile::{
+        , name = "jobs"
+        , export = "coordination.jobs"
+        , path = Some "profiles/coordination/jobs.dhall"
+        }
+      , Schema.OkfProfile::{
+        , name = "features"
+        , export = "coordination.features"
+        , path = Some "profiles/coordination/features.dhall"
+        }
+      , Schema.OkfProfile::{
+        , name = "product-research"
+        , export = "documentation.productResearch"
+        , path = Some "profiles/documentation/product-research.dhall"
+        }
       , Schema.OkfProfile::{
         , name = "use-cases"
         , export = "coordination.useCases"

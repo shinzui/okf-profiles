@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-10-16
+* **Addition**: ADR-17 separates jobs, product research, features, and scenarios, keeps existing schemas, and assigns each interim cross-bundle check to okf or Mori.
+
 ## 2026-10-05
 * **Addition**: Record operational runbook scope and the separation between metadata checks and execution evidence.
 

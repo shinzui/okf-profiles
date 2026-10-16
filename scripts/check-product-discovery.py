@@ -11,7 +11,9 @@ RULES with the project intended to own it long term:
   * `mori` owns a rule that follows a reference to another concept. That is
     registry-backed resolution, which okf ADR-1 assigns to Mori.
 
-When an owner ships equivalent support, delete the rule here.
+When an owner ships equivalent support, delete the rule here. The upstream
+requests are mori://shinzui/okf/okf/improvement-requests/concepts/IR-9 (okf)
+and mori://shinzui/mori/okf/improvement-requests/concepts/IR-38 (mori).
 
 Usage:
 
