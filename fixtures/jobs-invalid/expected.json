@@ -1,0 +1,45 @@
+{
+  "missing-type": {
+    "field": "type",
+    "diagnostics": 2
+  },
+  "unknown-type": "type",
+  "missing-title": "title",
+  "missing-description": "description",
+  "missing-generated": "generated",
+  "bad-generated-actor": "generated",
+  "missing-jobId": {
+    "field": "jobId",
+    "diagnostics": 2
+  },
+  "invalid-handle": {
+    "field": "jobId",
+    "diagnostics": 2
+  },
+  "missing-actor": "actor",
+  "missing-situation": "situation",
+  "missing-motivation": "motivation",
+  "missing-status": "status",
+  "invalid-status": "status",
+  "missing-validationStatus": "validationStatus",
+  "invalid-validationStatus": "validationStatus",
+  "missing-outcomes": "outcomes",
+  "empty-outcomes": "outcomes",
+  "scalar-outcomes": "outcomes",
+  "duplicate-outcome-name": "outcomes",
+  "missing-outcome-name": "name",
+  "missing-outcome-description": "description",
+  "invalid-direction": "direction",
+  "missing-assessment": "assessment",
+  "missing-assessment-rationale": "rationale",
+  "missing-assessedAt": "assessedAt",
+  "invalid-assessedAt": "assessedAt",
+  "empty-findingRefs": "findingRefs",
+  "local-findingRef": "findingRefs",
+  "wrong-family-findingRef": "findingRefs",
+  "self-relatedJob": "relatedJobs",
+  "wrong-family-relatedJob": "relatedJobs",
+  "missing-source-resource": "resource",
+  "invalid-review-outcome": "outcome",
+  "bad-verified-actor": "verified"
+}

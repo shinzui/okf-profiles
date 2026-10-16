@@ -26,6 +26,11 @@ provenance:
       at: 2026-10-16T12:43:01Z
       mode: "update"
       note: "Validate against pinned okf and ADRs: external-only reference encoding, no guidance (ADR-12), okf/mori-owned interim checker rules with upstream requests"
+    - model: "claude-opus-5-5"
+      harness: "claude-code"
+      at: 2026-10-16T13:14:59Z
+      mode: "implement"
+      note: "Implement milestones: jobs, product research, features, use-case links, discovery checker, registration"
 ---
 
 # Add jobs, product research, and features linked to use cases
@@ -43,10 +48,10 @@ Create three profiles: `coordination.jobs`, `documentation.productResearch`, and
 ## Progress
 
 
-Implementation has not started. The integration scope was revised on 2026-10-16. The same day, a validation pass checked the plan against the working tree and the pinned okf source. It fixed reference encoding, removed profile `guidance`, and assigned each semantic check an intended upstream owner. The five implementation milestones remain pending.
+Implementation began on 2026-10-16. The integration scope was revised earlier that day. A validation pass then checked the plan against the working tree and the pinned okf source. It fixed reference encoding, removed profile `guidance`, and assigned each semantic check an intended upstream owner.
 
 - [x] (2026-10-16) Validate the plan against the working tree, the pinned okf schema, and the local ADRs; baseline use-case, research-document, and capability suites pass.
-- [ ] Publish jobs and product-research contracts and their profile tests.
+- [x] (2026-10-16) Publish jobs and product-research contracts and their profile tests. `coordination.jobs` and `documentation.productResearch` type-check and appear in `okf profile list`. `scripts/test-jobs-profile.sh` accepts 3 concepts and rejects 34 focused cases. `scripts/test-product-research-profile.sh` accepts 5 concepts and rejects 44. Both run through the shared harness `scripts/profile_fixture_cases.py`.
 - [ ] Publish features with capability/specification references and AC-N acceptance criteria.
 - [ ] Connect use cases, implement the interim relationship checker with owner-tagged rules, and demonstrate integration through existing profiles.
 - [ ] Register profiles, update capability descriptions and the V02 house-status list, generate documentation, file the okf and Mori improvement requests, and record the architectural boundary.
@@ -55,7 +60,16 @@ Implementation has not started. The integration scope was revised on 2026-10-16.
 ## Surprises & Discoveries
 
 
-No implementation discoveries yet. During the 2026-10-16 plan revision, inspection of `profiles/coordination/improvement-requests.dhall` showed an existing `acceptanceCriteria` convention: record-local `id: AC-N`, `statement`, and `verification`, unique by `id`. The feature profile should reuse that shape. Inspection of `profiles/coordination/capabilities.dhall` also found guidance assigning cross-repository composition exclusively to use-case features; it must recognize standalone features while retaining the capability provision-claim boundary.
+During implementation (2026-10-16), `okf concepts --json` turned out to keep YAML numbers as JSON numbers, and a YAML `.inf` arrives as the string `".inf"`. The checker can therefore require a JSON number (excluding booleans) and needs no YAML parser. A missing `type` reports both `type not in profile vocabulary` and `missing profile-required field: type`. A missing or malformed ID field reports both the field rule and the core `document ID` rule. These are two diagnostics for one defect, so `expected.json` records `"diagnostics": 2` for exactly those cases rather than loosening the one-deviation assertion.
+
+```text
+$ bash scripts/test-jobs-profile.sh
+OK: jobs profile accepts 3 concepts and rejects 34 focused cases
+$ bash scripts/test-product-research-profile.sh
+OK: product-research profile accepts 5 concepts and rejects 44 focused cases
+```
+
+During the 2026-10-16 plan revision, inspection of `profiles/coordination/improvement-requests.dhall` showed an existing `acceptanceCriteria` convention: record-local `id: AC-N`, `statement`, and `verification`, unique by `id`. The feature profile should reuse that shape. Inspection of `profiles/coordination/capabilities.dhall` also found guidance assigning cross-repository composition exclusively to use-case features; it must recognize standalone features while retaining the capability provision-claim boundary.
 
 Plan validation (2026-10-16) found six facts that shaped the revision.
 
@@ -117,6 +131,10 @@ Decision (2026-10-16, validation revision): Keep `reviews` optional on the three
 Decision (2026-10-16, validation revision): Do not edit the `adopt-capabilities` blueprint in this plan. Its prose repeats the capability profile's "use-case feature" wording. ADR-7 ties blueprint changes to the catalog tag, and release work is out of scope. Record the three files as a release follow-up in `CHANGELOG.md` under Unreleased so the drift is visible.
 
 Decision (2026-10-16, validation revision): Write new profile tests in the style of the newest suite: a shell wrapper calling a Python script with an `expected.json` that maps each rejection fixture to the field its diagnostic must name, as in `scripts/test-transitions-profile.py`. This makes ADR-9's one-reason rule mechanically asserted rather than inspected by eye.
+
+Decision (2026-10-16, implementation): Make the profile acceptance bundles `fixtures/jobs`, `fixtures/product-research`, and `fixtures/features` the core of the product-discovery graph. `fixtures/product-discovery/manifest.json` points at them through `../jobs`, `../product-research`, and `../features`, and keeps use cases, capabilities, and specifications under `fixtures/product-discovery/`. The plan originally put six separate bundles under `fixtures/product-discovery/`. Sharing them means the examples documenting each profile are also proven graph-coherent, and the two copies cannot drift.
+
+Decision (2026-10-16, implementation): Tighten the transitions-style harness in a shared module, `scripts/profile_fixture_cases.py`. Each rejection fixture's advisory run must report exactly one `profile:` deviation, and that deviation must name the expected field. An `expected.json` value of `{"field": ..., "diagnostics": N}` declares a known overlap of core diagnostics. Transitions only asserts that some line names the field. The stricter form makes ADR-9's one-reason rule mechanical. Fixtures were generated from one valid base concept by single text edits; each fixture's body states the one rule it violates.
 
 ## Outcomes & Retrospective
 

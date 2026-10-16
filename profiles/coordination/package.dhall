@@ -11,6 +11,7 @@
 { bugReports = ./bug-reports.dhall
 , capabilities = ./capabilities.dhall
 , improvementRequests = ./improvement-requests.dhall
+, jobs = ./jobs.dhall
 , patternApplications = ./pattern-applications.dhall
 , transitions = ./transitions.dhall
 , useCases = ./use-cases.dhall
