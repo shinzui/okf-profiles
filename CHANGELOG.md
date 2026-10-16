@@ -8,11 +8,20 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+## [0.21.0] — 2026-10-16
+
 Adds three opt-in product-discovery profiles and canonical links from use cases to
 them. Existing governed corpora need no edits; no existing profile's schema changes
 except that a use case's inline `features` becomes optional. Consumers repinning the
-package refresh its semantic hash when they eventually repin. No version is published
-and no blueprint pin changes here.
+package re-run `dhall freeze`; the package semantic hash is
+`sha256:4be32588d55c74282ceab54b06b22f552cdbf4215788e3eb5256ee8744cb92a2`. Requires okf 0.9.0.0 or later. Every blueprint
+targets 0.21.0 per ADR-7; none gains a migration edge.
+
+Rehearsed against a real corpus: Mori's `docs/use-cases` bundle (8 use cases)
+reports identical diagnostics under the v0.20.0 and v0.21.0 use-case profiles, and
+passes every use-case rule of the relationship checker. The checker validates each
+bundle with `--strict`, so a corpus with outstanding recommended-field deviations
+(Mori's lacks `reviews` on several concepts) must clear them before adopting it.
 
 ### Added
 
@@ -48,12 +57,20 @@ and no blueprint pin changes here.
   as a home for behavior composed across repositories. No field, status, or rule
   changes.
 
-### Follow-up for the next release
+- The `adopt-capabilities` blueprint repins its descriptor to v0.21.0 and its
+  README, prompt, and authoring reference say behavior composed across repositories
+  belongs to a standalone or inline feature that may name the capabilities it builds
+  on.
+- Every blueprint targets v0.21.0 per
+  [ADR-7](./docs/adr/0007-blueprint-versions-track-the-catalog-tag.md).
 
-- Align the "use-case feature" wording in `blueprints/adopt-capabilities/README.md`,
-  `blueprints/adopt-capabilities/prompt.md`, and
-  `blueprints/adopt-capabilities/files/authoring-reference.md` with the capability
-  profile, alongside the blueprint version bump ADR-7 requires.
+### Not included
+
+An adoption blueprint for jobs, product research, and features waits for a first
+adopter. The okf and Mori requests that would retire the checker's rules,
+`mori://shinzui/okf/okf/improvement-requests/concepts/IR-9` and
+`mori://shinzui/mori/okf/improvement-requests/concepts/IR-38`, are proposed, not
+delivered.
 
 ## [0.20.0] — 2026-10-07
 

@@ -1,8 +1,8 @@
 # Capability catalog authoring reference
 
 The authoritative contract for a bundle governed by `coordination.capabilities`
-(introduced in okf-profiles v0.9.0; the shipped descriptor pins v0.19.0). Follow it exactly; do
-not reconstruct it from memory. Loading the v0.19.0 descriptor requires `okf` 0.9.0.0 or later.
+(introduced in okf-profiles v0.9.0; the shipped descriptor pins v0.21.0). Follow it exactly; do
+not reconstruct it from memory. Loading the v0.21.0 descriptor requires `okf` 0.9.0.0 or later.
 
 ## Bundle layout
 
@@ -76,8 +76,9 @@ no catalog — a consumer cannot tell which entries are real. Combined with requ
 omission is what keeps every record checkable.
 
 By the same logic, a claim that is only true when several repositories cooperate is not a capability
-record. No single repository can assert or prove it. It belongs to the consuming repository as a
-use-case feature.
+record. No single repository can assert or prove it. It belongs to the consumer as a feature: a
+standalone `coordination.features` record or an inline use-case feature. A feature may name the
+capabilities it builds on in `capabilityRefs`; a capability record never lists features in return.
 
 ## Granularity
 

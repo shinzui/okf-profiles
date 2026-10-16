@@ -34,7 +34,8 @@ the central risk**, and three rules in the prompt exist to contain it:
    the path before writing it. There is deliberately no `planned` status; an absent capability is an
    improvement request.
 2. **Provision, not composition.** A claim only true when several repositories cooperate belongs to
-   the consuming repository as a use-case feature. The working test is whether a record reads
+   the consumer as a feature — a standalone `coordination.features` record or an inline use-case
+   feature — which may name the capabilities it builds on. The working test is whether a record reads
    correctly to someone who has never heard of the surrounding portfolio.
 3. **One capability is one thing a consumer adopts *and* verifies independently.** A catalog with
    one record per exported module is a worse copy of the API reference, and is the main way this
@@ -63,9 +64,10 @@ preserved and conforming records are not rewritten.
 
 ## Requirements
 
-The shipped descriptor pins okf-profiles **v0.19.0**, which requires **`okf` 0.9.0.0 or later** to
-load. The capability contract itself was introduced in v0.9.0 and is unchanged since; v0.19.0 only
-widens the profile schema with optional `guidance`, which the shared profile leaves absent.
+The shipped descriptor pins okf-profiles **v0.21.0**, which requires **`okf` 0.9.0.0 or later** to
+load. The capability contract itself was introduced in v0.9.0 and its rules are unchanged since;
+v0.19.0 widened the profile schema with optional `guidance`, which the shared profile leaves absent,
+and v0.21.0 only rewords its description to recognize standalone features.
 
 ## References
 

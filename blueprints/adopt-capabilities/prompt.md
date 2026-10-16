@@ -45,7 +45,8 @@ capability record; it is an improvement request. There is deliberately no `plann
 
 **2. Provision, not composition.** A capability is something *this repository's code* does. If a
 claim is only true when several repositories cooperate, no single repository can assert or prove it
-— it belongs to the consuming repository as a use-case feature. A useful test: a record must read
+— it belongs to the consumer as a feature, either a standalone `coordination.features` record or an
+inline use-case feature, which may name this capability in `capabilityRefs`. A useful test: a record must read
 correctly to someone who has never heard of the other repositories in this portfolio. In practice
 this filters more than vocabulary; a claim that cannot be phrased without naming a sibling service
 is usually a composition claim in disguise.

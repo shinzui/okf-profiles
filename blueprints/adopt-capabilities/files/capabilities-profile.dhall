@@ -1,2 +1,2 @@
-https://raw.githubusercontent.com/shinzui/okf-profiles/v0.19.0/profiles/coordination/capabilities.dhall
-  sha256:d02b2944e85109c06e7a095a81de2e7ef7c6f607b225ec99622e60810889d809
+https://raw.githubusercontent.com/shinzui/okf-profiles/v0.21.0/profiles/coordination/capabilities.dhall
+  sha256:45fbebb3b33e755088cde6bc80ae8acc60855bff632ae1e756463ee38e283a80
