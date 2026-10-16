@@ -1,4 +1,36 @@
 --| Profile for JTBD use cases connected to repository-owned feature work.
+--
+-- ## Inline records and canonical references
+--
+-- A use case is a scenario. Its inline `jobs` and `features` records predate
+-- the standalone `coordination.jobs` and `coordination.features` profiles and
+-- remain valid unchanged. A use case may now link to the canonical concepts:
+--
+--   * `jobs[].jobRef` names the canonical job an inline job record is a
+--     scenario snapshot of, and `jobs[].outcomeNames` names that job's
+--     outcomes this scenario is about. The inline record keeps describing this
+--     scenario's actor and circumstances; it does not replace the job;
+--   * `featureRefs` names standalone features this scenario relies on, and is
+--     the preferred representation for new use cases, which then omit inline
+--     `features`;
+--   * `features[].featureRef` links a retained inline record to a standalone
+--     feature during migration. The standalone feature owns the current
+--     status, owners, and acceptance; the inline record is a snapshot a UI
+--     must not write back.
+--
+-- Inline `features` is therefore optional rather than required: an early
+-- `draft` or `validated` scenario can rely on no feature yet. That a
+-- `planned`, `in-progress`, or `delivered` use case names at least one inline
+-- feature or `featureRefs` entry is an any-of presence condition okf cannot
+-- express, so profile validation checks only the shape of what is present and
+-- the opt-in `scripts/check-product-discovery.py` gate enforces readiness,
+-- together with name uniqueness, `features[].jobs` resolution, and duplicate
+-- canonical references. Existing corpora are not required to run it.
+--
+-- All three references name concepts in other bundles. okf requires a
+-- reference rule's `localPrefix` to be a prefix this profile declares, so they
+-- use `UC` with `allowLocal = False` and a JOB-N or FEAT-N
+-- `externalUriPattern`.
 let Profile = ../../Profile/Type.dhall
 
 let FrontmatterRules = ../../Profile/FrontmatterRules.dhall
@@ -39,6 +71,20 @@ let nestedScalar =
         , cardinality = Cardinality.Scalar
         }
 
+let conceptUri =
+      \(prefix : Text) ->
+        "mori://[^/]+/[^/]+/okf/[^/]+/concepts/${prefix}-[1-9][0-9]*"
+
+let externalOnly =
+      \(prefix : Text) ->
+        Some
+          HandleReferenceRule::{
+          , localPrefix = "UC"
+          , externalUriSchemes = [ "mori" ]
+          , allowLocal = False
+          , externalUriPattern = Some (conceptUri prefix)
+          }
+
 let moriList =
       \(name : Text) ->
       \(description : Text) ->
@@ -64,7 +110,18 @@ let jobs =
           , nestedScalar "outcome" "Observable result that satisfies the job."
           ]
         , recommended = [] : List NestedFieldRule.Type
-        , optional = [] : List NestedFieldRule.Type
+        , optional =
+          [     nestedScalar
+                  "jobRef"
+                  "Canonical Mori URI of the job this record is a scenario snapshot of."
+            //  { reference = externalOnly "JOB" }
+          , NestedFieldRule::{
+            , field = "outcomeNames"
+            , description = Some
+                "Names of outcomes on the `jobRef` job that this scenario concerns."
+            , cardinality = Cardinality.List
+            }
+          ]
         }
       }
 
@@ -104,6 +161,10 @@ let features =
           , moriList
               "improvementRequests"
               "Stable Mori concept URIs of repository-owned requests delivering this feature."
+          ,     nestedScalar
+                  "featureRef"
+                  "Canonical Mori URI of the standalone feature this record snapshots."
+            //  { reference = externalOnly "FEAT" }
           ]
         }
       }
@@ -193,7 +254,6 @@ in  Profile::{
               , format = Some (FieldFormat.UriWithScheme "mori")
               }
             , jobs
-            , features
             ]
           , recommended =
             [ FieldRule::{
@@ -204,6 +264,14 @@ in  Profile::{
             ]
           , optional =
             [ FieldRule::{
+              , field = "featureRefs"
+              , description = Some
+                  "Canonical Mori URIs of standalone features; preferred over inline `features`."
+              , cardinality = Cardinality.List
+              , reference = externalOnly "FEAT"
+              }
+            , features
+            , FieldRule::{
               , field = "improvementRequests"
               , description = Some
                   "Stable Mori request URIs; mirror the union of feature-level request references."

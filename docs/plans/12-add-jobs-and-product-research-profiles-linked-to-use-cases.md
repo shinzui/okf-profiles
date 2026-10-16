@@ -53,7 +53,7 @@ Implementation began on 2026-10-16. The integration scope was revised earlier th
 - [x] (2026-10-16) Validate the plan against the working tree, the pinned okf schema, and the local ADRs; baseline use-case, research-document, and capability suites pass.
 - [x] (2026-10-16) Publish jobs and product-research contracts and their profile tests. `coordination.jobs` and `documentation.productResearch` type-check and appear in `okf profile list`. `scripts/test-jobs-profile.sh` accepts 3 concepts and rejects 34 focused cases. `scripts/test-product-research-profile.sh` accepts 5 concepts and rejects 44. Both run through the shared harness `scripts/profile_fixture_cases.py`.
 - [x] (2026-10-16) Publish features with capability/specification references and AC-N acceptance criteria. `coordination.features` is exported. `scripts/test-features-profile.sh` accepts 3 concepts (in-progress with two owners and CAP/SPEC/IR links, delivered enabling feature without a job, discovered feature) and rejects 31 focused cases.
-- [ ] Connect use cases, implement the interim relationship checker with owner-tagged rules, and demonstrate integration through existing profiles.
+- [x] (2026-10-16) Connect use cases, implement the interim relationship checker with owner-tagged rules, and demonstrate integration through existing profiles. `coordination.useCases` gained `jobs[].jobRef`, `jobs[].outcomeNames`, `featureRefs`, and `features[].featureRef`, and inline `features` is now optional. `scripts/check-product-discovery.py` lists 16 rules (10 `okf`, 6 `mori`) and passes on `fixtures/product-discovery/manifest.json`. `scripts/test-product-discovery.sh` runs 22 single-rule mutations, a profile-versus-checker boundary case, manifest and profile-failure exits, and 7 integration links with negative controls. `scripts/test-use-cases-profile.sh` moved onto the shared harness: 2 legacy concepts accepted, 16 focused rejections (9 legacy fixtures unchanged, 7 new). The three new export-to-directory pairs were added to `scripts/test-profile-docs.sh` and `just docs` was run here rather than in milestone 4, so this commit's documentation gate stays green.
 - [ ] Register profiles, update capability descriptions and the V02 house-status list, generate documentation, file the okf and Mori improvement requests, and record the architectural boundary.
 - [ ] Prove compatibility, run focused negative controls and full checks, and complete the retrospective.
 
@@ -63,6 +63,14 @@ Implementation began on 2026-10-16. The integration scope was revised earlier th
 During implementation (2026-10-16), `okf concepts --json` turned out to keep YAML numbers as JSON numbers, and a YAML `.inf` arrives as the string `".inf"`. The checker can therefore require a JSON number (excluding booleans) and needs no YAML parser. A missing `type` reports both `type not in profile vocabulary` and `missing profile-required field: type`. A missing or malformed ID field reports both the field rule and the core `document ID` rule. These are two diagnostics for one defect, so `expected.json` records `"diagnostics": 2` for exactly those cases rather than loosening the one-deviation assertion.
 
 ```text
+$ python3 scripts/check-product-discovery.py --manifest fixtures/product-discovery/manifest.json
+OK: 6 bundles, 18 concepts, 28 references resolved across jobs, product research, features, use cases, capabilities, and specifications
+unchecked: 4 owner project URIs and 1 improvement-request URIs are outside this checker's resolution domain
+untraversed: generic sources, related use cases, capability requires, specification supersession, and pointer destinations
+$ bash scripts/test-product-discovery.sh
+OK: product-discovery graph passes; 22 single-rule mutations fail at their intended field across 16 owned rules; 7 integration links and their negative controls hold
+$ bash scripts/test-use-cases-profile.sh
+OK: use-case profile accepts 2 concepts and rejects 16 focused cases
 $ bash scripts/test-features-profile.sh
 OK: features profile accepts 3 concepts and rejects 31 focused cases
 $ bash scripts/test-jobs-profile.sh
@@ -70,6 +78,16 @@ OK: jobs profile accepts 3 concepts and rejects 34 focused cases
 $ bash scripts/test-product-research-profile.sh
 OK: product-research profile accepts 5 concepts and rejects 44 focused cases
 ```
+
+A wrong-type target cannot occur for CAP, SPEC, JOB, or FEAT references in strictly valid bundles. Each reference's `externalUriPattern` fixes the target's handle prefix, and in every profile involved each prefix belongs to exactly one type, or to the two specification types that are both allowed. The `reference-target` rule's type check is therefore exercised through the PR namespace, which a study and a finding share (`study-ref-to-finding`, `finding-ref-to-study`). CAP and SPEC are exercised through missing targets and an unmapped bundle. The rule still checks type generally, so a future profile sharing a prefix cannot slip through.
+
+The mutation errors match the plan's example form exactly, for instance:
+
+```text
+mori://example/product/okf/use-cases/concepts/UC-1 jobs[0].outcomeNames[0]: [outcome-exists] unknown outcome missing-outcome on mori://example/product/okf/jobs/concepts/JOB-1
+```
+
+A supersession cycle reports one error per finding in the cycle (PR-5 and PR-6 in the mutation). The integration test accepts this because every error carries the intended rule. `scripts/test-product-discovery.sh` takes about 35 seconds, mostly strict okf validation of six bundles per mutation. Reverting is proven once over the whole restored tree rather than once per mutation, because each mutation restores exact bytes.
 
 During the 2026-10-16 plan revision, inspection of `profiles/coordination/improvement-requests.dhall` showed an existing `acceptanceCriteria` convention: record-local `id: AC-N`, `statement`, and `verification`, unique by `id`. The feature profile should reuse that shape. Inspection of `profiles/coordination/capabilities.dhall` also found guidance assigning cross-repository composition exclusively to use-case features; it must recognize standalone features while retaining the capability provision-claim boundary.
 
@@ -137,6 +155,10 @@ Decision (2026-10-16, validation revision): Write new profile tests in the style
 Decision (2026-10-16, implementation): Make the profile acceptance bundles `fixtures/jobs`, `fixtures/product-research`, and `fixtures/features` the core of the product-discovery graph. `fixtures/product-discovery/manifest.json` points at them through `../jobs`, `../product-research`, and `../features`, and keeps use cases, capabilities, and specifications under `fixtures/product-discovery/`. The plan originally put six separate bundles under `fixtures/product-discovery/`. Sharing them means the examples documenting each profile are also proven graph-coherent, and the two copies cannot drift.
 
 Decision (2026-10-16, implementation): Tighten the transitions-style harness in a shared module, `scripts/profile_fixture_cases.py`. Each rejection fixture's advisory run must report exactly one `profile:` deviation, and that deviation must name the expected field. An `expected.json` value of `{"field": ..., "diagnostics": N}` declares a known overlap of core diagnostics. Transitions only asserts that some line names the field. The stricter form makes ADR-9's one-reason rule mechanical. Fixtures were generated from one valid base concept by single text edits; each fixture's body states the one rule it violates.
+
+Decision (2026-10-16, implementation): The checker splits the plan's semantic constraints into 16 named rules. Four go beyond the plan's two bulleted lists, all derived from constraints in milestones 1 and 3. `baseline-context` (`okf`) requires population, period, and sources whenever an outcome states a baseline. `measurement-matches-outcome` (`mori`) requires a measurement to name a measured outcome in its unit. `reference-target` (`mori`) covers existence and type for every JOB, PR, FEAT, CAP, and SPEC field. `cited-finding-current` (`mori`) is the plan's current-status check. A relationship to a bundle missing from the manifest is a `reference-target` error. `relatedUseCases`, capability `requires`, and specification supersession are left untraversed and named in the success summary, as the plan directs for unrelated relationship classes.
+
+Decision (2026-10-16, implementation): `period-order` requires `periodStart` strictly before `periodEnd`, because a zero-length observation period cannot describe a measured value.
 
 ## Outcomes & Retrospective
 

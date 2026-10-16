@@ -42,27 +42,6 @@ Concise statement of the use case or theme.
 - Object fields: none
 - Element fields: none
 
-#### `features` — required
-
-Capabilities whose delivery makes the use case possible, with ownership and request tracking.
-
-- Allowed values: any
-- Cardinality: list
-- Format: none
-- Reference: none
-- Path: none
-- Unique by: none
-- Condition: none
-- Object fields: none
-- Element fields:
-    - `acceptance` — required; allowed values: any; cardinality: scalar; format: none — Observable evidence that proves the feature is delivered.
-    - `description` — required; allowed values: any; cardinality: scalar; format: none — Capability or behavior the feature supplies.
-    - `improvementRequests` — optional; allowed values: any; cardinality: list; format: uri-with-scheme(mori) — Stable Mori concept URIs of repository-owned requests delivering this feature.
-    - `jobs` — optional; allowed values: any; cardinality: list; format: none — Names of the JTBD records this feature advances.
-    - `name` — required; allowed values: any; cardinality: scalar; format: none — Stable feature name within the use case.
-    - `owners` — required; allowed values: any; cardinality: list; format: uri-with-scheme(mori) — Mori project URIs accountable for delivering the feature.
-    - `status` — required; allowed values: `discovered`, `planned`, `in-progress`, `delivered`, `blocked`, `deferred`; cardinality: scalar; format: none — Current delivery state of the feature.
-
 #### `generated` — required
 
 §5.2. Who produced this use case or theme's current content, and when.
@@ -93,9 +72,11 @@ Jobs-to-be-Done statements describing the actor, situation, desired progress, an
 - Object fields: none
 - Element fields:
     - `actor` — required; allowed values: any; cardinality: scalar; format: none — Person, role, or agent trying to make progress.
+    - `jobRef` — optional; allowed values: any; cardinality: scalar; format: none; reference: local handles with prefix `UC`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/JOB-[1-9][0-9]*` — Canonical Mori URI of the job this record is a scenario snapshot of.
     - `motivation` — required; allowed values: any; cardinality: scalar; format: none — Progress the actor wants to make.
     - `name` — required; allowed values: any; cardinality: scalar; format: none — Stable name for this job within the use case.
     - `outcome` — required; allowed values: any; cardinality: scalar; format: none — Observable result that satisfies the job.
+    - `outcomeNames` — optional; allowed values: any; cardinality: list; format: none — Names of outcomes on the `jobRef` job that this scenario concerns.
     - `situation` — required; allowed values: any; cardinality: scalar; format: none — Circumstance in which the job arises.
 
 #### `origin` — required
@@ -211,6 +192,42 @@ Theme slugs mirrored by body links to theme concepts.
 - Checked only under `--strict`
 
 ### Optional
+
+#### `featureRefs` — optional
+
+Canonical Mori URIs of standalone features; preferred over inline `features`.
+
+- Allowed values: any
+- Cardinality: list
+- Format: none
+- Reference: local handles with prefix `UC`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/FEAT-[1-9][0-9]*`
+- Path: none
+- Unique by: none
+- Condition: none
+- Object fields: none
+- Element fields: none
+
+#### `features` — optional
+
+Capabilities whose delivery makes the use case possible, with ownership and request tracking.
+
+- Allowed values: any
+- Cardinality: list
+- Format: none
+- Reference: none
+- Path: none
+- Unique by: none
+- Condition: none
+- Object fields: none
+- Element fields:
+    - `acceptance` — required; allowed values: any; cardinality: scalar; format: none — Observable evidence that proves the feature is delivered.
+    - `description` — required; allowed values: any; cardinality: scalar; format: none — Capability or behavior the feature supplies.
+    - `featureRef` — optional; allowed values: any; cardinality: scalar; format: none; reference: local handles with prefix `UC`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/FEAT-[1-9][0-9]*` — Canonical Mori URI of the standalone feature this record snapshots.
+    - `improvementRequests` — optional; allowed values: any; cardinality: list; format: uri-with-scheme(mori) — Stable Mori concept URIs of repository-owned requests delivering this feature.
+    - `jobs` — optional; allowed values: any; cardinality: list; format: none — Names of the JTBD records this feature advances.
+    - `name` — required; allowed values: any; cardinality: scalar; format: none — Stable feature name within the use case.
+    - `owners` — required; allowed values: any; cardinality: list; format: uri-with-scheme(mori) — Mori project URIs accountable for delivering the feature.
+    - `status` — required; allowed values: `discovered`, `planned`, `in-progress`, `delivered`, `blocked`, `deferred`; cardinality: scalar; format: none — Current delivery state of the feature.
 
 #### `improvementRequests` — optional
 

@@ -1,0 +1,34 @@
+{
+  "bundles": [
+    {
+      "uri": "mori://example/product/okf/jobs",
+      "path": "../jobs",
+      "profile": "../../profiles/coordination/jobs.dhall"
+    },
+    {
+      "uri": "mori://example/product/okf/research",
+      "path": "../product-research",
+      "profile": "../../profiles/documentation/product-research.dhall"
+    },
+    {
+      "uri": "mori://example/product/okf/features",
+      "path": "../features",
+      "profile": "../../profiles/coordination/features.dhall"
+    },
+    {
+      "uri": "mori://example/product/okf/use-cases",
+      "path": "use-cases",
+      "profile": "../../profiles/coordination/use-cases.dhall"
+    },
+    {
+      "uri": "mori://example/export-service/okf/capabilities",
+      "path": "capabilities",
+      "profile": "../../profiles/coordination/capabilities.dhall"
+    },
+    {
+      "uri": "mori://example/product/okf/specifications",
+      "path": "specifications",
+      "profile": "../../profiles/documentation/specifications.dhall"
+    }
+  ]
+}

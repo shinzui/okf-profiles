@@ -1,0 +1,18 @@
+{
+  "bad-actor": "generated",
+  "bad-legacy-timestamp": "timestamp",
+  "bad-verified-actor": "verified",
+  "duplicate-id": "UC-1",
+  "invalid-feature-status": "status",
+  "invalid-owner-uri": "owners",
+  "invalid-request-uri": "improvementRequests",
+  "missing-generated": "generated",
+  "missing-jobs": "jobs",
+  "local-job-ref": "jobRef",
+  "wrong-family-job-ref": "jobRef",
+  "scalar-outcome-names": "outcomeNames",
+  "local-feature-refs": "featureRefs",
+  "wrong-family-feature-refs": "featureRefs",
+  "scalar-feature-refs": "featureRefs",
+  "wrong-family-inline-feature-ref": "featureRef"
+}
