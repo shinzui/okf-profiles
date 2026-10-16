@@ -52,7 +52,7 @@ Implementation began on 2026-10-16. The integration scope was revised earlier th
 
 - [x] (2026-10-16) Validate the plan against the working tree, the pinned okf schema, and the local ADRs; baseline use-case, research-document, and capability suites pass.
 - [x] (2026-10-16) Publish jobs and product-research contracts and their profile tests. `coordination.jobs` and `documentation.productResearch` type-check and appear in `okf profile list`. `scripts/test-jobs-profile.sh` accepts 3 concepts and rejects 34 focused cases. `scripts/test-product-research-profile.sh` accepts 5 concepts and rejects 44. Both run through the shared harness `scripts/profile_fixture_cases.py`.
-- [ ] Publish features with capability/specification references and AC-N acceptance criteria.
+- [x] (2026-10-16) Publish features with capability/specification references and AC-N acceptance criteria. `coordination.features` is exported. `scripts/test-features-profile.sh` accepts 3 concepts (in-progress with two owners and CAP/SPEC/IR links, delivered enabling feature without a job, discovered feature) and rejects 31 focused cases.
 - [ ] Connect use cases, implement the interim relationship checker with owner-tagged rules, and demonstrate integration through existing profiles.
 - [ ] Register profiles, update capability descriptions and the V02 house-status list, generate documentation, file the okf and Mori improvement requests, and record the architectural boundary.
 - [ ] Prove compatibility, run focused negative controls and full checks, and complete the retrospective.
@@ -63,6 +63,8 @@ Implementation began on 2026-10-16. The integration scope was revised earlier th
 During implementation (2026-10-16), `okf concepts --json` turned out to keep YAML numbers as JSON numbers, and a YAML `.inf` arrives as the string `".inf"`. The checker can therefore require a JSON number (excluding booleans) and needs no YAML parser. A missing `type` reports both `type not in profile vocabulary` and `missing profile-required field: type`. A missing or malformed ID field reports both the field rule and the core `document ID` rule. These are two diagnostics for one defect, so `expected.json` records `"diagnostics": 2` for exactly those cases rather than loosening the one-deviation assertion.
 
 ```text
+$ bash scripts/test-features-profile.sh
+OK: features profile accepts 3 concepts and rejects 31 focused cases
 $ bash scripts/test-jobs-profile.sh
 OK: jobs profile accepts 3 concepts and rejects 34 focused cases
 $ bash scripts/test-product-research-profile.sh

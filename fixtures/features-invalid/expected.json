@@ -1,0 +1,42 @@
+{
+  "missing-type": {
+    "field": "type",
+    "diagnostics": 2
+  },
+  "missing-title": "title",
+  "missing-description": "description",
+  "missing-generated": "generated",
+  "missing-featureId": {
+    "field": "featureId",
+    "diagnostics": 2
+  },
+  "invalid-handle": {
+    "field": "featureId",
+    "diagnostics": 2
+  },
+  "missing-status": "status",
+  "invalid-status": "status",
+  "missing-behavior": "behavior",
+  "invalid-priority": "priority",
+  "committed-without-owners": "owners",
+  "empty-owners": "owners",
+  "malformed-owner": "owners",
+  "committed-without-criteria": "acceptanceCriteria",
+  "criterion-missing-id": "id",
+  "criterion-missing-statement": "statement",
+  "criterion-missing-verification": "verification",
+  "criterion-wrong-prefix": "id",
+  "criterion-duplicate-id": "acceptanceCriteria",
+  "delivered-without-deliveredAt": "deliveredAt",
+  "invalid-deliveredAt": "deliveredAt",
+  "delivered-without-evidence": "deliveryEvidence",
+  "evidence-missing-resource": "resource",
+  "local-jobRef": "jobRefs",
+  "wrong-family-jobRef": "jobRefs",
+  "outcome-missing-name": "outcomeName",
+  "outcome-wrong-family-jobRef": "jobRef",
+  "malformed-capabilityRef": "capabilityRefs",
+  "local-capabilityRef": "capabilityRefs",
+  "malformed-specificationRef": "specificationRefs",
+  "malformed-improvementRequest": "improvementRequests"
+}

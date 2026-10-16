@@ -10,6 +10,7 @@
 -- an assessable catalog pattern governs it and which of its own checks prove it.
 { bugReports = ./bug-reports.dhall
 , capabilities = ./capabilities.dhall
+, features = ./features.dhall
 , improvementRequests = ./improvement-requests.dhall
 , jobs = ./jobs.dhall
 , patternApplications = ./pattern-applications.dhall
