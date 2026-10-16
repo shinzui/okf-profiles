@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-10-16
+* **Update**: ADR-9 records the mechanical one-deviation harness and rule sweep, and per-type fixtures for field names shared between types.
 * **Addition**: ADR-17 separates jobs, product research, features, and scenarios, keeps existing schemas, and assigns each interim cross-bundle check to okf or Mori.
 
 ## 2026-10-05

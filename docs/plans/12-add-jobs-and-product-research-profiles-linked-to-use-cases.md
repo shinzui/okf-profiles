@@ -48,7 +48,7 @@ Create three profiles: `coordination.jobs`, `documentation.productResearch`, and
 ## Progress
 
 
-Implementation began on 2026-10-16. The integration scope was revised earlier that day. A validation pass then checked the plan against the working tree and the pinned okf source. It fixed reference encoding, removed profile `guidance`, and assigned each semantic check an intended upstream owner.
+Implementation was completed on 2026-10-16, and all five milestones pass `just check`. Two upstream improvement requests were written into the okf and Mori checkouts and remain uncommitted for the user's review. The integration scope was revised earlier that day. A validation pass then checked the plan against the working tree and the pinned okf source. It fixed reference encoding, removed profile `guidance`, and assigned each semantic check an intended upstream owner.
 
 - [x] (2026-10-16) Validate the plan against the working tree, the pinned okf schema, and the local ADRs; baseline use-case, research-document, and capability suites pass.
 - [x] (2026-10-16) Publish jobs and product-research contracts and their profile tests. `coordination.jobs` and `documentation.productResearch` type-check and appear in `okf profile list`. `scripts/test-jobs-profile.sh` accepts 3 concepts and rejects 34 focused cases. `scripts/test-product-research-profile.sh` accepts 5 concepts and rejects 44. Both run through the shared harness `scripts/profile_fixture_cases.py`.
@@ -57,7 +57,7 @@ Implementation began on 2026-10-16. The integration scope was revised earlier th
 - [x] (2026-10-16) Register profiles, update capability descriptions and the V02 house-status list, generate documentation, file the okf and Mori improvement requests, and record the architectural boundary. `mori.dhall` declares `jobs`, `features`, and `product-research` without a version; `mori show --full` prints `mori://shinzui/okf-profiles/profiles/jobs` and `.../features`. The capability header and description, the coordination family overview, and the Policy-one list in `Profile/V02.dhall` (now twelve profiles) were updated. README, CHANGELOG (Unreleased, with the `adopt-capabilities` wording follow-up), and regenerated docs are in place. ADR-17 was allocated with `okf id next` and validates strictly.
 - [x] (2026-10-16) With the user's approval, wrote two upstream improvement requests and left them uncommitted in their repositories for review. The Mori request is `mori://shinzui/mori/okf/improvement-requests/concepts/IR-38`, in `docs/improvement-requests/resolve-profile-declared-references-against-registered-concepts.md` of the mori checkout, plus its index and log. The okf request is `mori://shinzui/okf/okf/improvement-requests/concepts/IR-9`, in `docs/improvement-requests/express-product-discovery-constraints-in-profile-descriptors.md` of the okf checkout, plus its log. Both cite the checker's rule IDs.
 - [ ] The user commits the two upstream requests after review. For the okf request's URI to resolve, okf's `mori.dhall` must register its `docs/improvement-requests` bundle (see Surprises & Discoveries).
-- [ ] Prove compatibility, run focused negative controls and full checks, and complete the retrospective.
+- [x] (2026-10-16) Prove compatibility, run focused negative controls and full checks, and complete the retrospective. `scripts/sweep-profile-rules.py` (ADR-9's second check, made mechanical) ran over jobs, product research, features, and use cases. It found 12 missing fixtures, which were then added: 2 in features and 10 in product research. On re-run, every remaining unprotected relaxation falls into the three expected classes recorded in Surprises & Discoveries. `just check` and `git diff --check` pass. ADR-9 was amended with the lesson.
 
 ## Surprises & Discoveries
 
@@ -65,6 +65,13 @@ Implementation began on 2026-10-16. The integration scope was revised earlier th
 During implementation (2026-10-16), `okf concepts --json` turned out to keep YAML numbers as JSON numbers, and a YAML `.inf` arrives as the string `".inf"`. The checker can therefore require a JSON number (excluding booleans) and needs no YAML parser. A missing `type` reports both `type not in profile vocabulary` and `missing profile-required field: type`. A missing or malformed ID field reports both the field rule and the core `document ID` rule. These are two diagnostics for one defect, so `expected.json` records `"diagnostics": 2` for exactly those cases rather than loosening the one-deviation assertion.
 
 ```text
+$ just check   # final run, 2026-10-16, exit 0; new and changed suites:
+OK: features profile accepts 3 concepts and rejects 33 focused cases
+OK: jobs profile accepts 3 concepts and rejects 34 focused cases
+OK: product-discovery graph passes; 22 single-rule mutations fail at their intended field across 16 owned rules; 7 integration links and their negative controls hold
+OK: product-research profile accepts 5 concepts and rejects 54 focused cases
+OK: profile documentation is current and validates
+OK: use-case profile accepts 2 concepts and rejects 16 focused cases
 $ python3 scripts/check-product-discovery.py --manifest fixtures/product-discovery/manifest.json
 OK: 6 bundles, 18 concepts, 28 references resolved across jobs, product research, features, use cases, capabilities, and specifications
 unchecked: 4 owner project URIs and 1 improvement-request URIs are outside this checker's resolution domain
@@ -90,6 +97,16 @@ mori://example/product/okf/use-cases/concepts/UC-1 jobs[0].outcomeNames[0]: [out
 ```
 
 A supersession cycle reports one error per finding in the cycle (PR-5 and PR-6 in the mutation). The integration test accepts this because every error carries the intended rule. `scripts/test-product-discovery.sh` takes about 35 seconds, mostly strict okf validation of six bundles per mutation. Reverting is proven once over the whole restored tree rather than once per mutation, because each mutation restores exact bytes.
+
+The milestone-5 load-bearing sweep (2026-10-16) relaxed each rule of the four profiles in isolation, using copies normalized by `dhall --file`. It found that review had missed per-type coverage. `Product Research Study` and `Product Research Finding` share field names (`productResearchId`, `description`, `sources`, `jobRef`, `method`, `population`), and the finding's copies had no fixtures. Neither features nor product research had a fixture for the `reviews` family or for the list spelling of `verified`. Twelve fixtures were added. Final sweep totals of unprotected relaxations: jobs 31 of 60, product research 34 of 96, features 30 of 65, and use cases 42 of 60. The use-case figure includes pre-existing legacy gaps (`type`, `useCaseId`, `status`, `origin`, inline member deletions, and `features[].jobs`); none of the rules this plan added or changed are among them. The remaining entries fall into three expected classes:
+
+- unconstrained optional fields (`tags`, the job context fields, outcome measurement members), whose deletion is unobservable because unknown fields are allowed;
+- members of the spliced `reviews`, `generated`/`verified`, and `sources` families, which are protected at the family level here and tested member by member in their home profiles;
+- `allowSelf` and `allowLocal` on external-only references, which only change behavior together with `localPrefix`, ADR-9's composite policy unit.
+
+The legacy use-case gaps predate this plan and are left as a follow-up rather than widening its scope.
+
+The plan's Concrete Steps name `.agents/skills/exec-plan/record-provenance.ts`, but that path does not exist. The script is at `agents/skills/exec-plan/record-provenance.ts`.
 
 Filing the upstream requests (2026-10-16) found that okf's `docs/improvement-requests` directory is a legacy bundle. It has v0.1 `timestamp` frontmatter and no `index.md`, and okf's `mori.dhall` does not list it under `okfBundles`. A search with `mori registry concepts --search` therefore returns none of its requests, and okf has no profile to allocate handles with. IR-9 was chosen as the next number after its highest handle, IR-8, and the file follows the bundle's existing format. Its canonical URI is the intended `mori://shinzui/okf/okf/improvement-requests/concepts/IR-9`, which will resolve once that bundle is registered. Mori's bundle is profiled and registered, so `okf id next` allocated IR-38 there. Its strict validation reports 36 pre-existing deviations (`reviews` missing on older requests, and one terminal request without `resolution`). IR-38 adds none. `okf log add` reformats existing log entries, so the Mori and okf log edits were applied by hand to keep the diffs additive. No existing registry request covered either need: searches for "reference target existence", "numeric format", "descriptor", "any-of", and "typed edges" found only IR-18, which IR-38 builds on.
 
@@ -169,7 +186,21 @@ Decision (2026-10-16, implementation): `period-order` requires `periodStart` str
 ## Outcomes & Retrospective
 
 
-Implementation outcomes remain pending. The 2026-10-16 revisions complete the design of integration with existing profiles and align criterion identity. They also correct the reference encoding to what the pinned okf accepts, remove profile guidance per ADR-12, and give each semantic check an upstream owner. Only the plan has changed; no profile, fixture, or application behavior has been implemented.
+Completed 2026-10-16. Three new profiles are exported, registered in `mori.dhall` without a version, documented, and tested: `coordination.jobs`, `documentation.productResearch`, and `coordination.features`. `coordination.useCases` links additively to canonical jobs and features; inline `features` is now optional, and its legacy fixtures are unchanged and passing. `scripts/check-product-discovery.py` enforces 16 owner-tagged relationship rules over a manifest. The fixture graph demonstrates everything the plan set out to show:
+
+- a job supported by one finding and challenged by another (JOB-1, PR-2, PR-3);
+- one feature reused by two use cases (FEAT-1 in UC-1 and UC-2);
+- a draft scenario with no features (UC-3);
+- a feature linked to a capability, a specification, and a pointer;
+- a request originating from the feature, with its own unrelated `AC-1`;
+- a bug affecting the feature;
+- technical research and a specification citing product concepts through unchanged schemas.
+
+ADR-17 records the boundary, and ADR-9 was amended with the sweep lesson.
+
+Remaining work belongs to other owners. The user reviews and commits okf IR-9 and Mori IR-38. okf's improvement-request bundle needs registering for IR-9's URI to resolve. The next release aligns the `adopt-capabilities` blueprint wording (noted under Unreleased in `CHANGELOG.md`), and a later plan may close the legacy use-case fixture gaps the sweep surfaced.
+
+Lessons: making ADR-9 mechanical paid off immediately. The one-deviation harness kept every new fixture honest, and the sweep found twelve gaps that careful authoring had missed, all caused by field names shared between types or by spliced families. Sharing the profile acceptance bundles with the discovery graph meant the documentation examples were proven coherent for free. Most of `scripts/test-product-discovery.sh`'s 35 seconds goes to strict okf validation of six bundles per mutation, which is acceptable for now.
 
 ## Context and Orientation
 
@@ -449,3 +480,12 @@ Authoring note (2026-10-16): Created from the user's request for a precise imple
 Revision note (2026-10-16): Incorporated the agreed existing-profile integration: optional feature capability/specification references, record-local AC-N acceptance criteria matching improvement requests, capability guidance updates, explicit reuse of origin/affects/sources, and focused integration/compatibility tests. Expanded manifest resolution to CAP/SPEC targets and kept auxiliary request, bug, and technical-research examples separately validated. Standalone-review vocabulary expansion remains deferred. Implementation has not started.
 
 Revision note (2026-10-16, validation): Validated the plan against the working tree, the pinned okf source (`bdf8893`), and the local ADRs, then fixed what did not hold. okf rejects a reference prefix that the declaring profile does not declare, so every cross-profile reference is now specified as an external-only rule using the profile's own prefix with an `externalUriPattern`, and `owners` stays format-only. Profile `guidance` was removed per ADR-12. ADR-7, ADR-12, ADR-14, and okf ADR-1 and ADR-11 are now cited, and the `reviews` placement is justified by the specifications precedent. Self-reference moved into descriptors via `allowSelf`. The user asked whether the okf CLI should own the checks, which led to their decision to keep the Python checker as an interim gate whose rules are tagged `okf` or `mori` and listed by `--list-rules`, with one upstream improvement request filed per owner. Also added: the `Profile/V02.dhall` house-status list update, the transitions-style `expected.json` test harness, `originatingPlan` on the new ADR, and the deferred `adopt-capabilities` blueprint wording as a recorded follow-up. Implementation has not started.
+
+Revision note (2026-10-16, implementation): Implemented all five milestones and recorded progress, discoveries, decisions, and outcomes. Departures from the plan text, each with its reasoning in the Decision Log or Surprises & Discoveries:
+
+- The profile acceptance bundles double as the discovery graph's core bundles.
+- `scripts/profile_fixture_cases.py` is a shared, stricter test harness.
+- The checker has 16 named rules.
+- The documentation pairs were registered in milestone 3 to keep that commit green.
+- `scripts/sweep-profile-rules.py` was added and its gaps were filled.
+- With the user's approval, the upstream requests were written uncommitted, and okf's legacy request bundle was handled as described in Surprises & Discoveries.

@@ -6,8 +6,8 @@ docId: ADR-9
 status: Accepted
 date: 2026-08-02
 generated:
-  by: openai-codex/gpt-6-sol
-  at: "2026-09-27T14:42:46Z"
+  by: claude-code/claude-opus-5-5
+  at: "2026-10-16T15:30:00Z"
 ---
 
 # A rejection fixture must fail for exactly one reason
@@ -123,3 +123,27 @@ prefix plus handle format, and list cardinality plus nested element rules, as
 the composite policies described above. The 129 verification-evidence rejection
 cases passed this negative-control sweep after each authored constraint was
 relaxed in isolation.
+
+## Amendment — 2026-10-16
+
+Both checks are now mechanical for profiles in this catalog.
+`scripts/profile_fixture_cases.py` makes the first check part of a profile's
+test: each rejection fixture's advisory run must report exactly the number of
+deviations its `expected.json` entry declares (one unless an overlap is named),
+and one of them must name the field. `scripts/sweep-profile-rules.py` runs the
+second check against a profile normalized by `dhall --file`, so the temporary
+copy has no relative imports to break. It deletes each rule and separately clears
+its allowed values, format, uniqueness, and reference policy, then reports
+whether some fixture noticed.
+
+Running it over the product-discovery profiles found a gap that review had
+missed. When two types in one profile declare the same field name, a fixture
+for one type does not protect the other's rule. `Product Research Study` and
+`Product Research Finding` both declare `productResearchId`; only the study's had
+fixtures. Write per-type fixtures for each shared field. A spliced family also
+needs a fixture in each profile that splices it, including the list spelling of
+`verified`. Three classes of unprotected result are expected. One is an
+unconstrained optional field, which is unobservable when unknown fields are
+allowed. Another is a member of a spliced family whose home profile tests it
+member by member. The third is `allowSelf` or `allowLocal` on an external-only
+reference, which takes effect only together with `localPrefix`.

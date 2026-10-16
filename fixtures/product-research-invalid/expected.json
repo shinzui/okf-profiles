@@ -27,6 +27,7 @@
   "study-invalid-startedAt": "startedAt",
   "study-local-jobRef": "jobRefs",
   "study-wrong-family-jobRef": "jobRefs",
+  "study-missing-source-resource": "resource",
   "finding-missing-studyRef": "studyRef",
   "finding-self-studyRef": "studyRef",
   "finding-wrong-family-studyRef": "studyRef",
@@ -51,5 +52,20 @@
   "finding-measurement-missing-unit": "unit",
   "finding-measurement-missing-outcomeName": "outcomeName",
   "finding-measurement-invalid-periodEnd": "periodEnd",
-  "finding-measurement-duplicate-name": "measurements"
+  "finding-measurement-duplicate-name": "measurements",
+  "finding-missing-description": "description",
+  "finding-missing-productResearchId": {
+    "field": "productResearchId",
+    "diagnostics": 2
+  },
+  "finding-invalid-handle": {
+    "field": "productResearchId",
+    "diagnostics": 2
+  },
+  "finding-invalid-review-outcome": "outcome",
+  "finding-bad-verified-actor": "verified",
+  "finding-measurement-missing-jobRef": "jobRef",
+  "finding-measurement-missing-method": "method",
+  "finding-measurement-missing-population": "population",
+  "finding-measurement-invalid-periodStart": "periodStart"
 }

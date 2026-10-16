@@ -408,7 +408,10 @@ decorative: each one is written to fail for exactly one reason, and every rule a
 profile splices from `Profile/V02.dhall` has a fixture that goes green if the rule
 is deleted. See
 [ADR-9](./docs/adr/0009-a-rejection-fixture-must-fail-for-exactly-one-reason.md)
-for the two checks that keep them honest.
+for the two checks that keep them honest. Profiles tested through
+`scripts/profile_fixture_cases.py` assert the one-deviation rule mechanically, and
+`scripts/sweep-profile-rules.py` runs the load-bearing sweep against any profile
+(slow, and not part of `just test`).
 
 Type-check every Dhall file (requires the `dhall` CLI, ≥ 1.42):
 

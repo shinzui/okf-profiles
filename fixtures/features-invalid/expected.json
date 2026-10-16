@@ -38,5 +38,7 @@
   "malformed-capabilityRef": "capabilityRefs",
   "local-capabilityRef": "capabilityRefs",
   "malformed-specificationRef": "specificationRefs",
-  "malformed-improvementRequest": "improvementRequests"
+  "malformed-improvementRequest": "improvementRequests",
+  "invalid-review-outcome": "outcome",
+  "bad-verified-actor": "verified"
 }
