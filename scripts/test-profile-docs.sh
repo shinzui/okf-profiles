@@ -24,6 +24,7 @@ profiles=(
   "assurance.verificationEvidence:verification-evidence"
   "coordination.bugReports:bug-reports"
   "coordination.capabilities:capabilities"
+  "coordination.designs:designs"
   "coordination.features:features"
   "coordination.improvementRequests:improvement-requests"
   "coordination.jobs:jobs"

@@ -3,15 +3,24 @@ type: Architecture Decision Record
 title: Guidance is an evidence-backed exception
 description: Profile and type guidance stays absent by default and is added only as a minimal, narrowly scoped correction for a demonstrated authoring failure.
 docId: ADR-12
-status: Accepted
+status: Superseded
+supersededBy: ADR-18
 date: 2026-09-13
 originatingPlan: docs/plans/10-adopt-okf-0-9-guidance-across-existing-catalog-profiles.md
 generated:
   by: claude-code/claude-opus-5
   at: 2026-09-13T17:09:46Z
+amended:
+  - by: claude-code/claude-opus-5-5
+    at: 2026-10-19T18:00:00Z
+    change: Marked superseded by ADR-18.
 ---
 
 # Guidance is an evidence-backed exception
+
+> Superseded by [ADR-18](0018-guidance-carries-what-rules-and-descriptions-cannot.md), which keeps
+> absence as the default but admits guidance for lifecycle meaning, checks the descriptor cannot
+> express, and where prose belongs, without waiting for an observed failure.
 
 ## Context
 

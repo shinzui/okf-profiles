@@ -76,6 +76,8 @@ profiles/
     package.dhall             # namespaced coordination-profile exports
     bug-reports.dhall         # defects in behavior a repository already provides
     capabilities.dhall        # what a repository provides today, with evidence
+    designs.dhall             # design work per surface: brief, breadboard, detailed design
+    designs-for.dhall         # the designs builder, for a house's closed viewer-axis names
     features.dhall            # reusable product features with FEAT-N handles
     improvement-requests.dhall
                               # cross-repository improvement-request conventions
@@ -273,18 +275,29 @@ A profile carries three kinds of content, and each has one job:
   written in it. Profile-wide guidance applies to every type, and type guidance is
   added after it rather than replacing it.
 
-**`guidance = None Text` is the normal state, and every export in this catalog
-leaves it absent.** Treat guidance like an index hint in SQL: an escape hatch for a
-demonstrated bad plan, not part of the ordinary query. A model authoring a document
-already has the structured rules, the descriptions, the repository, and its task;
-extra instructions constrain that reasoning and compound, because profile guidance
-is inherited by every type. Add guidance only when repeated, observed output shows
-a specific wrong authoring choice that those inputs cannot disambiguate — and then
-add the smallest nudge, at the narrowest scope (a single type rather than the whole
-profile), with a way to tell whether it helped. Do not use it to restate allowed
-values, required fields, path rules, descriptions, or general best practice, and
-remove it once the behavior no longer needs it. Absence needs no justification. See
-[ADR-12](./docs/adr/0012-guidance-is-an-evidence-backed-exception.md).
+**`guidance = None Text` is the normal state, and a profile or type without it
+is complete.** Guidance is applied to every document in its scope whether or not
+that document needs it, profile guidance is inherited by every type, and okf never
+validates any of it, so every sentence is a standing cost. It may carry only what
+no other part of a profile can hold:
+
+1. what moves a document between statuses, and who or what signs that off;
+2. a check the descriptor cannot express — an invariant across documents, or a
+   check delegated to another tool — stated as what the author must verify; and
+3. which body sections carry content that has no field.
+
+It never carries anything a structured rule can express (write the rule and its
+rejection fixture), a restatement of allowed values, required fields, formats or
+descriptions, general writing advice or best practice, a task runbook, or a
+house's people, tools and vocabulary in a shared profile. Every sentence must
+change what an author does: delete it, and if an author holding the rules and
+descriptions would still do the right thing, it goes. Prefer a single type over
+the profile, and delete a delegated check once okf or Mori runs it. The change
+that adds guidance names which of the three kinds each sentence is. Today
+`coordination.transitions` (checks delegated to Mori) and the three
+`coordination.designs` types carry guidance. See
+[ADR-18](./docs/adr/0018-guidance-carries-what-rules-and-descriptions-cannot.md),
+which supersedes ADR-12.
 
 A local descriptor can add such a hint without forking the shared profile:
 
@@ -299,8 +312,9 @@ in  okf.postgresql
         }
 ```
 
-That is an illustration of the mechanism, not a recommended hint: write one only
-after you have the failure evidence for it.
+That is an illustration of the mechanism, not a recommended hint. A house's own
+guidance is held to the same three kinds; it is also where house tools, skills and
+named approvers belong.
 
 
 ## Schema evolution
@@ -383,6 +397,7 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-architecture-decisions-profile.sh` | `documentation.architectureDecisions` |
 | `test-bug-reports-profile.sh` | `coordination.bugReports` |
 | `test-capabilities-profile.sh` | `coordination.capabilities` |
+| `test-designs-profile.sh` | `coordination.designs`, and `coordination.designsFor` closing the viewer-axis names |
 | `test-features-profile.sh` | `coordination.features` |
 | `test-jobs-profile.sh` | `coordination.jobs` |
 | `test-product-research-profile.sh` | `documentation.productResearch` |
@@ -476,9 +491,8 @@ version that would churn every page on an okf bump.
 When a profile carries `guidance`, `profile.md` gains a `## Guidance` section.
 When a profile or type carries it, each affected type page gains a `## Guidance`
 section with `### Profile-wide` text first and `### Type-specific` text after it,
-omitting whichever scope is blank. No export sets guidance today, so no
-generated page has that section; its absence is the expected result, not missing
-output.
+omitting whichever scope is blank. Only the exports that carry guidance have
+that section; its absence elsewhere is the expected result, not missing output.
 
 
 ## Migrating an existing corpus
@@ -572,7 +586,8 @@ reshape `sources` from a list of strings into the v0.2 list of records:
 ## Profile catalog
 
 Every profile targets OKF v0.2, declares `okfVersion = "0.2"`, sets
-`requireBundleVersion = Some "0.2"`, leaves `guidance` absent, and from v0.15.0
+`requireBundleVersion = Some "0.2"`, leaves `guidance` absent unless ADR-18
+admits it, and from v0.15.0
 requires **okf 0.9.0.0 or later**.
 
 | Export | Purpose | `generated` | Also demands |
@@ -582,12 +597,13 @@ requires **okf 0.9.0.0 or later**.
 | `assurance.verificationEvidence` | Evidence of a system test: `Attested Computation` definitions with VC-N handles, path-addressed `Verification Run` and `Attestation` events, and digest-pinned links to external data | required | nothing recommended; run-only and comparison-only fields follow `recordKind` |
 | `coordination.bugReports` | Defects in behavior a repository already provides, with `BUG-N` handles, a severity scale graded by observable consequence, and a reproduction a reader can follow | required | `reviews`; `resolution` once a report reaches a terminal status; `workaround` once severity is `degraded` |
 | `coordination.capabilities` | What a repository provides today, with `CAP-N` handles, a compatibility promise separate from availability, and required evidence | required | `reviews`; `interface`; `replacedBy` once a capability is deprecated or withdrawn |
+| `coordination.designs` | Design work per surface in three linked types sharing `designId`: a `Design Brief` (`BRIEF-N`: viewers, canonical jobs and outcomes, subject states, viewer and subject axes, scenarios, success criteria), a `Breadboard` (`BB-N`: places, affordances naming features, connections, affordance × viewer visibility), and a `Detailed Design` (`DES-N`: affordance states, design artifacts). Implementation is tracked on the features | required | `reviews`; on a brief, `outcomeRefs`, `viewerAxes`, `scenarios`, `successCriteria` and `verified` once `validated`; `verified` on a breadboard once `validated` and on a design once `designed`; `designArtifacts` and `decisions` on a design once `chosen`; `supersededBy` once `retired` |
 | `coordination.features` | Independently addressable product features with `FEAT-N` handles: customer-visible `behavior`, a discovery-to-delivery lifecycle, and canonical links to jobs and their outcomes, contributing capabilities, governing specifications, and delivering requests. Delivery is not proof of outcome or conformance | required | nothing recommended; `owners` and feature-local `AC-N` `acceptanceCriteria` once `planned`, `in-progress`, `blocked`, or `delivered`; `deliveredAt` and `deliveryEvidence` once `delivered` |
 | `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles, typed canonical source dependencies, stable request-local acceptance criteria, completion state, and structured review provenance | required | `reviews`; `resolution` once a request reaches a terminal state |
 | `coordination.jobs` | Canonical Jobs-to-be-Done statements with `JOB-N` handles: actor, situation, motivation, qualitative or measured `outcomes`, and a declared `validationStatus` backed by an explicit `assessment` citing product-research findings. States customer progress, never a solution | required | nothing recommended; `assessment` once `validationStatus` is `supported`, `mixed`, or `challenged` |
 | `coordination.patternApplications` | A service's decision about one assessable catalog pattern, with `PA-N` handles: the `service` and `pattern` as canonical `mori://` URIs, an `applicable` / `not-applicable` / `exception` / `needs-triage` decision with rationale, and `checks` binding criterion ids to service-owned targets. Records applicability, never conformance | required | nothing recommended; `exception` (human authority, scope, reason, review condition) once `decision` is `exception` |
 | `coordination.useCases` | JTBD use cases with `UC-N` handles, typed feature delivery, and repository-owned request references. Inline jobs may link to canonical jobs (`jobRef`, `outcomeNames`); features may be referenced canonically (`featureRefs`) instead of inline | required (profile-wide, so themes too) | `reviews`; `themes` on a use case |
-| `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles and checked supersession references | required | nothing recommended |
+| `documentation.architectureDecisions` | Flat architecture-decision records with bundle-scoped `ADR-N` handles, checked supersession references, and an optional `amended` record of later changes that leave a decision standing | required | nothing recommended |
 | `documentation.patternCatalog` | Mori-addressable catalogs with typed status, URI, and tag fields. Opt-in `Assessable Standard` and `Assessable Pattern` types carry a `PAT-N` handle, an `applicability` scope, and stable `criteria` naming the evidence kind that settles each | required | nothing recommended; `sources` is the v0.2 record shape; `patternId`, `applicability`, and `criteria` on the assessable types only |
 | `documentation.productResearch` | Customer and product discovery research with `PR-N` handles shared by two types: a `Product Research Study` (question, method, population, context) and a `Product Research Finding` (observation kept apart from interpretation, assessments of named claims about jobs, and measurements of their outcomes) | required | nothing recommended; `completedAt` and `limitations` once a study is `complete`; `supersededBy` or `withdrawalReason` for a superseded or withdrawn finding |
 | `documentation.researchDocuments` | Nested research corpora with `RES-N` handles, structured reviews, and conditional supersession | required | `reviews`; `sources` is the v0.2 record shape |
@@ -640,6 +656,7 @@ not profiles a consumer selects:
 
 | Export | What it is |
 |---|---|
+| `coordination.designsFor` | `{ viewerAxisNames : List Text } -> Profile`: the designs profile with a house's closed list of viewer axes. `coordination.designs` is it applied to an empty list, which leaves the names open |
 | `v02` | The six OKF v0.2 field families, defined once. Splice `v02.generated`, `v02.verified`, `v02.legacyTimestamp`, `v02.status`, `v02.staleAfter`, `v02.sources`, `v02.usageWindow` into your own presence lists. See [ADR-5](./docs/adr/0005-v0-2-field-families-are-defined-once.md) |
 | `reviewRule` | The house `reviews` family: reviewer identity, scope, outcome, and model metadata. Use it where a review is an annotation on a document; use `assurance.reviews` where the review is the artifact |
 | `modelReview` | The model-review vocabulary both of those read from — the `effort` grades and the shared wording — so the two cannot drift apart |
@@ -671,10 +688,11 @@ not profiles a consumer selects:
    `okf profile show --registry ./package.dhall <export>` must load without a
    `Failed to load profile` line — the `okfVersion` check runs at load time, not
    type-check time.
-7. Leave `guidance` absent. Put what a type or field *is* in its `description`
-   and what a document must satisfy in structured rules. Add guidance later only
-   for observed, repeated authoring failures those cannot resolve, as described
-   under [Descriptions, rules, and guidance](#descriptions-rules-and-guidance).
+7. Leave `guidance` absent unless a sentence is one of ADR-18's three kinds:
+   lifecycle meaning, a check the descriptor cannot express, or where body prose
+   belongs. Put what a type or field *is* in its `description` and what a
+   document must satisfy in structured rules. See
+   [Descriptions, rules, and guidance](#descriptions-rules-and-guidance).
 8. Add a row describing it to this README and bump the tag on release.
 
 
@@ -849,3 +867,40 @@ Importing the Dhall profiles does not run the checker;
 a consumer that wants these guarantees adopts the script and a manifest
 explicitly. See
 [ADR-17](./docs/adr/0017-product-discovery-separates-jobs-research-features-and-scenarios.md).
+
+
+## Design work: briefs, breadboards, and detailed designs
+
+`coordination.designs` carries one surface — a page, or a self-contained part of
+one — from why to how before it is built, in one folder per surface:
+
+| Concept | Path | Answers |
+|---|---|---|
+| `Design Brief` (`BRIEF-N`) | `<surface>/brief` | Why does the surface exist, who views it for which jobs, which scenarios must it work in, and how is it judged? |
+| `Breadboard` (`BB-N`) | `<surface>/breadboard` | What can each viewer read or do, where, and how do they arrive — in words, with no layout? |
+| `Detailed Design` (`DES-N`) | `<surface>/design` | What does it look like, in every affordance state, and where are the final screens? |
+
+Implementation is not a fourth type or a status: the features a breadboard's
+affordances name own delivery. A brief links canonical jobs and their outcomes,
+and affordances link features, by external-only Mori URIs. A brief's scenarios
+are surface fixtures — one viewer, one subject state, concrete data, an entry
+point — not use cases. Decision (`D-N`) and question (`Q-N`) ids are unique
+across a surface's three documents.
+
+Viewer axes are attributes every viewer has on every page of a product, so the
+names are a house choice. A house closes them, and adds its own guidance, in its
+local descriptor:
+
+```dhall
+let okf =
+      https://raw.githubusercontent.com/shinzui/okf-profiles/<tag>/package.dhall
+        sha256:… -- run `dhall freeze` to fill this in
+
+in      okf.coordination.designsFor
+          { viewerAxisNames = [ "plan", "role", "device" ] }
+    //  { guidance = Some
+            "The product owner signs off briefs and breadboards; the design lead signs off detailed designs."
+        }
+```
+
+See [ADR-19](./docs/adr/0019-design-work-is-three-documents-per-surface.md).

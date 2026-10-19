@@ -8,6 +8,54 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+Adds the opt-in `coordination.designs` profile, replaces the guidance policy, and
+gives architecture decisions an optional `amended` record. Existing governed
+corpora need no edits.
+
+Rehearsed against a production design corpus governed by a local designs
+descriptor: one surface's brief, breadboard and detailed design validate under
+`designsFor` with the house's four viewer-axis names as they do under the local
+descriptor. Under `--strict` the local descriptor reported `openQuestions`
+missing on all three documents once every question was answered; the promoted
+profile reports only the absent `reviews`.
+
+### Added
+
+- `coordination.designs`: design work per surface in three linked types sharing a
+  `designId` handle field — `Design Brief` (`BRIEF-N`), `Breadboard` (`BB-N`) and
+  `Detailed Design` (`DES-N`) at `<surface>/brief`, `<surface>/breadboard` and
+  `<surface>/design`. Briefs link canonical jobs and outcomes and affordances link
+  features through external-only Mori URIs; implementation is tracked on the
+  features. Approval (`validated`, `designed`) requires `verified`. A detailed
+  design records its chosen direction in `decisions` from `chosen` on. Decision
+  and question ids are `D-N` and `Q-N` handles. Each type carries short guidance
+  under ADR-18. See ADR-19.
+- `coordination.designsFor { viewerAxisNames }`: the same profile with a house's
+  closed list of viewer-axis names. It is a function, so registries skip it;
+  `coordination.designs` applies it to an empty list, leaving names open.
+- `documentation.architectureDecisions`: optional `amended`, a list of `by`, `at`
+  and `change` for later changes that leave a decision standing, such as marking
+  it superseded. `generated` keeps who wrote the decision instead of being
+  overwritten; `by` and `at` use the `generated` formats. ADR-12 uses it.
+
+### Changed
+
+- **Guidance policy: ADR-18 supersedes ADR-12.** Absence stays the default.
+  Guidance may carry only lifecycle meaning, checks the descriptor cannot express,
+  and where body prose belongs, and never restates rules or descriptions, gives
+  general advice, or names a house's tools and people. No profile's guidance
+  changes; `coordination.transitions` already fitted the new policy.
+
+### Migrating a local designs descriptor
+
+A repository with a local `designs` descriptor built on v0.21.0 replaces its body
+with `Profiles.coordination.designsFor { viewerAxisNames = [ … ] }`, or with
+`Profiles.coordination.designs` for open names, and moves house-specific guidance
+onto the profile with `//`. `decisions`, `openQuestions` and `subjectAxes` move
+from `recommended` to `optional` (ADR-8), which only relaxes `--strict`, except
+that a detailed design at `chosen` or `designed` must now carry `decisions`.
+`decisions[].id` and `openQuestions[].id` must be `D-N` and `Q-N` handles.
+
 ## [0.21.0] — 2026-10-16
 
 Adds three opt-in product-discovery profiles and canonical links from use cases to

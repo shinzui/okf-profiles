@@ -278,6 +278,12 @@ in  Schema.Project::{
         , path = Some "profiles/coordination/jobs.dhall"
         }
       , Schema.OkfProfile::{
+        , name = "designs"
+        , version = Some "v0.22.0"
+        , export = "coordination.designs"
+        , path = Some "profiles/coordination/designs.dhall"
+        }
+      , Schema.OkfProfile::{
         , name = "features"
         , version = Some "v0.21.0"
         , export = "coordination.features"

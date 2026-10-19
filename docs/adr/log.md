@@ -1,5 +1,10 @@
 # Bundle Update Log
 
+## 2026-10-19
+* **Addition**: ADR-18 supersedes ADR-12: guidance stays absent by default and is admitted only for lifecycle meaning, checks the descriptor cannot express, and where body prose belongs.
+* **Update**: ADR-12 is marked superseded by ADR-18, recorded in its `amended` list so `generated` keeps its original author.
+* **Addition**: ADR-19 records the designs profile: three documents per surface, implementation on features, and viewer-axis names as a house choice.
+
 ## 2026-10-16
 * **Update**: ADR-9 records the mechanical one-deviation harness and rule sweep, and per-type fixtures for field names shared between types.
 * **Addition**: ADR-17 separates jobs, product research, features, and scenarios, keeps existing schemas, and assigns each interim cross-bundle check to okf or Mori.

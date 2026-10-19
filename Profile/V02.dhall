@@ -32,8 +32,8 @@
 -- ## Policy one: where the house `status` key collides, the house key wins
 --
 -- OKF v0.2 §5.4 gives `status` the vocabulary `draft` / `stable` / `deprecated`.
--- Twelve profiles in this repository use the same key name for a house lifecycle
--- vocabulary — five that predate v0.2, and seven introduced after it that answer
+-- Thirteen profiles in this repository use the same key name for a house lifecycle
+-- vocabulary — five that predate v0.2, and eight introduced after it that answer
 -- a question v0.2's vocabulary cannot:
 --
 --   * `documentation.architectureDecisions` — `Accepted`, and siblings
@@ -61,8 +61,12 @@
 --   * `coordination.features`               — `discovered`, `planned`, `in-progress`,
 --                                             `delivered`, `blocked`, `deferred`,
 --                                             `retired`
+--   * `coordination.designs`                — brief and breadboard `draft`,
+--                                             `validated`, `retired`; detailed
+--                                             design `exploring`, `chosen`,
+--                                             `designed`, `retired`
 --
--- Those twelve keep their house vocabulary and do **not** splice in `status` or
+-- Those thirteen keep their house vocabulary and do **not** splice in `status` or
 -- `staleAfter` from this module. This is sanctioned rather than tolerated: a
 -- profile key name does not imply the OKF core key of that name, and okf never
 -- rejects a profile over it. What okf checks instead is value *formats*, because

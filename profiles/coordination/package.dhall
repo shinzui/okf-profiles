@@ -14,10 +14,18 @@
 -- remains the scenario that ties them together. The research behind a job's
 -- support lives in `documentation.productResearch`.
 --
+-- Designs carry a surface from why to how before it is built: a Design Brief
+-- names the jobs it serves and the scenarios it must work in, a Breadboard
+-- names the features its affordances rely on, and a Detailed Design presents
+-- it. Implementation stays on those features. `designsFor` builds the profile
+-- with a house's closed list of viewer axes; it is a function, not a profile.
+--
 -- A pattern application sits beside them: a service's decision about whether
 -- an assessable catalog pattern governs it and which of its own checks prove it.
 { bugReports = ./bug-reports.dhall
 , capabilities = ./capabilities.dhall
+, designs = ./designs.dhall
+, designsFor = ./designs-for.dhall
 , features = ./features.dhall
 , improvementRequests = ./improvement-requests.dhall
 , jobs = ./jobs.dhall
