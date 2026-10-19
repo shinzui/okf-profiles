@@ -8,9 +8,15 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+## [0.22.0] — 2026-10-19
+
 Adds the opt-in `coordination.designs` profile, replaces the guidance policy, and
 gives architecture decisions an optional `amended` record. Existing governed
-corpora need no edits.
+corpora need no edits. Consumers repinning the package re-run `dhall freeze`; the
+package semantic hash is
+`sha256:2294a5bd32ca22daa89610e12fde81dd3115701fcb0bf7a790c7bdee6d85db65`.
+Requires okf 0.9.0.0 or later. Every blueprint targets 0.22.0 per ADR-7; none
+gains a migration edge.
 
 Rehearsed against a production design corpus governed by a local designs
 descriptor: one surface's brief, breadboard and detailed design validate under
@@ -45,6 +51,8 @@ profile reports only the absent `reviews`.
   and where body prose belongs, and never restates rules or descriptions, gives
   general advice, or names a house's tools and people. No profile's guidance
   changes; `coordination.transitions` already fitted the new policy.
+- Every blueprint targets v0.22.0 per
+  [ADR-7](./docs/adr/0007-blueprint-versions-track-the-catalog-tag.md).
 
 ### Migrating a local designs descriptor
 
