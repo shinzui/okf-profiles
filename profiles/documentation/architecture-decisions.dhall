@@ -11,11 +11,49 @@ let FieldRule = okf.defaults.FieldRule
 
 let HandleReferenceRule = okf.defaults.HandleReferenceRule
 
+let Nested = okf.defaults.NestedFieldRule
+
 let Cardinality = okf.Cardinality
 
 let FieldFormat = okf.FieldFormat
 
 let v02 = ../../Profile/V02.dhall
+
+-- `generated` is one mapping (§5.2): who produced the content. A later change
+-- that leaves the decision standing, such as marking it superseded, is recorded
+-- here instead, so the original author is not overwritten. Rewriting the
+-- decision itself updates `generated`.
+let amended =
+      FieldRule::{
+      , field = "amended"
+      , description = Some
+          "Later changes that leave the decision standing, such as marking it superseded, newest last. `generated` keeps who wrote the decision."
+      , cardinality = Cardinality.List
+      , elementFields = Some
+        { required =
+          [ Nested::{
+            , field = "by"
+            , description = Some
+                "§7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`."
+            , cardinality = Cardinality.Scalar
+            , format = Some FieldFormat.Actor
+            }
+          , Nested::{
+            , field = "at"
+            , description = Some "UTC RFC3339 timestamp, ending in `Z`, for when this happened."
+            , cardinality = Cardinality.Scalar
+            , format = Some FieldFormat.Rfc3339Utc
+            }
+          , Nested::{
+            , field = "change"
+            , description = Some "What changed, in one sentence."
+            , cardinality = Cardinality.Scalar
+            }
+          ]
+        , recommended = [] : List Nested.Type
+        , optional = [] : List Nested.Type
+        }
+      }
 
 let scalar =
       \(name : Text) ->
@@ -80,6 +118,7 @@ in  Profile::{
         , scalar
             "originatingPlan"
             "Plan that produced the decision, when recorded."
+        , amended
         ,     v02.verified
           //  { description = Some
                   "§5.2. Independent confirmations that this decision record is accurate."

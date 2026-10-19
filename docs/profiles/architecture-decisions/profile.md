@@ -24,6 +24,23 @@ These rules apply to every concept in a bundle governed by this profile,
 whatever its type. Each concept type's own page repeats them merged with that
 type's rules, which is the form that actually applies.
 
+### `amended` — optional
+
+Later changes that leave the decision standing, such as marking it superseded, newest last. `generated` keeps who wrote the decision.
+
+- Allowed values: any
+- Cardinality: list
+- Format: none
+- Reference: none
+- Path: none
+- Unique by: none
+- Condition: none
+- Object fields: none
+- Element fields:
+    - `at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
+    - `by` — required; allowed values: any; cardinality: scalar; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - `change` — required; allowed values: any; cardinality: scalar; format: none — What changed, in one sentence.
+
 ### `date` — required
 
 Original calendar date of the decision.

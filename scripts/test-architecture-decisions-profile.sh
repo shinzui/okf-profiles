@@ -22,7 +22,12 @@ for fixture in \
   bad-actor \
   missing-generated \
   bad-verified-actor \
-  bad-legacy-timestamp; do
+  bad-legacy-timestamp \
+  amended-missing-by \
+  amended-missing-at \
+  amended-missing-change \
+  amended-bad-actor \
+  amended-bad-at; do
   if "${okf_bin}" validate "fixtures/architecture-decisions-invalid/${fixture}" \
     --profile "${profile}" \
     --profile-enforce >/dev/null 2>&1; then

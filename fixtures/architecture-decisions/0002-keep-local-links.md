@@ -5,6 +5,10 @@ description: Keep same-repository ADR references usable without registry access.
 generated:
   by: human:nadeem
   at: 2026-07-26T00:00:00Z
+amended:
+  - by: human:nadeem
+    at: 2026-07-26T12:00:00Z
+    change: Corrected a broken link.
 docId: ADR-2
 status: Accepted
 date: 2026-07-26
