@@ -4,6 +4,7 @@
 * **Addition**: ADR-18 supersedes ADR-12: guidance stays absent by default and is admitted only for lifecycle meaning, checks the descriptor cannot express, and where body prose belongs.
 * **Update**: ADR-12 is marked superseded by ADR-18, recorded in its `amended` list so `generated` keeps its original author.
 * **Addition**: ADR-19 records the designs profile: three documents per surface, implementation on features, and viewer-axis names as a house choice.
+* **Update**: ADR-19 classifies every guidance sentence of the designs types by its ADR-18 kind; the brief's sentence about starting a breadboard early fitted none and is removed from the profile. The chain between a surface's documents is local handles only, and an external `supersededBy` must be a concept URI with the same prefix.
 
 ## 2026-10-16
 * **Update**: ADR-9 records the mechanical one-deviation harness and rule sweep, and per-type fixtures for field names shared between types.

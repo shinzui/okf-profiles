@@ -23,7 +23,7 @@ The body carries what only prose can: **Problem**, **Who it's for**, **Non-goals
 
 okf checks the shapes, not the cross-references or the scenario coverage the `scenarios` description asks for. Read them: every `jobs[].viewers` and `scenarios[].viewer` is a declared viewer; every `scenarios[].state` a declared subject state; every `scenarios[].axes` entry a declared viewer or subject axis; every `scenarios[].jobs` entry a local job name; every `outcomeRefs[].jobRef` a `jobs[].jobRef`.
 
-`draft` → `validated` when the surface's approver signs off. A breadboard may start before then, but it inherits whatever the review changes.
+`draft` → `validated` when the surface's approver signs off.
 
 ## Type settings
 
@@ -189,7 +189,7 @@ Later document replacing this one.
 - Allowed values: any
 - Cardinality: scalar
 - Format: none
-- Reference: local handles with prefix `BRIEF`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
+- Reference: local handles with prefix `BRIEF`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/BRIEF-[1-9][0-9]*`
 - Path: none
 - Unique by: none
 - Condition: applies only when `status` is `retired`

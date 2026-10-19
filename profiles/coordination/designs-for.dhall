@@ -35,6 +35,10 @@
 -- bundle is external only, with the target prefix fixed by
 -- `externalUriPattern` (ADR-17).
 --
+-- A surface's own chain — `brief` on a breadboard, `breadboard` on a detailed
+-- design — is local handles only (ADR-19). `supersededBy` may also name a
+-- concept in another bundle, by canonical URI with the same prefix.
+--
 --
 -- ## Viewers, subject states, axes and scenarios
 --
@@ -172,13 +176,27 @@ let externalOnly =
           , externalUriPattern = Some (conceptUri prefix)
           }
 
-let localOr =
+-- A surface's three documents live in one folder and chain by local handle
+-- (ADR-19), so `brief` and `breadboard` take no external URI.
+let localOnly =
+      \(prefix : Text) ->
+        Some
+          HandleReferenceRule::{
+          , localPrefix = prefix
+          , externalUriSchemes = [] : List Text
+          , allowSelf = False
+          }
+
+-- A replacement can live in another bundle once a surface moves, so
+-- `supersededBy` also takes a canonical concept URI with the same prefix.
+let localOrConcept =
       \(prefix : Text) ->
         Some
           HandleReferenceRule::{
           , localPrefix = prefix
           , externalUriSchemes = [ "mori" ]
           , allowSelf = False
+          , externalUriPattern = Some (conceptUri prefix)
           }
 
 let designId =
@@ -205,7 +223,7 @@ let supersededBy =
         , field = "supersededBy"
         , description = Some "Later document replacing this one."
         , cardinality = Cardinality.Scalar
-        , reference = localOr prefix
+        , reference = localOrConcept prefix
         , when = whenStatus [ "retired" ]
         }
 
@@ -370,7 +388,7 @@ let brief =
 
             okf checks the shapes, not the cross-references or the scenario coverage the `scenarios` description asks for. Read them: every `jobs[].viewers` and `scenarios[].viewer` is a declared viewer; every `scenarios[].state` a declared subject state; every `scenarios[].axes` entry a declared viewer or subject axis; every `scenarios[].jobs` entry a local job name; every `outcomeRefs[].jobRef` a `jobs[].jobRef`.
 
-            `draft` → `validated` when the surface's approver signs off. A breadboard may start before then, but it inherits whatever the review changes.
+            `draft` → `validated` when the surface's approver signs off.
             ''
         , pathPattern = Some "*/brief"
         , idPrefix = Some "BRIEF"
@@ -501,7 +519,7 @@ let breadboard =
           [ designId "BB"
           , status [ "draft", "validated", "retired" ]
           ,     scalar "brief" "The brief this breadboard answers."
-            //  { reference = localOr "BRIEF" }
+            //  { reference = localOnly "BRIEF" }
           , places
           , affordances
           , connections
@@ -553,7 +571,7 @@ let detailedDesign =
           [ designId "DES"
           , status [ "exploring", "chosen", "designed", "retired" ]
           ,     scalar "breadboard" "The breadboard this design presents."
-            //  { reference = localOr "BB" }
+            //  { reference = localOnly "BB" }
           , states
           , designArtifacts // { when = whenStatus [ "chosen", "designed" ] }
           , decisions // { when = whenStatus [ "chosen", "designed" ] }

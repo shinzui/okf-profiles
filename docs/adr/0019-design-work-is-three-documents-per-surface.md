@@ -6,8 +6,8 @@ docId: ADR-19
 status: Accepted
 date: 2026-10-19
 generated:
-  by: claude-code/claude-opus-5-5
-  at: 2026-10-19T18:00:00Z
+  by: claude-code/claude-fable-5-1
+  at: 2026-10-19T20:20:00Z
 ---
 
 # Design work is three documents per surface, and implementation stays on features
@@ -28,7 +28,9 @@ and success criteria. A `Breadboard` (`BB-N`) says how in structure: places, aff
 connections and what each viewer gets. A `Detailed Design` (`DES-N`) says how in presentation:
 affordance states, the artifacts and the handoff. They live at `<surface>/brief`,
 `<surface>/breadboard` and `<surface>/design`, share the `designId` field, and each references
-the one before it by local handle.
+the one before it by a local handle only, never a URI: a surface's three documents are one
+bundle's concern. A retired document's `supersededBy` is a local handle or a canonical concept
+URI with the same prefix, because a replacement can live in another bundle.
 
 **Implementation is not a fourth type or a status.** Delivery is owned by the
 `coordination.features` that a breadboard's affordances name. An `implemented` status here would
@@ -53,10 +55,16 @@ function, so registries skip it and a house calls it from its local descriptor.
 
 **Approval is `verified`.** `validated` and `designed` require `verified`, mirrored from the
 approving `reviews` entry (ADR-4). A detailed design records its chosen direction in
-`decisions` from `chosen` on, because that is what `chosen` means. Type guidance carries the
-lifecycle meaning and the
-cross-document checks okf cannot run, under
-[ADR-18](0018-guidance-carries-what-rules-and-descriptions-cannot.md).
+`decisions` from `chosen` on, because that is what `chosen` means.
+
+**Type guidance is held to ADR-18's three kinds, sentence by sentence.** On each type, the
+sentence naming the status steps and who signs them off is lifecycle meaning. The sentences
+beginning "okf checks the shapes" on a brief and a breadboard, and "By `designed`" on a detailed
+design, are checks the descriptor cannot express: cross-document references and scenario coverage
+that the author verifies by reading. The sentences naming body content — **Problem** and its
+siblings on a brief, **ordering rules** on a breadboard, `## Design handoff` on a detailed design —
+say where prose belongs. Nothing else is in the guidance; a sentence that fits none of the kinds is
+deleted ([ADR-18](0018-guidance-carries-what-rules-and-descriptions-cannot.md)).
 
 ## Rejected alternatives
 
@@ -74,5 +82,6 @@ A house with a local designs descriptor replaces it with `coordination.designs`,
 `coordination.designsFor` and its axis names, and moves house-specific guidance (tools, skills,
 named approvers) onto its profile with `//`. Existing documents validate unchanged except that
 `decisions`, `openQuestions` and `subjectAxes` are optional rather than recommended (ADR-8), which
-only relaxes `--strict`; a detailed design at `chosen` or `designed` must carry `decisions`; and
-decision and question ids must be `D-N` and `Q-N` handles.
+only relaxes `--strict`; a detailed design at `chosen` or `designed` must carry `decisions`;
+decision and question ids must be `D-N` and `Q-N` handles; `brief` and `breadboard` must be local
+handles; and an external `supersededBy` must be a concept URI with the same prefix.

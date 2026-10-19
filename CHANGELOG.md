@@ -55,6 +55,8 @@ onto the profile with `//`. `decisions`, `openQuestions` and `subjectAxes` move
 from `recommended` to `optional` (ADR-8), which only relaxes `--strict`, except
 that a detailed design at `chosen` or `designed` must now carry `decisions`.
 `decisions[].id` and `openQuestions[].id` must be `D-N` and `Q-N` handles.
+`brief` and `breadboard` must be local handles, and an external `supersededBy`
+must be a canonical concept URI with the same prefix.
 
 ## [0.21.0] — 2026-10-16
 

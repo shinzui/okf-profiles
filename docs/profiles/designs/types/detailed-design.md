@@ -44,7 +44,7 @@ The breadboard this design presents.
 - Allowed values: any
 - Cardinality: scalar
 - Format: none
-- Reference: local handles with prefix `BB`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
+- Reference: local handles with prefix `BB`; external URIs not allowed; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
 - Condition: none
@@ -167,7 +167,7 @@ Later document replacing this one.
 - Allowed values: any
 - Cardinality: scalar
 - Format: none
-- Reference: local handles with prefix `DES`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
+- Reference: local handles with prefix `DES`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/DES-[1-9][0-9]*`
 - Path: none
 - Unique by: none
 - Condition: applies only when `status` is `retired`
