@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-runbooks"
-    , version = Some "0.22.0"
+    , version = Some "0.23.0"
     , description = Some
         "Adopt operational procedures with stable RB handles, explicit ownership, applicability and effects, preserving evidence and existing navigation."
     , prompt = ./prompt.md as Text

@@ -8,9 +8,14 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+## [0.23.0] — 2026-10-21
+
 Adds the opt-in `coordination.frictionLog` profile. Existing governed corpora need
-no edits, and no existing profile's schema changes. Blueprints keep targeting
-0.22.0 until the next release per ADR-7; none gains a migration edge.
+no edits, and no existing profile's schema changes. Consumers repinning the package
+re-run `dhall freeze`; the package semantic hash is
+`sha256:a3343fd47e2cc51907ae81ccaec2f3957e048e37545df7ecb0bcac8604d4cab0`.
+Requires okf 0.9.0.0 or later. Every blueprint targets 0.23.0 per ADR-7; none
+gains a migration edge.
 
 ### Added
 

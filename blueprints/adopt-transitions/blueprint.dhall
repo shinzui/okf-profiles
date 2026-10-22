@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-transitions"
-    , version = Some "0.22.0"
+    , version = Some "0.23.0"
     , description = Some
         "Adopt declared platform transitions with stable TR handles, participant identities, responsibility movement and scoped retirement requirements."
     , prompt = ./prompt.md as Text
