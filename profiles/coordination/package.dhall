@@ -20,6 +20,11 @@
 -- it. Implementation stays on those features. `designsFor` builds the profile
 -- with a house's closed list of viewer axes; it is a function, not a profile.
 --
+-- A friction log sits in front of the triangle: an entry records that a
+-- surface cost an implementer effort before anyone can say whether it is a
+-- defect, a gap, or neither, and its triage status names the bug report or
+-- improvement request that took it over.
+--
 -- A pattern application sits beside them: a service's decision about whether
 -- an assessable catalog pattern governs it and which of its own checks prove it.
 { bugReports = ./bug-reports.dhall
@@ -27,6 +32,7 @@
 , designs = ./designs.dhall
 , designsFor = ./designs-for.dhall
 , features = ./features.dhall
+, frictionLog = ./friction-log.dhall
 , improvementRequests = ./improvement-requests.dhall
 , jobs = ./jobs.dhall
 , patternApplications = ./pattern-applications.dhall

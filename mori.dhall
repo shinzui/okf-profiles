@@ -290,6 +290,12 @@ in  Schema.Project::{
         , path = Some "profiles/coordination/features.dhall"
         }
       , Schema.OkfProfile::{
+        , name = "friction-log"
+        , version = Some "v0.23.0"
+        , export = "coordination.frictionLog"
+        , path = Some "profiles/coordination/friction-log.dhall"
+        }
+      , Schema.OkfProfile::{
         , name = "product-research"
         , version = Some "v0.22.0"
         , export = "documentation.productResearch"

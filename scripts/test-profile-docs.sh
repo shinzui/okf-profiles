@@ -26,6 +26,7 @@ profiles=(
   "coordination.capabilities:capabilities"
   "coordination.designs:designs"
   "coordination.features:features"
+  "coordination.frictionLog:friction-log"
   "coordination.improvementRequests:improvement-requests"
   "coordination.jobs:jobs"
   "coordination.patternApplications:pattern-applications"

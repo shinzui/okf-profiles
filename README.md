@@ -79,6 +79,8 @@ profiles/
     designs.dhall             # design work per surface: brief, breadboard, detailed design
     designs-for.dhall         # the designs builder, for a house's closed viewer-axis names
     features.dhall            # reusable product features with FEAT-N handles
+    friction-log.dhall        # the cost of doing work, recorded before it is a
+                              # defect or a request
     improvement-requests.dhall
                               # cross-repository improvement-request conventions
     jobs.dhall                # canonical Jobs-to-be-Done statements with JOB-N handles
@@ -293,8 +295,8 @@ change what an author does: delete it, and if an author holding the rules and
 descriptions would still do the right thing, it goes. Prefer a single type over
 the profile, and delete a delegated check once okf or Mori runs it. The change
 that adds guidance names which of the three kinds each sentence is. Today
-`coordination.transitions` (checks delegated to Mori) and the three
-`coordination.designs` types carry guidance. See
+`coordination.transitions` (checks delegated to Mori), the three
+`coordination.designs` types, and the `Friction Entry` type carry guidance. See
 [ADR-18](./docs/adr/0018-guidance-carries-what-rules-and-descriptions-cannot.md),
 which supersedes ADR-12.
 
@@ -398,6 +400,7 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-capabilities-profile.sh` | `coordination.capabilities` |
 | `test-designs-profile.sh` | `coordination.designs`, and `coordination.designsFor` closing the viewer-axis names |
 | `test-features-profile.sh` | `coordination.features` |
+| `test-friction-log-profile.sh` | `coordination.frictionLog` |
 | `test-jobs-profile.sh` | `coordination.jobs` |
 | `test-product-research-profile.sh` | `documentation.productResearch` |
 | `test-product-discovery.sh` | `scripts/check-product-discovery.py` and the product-discovery integration fixtures — see [Product discovery](#product-discovery-jobs-research-and-features) |
@@ -598,6 +601,7 @@ requires **okf 0.9.0.0 or later**.
 | `coordination.capabilities` | What a repository provides today, with `CAP-N` handles, a compatibility promise separate from availability, and required evidence | required | `reviews`; `interface`; `replacedBy` once a capability is deprecated or withdrawn |
 | `coordination.designs` | Design work per surface in three linked types sharing `designId`: a `Design Brief` (`BRIEF-N`: viewers, canonical jobs and outcomes, subject states, viewer and subject axes, scenarios, success criteria), a `Breadboard` (`BB-N`: places, affordances naming features, connections, affordance × viewer visibility), and a `Detailed Design` (`DES-N`: affordance states, design artifacts). Implementation is tracked on the features | required | `reviews`; on a brief, `outcomeRefs`, `viewerAxes`, `scenarios`, `successCriteria` and `verified` once `validated`; `verified` on a breadboard once `validated` and on a design once `designed`; `designArtifacts` and `decisions` on a design once `chosen`; `supersededBy` once `retired` |
 | `coordination.features` | Independently addressable product features with `FEAT-N` handles: customer-visible `behavior`, a discovery-to-delivery lifecycle, and canonical links to jobs and their outcomes, contributing capabilities, governing specifications, and delivering requests. Delivery is not proof of outcome or conformance | required | nothing recommended; `owners` and feature-local `AC-N` `acceptanceCriteria` once `planned`, `in-progress`, `blocked`, or `delivered`; `deliveredAt` and `deliveryEvidence` once `delivered` |
+| `coordination.frictionLog` | The cost of doing work in a repository, recorded before it is known to be a defect or a request: one `Friction Entry` per surface that cost an implementer effort, with `FRIC-N` handles, an `impact` graded by what happened to the work, the `kind` of surface, a `mori://` `origin` and an `affects` that admits any absolute URI, and a triage `status` naming what took it over. Behavior known to be wrong is a bug report; a gap someone can state is an improvement request | required | nothing recommended; `workaround` once `impact` is `detour`; `promotedTo` once `promoted`; `duplicateOf` once `duplicate`; `resolution` once `resolved` or `accepted` |
 | `coordination.improvementRequests` | Flat cross-repository improvement requests with bundle-scoped `IR-N` handles, typed canonical source dependencies, stable request-local acceptance criteria, completion state, and structured review provenance | required | `reviews`; `resolution` once a request reaches a terminal state |
 | `coordination.jobs` | Canonical Jobs-to-be-Done statements with `JOB-N` handles: actor, situation, motivation, qualitative or measured `outcomes`, and a declared `validationStatus` backed by an explicit `assessment` citing product-research findings. States customer progress, never a solution | required | nothing recommended; `assessment` once `validationStatus` is `supported`, `mixed`, or `challenged` |
 | `coordination.patternApplications` | A service's decision about one assessable catalog pattern, with `PA-N` handles: the `service` and `pattern` as canonical `mori://` URIs, an `applicable` / `not-applicable` / `exception` / `needs-triage` decision with rationale, and `checks` binding criterion ids to service-owned targets. Records applicability, never conformance | required | nothing recommended; `exception` (human authority, scope, reason, review condition) once `decision` is `exception` |
@@ -903,3 +907,41 @@ in      okf.coordination.designsFor
 ```
 
 See [ADR-19](./docs/adr/0019-design-work-is-three-documents-per-surface.md).
+
+
+## Friction: the intake in front of bug reports and requests
+
+`coordination.frictionLog` records the cost of doing work in a repository before
+anyone knows whether it is a defect, a gap, or neither. One `Friction Entry`
+(`FRIC-N`) is one surface — a document, an interface, a tool, an environment, or
+a house process — costing an implementer effort once. It says what was attempted,
+what happened instead, what it cost, and what the implementer did about it, and it
+makes no claim about who is wrong. That is what keeps it apart from its siblings:
+a bug report is a broken provision claim with a reproduction, and an improvement
+request is a gap someone can state. Friction becomes one of those at triage, and
+`status` records which, with `promotedTo` naming the artifact that took over.
+
+| Field | What it says |
+|---|---|
+| `impact` | What happened to the work: `blocked`, `detour` (a `workaround` is demanded), `slowdown`, or `nuisance` |
+| `kind` | The sort of surface that cost the effort: `documentation`, `interface`, `tooling`, `environment`, or `process` |
+| `origin`, `affects` | The project that felt the friction (a Mori URI) and the project or artifact whose surface cost the effort (any absolute URI, because friction is often with a tool a house does not register) |
+| `status` | `logged` when written; at triage `promoted`, `resolved`, `accepted`, or `duplicate`, each demanding the field that gives it meaning |
+| `plan` | The plan being implemented when the friction occurred, so a plan's retrospective and the log cite each other |
+
+`reviews` and `verified` are optional rather than recommended, on purpose: an
+entry is a first-person observation, and demanding review provenance on every one
+would price the log out of the habit it exists to create. Triage is the quality
+gate. The exec-plan and master-plan skills published by
+`mori://shinzui/agent-seihou` write entries into a bundle governed by this profile
+while implementing a plan and triage them at completion.
+
+```dhall
+let okf =
+      https://raw.githubusercontent.com/shinzui/okf-profiles/<tag>/package.dhall
+        sha256:… -- run `dhall freeze` to fill this in
+
+in  okf.coordination.frictionLog
+```
+
+See [ADR-20](./docs/adr/0020-a-friction-entry-records-cost-before-it-is-a-defect-or-a-request.md).

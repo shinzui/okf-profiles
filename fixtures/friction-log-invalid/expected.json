@@ -1,0 +1,53 @@
+{
+  "missing-type": {
+    "field": "type",
+    "diagnostics": 2
+  },
+  "unknown-type": "type",
+  "missing-title": "title",
+  "missing-description": "description",
+  "missing-generated": "generated",
+  "bad-generated-actor": "by",
+  "missing-frictionId": {
+    "field": "frictionId",
+    "diagnostics": 2
+  },
+  "wrong-prefix": {
+    "field": "frictionId",
+    "diagnostics": 2
+  },
+  "padded-handle": {
+    "field": "frictionId",
+    "diagnostics": 2
+  },
+  "missing-status": "status",
+  "invalid-status": "status",
+  "missing-impact": "impact",
+  "invalid-impact": "impact",
+  "missing-kind": "kind",
+  "invalid-kind": "kind",
+  "missing-origin": "origin",
+  "invalid-origin-uri": "origin",
+  "missing-affects": "affects",
+  "invalid-affects-uri": "affects",
+  "detour-without-workaround": "workaround",
+  "promoted-without-promotedTo": "promotedTo",
+  "invalid-promotedTo-uri": "promotedTo",
+  "duplicate-without-duplicateOf": "duplicateOf",
+  "unresolvable-duplicateOf": "duplicateOf",
+  "duplicateOf-wrong-scheme": "duplicateOf",
+  "resolved-without-resolution": "resolution",
+  "accepted-without-resolution": "resolution",
+  "scalar-tags": "tags",
+  "amended-bad-actor": "by",
+  "amended-missing-at": "at",
+  "amended-bad-at": "at",
+  "self-duplicate": "duplicateOf",
+  "amended-missing-change": "change",
+  "invalid-review-outcome": "outcome",
+  "bad-verified-actor": "verified",
+  "bad-verified-list-actor": "verified",
+  "missing-bundle-version": "okf_version",
+  "duplicate-id": "duplicate document ID",
+  "nested-path": "path"
+}

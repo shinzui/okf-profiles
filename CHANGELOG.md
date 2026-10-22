@@ -8,6 +8,26 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+Adds the opt-in `coordination.frictionLog` profile. Existing governed corpora need
+no edits, and no existing profile's schema changes. Blueprints keep targeting
+0.22.0 until the next release per ADR-7; none gains a migration edge.
+
+### Added
+
+- `coordination.frictionLog`: the cost of doing work in a repository, recorded
+  before it is known to be a defect or a request. One `Friction Entry` (`FRIC-N`)
+  per surface that cost an implementer effort, with an `impact` graded by what
+  happened to the work (`blocked`, `detour`, `slowdown`, `nuisance`), the `kind`
+  of surface (`documentation`, `interface`, `tooling`, `environment`, `process`),
+  a `mori://` `origin`, an `affects` that admits any absolute URI, an optional
+  `plan`, and a triage `status` (`logged`, `promoted`, `resolved`, `accepted`,
+  `duplicate`) whose later values demand `promotedTo`, `duplicateOf`, or
+  `resolution`; `workaround` is demanded once `impact` is `detour`. `reviews` and
+  `verified` are optional rather than recommended, and `amended` keeps `generated`
+  on the observer. The type carries two sentences of guidance under ADR-18. See
+  ADR-20. The exec-plan and master-plan skills in `mori://shinzui/agent-seihou`
+  write entries into a bundle governed by this profile while implementing a plan.
+
 ## [0.22.0] — 2026-10-19
 
 Adds the opt-in `coordination.designs` profile, replaces the guidance policy, and

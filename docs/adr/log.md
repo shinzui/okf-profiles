@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-10-21
+* **Addition**: ADR-20 gives the cost of doing work its own friction-log profile: FRIC-N entries graded by impact, a mori origin and any-URI affects, optional review provenance, and a triage status naming the bug report or request that took over.
+
 ## 2026-10-19
 * **Addition**: ADR-18 supersedes ADR-12: guidance stays absent by default and is admitted only for lifecycle meaning, checks the descriptor cannot express, and where body prose belongs.
 * **Update**: ADR-12 is marked superseded by ADR-18, recorded in its `amended` list so `generated` keeps its original author.
