@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-10-23
+* **Update**: ADR-22: record strategy, launch and messaging contract.
 * **Added**: Record campaign, claim-check and audience profile contract.
 
 ## 2026-10-21
