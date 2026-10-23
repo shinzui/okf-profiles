@@ -8,6 +8,38 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+## [0.25.0] — 2026-10-23
+
+Adds opt-in strategy, launch and messaging contracts without changing any existing
+profile value. Consumers repin and run `dhall freeze`; the package semantic hash is
+`sha256:ec74cc6f7b8ee1a5af81ee7fc8804f35cf2c9ba4010671d9e881da72eb6719d3`.
+Requires okf 0.9.0.0 or later. Blueprint versions target 0.25.0 under ADR-7;
+unchanged descriptor pins retain their semantic hashes.
+
+### Added
+
+- `coordination.strategy`: Strategic Themes (`THEME-N`), Objectives (`OBJ-N`)
+  with objective-local key results, and Initiatives (`INIT-N`). Targets remain
+  aspirations; observed results are assessed through Findings or Claim Checks.
+- `coordination.launches`: Launches (`LAUNCH-N`) with explicit readiness and
+  go-live evidence, and Landing Pages (`LP-N`) linked to design work.
+- `documentation.messaging`: Positioning (`POS-N`) and Messages (`MSG-N`)
+  addressed to Segments or Personas, with evidence-backed proof points.
+- Portable GTM checks for audiences, typed proof-point evidence, key-result
+  job/outcome pairs, objective-local key-result references and ordered periods.
+  The manifest API and released campaign controls remain compatible.
+
+Real portfolio, messaging and operating-objective samples validate in disposable
+scratch bundles. Historical states and source coordinates are preserved; a draft
+one-year objective carries an explicitly provisional calendar anchor. No private
+figures, people, current execution state or inferred achievement enters fixtures.
+
+### Fixed
+
+- README validation-table rows and missing catalog entries for the previous
+  campaign/audience/claim release. No published tag or profile value is changed.
+
+
 ## [0.24.0] — 2026-10-23
 
 Adds opt-in campaign, audience and checked-claim contracts. Existing profile values
