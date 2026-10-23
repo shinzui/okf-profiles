@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-10-23
+* **Update**: IR-9 completed: v0.24.0 published and its remote hash and three exports verified.
 * **Added**: Record campaign, claim-check and audience profile contract.
 
 ## 2026-10-07
