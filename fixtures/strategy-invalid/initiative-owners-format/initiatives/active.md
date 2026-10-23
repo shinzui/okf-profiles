@@ -15,7 +15,7 @@ objectiveRefs: ["OBJ-1"]
 keyResultRefs: [{"objectiveRef": "OBJ-1", "krId": "KR-1"}]
 hypothesis: {"problem": "Slow sharing", "belief": "A relevant cue reduces delay", "prediction": "Sharing time falls", "falsifiedIf": "Sharing time does not fall"}
 studyRef: "mori://example/gtm/okf/research/concepts/PR-1"
-owners: "invalid-value"
+owners: ["invalid actor"]
 featureRefs: ["mori://example/gtm/okf/features/concepts/FEAT-1"]
 campaignRefs: ["mori://example/gtm/okf/campaigns/concepts/CMP-1"]
 segmentRefs: ["mori://example/gtm/okf/audiences/concepts/SEG-1"]
