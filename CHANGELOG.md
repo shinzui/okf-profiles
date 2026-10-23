@@ -8,6 +8,36 @@ these profiles and how to migrate it.
 
 ## [Unreleased]
 
+## [0.24.0] — 2026-10-23
+
+Adds opt-in campaign, audience and checked-claim contracts. Existing profile values
+and governed corpora are unchanged. Consumers repin and run `dhall freeze`; the
+package semantic hash is
+`sha256:d0ce31021b2cb2cc6f191fd1d895bbf1ca8aad7f0e41f7c992cf972f2c2df800`.
+Requires okf 0.9.0.0 or later. Every blueprint targets 0.24.0 per ADR-7; descriptor
+pins for unchanged profile values remain unchanged.
+
+### Added
+
+- `coordination.campaigns`: Campaign (`CMP-N`) and Campaign Email (`EMAIL-N`),
+  independent email variants, purpose blocks and research-backed readouts.
+- `coordination.audiences`: Segment (`SEG-N`) and Persona (`PERSONA-N`), using the
+  jobs profile's assessment policy. A persona identifies who holds a job.
+- `assurance.claimChecks`: Claim Check (`CLM-N`), exact wording, measured evidence,
+  checked result and replacement wording. It does not admit computation definitions.
+- `hypothesis`: the shared authoring block for problem, belief, prediction and
+  falsification, reusable by campaigns and initiatives.
+- Portable opt-in `scripts/check-gtm.py` with strict manifest validation, named
+  rules and single-fault manifest controls. Local conditions remain owned by OKF,
+  reference resolution by Mori. See ADR-21.
+
+The real South Bay campaign was converted in disposable scratch bundles: four
+email keys (including both sequence-2 variants), eleven claims, four segments and
+two announced Feature definitions. Historical dates remain normalized calendar
+dates, not freshly observed production events. A historical behavioral assertion
+without query/computation evidence is explicitly cannot-verify; its source verdict
+is retained, rather than inventing evidence.
+
 ## [0.23.0] — 2026-10-21
 
 Adds the opt-in `coordination.frictionLog` profile. Existing governed corpora need
