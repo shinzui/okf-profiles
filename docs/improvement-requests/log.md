@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-10-23
+* **Update**: IR-11: request observable and efficient policy-sweep verification after recurring consumer friction.
 * **Update**: IR-10: record strategy, launch and messaging contract.
 * **Update**: IR-9 completed: v0.24.0 published and its remote hash and three exports verified.
 * **Added**: Record campaign, claim-check and audience profile contract.
