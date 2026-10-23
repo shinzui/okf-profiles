@@ -128,5 +128,10 @@
   "message-matrixrow-cardinality": "matrixRow",
   "message-matrixdimensions-cardinality": "matrixDimensions",
   "message-wrong-path": "path",
-  "message-unknown-type": "type"
+  "message-unknown-type": "type",
+  "message-segmentrefs-reference": "segmentRefs",
+  "message-segmentrefs-external-prefix": "segmentRefs",
+  "message-segmentrefs-external-scheme": "segmentRefs",
+  "message-segmentrefs-local-disallowed": "segmentRefs",
+  "message-segmentrefs-cardinality": "segmentRefs"
 }
