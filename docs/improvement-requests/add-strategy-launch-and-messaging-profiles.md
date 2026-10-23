@@ -2,7 +2,10 @@
 type: "Improvement Request"
 title: "Add strategy, launch and messaging profiles"
 description: "Publish coordinated strategy and launch types and evidence-backed customer messaging with the portable GTM gate."
-status: "in-progress"
+status: "completed"
+completedAt: "2026-10-23T23:49:25Z"
+resolution: "Published v0.25.0 at a2f01f755cc9c38ae7d43ed81ea45d8734729106; remote semantic hash ec74cc6f7b8ee1a5af81ee7fc8804f35cf2c9ba4010671d9e881da72eb6719d3 and all three exports verified."
+amended: [{by: "codex-cli/gpt-6.1-sol", at: "2026-10-23T23:49:25Z", change: "Verify the owner-approved published release and complete the consumer handoff."}]
 origin: "mori://tan/tan-product-management/plans/4-add-strategy-messaging-and-launch-profiles-to-okf-profiles"
 requestId: "IR-10"
 generated: {"by": "codex-cli/gpt-6.1-sol", "at": "2026-10-23T22:39:33Z"}
