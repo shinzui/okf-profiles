@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-10-23
+* **Added**: Record campaign, claim-check and audience profile contract.
+
 ## 2026-10-07
 * **Completion**: IR-8 ships in v0.20.0 with verified remote pins; prompt-guided TAN adoption, no-intent no-op and repeated stable-handle rehearsal close all five criteria.
 * **Update**: IR-8 enters implementation; OKF 0.2 provenance requires generated and leaves timestamp optional. Local descriptor, focused fixtures and complete catalog checks pass.

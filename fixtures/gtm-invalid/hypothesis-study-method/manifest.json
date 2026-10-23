@@ -1,0 +1,44 @@
+{
+  "bundles": [
+    {
+      "uri": "mori://example/gtm/okf/campaigns",
+      "path": "campaigns",
+      "profile": "../../../profiles/coordination/campaigns.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/claims",
+      "path": "../../claim-checks",
+      "profile": "../../../profiles/assurance/claim-checks.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/audiences",
+      "path": "../../audiences",
+      "profile": "../../../profiles/coordination/audiences.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/research",
+      "path": "research",
+      "profile": "../../../profiles/documentation/product-research.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/features",
+      "path": "../../gtm-support/features",
+      "profile": "../../../profiles/coordination/features.dhall"
+    },
+    {
+      "uri": "mori://example/product/okf/jobs",
+      "path": "../../jobs",
+      "profile": "../../../profiles/coordination/jobs.dhall"
+    },
+    {
+      "uri": "mori://example/product/okf/terms",
+      "path": "../../terminology",
+      "profile": "../../../profiles/documentation/terminology.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/computations",
+      "path": "../../verification-evidence",
+      "profile": "../../../profiles/assurance/verification-evidence.dhall"
+    }
+  ]
+}

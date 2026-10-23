@@ -131,7 +131,7 @@ changes a consumer's conventions.
 ```dhall
 -- your-project/okf-profile.dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.23.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.24.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -142,7 +142,7 @@ an implementation-pattern corpus consumes the documentation catalog profile as:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.23.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.24.0/package.dhall
 
 in  okf.documentation.patternCatalog
 ```
@@ -154,7 +154,7 @@ Override an existing profile without copying — `//` replaces fields on the val
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.23.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.24.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -167,7 +167,7 @@ fields you set; everything else takes the schema default:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.23.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.24.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.Profile::{
@@ -223,17 +223,18 @@ v0.15.0 profile record and fails to load it, even though no rule changed. The
 existing `postgresql` and `tanPostgresql` fields remain stable flat exports; new
 profile families should use a namespaced directory and package field.
 
-To move a consumer repository onto v0.23.0, go in this order:
+To move a consumer repository onto v0.24.0, go in this order:
 
 1. **Upgrade the `okf` CLI** to 0.9.0.0 or later. An older CLI rejects the new
    descriptor for the wrong reason, which looks like a broken profile.
-2. **Repin the descriptor** to the `v0.23.0` tag, delete the old hash line, and
+2. **Repin the descriptor** to the `v0.24.0` tag, delete the old hash line, and
    re-run `dhall freeze`.
 3. **Run the repository's strict validation** (`okf validate --strict
    --profile-enforce …` or its check target). No concept document needs editing:
-   v0.23.0 adds `coordination.frictionLog` and changes no export name or existing
-   rule. A repository adopts it with `okf profile init coordination.frictionLog`;
-   nothing existing needs migration.
+   v0.24.0 adds campaigns, audiences and claim checks and changes no existing
+   profile rule. Adopt only the exports needed by the corpus and opt into
+   `scripts/check-gtm.py` for the delegated conditions and relationships;
+   existing corpora need no migration.
 
 > **`okfVersion` is compile-checked against the rules a profile declares, in both
 > directions.** This is the thing most likely to surprise someone forking a
@@ -302,7 +303,7 @@ A local descriptor can add such a hint without forking the shared profile:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.23.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.24.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -399,7 +400,14 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-designs-profile.sh` | `coordination.designs`, and `coordination.designsFor` closing the viewer-axis names |
 | `test-features-profile.sh` | `coordination.features` |
 | `test-friction-log-profile.sh` | `coordination.frictionLog` |
-| `test-jobs-profile.sh` | `coordination.jobs` |
+| `test-campaigns-profile.sh` | `coordination.campaigns` |
+| `test-audiences-profile.sh` | `coordination.audiences` |
+| `test-claim-checks-profile.sh` | `assurance.claimChecks` |
+| `test-gtm.sh` | Opt-in GTM gate and focused manifest controls |
+| `test-jobs-profile.sh` | `coordination.campaigns` | Coordinated Campaigns (`CMP-N`) and Campaign Emails (`EMAIL-N`), with purpose, audiences, actual send state and research readouts | required | nothing recommended; purpose blocks, cancellation and readout conditions |
+| `coordination.audiences` | Segments (`SEG-N`) define populations; Personas (`PERSONA-N`) describe roles and contexts holding jobs | required | nothing recommended; supported/mixed/challenged personas carry the jobs assessment shape |
+| `assurance.claimChecks` | Claim Checks (`CLM-N`) record exact checked wording, evidence and verdict | required | nothing recommended; measured verdicts require measurement/context and evidence; inaccurate wording needs a replacement |
+| `coordination.jobs` |
 | `test-product-research-profile.sh` | `documentation.productResearch` |
 | `test-product-discovery.sh` | `scripts/check-product-discovery.py` and the product-discovery integration fixtures — see [Product discovery](#product-discovery-jobs-research-and-features) |
 | `test-improvement-requests-profile.sh` | `coordination.improvementRequests` |
@@ -548,7 +556,7 @@ logs, registers both bundles in Mori, and wires strict validation into the repos
 checks. A repository with neither corpus completes without changes.
 
 The working catalog also provides [`adopt-terminology`](./blueprints/adopt-terminology/), targeting
-the released v0.23.0 profile:
+the released v0.24.0 profile:
 
 ```bash
 seihou agent run adopt-terminology
@@ -660,6 +668,7 @@ not profiles a consumer selects:
 | `coordination.designsFor` | `{ viewerAxisNames : List Text } -> Profile`: the designs profile with a house's closed list of viewer axes. `coordination.designs` is it applied to an empty list, which leaves the names open |
 | `v02` | The six OKF v0.2 field families, defined once. Splice `v02.generated`, `v02.verified`, `v02.legacyTimestamp`, `v02.status`, `v02.staleAfter`, `v02.sources`, `v02.usageWindow` into your own presence lists. See [ADR-5](./docs/adr/0005-v0-2-field-families-are-defined-once.md) |
 | `reviewRule` | The house `reviews` family: reviewer identity, scope, outcome, and model metadata. Use it where a review is an annotation on a document; use `assurance.reviews` where the review is the artifact |
+| `hypothesis` | Shared object rule for `problem`, `belief`, `prediction` and `falsifiedIf`, reused by coordinated work |
 | `modelReview` | The model-review vocabulary both of those read from — the `effort` grades and the shared wording — so the two cannot drift apart |
 | `Profile`, `TypeRule`, `FrontmatterRules`, `FieldRule`, `NestedRules`, `NestedFieldRule`, `HandleReferenceRule`, `PathReferenceRule`, `FieldCondition`, `Cardinality`, `FieldFormat`, `mk` | okf's schema records and constructors, re-exported so a profile never imports okf directly |
 
@@ -943,3 +952,25 @@ in  okf.coordination.frictionLog
 ```
 
 See [ADR-20](./docs/adr/0020-a-friction-entry-records-cost-before-it-is-a-defect-or-a-request.md).
+
+## Campaigns, claim checks, and audiences
+
+A campaign is coordinated work. Its primary and secondary purposes carry hypothesis,
+announcement or engagement blocks. Emails have independent handles; two regional variants
+may share a sequence number. Planned dates do not prove approval, availability or sending.
+An experiment reaching measurement links a Product Research Study with method experiment;
+its readout cites Findings rather than introducing a parallel result type. Jobs and their
+outcomes retain their own identities. Personas describe who holds them; they are not jobs.
+
+Claim Checks record assurance about exact wording, independently of the campaign or deck
+that uses it. A measured verdict carries what was measured, when, who checked it, and a
+repository query or existing Attested Computation reference. An inaccurate statement gets
+replacement wording. This profile does not admit Attested Computation definitions.
+
+The optional `scripts/check-gtm.py --manifest <path>` gate validates mapped bundles strictly
+and enforces unsupported conjunctions, alternative evidence and target types. Its manifest
+uses the discovery gate's `bundles` entries (`uri`, `path`, `profile`); paths are relative to
+the manifest. Query and other repository artifact paths are relative to the containing Git
+root, or to the manifest directory for standalone scratch bundles. The script has no sibling
+checkout dependency. It does not check generic sources or owner existence; a passing gate
+is document consistency, not production verification. See [ADR-21](docs/adr/0021-campaigns-are-coordinated-work-claim-checks-are-assurance-readouts-are-research.md).

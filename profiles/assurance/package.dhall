@@ -14,7 +14,9 @@
 -- failure mode.
 -- `verificationEvidence` records a claim about a system being put to the test
 -- and what the run and independent verifier concluded.
-{ reviews = ./reviews.dhall
+-- Claim checks record a test of wording against data, not a software run.
+{ claimChecks = ./claim-checks.dhall
+, reviews = ./reviews.dhall
 , failureModes = ./failure-modes.dhall
 , verificationEvidence = ./verification-evidence.dhall
 }

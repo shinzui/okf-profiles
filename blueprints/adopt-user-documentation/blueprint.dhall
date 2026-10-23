@@ -4,7 +4,7 @@ let S =
 
 in  S.Blueprint::{
     , name = "adopt-user-documentation"
-    , version = Some "0.23.0"
+    , version = Some "0.24.0"
     , description = Some
         "Adapt existing docs/user and docs/guides corpora to the shared user-documentation profile, preserving prose while adding reader-intent types, stable DOC-N handles, strict validation, and Mori bundle registration."
     , prompt = ./prompt.md as Text

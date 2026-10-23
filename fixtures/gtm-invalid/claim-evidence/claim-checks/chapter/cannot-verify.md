@@ -1,0 +1,20 @@
+---
+type: "Claim Check"
+title: "Claim cannot-verify"
+description: "Synthetic fixture for Claim cannot-verify."
+generated: {"by": "human:fixture-author", "at": "2026-10-23T20:30:00Z"}
+claimId: "CLM-5"
+statement: "There are twenty chapter members."
+usedIn: ["mori://example/gtm/okf/campaigns/concepts/EMAIL-1", "README.md"]
+verdict: "cannot-verify"
+stated: 20
+reviews: [{"kind": "human", "reviewer": "human:fixture-reviewer", "reviewed_at": "2026-10-23T20:30:00Z", "document_timestamp": "2026-10-23T20:30:00Z", "scope": "content-and-metadata", "outcome": "commented", "context": "Synthetic contract fixture, not production campaign evidence."}]
+sources: [{"resource": "Synthetic fixture evidence", "title": "Fixture evidence"}]
+verified: {"by": "human:fixture-author", "at": "2026-10-23T20:30:00Z"}
+checkedBy: "human:fixture-checker"
+unverifiableBecause: "The historical population snapshot was not retained."
+---
+
+# Claim cannot-verify
+
+Synthetic contract fixture.

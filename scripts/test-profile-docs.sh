@@ -19,6 +19,9 @@ out_root="docs/profiles"
 # documented in. Directory names match `profiles/<family>/<name>.dhall`,
 # `fixtures/<name>/`, and `scripts/test-<name>-profile.sh`.
 profiles=(
+  "coordination.campaigns:campaigns"
+  "coordination.audiences:audiences"
+  "assurance.claimChecks:claim-checks"
   "assurance.failureModes:failure-modes"
   "assurance.reviews:reviews"
   "assurance.verificationEvidence:verification-evidence"

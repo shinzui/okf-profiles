@@ -1,0 +1,13 @@
+{
+  "secondary-purpose-block": "secondary-purpose-block",
+  "hypothesis-study-missing": "hypothesis-study",
+  "hypothesis-study-finding": "hypothesis-study",
+  "claim-evidence": "claim-evidence",
+  "reference-target": "reference-target",
+  "readout-target": "reference-target",
+  "unresolved-target": "reference-target",
+  "query-path": "query-path",
+  "metric-context": "metric-context",
+  "owner-format": "owner-format",
+  "hypothesis-study-method": "hypothesis-study"
+}

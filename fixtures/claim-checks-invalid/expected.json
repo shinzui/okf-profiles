@@ -1,0 +1,56 @@
+{
+  "claim-check-missing-type": {
+    "field": "type",
+    "diagnostics": 2
+  },
+  "claim-check-type-cardinality": {
+    "field": "type",
+    "diagnostics": 2
+  },
+  "claim-check-missing-title": "title",
+  "claim-check-title-cardinality": "title",
+  "claim-check-missing-description": "description",
+  "claim-check-description-cardinality": "description",
+  "claim-check-missing-generated": "generated",
+  "claim-check-bad-generated": "by",
+  "claim-check-missing-claimid": {
+    "field": "claimId",
+    "diagnostics": 2
+  },
+  "claim-check-claimid-format": {
+    "field": "claimId",
+    "diagnostics": 2
+  },
+  "claim-check-claimid-cardinality": {
+    "field": "claimId",
+    "diagnostics": 2
+  },
+  "claim-check-missing-statement": "statement",
+  "claim-check-statement-cardinality": "statement",
+  "claim-check-missing-usedin": "usedIn",
+  "claim-check-usedin-cardinality": "usedIn",
+  "claim-check-missing-verdict": "verdict",
+  "claim-check-verdict-vocabulary": "verdict",
+  "claim-check-verdict-cardinality": "verdict",
+  "claim-check-missing-checkedby": "checkedBy",
+  "claim-check-checkedby-format": "checkedBy",
+  "claim-check-checkedby-cardinality": "checkedBy",
+  "claim-check-missing-measured": "measured",
+  "claim-check-measured-cardinality": "measured",
+  "claim-check-missing-asof": "asOf",
+  "claim-check-asof-format": "asOf",
+  "claim-check-asof-cardinality": "asOf",
+  "claim-check-missing-suggestedwording": "suggestedWording",
+  "claim-check-suggestedwording-cardinality": "suggestedWording",
+  "claim-check-missing-unverifiablebecause": "unverifiableBecause",
+  "claim-check-unverifiablebecause-cardinality": "unverifiableBecause",
+  "claim-check-bad-review": "outcome",
+  "claim-check-bad-verified": "by",
+  "claim-check-bad-sources": "sources",
+  "claim-check-query-cardinality": "query",
+  "claim-check-computationref-format": "computationRef",
+  "claim-check-computationref-cardinality": "computationRef",
+  "claim-check-stated-cardinality": "stated",
+  "claim-check-unknown-type": "type",
+  "claim-check-tags-cardinality": "tags"
+}

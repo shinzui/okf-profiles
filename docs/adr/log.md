@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-10-23
+* **Added**: Record campaign, claim-check and audience profile contract.
+
 ## 2026-10-21
 * **Addition**: ADR-20 gives the cost of doing work its own friction-log profile: FRIC-N entries graded by impact, a mori origin and any-URI affects, optional review provenance, and a triage status naming the bug report or request that took over.
 

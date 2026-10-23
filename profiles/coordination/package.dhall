@@ -27,7 +27,10 @@
 --
 -- A pattern application sits beside them: a service's decision about whether
 -- an assessable catalog pattern governs it and which of its own checks prove it.
-{ bugReports = ./bug-reports.dhall
+-- Campaigns coordinate work; audiences describe its consumer populations.
+{ campaigns = ./campaigns.dhall
+, audiences = ./audiences.dhall
+, bugReports = ./bug-reports.dhall
 , capabilities = ./capabilities.dhall
 , designs = ./designs.dhall
 , designsFor = ./designs-for.dhall
