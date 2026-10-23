@@ -39,6 +39,36 @@
       "uri": "mori://example/gtm/okf/computations",
       "path": "../verification-evidence",
       "profile": "../../profiles/assurance/verification-evidence.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/strategy",
+      "path": "../strategy",
+      "profile": "../../profiles/coordination/strategy.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/launches",
+      "path": "../launches",
+      "profile": "../../profiles/coordination/launches.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/messaging",
+      "path": "../messaging",
+      "profile": "../../profiles/documentation/messaging.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/designs",
+      "path": "../designs",
+      "profile": "../../profiles/coordination/designs.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/strategy-campaigns",
+      "path": "../gtm-strategy-support/campaigns",
+      "profile": "../../profiles/coordination/campaigns.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/strategy-claims",
+      "path": "../gtm-strategy-support/claims",
+      "profile": "../../profiles/assurance/claim-checks.dhall"
     }
   ]
 }

@@ -217,18 +217,21 @@ in  Schema.Project::{
         }
       ]
     , profiles =
-      [ Schema.OkfProfile::{ name = "campaigns", version = Some "v0.24.0", export = "coordination.campaigns", path = Some "profiles/coordination/campaigns.dhall" }
-      , Schema.OkfProfile::{ name = "audiences", version = Some "v0.24.0", export = "coordination.audiences", path = Some "profiles/coordination/audiences.dhall" }
-      , Schema.OkfProfile::{ name = "claim-checks", version = Some "v0.24.0", export = "assurance.claimChecks", path = Some "profiles/assurance/claim-checks.dhall" }
+      [ Schema.OkfProfile::{ name = "strategy", version = Some "v0.25.0", export = "coordination.strategy", path = Some "profiles/coordination/strategy.dhall" }
+      , Schema.OkfProfile::{ name = "launches", version = Some "v0.25.0", export = "coordination.launches", path = Some "profiles/coordination/launches.dhall" }
+      , Schema.OkfProfile::{ name = "messaging", version = Some "v0.25.0", export = "documentation.messaging", path = Some "profiles/documentation/messaging.dhall" }
+      , Schema.OkfProfile::{ name = "campaigns", version = Some "v0.25.0", export = "coordination.campaigns", path = Some "profiles/coordination/campaigns.dhall" }
+      , Schema.OkfProfile::{ name = "audiences", version = Some "v0.25.0", export = "coordination.audiences", path = Some "profiles/coordination/audiences.dhall" }
+      , Schema.OkfProfile::{ name = "claim-checks", version = Some "v0.25.0", export = "assurance.claimChecks", path = Some "profiles/assurance/claim-checks.dhall" }
       , Schema.OkfProfile::{
         , name = "transitions"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         , export = "coordination.transitions"
         , path = Some "profiles/coordination/transitions.dhall"
         }
       , Schema.OkfProfile::{
         , name = "runbooks"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         , export = "documentation.runbooks"
         , path = Some "profiles/documentation/runbooks.dhall"
         }
@@ -236,71 +239,71 @@ in  Schema.Project::{
         , name = "failure-modes"
         , export = "assurance.failureModes"
         , path = Some "profiles/assurance/failure-modes.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "reviews"
         , export = "assurance.reviews"
         , path = Some "profiles/assurance/reviews.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "verification-evidence"
         , export = "assurance.verificationEvidence"
         , path = Some "profiles/assurance/verification-evidence.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "bug-reports"
         , export = "coordination.bugReports"
         , path = Some "profiles/coordination/bug-reports.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "capabilities"
         , export = "coordination.capabilities"
         , path = Some "profiles/coordination/capabilities.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "improvement-requests"
         , export = "coordination.improvementRequests"
         , path = Some "profiles/coordination/improvement-requests.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "pattern-applications"
         , export = "coordination.patternApplications"
         , path = Some "profiles/coordination/pattern-applications.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "jobs"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         , export = "coordination.jobs"
         , path = Some "profiles/coordination/jobs.dhall"
         }
       , Schema.OkfProfile::{
         , name = "designs"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         , export = "coordination.designs"
         , path = Some "profiles/coordination/designs.dhall"
         }
       , Schema.OkfProfile::{
         , name = "features"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         , export = "coordination.features"
         , path = Some "profiles/coordination/features.dhall"
         }
       , Schema.OkfProfile::{
         , name = "friction-log"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         , export = "coordination.frictionLog"
         , path = Some "profiles/coordination/friction-log.dhall"
         }
       , Schema.OkfProfile::{
         , name = "product-research"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         , export = "documentation.productResearch"
         , path = Some "profiles/documentation/product-research.dhall"
         }
@@ -308,61 +311,61 @@ in  Schema.Project::{
         , name = "use-cases"
         , export = "coordination.useCases"
         , path = Some "profiles/coordination/use-cases.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "architecture-decisions"
         , export = "documentation.architectureDecisions"
         , path = Some "profiles/documentation/architecture-decisions.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "pattern-catalog"
         , export = "documentation.patternCatalog"
         , path = Some "profiles/documentation/pattern-catalog.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "research-documents"
         , export = "documentation.researchDocuments"
         , path = Some "profiles/documentation/research-documents.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "specifications"
         , export = "documentation.specifications"
         , path = Some "profiles/documentation/specifications.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "terminology"
         , export = "documentation.terminology"
         , path = Some "profiles/documentation/terminology.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "user-documentation"
         , export = "documentation.userDocumentation"
         , path = Some "profiles/documentation/user-documentation.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "okf-v0-2"
         , export = "okfV02"
         , path = Some "profiles/okf-v0-2.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "postgresql"
         , export = "postgresql"
         , path = Some "profiles/postgresql.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       , Schema.OkfProfile::{
         , name = "tan-postgresql"
         , export = "tanPostgresql"
         , path = Some "profiles/tan-postgresql.dhall"
-        , version = Some "v0.24.0"
+        , version = Some "v0.25.0"
         }
       ]
     , okfBundles =

@@ -1,0 +1,64 @@
+{
+  "bundles": [
+    {
+      "uri": "mori://example/gtm/okf/campaigns",
+      "path": "../../campaigns",
+      "profile": "../../../profiles/coordination/campaigns.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/claims",
+      "path": "claims",
+      "profile": "../../../profiles/assurance/claim-checks.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/audiences",
+      "path": "../../audiences",
+      "profile": "../../../profiles/coordination/audiences.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/research",
+      "path": "../../gtm-support/research",
+      "profile": "../../../profiles/documentation/product-research.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/features",
+      "path": "../../gtm-support/features",
+      "profile": "../../../profiles/coordination/features.dhall"
+    },
+    {
+      "uri": "mori://example/product/okf/jobs",
+      "path": "../../jobs",
+      "profile": "../../../profiles/coordination/jobs.dhall"
+    },
+    {
+      "uri": "mori://example/product/okf/terms",
+      "path": "../../terminology",
+      "profile": "../../../profiles/documentation/terminology.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/computations",
+      "path": "../../verification-evidence",
+      "profile": "../../../profiles/assurance/verification-evidence.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/strategy",
+      "path": "../../strategy",
+      "profile": "../../../profiles/coordination/strategy.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/launches",
+      "path": "../../launches",
+      "profile": "../../../profiles/coordination/launches.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/messaging",
+      "path": "../../messaging",
+      "profile": "../../../profiles/documentation/messaging.dhall"
+    },
+    {
+      "uri": "mori://example/gtm/okf/designs",
+      "path": "../../designs",
+      "profile": "../../../profiles/coordination/designs.dhall"
+    }
+  ]
+}

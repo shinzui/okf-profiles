@@ -47,11 +47,13 @@ Profile/
   TypeRule.dhall              # re-export of okf's per-type completion module
   FrontmatterRules.dhall      # re-export of okf's frontmatter completion module
   ReviewRule.dhall            # shared nested review-provenance contract
+  Hypothesis.dhall            # shared falsifiable hypothesis block
   ModelReview.dhall           # the model-review vocabulary shared by ReviewRule and assurance.reviews
   V02.dhall                   # the six OKF v0.2 field families, defined once for the catalog
 profiles/
   assurance/
     package.dhall             # namespaced assurance-profile exports
+    claim-checks.dhall        # exact checked wording, evidence and verdict
     failure-modes.dhall       # recurring failure modes: signature, confirming checks,
                               # explanations already ruled out, and the control that stops it
     reviews.dhall             # what was reviewed, at which commit, by whom, at what effort
@@ -62,6 +64,7 @@ profiles/
     package.dhall             # namespaced documentation-profile exports
     architecture-decisions.dhall
                               # flat ADR corpus with stable ADR-N handles
+    messaging.dhall           # positioning and messages addressed to audiences
     pattern-catalog.dhall     # implementation-pattern catalog conventions, with
                               # opt-in assessable types carrying PAT-N criteria
     product-research.dhall    # customer-discovery studies and findings with PR-N handles
@@ -74,6 +77,10 @@ profiles/
     user-documentation.dhall  # user-facing pages with stable DOC-N handles
   coordination/
     package.dhall             # namespaced coordination-profile exports
+    campaigns.dhall           # coordinated campaigns and distinct email variants
+    audiences.dhall           # audience segments and research-assessed personas
+    strategy.dhall            # themes, objectives and initiatives
+    launches.dhall            # launch readiness and landing-page publication
     bug-reports.dhall         # defects in behavior a repository already provides
     capabilities.dhall        # what a repository provides today, with evidence
     designs.dhall             # design work per surface: brief, breadboard, detailed design
@@ -93,7 +100,7 @@ profiles/
   tan-postgresql.dhall        # stable flat tan PostgreSQL export
 fixtures/                     # one acceptance bundle and one -invalid/ tree per profile
 scripts/                      # one test-*.sh per profile, plus the ADR bundle check and
-                              # the opt-in check-product-discovery.py relationship gate
+                              # opt-in product-discovery and GTM relationship gates
 docs/
   adr/                        # this repository's own decisions, governed by its own profile
   masterplans/, plans/        # the initiative that produced this release
@@ -131,7 +138,7 @@ changes a consumer's conventions.
 ```dhall
 -- your-project/okf-profile.dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.24.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.25.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -142,7 +149,7 @@ an implementation-pattern corpus consumes the documentation catalog profile as:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.24.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.25.0/package.dhall
 
 in  okf.documentation.patternCatalog
 ```
@@ -154,7 +161,7 @@ Override an existing profile without copying — `//` replaces fields on the val
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.24.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.25.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -167,7 +174,7 @@ fields you set; everything else takes the schema default:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.24.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.25.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.Profile::{
@@ -223,15 +230,15 @@ v0.15.0 profile record and fails to load it, even though no rule changed. The
 existing `postgresql` and `tanPostgresql` fields remain stable flat exports; new
 profile families should use a namespaced directory and package field.
 
-To move a consumer repository onto v0.24.0, go in this order:
+To move a consumer repository onto v0.25.0, go in this order:
 
 1. **Upgrade the `okf` CLI** to 0.9.0.0 or later. An older CLI rejects the new
    descriptor for the wrong reason, which looks like a broken profile.
-2. **Repin the descriptor** to the `v0.24.0` tag, delete the old hash line, and
+2. **Repin the descriptor** to the `v0.25.0` tag, delete the old hash line, and
    re-run `dhall freeze`.
 3. **Run the repository's strict validation** (`okf validate --strict
    --profile-enforce …` or its check target). No concept document needs editing:
-   v0.24.0 adds campaigns, audiences and claim checks and changes no existing
+   v0.25.0 adds campaigns, audiences and claim checks and changes no existing
    profile rule. Adopt only the exports needed by the corpus and opt into
    `scripts/check-gtm.py` for the delegated conditions and relationships;
    existing corpora need no migration.
@@ -303,7 +310,7 @@ A local descriptor can add such a hint without forking the shared profile:
 
 ```dhall
 let okf =
-      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.24.0/package.dhall
+      https://raw.githubusercontent.com/shinzui/okf-profiles/v0.25.0/package.dhall
         sha256:… -- run `dhall freeze` to fill this in
 
 in  okf.postgresql
@@ -403,11 +410,11 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-campaigns-profile.sh` | `coordination.campaigns` |
 | `test-audiences-profile.sh` | `coordination.audiences` |
 | `test-claim-checks-profile.sh` | `assurance.claimChecks` |
+| `test-strategy-profile.sh` | `coordination.strategy` |
+| `test-launches-profile.sh` | `coordination.launches` |
+| `test-messaging-profile.sh` | `documentation.messaging` |
 | `test-gtm.sh` | Opt-in GTM gate and focused manifest controls |
-| `test-jobs-profile.sh` | `coordination.campaigns` | Coordinated Campaigns (`CMP-N`) and Campaign Emails (`EMAIL-N`), with purpose, audiences, actual send state and research readouts | required | nothing recommended; purpose blocks, cancellation and readout conditions |
-| `coordination.audiences` | Segments (`SEG-N`) define populations; Personas (`PERSONA-N`) describe roles and contexts holding jobs | required | nothing recommended; supported/mixed/challenged personas carry the jobs assessment shape |
-| `assurance.claimChecks` | Claim Checks (`CLM-N`) record exact checked wording, evidence and verdict | required | nothing recommended; measured verdicts require measurement/context and evidence; inaccurate wording needs a replacement |
-| `coordination.jobs` |
+| `test-jobs-profile.sh` | `coordination.jobs` |
 | `test-product-research-profile.sh` | `documentation.productResearch` |
 | `test-product-discovery.sh` | `scripts/check-product-discovery.py` and the product-discovery integration fixtures — see [Product discovery](#product-discovery-jobs-research-and-features) |
 | `test-improvement-requests-profile.sh` | `coordination.improvementRequests` |
@@ -420,8 +427,7 @@ OK: architecture-decision profile acceptance and rejection fixtures
 | `test-specifications-profile.sh` | `documentation.specifications` |
 | `test-terminology-profile.sh` | `documentation.terminology` |
 | `test-runbooks-profile.sh` | `documentation.runbooks` |
-| `test-user-documentation-profile.sh` | `documentation.runbooks` | Operational procedures with stable RB-N handles, ownership, project scope, environments, trigger, effects and lifecycle | required | optional sources, verification, freshness, supporting Mori references and typed supersession |
-| `documentation.userDocumentation` |
+| `test-user-documentation-profile.sh` | `documentation.userDocumentation` |
 | `test-reviews-profile.sh` | `assurance.reviews` |
 | `test-verification-evidence-profile.sh` | `assurance.verificationEvidence` |
 | `test-tan-postgresql-profile.sh` | `tanPostgresql` |
@@ -556,7 +562,7 @@ logs, registers both bundles in Mori, and wires strict validation into the repos
 checks. A repository with neither corpus completes without changes.
 
 The working catalog also provides [`adopt-terminology`](./blueprints/adopt-terminology/), targeting
-the released v0.24.0 profile:
+the released v0.25.0 profile:
 
 ```bash
 seihou agent run adopt-terminology
@@ -603,6 +609,12 @@ requires **okf 0.9.0.0 or later**.
 | `assurance.failureModes` | Recurring failure modes with `FM-N` handles: the `signature` that identifies one on sight, the `diagnosis` checks that confirm it, the `eliminated` explanations already disproved with the check that killed each, the `occurrences` that justify the record, and the `scope` saying at what altitude a durable fix has to live | required | `reviews`; `rootCause` once a mechanism is claimed; `control` and `detection` once one exists; `eliminated` once diagnosed |
 | `assurance.reviews` | Records of an artifact having been reviewed, with `REV-N` handles: a stable `subject` + `component` identity, the commit examined, whether the reading was `full` or `incremental` and from which `baseSha`, the reviewer as an OKF §7 actor, and provider / model / effort once the reviewer is a model | required | `previousReview` once `coverage` is `incremental` |
 | `assurance.verificationEvidence` | Evidence of a system test: `Attested Computation` definitions with VC-N handles, path-addressed `Verification Run` and `Attestation` events, and digest-pinned links to external data | required | nothing recommended; run-only and comparison-only fields follow `recordKind` |
+| `coordination.campaigns` | Campaigns (`CMP-N`) and distinct Campaign Emails (`EMAIL-N`) coordinate purposes, audiences, delivery and research readouts | required | nothing recommended; purpose blocks and actual lifecycle evidence |
+| `coordination.audiences` | Segments (`SEG-N`) define populations; Personas (`PERSONA-N`) describe roles and contexts holding jobs | required | nothing recommended; supported/mixed/challenged personas carry assessments |
+| `assurance.claimChecks` | Claim Checks (`CLM-N`) record exact checked wording, evidence and verdict | required | nothing recommended; measured checks require measurement context and evidence |
+| `coordination.strategy` | Strategic Themes (`THEME-N`), Objectives (`OBJ-N`) with local key results, and Initiatives (`INIT-N`) coordinate intended outcomes and work | required | nothing recommended; assessed results cite evidence; done/killed initiatives state the outcome/reason |
+| `coordination.launches` | Launches (`LAUNCH-N`) and Landing Pages (`LP-N`) coordinate go-live work and publication evidence | required | nothing recommended; readiness states conditions, launched/live requires actual event evidence |
+| `documentation.messaging` | Positioning (`POS-N`) and Messages (`MSG-N`) explain value to audiences with cited proof points | required | nothing recommended; audience and evidence types are checked by the opt-in GTM gate |
 | `coordination.bugReports` | Defects in behavior a repository already provides, with `BUG-N` handles, a severity scale graded by observable consequence, and a reproduction a reader can follow | required | `reviews`; `resolution` once a report reaches a terminal status; `workaround` once severity is `degraded` |
 | `coordination.capabilities` | What a repository provides today, with `CAP-N` handles, a compatibility promise separate from availability, and required evidence | required | `reviews`; `interface`; `replacedBy` once a capability is deprecated or withdrawn |
 | `coordination.designs` | Design work per surface in three linked types sharing `designId`: a `Design Brief` (`BRIEF-N`: viewers, canonical jobs and outcomes, subject states, viewer and subject axes, scenarios, success criteria), a `Breadboard` (`BB-N`: places, affordances naming features, connections, affordance × viewer visibility), and a `Detailed Design` (`DES-N`: affordance states, design artifacts). Implementation is tracked on the features | required | `reviews`; on a brief, `outcomeRefs`, `viewerAxes`, `scenarios`, `successCriteria` and `verified` once `validated`; `verified` on a breadboard once `validated` and on a design once `designed`; `designArtifacts` and `decisions` on a design once `chosen`; `supersededBy` once `retired` |
@@ -974,3 +986,18 @@ the manifest. Query and other repository artifact paths are relative to the cont
 root, or to the manifest directory for standalone scratch bundles. The script has no sibling
 checkout dependency. It does not check generic sources or owner existence; a passing gate
 is document consistency, not production verification. See [ADR-21](docs/adr/0021-campaigns-are-coordinated-work-claim-checks-are-assurance-readouts-are-research.md).
+
+## Strategy, launches and messaging
+
+Strategy keeps targets apart from evidence: key results hold aspirations, while Findings
+and Claim Checks carry observations. Objective result assessments cite those records.
+Growth projects are Initiatives, and a Strategic Theme is distinct from a Use Case Theme.
+Launch readiness uses the feature acceptance shape; a go-live event does not prove outcome.
+Landing Pages reference designs rather than duplicating design work.
+
+Positioning and Messages address Segments or Personas. Proof points must cite Findings
+or Claim Checks, rather than Studies. Agency matrix coordinates remain scalar labels.
+The opt-in `scripts/check-gtm.py` retains its manifest API and resolves these new types,
+objective-local key results and job-outcome pairs. It checks audiences, typed evidence,
+finite targets and ordered objective periods alongside the campaign rules.
+See [ADR-22](docs/adr/0022-strategy-and-launches-are-coordination-messaging-is-documentation.md).

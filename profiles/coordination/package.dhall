@@ -28,7 +28,10 @@
 -- A pattern application sits beside them: a service's decision about whether
 -- an assessable catalog pattern governs it and which of its own checks prove it.
 -- Campaigns coordinate work; audiences describe its consumer populations.
-{ campaigns = ./campaigns.dhall
+-- Strategy names intended outcomes; launches coordinate publication.
+{ strategy = ./strategy.dhall
+, launches = ./launches.dhall
+, campaigns = ./campaigns.dhall
 , audiences = ./audiences.dhall
 , bugReports = ./bug-reports.dhall
 , capabilities = ./capabilities.dhall

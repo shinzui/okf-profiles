@@ -1,5 +1,7 @@
 --| Reusable documentation profiles.
-{ architectureDecisions = ./architecture-decisions.dhall
+-- Messaging explains value to an audience with attributable evidence.
+{ messaging = ./messaging.dhall
+, architectureDecisions = ./architecture-decisions.dhall
 , patternCatalog = ./pattern-catalog.dhall
 , productResearch = ./product-research.dhall
 , runbooks = ./runbooks.dhall
