@@ -39,8 +39,14 @@ This plan implements the improvement request
 `mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-11` (file
 [docs/improvement-requests/make-profile-policy-sweeps-observable-and-reduce-redundant-fixture-scans.md](../improvement-requests/make-profile-policy-sweeps-observable-and-reduce-redundant-fixture-scans.md))
 and widens it. The request asks for progress output and fewer repeated fixture scans. This plan
-also fixes why the scans are expensive and why some sweep results mislead, and for that it adds a
-native sweep command to okf (`mori://shinzui/okf`).
+also fixes why the scans are expensive and why some sweep results mislead, and for that okf
+gains a native sweep command. That okf work, the engine and the `okf profile sweep` command, is
+planned and tracked in okf's own ExecPlan `mori://shinzui/okf/plans/71-add-okf-profile-sweep-for-load-bearing-rule-checks`
+(plan 71 below), extracted from this plan on 2026-10-28. This plan keeps the catalog side: the
+improved legacy sweep and its recorded baselines, the comparison script that proves parity, and
+adoption of the command once okf ships it. The two plans share one intention and reference each
+other; the measurements and design decisions made while this plan was written stay recorded
+here as history, and plan 71 carries the ones it owns.
 
 
 ## Purpose / Big Picture
@@ -59,7 +65,7 @@ in this plan comes from.
 
 After this plan:
 
-- **The command.** A maintainer runs
+- **The command** (built in okf under plan 71). A maintainer runs
   `okf profile sweep profiles/coordination/strategy.dhall --accept fixtures/strategy --cases fixtures/strategy-invalid`.
   It finishes in seconds rather than tens of minutes: the planning measurement forecasts about
   six seconds for the strategy profile's default relaxations.
@@ -84,24 +90,21 @@ After this plan:
       `objectFields`, and writes a JSON summary.
 - [ ] Milestone 1: legacy baseline summaries recorded for the six families under
       `docs/plans/evidence/13/`.
-- [x] Milestone 2 (prototype): in-process timing spike in the okf checkout, with numbers
-      recorded in Surprises & Discoveries and a promote/discard decision in the Decision Log.
-      Done 2026-10-28 during plan validation, before implementation started: compile plus one
-      full pass over the 182 strategy cases costs about 36 ms, so the approach is promoted. Re-run
-      the spike only if okf-core's profile validation changes before Milestone 3 begins.
-- [ ] Milestone 3: okf improvement request filed in `mori://shinzui/okf` with an allocated handle.
-- [ ] Milestone 3: `Okf.Profile.Sweep` in okf-core: typed relaxation enumeration, suite
-      loading, in-process evaluation with the legacy predicate.
-- [ ] Milestone 3: `okf profile sweep` command with streaming text and `--json` output.
-- [ ] Milestone 3: `scripts/compare-sweep-results.py` proves parity with the six legacy baselines.
-- [ ] Milestone 4: provable inertness, composite policy units, presence demotion, value-admitting
-      vocabulary relaxation, exception manifests, and exit codes in okf.
-- [ ] Milestone 5 (conditional): bounded deterministic parallel evaluation, or a recorded
-      decision that serial evaluation already meets the time budget.
-- [ ] Milestone 6: okf release prepared (owner approves the tag and push).
-- [ ] Milestone 6: `scripts/sweep-profile-rules.py` delegates to `okf profile sweep`; exception
-      manifests written for the six families; full catalog swept and triaged.
-- [ ] Milestone 6: README, ADR-9 amendment, okf ADR, IR-11 completion, and the logs.
+- [x] Timing spike run on 2026-10-28 during plan validation: compile plus one full pass over
+      the 182 strategy cases costs about 36 ms in process, so the in-process approach is
+      promoted. The numbers are in Surprises & Discoveries; the spike is now Milestone 0 of
+      plan 71.
+- [ ] Milestone 2: `scripts/compare-sweep-results.py` written and, with plan 71's Milestone 1
+      build on `OKF_BIN`, parity proven for the six families with the okf NDJSON evidence
+      committed under `docs/plans/evidence/13/`.
+- [ ] Milestone 3: `scripts/sweep-profile-rules.py` delegates to `okf profile sweep`; exception
+      manifests written for the six families; `scripts/sweep-all-profiles.sh` added; full
+      catalog swept and triaged, including one `--kinds all` run.
+- [ ] Milestone 3: README, ADR-9 amendment, IR-11 completion and the logs; the `just check`
+      gating decision recorded.
+
+The okf engine, command, classification, optional parallelism, release, okf ADR and okf request
+are plan 71's milestones; their state is tracked there.
 
 
 ## Surprises & Discoveries
@@ -327,6 +330,23 @@ After this plan:
   recorded in Surprises & Discoveries so the two can be told apart.
   Date: 2026-10-28
 
+- Decision: Relocate the okf work into okf's own ExecPlan, `mori://shinzui/okf/plans/71-add-okf-profile-sweep-for-load-bearing-rule-checks`,
+  and keep this plan for the catalog side. This supersedes the earlier decision to do all the
+  okf code work under this one plan.
+  Rationale: Each repository's plan should be implementable from that checkout alone, and each
+  commit should point at a plan in the same repository. Plan 71 now owns the engine design: the
+  in-process typed engine, the promote decision, grouping per rule location, the Nix toolchain,
+  classification by evidence, "acceptance failure is never protection" as an engine rule, the
+  default and `all` kind sets, and the `Okf.Profile.Sweep` and `okf profile sweep` interfaces.
+  The entries above that record those decisions stay as the history of how they were reached;
+  where they say Milestone 2 (the spike), 3, 4, 5 or 6, read plan 71's Milestones 0, 1, 2, 3
+  and 4, and the same mapping applies to the dated revision note below and to the Surprises &
+  Discoveries entries written before the relocation. This plan keeps the legacy engine, the baselines, the comparison script, the exception
+  manifests, the wrapper, the catalog gate and the ADR-9 amendment, and restates only the parts
+  of okf's contract it consumes. Commits in the okf checkout carry plan 71's trailer; commits
+  here carry this plan's. Both carry the shared intention.
+  Date: 2026-10-28
+
 
 ## Outcomes & Retrospective
 
@@ -482,76 +502,54 @@ bundles. The counts were produced during planning by running the script's own `r
 with the sweeps recorded in
 `mori://tan/tan-product-management/plans/4-add-strategy-messaging-and-launch-profiles-to-okf-profiles`.
 
-### okf, the producer (`mori://shinzui/okf`)
+### okf and the `okf profile sweep` contract (`mori://shinzui/okf`)
 
-okf is a Haskell project: the `okf-core` library and the `okf-cli` executable `okf`, currently
-version 0.10.0.0. Find the checkout with `mori registry show shinzui/okf --full` (field `Path`).
-Its compiler is GHC 9.12.4, provided by the checkout's Nix flake development shell, so every
-cabal command below runs from the checkout root as `nix develop --command <command>`, for
-example `nix develop --command cabal build all` and `nix develop --command cabal test all`.
-A `ghc` found on `PATH` outside that shell is not the project's compiler (the planning machine
-had 9.10.3 there, which cannot build the test suite's `zlib` dependency). The executable already
-links with `-threaded -rtsopts -with-rtsopts=-N`. Use
-`OKF_BIN="$(cd <okf checkout> && nix develop --command cabal list-bin okf)"` to run an
-unreleased build from okf-profiles.
+okf is the Haskell tool (`okf-core` library, `okf-cli` executable) that validates bundles.
+Version 0.10.0.0, the one installed on the owner's `PATH`, has no sweep command. Plan 71 adds
+`okf profile sweep` and prepares the next release (expected 0.11.0.0). Until that release is
+installed, this plan runs the unreleased build through `OKF_BIN`: from the okf checkout (find
+it with `mori registry show shinzui/okf --full`, field `Path`), build inside its Nix shell with
+`nix develop --command cabal build all`, then export
+`OKF_BIN="$(cd <okf checkout> && nix develop --command cabal list-bin okf)"`. Both
+`scripts/profile_fixture_cases.py` and, after Milestone 1, `scripts/sweep-profile-rules.py`
+honour it.
 
-These modules matter:
+What this plan relies on, and plan 71 delivers:
 
-- **`okf-core/src/Okf/Profile.hs`** contains:
-  - the authored descriptor types: `ProfileSpec`, `FrontmatterRules` (lists `required`,
-    `recommended`, `optional`), `FieldRule`, `NestedRules`, `NestedFieldRule`,
-    `HandleReferenceRule`, `PathReferenceRule`, `FieldFormat`, `Cardinality` and `TypeRule`;
-  - `loadProfileFile`, which decodes a descriptor from a Dhall file;
-  - `compileProfile :: ProfileSpec -> Either (NonEmpty ProfileDefinitionError) CompiledProfile`,
-    which checks definitions and merges each type's rules with the profile-wide rules into
-    `EffectiveFieldRule`s;
-  - `validateProfileWith` and `validateProfileVersion`;
-  - the structured `ProfileViolation` type, whose constructors carry the concept ID and the
-    `FieldPath`, for example `ValueNotInVocabulary`, `LocalDocumentReferenceNotAllowed` and
-    `SelfDocumentReference`.
-
-  `NestedRules` cannot contain further nesting, so a rule's location has at most two levels. A
-  `NestedFieldRule` carries `allowedValues`, `cardinality`, `format`, `path`, `when` and
-  `reference`, but never `uniqueBy`, `elementFields` or `objectFields`; so `allowSelf`,
-  `allowLocal` and `externalUriPattern` relaxations apply at nested scope too, and the legacy
-  script already produces them there (for example `jobRef` inside `keyResults`).
-  `compileProfile` rejects duplicate field names within one list at one scope
-  (`DuplicateFieldRule`), so scope + list + field identifies an authored rule uniquely.
-- **`validateReferenceText`** in the same file checks `allowLocal` *before* the prefix,
-  dangling-owner and `allowSelf` checks. Two consequences follow:
-  - When `allowLocal = False`, the `allowSelf` flag is never consulted, so relaxing it is provably
-    unobservable.
-  - Relaxing `allowLocal` on an external-only reference turns a `LocalDocumentReferenceNotAllowed`
-    deviation into `ReferenceHandlePrefixMismatch` or `DanglingHandleReference` on the same field.
-    The fixture stays rejected and still names the field, so the legacy predicate reports no
-    witness. That is the composite masking ADR-9 describes.
-- **`okf-core/src/Okf/Validation.hs`** contains `validateBundle` (core structural checks under
-  `PermissiveConformance` or `StrictAuthoring`), `validateBundleLogs` and `logStaleness`. None of
-  them takes a profile.
-- **`okf-core/src/Okf/Bundle.hs`** contains `walkBundle`, `walkBundleInventory` and `walkLogs`.
-  `okf-core/src/Okf/Index.hs` contains `readBundleVersion`.
-- **`okf-cli/src/Okf/Cli.hs`** contains:
-  - `runValidate`, which is the composition the sweep must reproduce: core errors and log
-    staleness, then `validateProfileVersion <> validateProfileWith`, each printed as
-    `"profile: " <> renderProfileViolation compiled concepts v`;
-  - the `ProfileCommand` sum (`ProfileList`, `ProfileShow`, `ProfileInit`) and
-    `profileCommandParser`, which the new `sweep` subcommand joins;
-  - `renderProfileViolation`, which exists only in the CLI.
-
-  Help text lives in `okf-cli/help/*.md`, and `okf-cli/help/profiles.md` documents profile
-  commands. The changelog is `okf-cli/CHANGELOG.md` (Keep a Changelog format).
-
-Two okf ADRs constrain the design:
-
-- **`mori://shinzui/okf/okf/adrs/concepts/ADR-5` ("Compile profile rules before validation").**
-  Bundle validation accepts only a `CompiledProfile`. Profile-scope and type-scope rules merge by
-  field name, vocabularies intersect, and an empty vocabulary means unconstrained. So a relaxation
-  must be applied to the authored `ProfileSpec` and recompiled. A relaxation at type scope can be
-  partly masked by a profile-scope rule for the same field.
-- **`mori://shinzui/okf/okf/adrs/concepts/ADR-11` ("Growing the profile descriptor language").**
-  Every additive descriptor-schema change needs a frozen decoder generation. This plan adds *no*
-  descriptor schema members, so no new generation is required. Keep it that way. The sweep reads
-  descriptors and never changes their published shape.
+- **Usage.** `okf profile sweep PROFILE --accept BUNDLE [--accept BUNDLE ...] --cases DIR
+  [--kinds legacy|default|all] [--json] [--only FIELD] [--exceptions FILE]`. `--cases` is a
+  directory in the `fixtures/<name>-invalid` shape, with `expected.json` in the same format
+  the catalog uses today. The command decodes the profile once, loads every bundle once,
+  evaluates each relaxation in process, and prints one line per relaxation as it is decided,
+  with line buffering, then a summary line with elapsed time.
+- **The same predicate.** A case is a *witness* under a relaxed profile exactly when it stops
+  meeting the expectation that `profile_fixture_cases.py` checks: N rendered `profile:` lines,
+  one naming the field. The engine applies this predicate to lines rendered by the same
+  renderer `okf validate` uses, so its witnesses match the legacy script's.
+- **Outcome classes** (plan 71, Milestone 2). Each relaxation ends as one of: `protected`
+  (a witness exists); `subsumed` (a `delete` that only made the field unknown, while every other
+  relaxation of the rule is accounted for); `covered` (a member of a composite policy whose
+  unit relaxation is protected, or a vocabulary clearing that cannot compile but whose
+  value-admitting relaxation is protected); `inert` (okf proves the relaxed profile behaves
+  identically, for example `allowSelf` on a reference with `allowLocal = False`, which
+  `validateReferenceText` never consults); `exception` (listed in the suite's manifest); or
+  `unprotected`. Acceptance failures and definition errors are never protection; an
+  unexplained one is a failing outcome. The three ADR-9 "expected unprotected" classes map
+  onto these as follows: an unconstrained optional field under `allowUnknownFields = True` is
+  `inert`; `allowSelf`/`allowLocal` on an external-only reference is `inert` or `covered`; a
+  spliced shared-family member is an `exception`, because after decoding nothing in a
+  descriptor says which rules came from a family.
+- **Exit codes.** 0 when nothing fails; 1 when any relaxation is failing or a manifest entry is
+  stale; 2 for a baseline fault (an acceptance bundle or case that does not meet its expectation
+  under the unrelaxed profile), an unreadable manifest or bad arguments; 3 for an internal
+  contradiction in okf's inertness proof.
+- **Machine-readable output.** With `--json`, NDJSON events `start`, `baseline`, one
+  `relaxation` per relaxation and `summary`; the fields this plan's comparison script keys on
+  are `field`, `kind` and `legacyOutcome` (see Interfaces and Dependencies).
+- **The manifest.** okf reads `<cases>/sweep-exceptions.json` when present (shape under
+  Interfaces and Dependencies). The manifest is authored here, beside the cases, and okf reports
+  an entry that matches no relaxation, or whose relaxation is not otherwise `unprotected`, as a
+  failing `stale-exception`.
 
 A naming hazard: okf's own improvement-request corpus also contains an "IR-11" (closing nested
 vocabularies), which is unrelated to this request. Always refer to requests by their full `mori://`
@@ -571,17 +569,17 @@ why shared-family results go in an exception manifest.
 
 ## Plan of Work
 
-The work runs in two repositories. Milestones 1 and 6 change okf-profiles, and Milestones 2–5
-change okf. Every commit in either repository uses Conventional Commits and ends with these
-trailers:
+Every milestone in this plan changes okf-profiles. The okf work is plan 71
+(`mori://shinzui/okf/plans/71-add-okf-profile-sweep-for-load-bearing-rule-checks`): Milestone 2 here needs
+its Milestone 1 build, and Milestone 3 here needs its release (or `OKF_BIN` until the release is
+installed). Every commit here uses Conventional Commits and ends with these trailers:
 
 ```text
-ExecPlan: mori://shinzui/okf-profiles/plans/13-make-profile-policy-sweeps-observable-and-run-them-natively-in-okf
+ExecPlan: docs/plans/13-make-profile-policy-sweeps-observable-and-run-them-natively-in-okf.md
 Intention: intention_01m61cc0jhee7trcx2kvb6x77y
 ```
 
-In okf-profiles itself, the `ExecPlan:` trailer may instead use the repository-relative form
-`docs/plans/13-make-profile-policy-sweeps-observable-and-run-them-natively-in-okf.md`.
+Commits in the okf checkout carry plan 71's own trailer instead.
 
 Do not create branches; commit on the current branch of each checkout. Before you start, run
 `git status` in okf-profiles. If unrelated uncommitted work exists, for example under
@@ -679,7 +677,7 @@ sweep: 119 relaxations: 94 witnessed, 3 acceptance-fails, 2 descriptor-invalid, 
 `legacyOutcome` is the exact string the old `noticed` returned: `fixture <name>`,
 `acceptance-fails`, `MUTATION-ILL-TYPED` or `UNPROTECTED`. `descriptor-invalid` results carry
 `legacyOutcome: "acceptance-fails"`, because that is what the old script would have reported.
-This field is the comparison key used in Milestone 3. `gitCommit` is `git rev-parse HEAD` of
+This field is the comparison key used in Milestone 2. `gitCommit` is `git rev-parse HEAD` of
 okf-profiles.
 
 **Recorded baselines.** After the script works, record the six legacy baselines. They take a long
@@ -697,406 +695,47 @@ Acceptance:
 - Temporarily break one rejection fixture's `expected.json` entry: the script exits 2 with a
   baseline fault. Restore the entry afterwards.
 
-### Milestone 2 — Prototype: measure in-process evaluation (okf checkout)
+### Milestone 2 — Parity between the native engine and the legacy baselines
 
-This is a prototyping milestone. It is not committed except as numbers in this plan. It confirms
-that decoding the profile once and evaluating every relaxation in memory is as cheap as the
-Decision Log assumes. It also finds anything unexpectedly expensive in `compileProfile`, such as
-compiling `externalUriPattern` regexes on every compile.
+This milestone needs plan 71's Milestone 1: an okf build whose `okf profile sweep --kinds legacy
+--json` runs on the catalog. Point `OKF_BIN` at it (see Context and Orientation). It can start
+as soon as that build exists; the baselines from Milestone 1 must have been recorded with the
+Milestone 1 script (after the scanner fix) at a commit whose `fixtures/` and `profiles/` are
+unchanged since.
 
-**This milestone was run on 2026-10-28 during plan validation**, and its numbers are in
-Surprises & Discoveries: one compile plus one full rendered pass over all 182 strategy cases
-costs 36 ms, so the approach is promoted. Repeat it only if okf-core's profile validation or
-compilation changes before Milestone 3 begins; it takes about a minute.
+**Comparison script.** Add `scripts/compare-sweep-results.py LEGACY.json OKF.ndjson`. It reads
+the legacy summary written by `--json` in Milestone 1 and the okf NDJSON stream, and compares
+the multisets of `(field, kind, legacyOutcome)` tuples. okf derives `legacyOutcome` from its own
+observation with the legacy precedence (plan 71 specifies this): an acceptance violation or a
+descriptor that does not compile → `acceptance-fails`; otherwise a primary witness `w` →
+`fixture w`; otherwise → `UNPROTECTED`. The script prints every unmatched tuple on either side.
+An okf-only tuple is acceptable only when it is a `delete` of a rule that is the sole element of
+its list, because the legacy textual deletion cannot remove a sole element; label these
+`legacy cannot delete a sole list element`. Any other unmatched tuple, including a legacy
+`MUTATION-ILL-TYPED`, makes it exit 1. The script also checks that the legacy summary's
+`gitCommit` matches `git rev-parse HEAD` and warns when it does not, since the comparison is
+only meaningful on the same fixtures. If a mismatch traces to rendering differences between okf
+versions, regenerate the legacy baseline with `OKF_BIN` set to the new build.
 
-In the okf checkout, write an uncommitted file `spike/SweepSpike.hs` (code under Concrete Steps).
-It loads `profiles/coordination/strategy.dhall` from the okf-profiles checkout with
-`loadProfileFile`, and loads all 182 rejection fixtures with `walkBundle`,
-`walkBundleInventory` and `readBundleVersion`. Then it times, 200 iterations each:
-
-- `compileProfile` on the decoded spec, forced to weak head normal form only;
-- compile plus counting the violations over every fixture;
-- one full pass over every fixture with a shared compiled profile, rendering every violation
-  with `show`;
-- compile plus that full rendered pass, which is the cost of one relaxation.
-
-Each timed call takes the iteration index as an argument and is marked `NOINLINE`, and the file
-is compiled with `-fno-full-laziness -fno-cse`. Without that, GHC floats a loop body that does
-not depend on the index out of the loop and evaluates it once, and the spike reports the cost
-of one iteration as the cost of 200 (this happened during validation).
-
-Build and run it from the okf checkout root, inside the Nix shell. `cabal exec -- runghc` does
-not see the in-place library; a GHC environment file does:
-
-```bash
-nix develop --command bash -c '
-  cabal build okf-core --write-ghc-environment-files=always &&
-  ghc -O1 -outputdir spike/build spike/SweepSpike.hs -o spike/sweep-spike &&
-  ./spike/sweep-spike <okf-profiles checkout>'
-rm -rf spike .ghc.environment.*
-```
-
-Promote the approach if one compile plus one full rendered pass costs under 50 ms. That gives
-under 10 s serial for 200 relaxations, against tens of minutes today. Otherwise, record the
-dominant cost in Surprises & Discoveries and treat Milestone 5 (parallel evaluation) as required.
-Record the measured numbers in Surprises & Discoveries either way, and delete `spike/` and the
-environment file afterwards; neither is ignored by git.
-
-### Milestone 3 — Native `okf profile sweep` with legacy parity (okf, then okf-profiles)
-
-This milestone builds the engine and the command, and proves that they reproduce the legacy
-results.
-
-**Request.** First, file the request in okf's corpus. Copy the frontmatter shape of
-`docs/improvement-requests/fail-profile-enforce-when-no-profile-is-applied.md` in the okf checkout:
-
-- `type: Improvement Request`, `title`, `description`, `generated`;
-- `requestId` from `okf id next docs/improvement-requests IR` (run in the okf checkout, and add
-  `--profile` if that bundle declares one; at planning time it did not);
-- `status: proposed`;
-- `origin: mori://shinzui/okf-profiles/plans/13-make-profile-policy-sweeps-observable-and-run-them-natively-in-okf`;
-- `acceptanceCriteria` restating this plan's Validation and Acceptance for okf.
-
-Title it "Sweep profile rules for load-bearingness natively". Add an entry to okf's
-`docs/improvement-requests/log.md` in the existing style. Record the allocated handle and its
-`mori://shinzui/okf/okf/improvement-requests/concepts/IR-N` URI in the Decision Log. Verify it
-with `mori registry concepts --id IR-N --json` after `mori register --local` in the okf checkout;
-if the registry lags, record the intended URI anyway.
-
-**Engine module.** Create `okf-core/src/Okf/Profile/Sweep.hs` and list it in
-`okf-core/okf-core.cabal` under `exposed-modules`. It is pure except for one loading function.
-Its interfaces are specified in Interfaces and Dependencies. It has six parts:
-
-1. **Rule locations.** A `RuleLocation` names an authored rule by scope (profile-wide, or
-   `type:<Type Name>`), presence list (`required`, `recommended`, `optional`), field, and
-   optionally a nested container (`elementFields` or `objectFields`) with its own list and member
-   field. `renderRuleLocation` prints it as a stable text identifier:
-
-   ```text
-   profile/required/status
-   type:Objective/required/keyResults/elementFields/required/id
-   ```
-
-   A *relaxation ID* is the location plus `#<kind>`, for example
-   `type:Launch/required/launchRef#allowLocal`. IDs are the keys used by exception manifests and
-   by the comparison script.
-2. **Enumeration and application.** `enumerateRelaxations :: KindSet -> ProfileSpec -> [Relaxation]`
-   walks the authored spec in declaration order: the profile-wide frontmatter lists first, then
-   each type in declaration order, and within each rule its nested members. It yields every
-   applicable relaxation. `applyRelaxation :: Relaxation -> ProfileSpec -> ProfileSpec` performs
-   it on the typed value. In this milestone, implement only the seven legacy kinds, with the same
-   applicability conditions as the Python script:
-   - `allowedValues` only when the list is non-empty;
-   - `format` and `uniqueBy` only when they are `Just`;
-   - `allowSelf` and `allowLocal` only when `False`, inside `reference` (not inside `path`);
-   - `externalUriPattern` only when it is `Just`;
-   - `delete` for every rule.
-3. **Suites.** A `Suite` holds the acceptance bundles and the rejection cases, each loaded once.
-   Every bundle keeps its concepts, inventory, version declaration and logs. Each rejection case
-   keeps its name and expectation (field, count) parsed from `expected.json`, in file order.
-   `loadSuite :: [FilePath] -> FilePath -> IO (Either SuiteError Suite)` does this loading. Use
-   aeson's ordered parsing of the top-level object. Aeson's `KeyMap` is not ordered, so parse the
-   object's key order from the raw bytes, or decode into `[(Text, Value)]` with
-   `Data.Aeson.Decoding`'s token stream. Choose one, record the choice in the Decision Log, and
-   test that order survives. Order matters because the legacy witness is the *first* noticing
-   fixture.
-4. **Baseline.** `checkBaseline` computes each acceptance bundle's core errors and log staleness
-   once. These do not depend on the profile. The acceptance bundles must pass
-   (`StrictAuthoring`, enforced, log-enforced, exactly as `runValidate` decides), and every
-   rejection case must meet its expectation under the unrelaxed profile. Any failure is a
-   `BaselineFault`, which stops the sweep before any relaxation runs.
-5. **Evaluation.** `evaluateRelaxation` recompiles the relaxed spec. A `Left` is
-   `DescriptorInvalid`. Otherwise it computes, for each acceptance bundle, the profile violations
-   under `StrictAuthoring`. Any violation means `AcceptanceObservable`, with the rendered lines.
-   For each rejection case, it computes the violations under `PermissiveConformance`, renders
-   them, and applies the legacy predicate: exactly `count` lines, at least one containing the
-   field. A case that fails the predicate is a witness.
-
-   Collect *all* witnesses, not just the first. The *primary* witness is the first in the legacy
-   order: cases whose expected field equals the rule's innermost field name first (stable), then
-   the rest in file order. Collecting every witness means every relaxation costs a full pass
-   over the cases; the spike measured that pass at about 30 ms for 182 cases, so this is
-   affordable and buys the full witness list and the facet witnesses of Milestone 4. Because
-   rendering lives in okf-cli, the engine takes the renderer as a parameter:
-   `type Render = CompiledProfile -> [Concept] -> ProfileViolation -> Text`.
-6. **Grouping.** Evaluate relaxations one *rule location* at a time: all relaxations of one
-   authored rule form a group, evaluated together, and the group's results are emitted in
-   enumeration order once the whole group is decided. In this milestone the grouping changes
-   nothing visible, because no outcome depends on a sibling; Milestone 4 adds `subsumed` and
-   `covered`, which do, and Milestone 5 parallelizes over groups. `sweepProfile` returns a list
-   that is lazy per group, so printing starts after the first group, not after the whole sweep.
-
-**Command.** Add `ProfileSweep ProfileSweepOptions` to `ProfileCommand` in `okf-cli/src/Okf/Cli.hs`
-and a `sweep` subcommand to `profileCommandParser`:
-
-```text
-okf profile sweep PROFILE --accept BUNDLE [--accept BUNDLE ...] --cases DIR
-                  [--kinds legacy|default|all] [--json] [--only FIELD]
-```
-
-In this milestone, `default` equals `legacy`. `runProfileSweep` follows these steps:
-
-1. Set `hSetBuffering stdout LineBuffering` and the same for stderr.
-2. Load the profile with the existing `loadProfileOrExit` and `compileProfileOrExit`, then call
-   `loadSuite`.
-3. Print a start line naming the okf version, the profile, the number of relaxations and the
-   number of cases.
-4. Run the baseline. On a fault, print it and exit 2.
-5. Print one line per relaxation, in enumeration order, as each rule location's group is
-   decided. The text layout is:
-
-   ```text
-   [  12/119] OK  type:Objective/required/status#allowedValues  witness objective-bad-status (+2 more) 3 ms
-   [  13/119] !!  type:Launch/required/launchRef#allowLocal      unprotected 41 ms
-   ```
-
-6. Print a summary line with counts per outcome and the total elapsed time.
-
-With `--json`, print one JSON object per line (NDJSON) instead, with the schema under Interfaces
-and Dependencies.
-
-For this milestone, exit 0 after a successful run whatever the outcomes, matching the legacy
-script. Exit codes become meaningful in Milestone 4. Write `okf-cli/help/profiles.md` text for
-the command, along with an `[Unreleased]` changelog entry and tests:
-
-- **okf-core tests** (`okf-core/test/Main.hs`) cover enumeration over a small fixture profile
-  under `okf-core/test/fixtures/` (expected IDs), `applyRelaxation` for each kind, preservation of
-  `expected.json` order, baseline faults, and a witness and an unprotected result on a two-case
-  suite.
-- **An okf-cli test** (`okf-cli/test/Main.hs`) runs the command end to end on that fixture suite
-  and checks the NDJSON shape.
-
-**Comparison script.** Back in okf-profiles, add `scripts/compare-sweep-results.py LEGACY.json OKF.ndjson`.
-It reads the legacy summary from Milestone 1 and the okf NDJSON stream, and compares the
-multisets of `(field, kind, legacyOutcome)` tuples. The okf side derives `legacyOutcome` from its
-own observation with the legacy precedence:
-
-1. `AcceptanceObservable` or `DescriptorInvalid` → `acceptance-fails`;
-2. otherwise a primary witness `w` → `fixture w`;
-3. otherwise → `UNPROTECTED`.
-
-It prints every unmatched tuple on either side. An okf-only tuple is acceptable only when it is a
-`delete` of a rule that is the sole element of its list, because the legacy textual deletion
-cannot remove a sole element. The script labels these `legacy cannot delete a sole list element`.
-Any other unmatched tuple, including a legacy `MUTATION-ILL-TYPED`, makes it exit 1.
-
-The comparison is only meaningful when both runs used the same fixtures (same `gitCommit` for the
-files under `fixtures/` and `profiles/`) and the same okf renderer. If a mismatch traces to
-rendering, regenerate the legacy baseline with `OKF_BIN` set to the new build.
+**Evidence.** For each of the six families, write the okf stream to
+`docs/plans/evidence/13/<name>.okf.ndjson` and commit it beside the legacy baseline, with the
+wall time of each run recorded in Outcomes & Retrospective next to the legacy wall time from
+Milestone 1.
 
 Acceptance:
 
-- For each of the six profiles,
-  `"$OKF_BIN" profile sweep <profile> --accept fixtures/<name> --cases fixtures/<name>-invalid --kinds legacy --json > docs/plans/evidence/13/<name>.okf.ndjson`
-  completes.
-- `python3 scripts/compare-sweep-results.py docs/plans/evidence/13/<name>.legacy.json docs/plans/evidence/13/<name>.okf.ndjson`
-  prints `parity: N/N legacy results matched` and exits 0.
-- Record each pair of wall times in Outcomes & Retrospective. The strategy sweep with
-  `--kinds legacy` is forecast at about 4 s (0.3 s loading plus 119 relaxations × 36 ms); treat
-  a wall time over 15 s as a defect to investigate (a lost sharing of the loaded suite, or a
-  recompile per case) before accepting the milestone.
+- For each family, `python3 scripts/compare-sweep-results.py docs/plans/evidence/13/<name>.legacy.json docs/plans/evidence/13/<name>.okf.ndjson`
+  prints `parity: N/N legacy results matched` and exits 0, with only sole-element deletions as
+  okf-only results.
+- The strategy run's wall time is seconds (forecast about 4.5 s); the legacy baseline for the
+  same relaxations is the number recorded in Milestone 1. Record both.
 
-### Milestone 4 — Principled classification and a failing exit code (okf)
+### Milestone 3 — Adoption: wrapper, manifests, catalog gate, documentation
 
-This milestone turns observations into classifications that can gate a release. It extends
-`Okf.Profile.Sweep` and the command. The ordering of classification rules below is normative.
+This milestone needs plan 71's Milestone 2 (classification and exit codes). Its gating step
+needs the okf release installed on the owner's `PATH`; everything else works with `OKF_BIN`.
 
-**New relaxation kinds:**
-
-- `presence`: move a `required` rule to the `optional` list at the same scope, keeping every
-  constraint. This is in the `default` set. It does not apply to `recommended` rules, whose
-  absence is invisible without `--strict`, which rejection fixtures do not use (ADR-8).
-- `admitValue:<value>`: append one value to a non-empty `allowedValues`. This is generated only
-  for a rule whose `allowedValues` relaxation is `DescriptorInvalid`. There is one candidate for
-  each distinct value that some rejection case's baseline `ValueNotInVocabulary` violation
-  reports at that rule's field path. It is the general form of the "expand the allowed values"
-  controls recorded in the tan-product-management EP-4 record. Derive these candidates during
-  enumeration, after the baseline: whether the `allowedValues` relaxation is `DescriptorInvalid`
-  needs only `compileProfile` (about 6 ms), and the baseline violations are already computed.
-  The start event's `relaxationCount` is therefore exact, and `index`/`total` never change
-  mid-run.
-- In the `all` set only:
-  - `cardinality` (set to `Any`);
-  - `condition` (set `when` to `Nothing`);
-  - `path` (set `path` to `Nothing`);
-  - `reference` (set `reference` to `Nothing`; this is the composite unit);
-  - `elementFields` and `objectFields` (set to `Nothing`; composite with list cardinality);
-  - at type scope: `pathPattern`, `resourceScheme`, `requireSchemaSection` (to `False`),
-    `schemaColumns` (to `[]`), and `idPrefix` (composite with a `DocumentHandle` format).
-
-**Observation.** For each relaxation the engine records the witnesses (outcome level, the legacy
-predicate), the acceptance violations, the definition errors, and the *facet witnesses*. A facet
-witness is a rejection case in which a baseline violation of the relaxation's own kind (see the
-table below) at the rule's path disappears, whether or not the fixture still fails for another
-reason. The mapping from relaxation kind to violation constructors is:
-
-- `delete`/`presence` → `MissingProfileField`, `MissingNestedProfileField`;
-- `allowedValues`/`admitValue` → `ValueNotInVocabulary`;
-- `format` → `ValueFormatMismatch`;
-- `uniqueBy` → `DuplicateNestedFieldValue`;
-- `allowLocal` → `LocalDocumentReferenceNotAllowed`;
-- `allowSelf` → `SelfDocumentReference`;
-- `externalUriPattern` → `ExternalReferencePatternMismatch`;
-- `cardinality` → `CardinalityMismatch`;
-- `reference` → every reference constructor;
-- `path` → the path constructors.
-
-**Classification:** apply these rules in order; the first that matches decides the outcome.
-Rules 2, 3 and 6 look at sibling relaxations of the same rule location (and at the derived
-`admitValue` and composite unit relaxations of that rule), which is why Milestone 3 evaluates
-and emits one rule location's relaxations as a group.
-
-1. **`protected`:** at least one witness, and no acceptance violation and no definition error.
-2. **`subsumed`** (non-failing): the kind is `delete`, the result is `AcceptanceObservable` or
-   `DescriptorInvalid`, and every other relaxation of the same rule location ends `protected`,
-   `inert`, `covered` or `exception`. A deletion that only makes the field unknown tests the
-   declaration, not a constraint. The constraint-specific relaxations carry the evidence. The
-   line names them.
-3. **`covered`** (non-failing): the kind is `allowedValues`, the result is `DescriptorInvalid`,
-   and some `admitValue` relaxation of the same rule is `protected`. The line names it and its
-   witness.
-4. **`descriptor-invalid` or `acceptance-observable`** (failing): every other result with
-   definition errors or acceptance violations.
-5. **`inert`** (non-failing): no witness, and the relaxed compiled profile is *behaviourally
-   equal* to the baseline. Define `behaviourKey :: CompiledProfile -> BehaviourKey` as a
-   projection of the compiled rules that erases only what the validator provably never consults.
-   Each erasure needs a code comment naming the validator function that proves it, and a test.
-   There are four erasures:
-   - descriptions and guidance;
-   - an `EffectiveFieldRule` with no presence clauses, no allowed values, `Any` cardinality and no
-     format, nested rules, reference, path or uniqueness, when `allowUnknownFields` is `True`;
-   - `allowSelf` inside a handle reference whose effective `allowLocal` is `False`;
-   - `externalUriPattern` when `externalUriSchemes` is empty.
-
-   Inert means equal keys. The engine always evaluates the relaxation anyway. If an inert
-   relaxation has a witness, that is an okf bug: report it as an internal error and exit 3, so an
-   unsound proof can never hide a real result.
-6. **`covered`** (non-failing): no witness, and the relaxation is a member of a composite unit
-   whose unit relaxation is `protected`. The units are:
-   - the members of a handle reference policy (`allowLocal`, `allowSelf`, `externalUriPattern`)
-     and the unit `reference`;
-   - a type's `idPrefix` and the `DocumentHandle` `format` of its `idField`, each covering the
-     other;
-   - a `List` cardinality and `elementFields`.
-
-   The engine evaluates the unit relaxation even under the `default` set when a member needs it.
-   It reports the unit and its witness, and also the member's facet witnesses, which show that the
-   fixture does exercise the member.
-7. **`exception`** (non-failing): no witness, and the relaxation ID matches an entry in the
-   suite's exception manifest.
-8. **`unprotected`** (failing): everything else.
-
-**Exception manifest.** The command reads `--exceptions FILE`, defaulting to
-`<cases>/sweep-exceptions.json` when that file exists, with this shape:
-
-```json
-{
-  "version": 1,
-  "exceptions": [
-    {
-      "relaxation": "type:Objective/optional/verified/objectFields/required/by#delete",
-      "class": "shared-family",
-      "home": "okfV02",
-      "rationale": "Spliced from Profile/V02.dhall; okf-v0-2-invalid tests each member."
-    }
-  ]
-}
-```
-
-`class` is a closed vocabulary:
-
-- `shared-family` requires `home`, naming the home profile's export;
-- `overlapping-rule` requires `overlapsWith`, the relaxation ID or type attribute that governs
-  the same value (ADR-9's one-governing-rule caveat);
-- `deferred` requires `request`, a `mori://` URI of the request that will add the fixture.
-
-These rules apply to the manifest:
-
-- Every entry needs a non-empty `rationale`.
-- An entry whose ID matches no relaxation, or whose relaxation is not otherwise `unprotected`, is
-  *stale*. It is reported as `stale-exception` and is failing, so manifests cannot rot.
-- Malformed manifests are a baseline fault.
-
-**Exit codes:**
-
-- 0 when no failing outcome or stale exception exists;
-- 1 when any does;
-- 2 for a baseline fault, an unreadable manifest or bad arguments;
-- 3 for an internal inertness contradiction.
-
-**Output.** The summary line lists counts for every outcome. The NDJSON relaxation events gain
-`outcome`, `coveredBy`, `facetWitnesses`, `reason` and `exception` (see Interfaces and
-Dependencies).
-
-**Tests.** Write okf-core tests, each on a small purpose-built profile and suite under
-`okf-core/test/fixtures/sweep/`, for:
-
-- each classification rule, including a contradiction test that feeds a deliberately wrong
-  `behaviourKey` through an internal test hook and expects the internal error;
-- each erasure in `behaviourKey`: the same bundles yield identical violations with and without
-  the erased member;
-- `admitValue` generation from a conditional status vocabulary, where emptying the vocabulary
-  must make `compileProfile` fail;
-- the `allowLocal` masking case, which must end `covered` by `reference`;
-- stale and malformed manifests.
-
-Acceptance:
-
-- `nix develop --command cabal test all` passes in the okf checkout.
-- On the six families,
-  `"$OKF_BIN" profile sweep … --kinds legacy --json` still passes the comparison script.
-  `legacyOutcome` is unchanged by classification.
-- `"$OKF_BIN" profile sweep profiles/coordination/strategy.dhall --accept fixtures/strategy --cases fixtures/strategy-invalid`
-  (with the default kinds and no manifest yet) exits 1. Its unprotected lines are exactly the
-  shared-family members and any genuine gaps. No `allowSelf`/`allowLocal` line is unprotected:
-  each is `inert` or `covered`.
-
-### Milestone 5 — Conditional: bounded, deterministic parallel evaluation (okf)
-
-Do this milestone only if Milestone 4's default-kind sweep of the strategy profile takes more
-than 30 s of wall time on the reference machine, or if Milestone 2 recorded that it would.
-Otherwise, record the measured time and the decision to skip it in the Decision Log, check the
-Progress item, and move on. Milestone 2 forecasts about 6 s, so the expected outcome is a
-recorded skip; the design below stays in the plan in case the measured command disagrees.
-
-Evaluation is pure, so parallelism needs no threads in the engine. In `runProfileSweep`:
-
-1. Build the lazy list of per-rule-location groups, each a list of `(Relaxation, Outcome)`
-   pairs (Milestone 3's grouping).
-2. Apply `withStrategy (parBuffer jobs rdeepseq)` to the list of groups.
-   `Control.Parallel.Strategies.parBuffer :: Int -> Strategy a -> Strategy [a]` from the
-   `parallel` package evaluates up to `jobs` list elements ahead of the consumer.
-3. Consume the list sequentially for printing.
-
-Output order stays the enumeration order whatever the scheduling, so results are deterministic.
-At most `jobs` groups run ahead of printing, which bounds both work and memory.
-
-To support this:
-
-- Add `--jobs N`, defaulting to the RTS capability count, with `--jobs 1` meaning serial.
-- Add `NFData` instances through `deriving anyclass (NFData)` for the engine's result types and
-  for any okf-core types they contain (`ProfileViolation`, `FieldPath` and their components).
-- Add `parallel` and `deepseq` with bounds to `okf-cli/okf-cli.cabal`, and `deepseq` to
-  `okf-core/okf-core.cabal` if the instances live there.
-
-Acceptance: running the same sweep with `--jobs 1` and `--jobs 8` gives byte-identical `--json`
-output once `elapsedMs` is removed (`jq -c 'del(.elapsedMs)'`), and the `--jobs 8` wall time is
-lower.
-
-### Milestone 6 — Release and adoption (okf, then okf-profiles)
-
-**okf release.** Prepare the release by following okf's established process: version bump in
-both `.cabal` files, the changelog section, and generated help if any. Look at the most recent
-`chore(release)` commit in the okf checkout with `git log --grep 'chore(release)' -1 --stat` and
-mirror it (the 0.10.0.0 commit, `b575102`, bumps both `.cabal` files, moves the `[Unreleased]`
-changelog entries under the version heading, and explains the semver bump in its body). Build
-and test the release candidate inside the Nix shell: `nix develop --command cabal test all`.
-The expected version is 0.11.0.0; record the actual one. **Ask the owner before tagging or
-pushing.** Installing the release on the owner's `PATH` (through their Nix home-manager
-configuration) is the owner's action. Until it happens, keep using `OKF_BIN`.
-
-**Delegating wrapper.** In okf-profiles, add `--engine okf|legacy` to
-`scripts/sweep-profile-rules.py`:
+**Delegating wrapper.** Add `--engine okf|legacy` to `scripts/sweep-profile-rules.py`:
 
 - `okf`, the default, first checks that `"$OKF_BIN" profile sweep --help` succeeds. It then
   replaces itself with
@@ -1113,7 +752,8 @@ configuration) is the owner's action. Until it happens, keep using `OKF_BIN`.
 1. Run the default-kind sweep.
 2. For every `unprotected` result, either add the missing rejection fixture, following ADR-9
    (one fault per fixture, with an entry in `expected.json`), or add an exception entry to
-   `fixtures/<name>-invalid/sweep-exceptions.json` with the right class.
+   `fixtures/<name>-invalid/sweep-exceptions.json` with the right class (shape under Interfaces
+   and Dependencies).
 3. Verify each `shared-family` exception: run the home profile's sweep and confirm that the same
    innermost field and kind are `protected` there. Note any that are not as findings.
 4. Re-run until the sweep exits 0.
@@ -1145,15 +785,13 @@ Until then, a contributor with okf 0.10 would see `just check` fail for a missin
   Advance ADR-9's `timestamp` (or its equivalent last-revision field, per the local profile) and
   add a log entry with `okf log add docs/adr --kind Update -m "ADR-9 …"` in the established style. Then run
   `okf validate docs/adr --strict --profile docs/adr/profile.dhall --profile-enforce --log-enforce`.
-- In okf, add an ADR recording why the sweep relaxes the typed descriptor in process and what
-  `behaviourKey` may erase, following okf's ADR workflow (`okf id next docs/adr ADR --profile docs/adr/profile.dhall`).
-- Mark the okf request completed in the same way.
+- The okf-side ADR and the okf request's completion are plan 71's Milestone 4.
 
 **Close IR-11.** Set `status: completed`, `completedAt`, `targetPlan` (this plan's `mori://`
-URI), a `resolution` naming the okf release and the parity evidence, and an `amended` entry.
-Append the completion to `docs/improvement-requests/log.md`, then validate that bundle strictly
-with its own profile, `docs/improvement-requests/profile.dhall`. When implementation starts
-(Milestone 1), first set `status: in-progress` and `targetPlan`, with a log entry.
+URI), a `resolution` naming the okf release, plan 71 and the parity evidence, and an `amended`
+entry. Append the completion to `docs/improvement-requests/log.md`, then validate that bundle
+strictly with its own profile, `docs/improvement-requests/profile.dhall`. When implementation
+starts (Milestone 1), first set `status: in-progress` and `targetPlan`, with a log entry.
 
 Acceptance:
 
@@ -1161,14 +799,14 @@ Acceptance:
 - `python3 scripts/sweep-profile-rules.py profiles/coordination/strategy.dhall fixtures/strategy fixtures/strategy-invalid`
   streams okf's lines and exits 0.
 - `bash scripts/sweep-all-profiles.sh` exits 0 and prints its total time.
-- Both ADR bundles and both request bundles validate strictly.
+- The ADR bundle and the request bundle validate strictly.
 
 
 ## Concrete Steps
 
-All okf-profiles commands run from the okf-profiles checkout root. All okf commands run from the
-okf checkout root (find it with `mori registry show shinzui/okf --full`). The scratch directory
-for long outputs that are not evidence is any directory outside both checkouts.
+All commands run from the okf-profiles checkout root. Building okf is plan 71's business; this
+plan only needs `OKF_BIN` exported as described in Context and Orientation. The scratch
+directory for long outputs that are not evidence is any directory outside the checkout.
 
 Milestone 1 — try the improved legacy script on the smallest family and watch it stream:
 
@@ -1198,8 +836,7 @@ Record the six baselines (long-running, one at a time, in the background). Budge
 each unprotected relaxation costs a full pass of about 0.38 s per case on the strategy profile
 (less on smaller descriptors), so expect roughly half an hour each for strategy, launches,
 campaigns and messaging, a quarter of an hour for audiences and four minutes for claim-checks,
-about two hours in total. Start the loop and carry on with Milestone 3's okf work while it
-runs:
+about two hours in total. Start the loop and carry on with Milestone 2's script while it runs:
 
 ```bash
 mkdir -p docs/plans/evidence/13
@@ -1226,119 +863,10 @@ ExecPlan: docs/plans/13-make-profile-policy-sweeps-observable-and-run-them-nativ
 Intention: intention_01m61cc0jhee7trcx2kvb6x77y
 ```
 
-Milestone 2 — the spike file in the okf checkout, `spike/SweepSpike.hs`. This exact file
-compiled and ran on 2026-10-28 against okf-core 0.10.0.0 with GHC 9.12.4. Adjust imports if a
-later compiler reports a name in a different module.
-
-```haskell
-{-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -fno-full-laziness -fno-cse #-}
-module Main (main) where
-
-import Control.Monad (forM, forM_)
-import Data.Time.Clock (diffUTCTime, getCurrentTime)
-import Okf.Bundle (walkBundle, walkBundleInventory)
-import Okf.Index (readBundleVersion)
-import Okf.Profile (CompiledProfile, ProfileSpec, compileProfile, loadProfileFile, validateProfileVersion, validateProfileWith)
-import Okf.Validation (ValidationProfile (..))
-import System.Directory (doesDirectoryExist, listDirectory)
-import System.Environment (getArgs)
-import System.FilePath ((</>))
-import System.IO (hFlush, stdout)
-
--- Each worker takes an iteration index it ignores, and is NOINLINE, so GHC
--- cannot float the call out of the loop and compute it once.
-
-{-# NOINLINE compileOnce #-}
-compileOnce :: Int -> ProfileSpec -> CompiledProfile
-compileOnce _ spec = either (error . show) id (compileProfile spec)
-
-{-# NOINLINE passOnce #-}
-passOnce :: Int -> CompiledProfile -> [(a, b, c)] -> ([(a, b, c)] -> CompiledProfile -> Int) -> Int
-passOnce _ compiled suite f = f suite compiled
-
-{-# NOINLINE evaluateOnce #-}
-evaluateOnce :: Int -> ProfileSpec -> [(a, b, c)] -> ([(a, b, c)] -> CompiledProfile -> Int) -> Int
-evaluateOnce _ spec suite f = f suite (either (error . show) id (compileProfile spec))
-
-timed :: String -> Int -> (Int -> IO ()) -> IO ()
-timed label n act = do
-  t0 <- getCurrentTime
-  forM_ [1 .. n] act
-  t1 <- getCurrentTime
-  let total = realToFrac (diffUTCTime t1 t0) :: Double
-  putStrLn (label <> ": " <> show n <> " iterations in " <> show total <> " s = " <> show (total / fromIntegral n * 1000) <> " ms each")
-  hFlush stdout
-
-main :: IO ()
-main = do
-  [root] <- getArgs
-  t0 <- getCurrentTime
-  Right spec <- loadProfileFile (root </> "profiles/coordination/strategy.dhall")
-  tLoad <- getCurrentTime
-  putStrLn ("profile decode: " <> show (diffUTCTime tLoad t0))
-  let casesDir = root </> "fixtures/strategy-invalid"
-  names <- listDirectory casesDir
-  dirs <- filter snd <$> forM names (\n -> (,) (casesDir </> n) <$> doesDirectoryExist (casesDir </> n))
-  suite <- forM (map fst dirs) $ \d -> do
-    Right concepts <- walkBundle d
-    Right inventory <- walkBundleInventory d
-    Right declaration <- readBundleVersion d
-    pure (concepts, inventory, declaration)
-  t1 <- getCurrentTime
-  putStrLn ("load: " <> show (diffUTCTime t1 tLoad) <> " for " <> show (length suite) <> " cases")
-  let fullPass s compiled =
-        sum [ length (show vs)
-            | (concepts, inventory, declaration) <- s
-            , let vs = validateProfileVersion declaration compiled
-                         <> validateProfileWith inventory PermissiveConformance compiled concepts ]
-      violationCount s compiled =
-        sum [ length (validateProfileVersion declaration compiled
-                        <> validateProfileWith inventory PermissiveConformance compiled concepts)
-            | (concepts, inventory, declaration) <- s ]
-  let compiled0 = compileOnce 0 spec
-  putStrLn ("violations per pass: " <> show (violationCount suite compiled0))
-  timed "compile only (WHNF)" 200 (\i -> compileOnce i spec `seq` pure ())
-  timed "compile + count violations over 182 cases" 200 (\i -> evaluateOnce i spec suite violationCount `seq` pure ())
-  timed "full pass, rendered with show, shared compile" 200 (\i -> passOnce i compiled0 suite fullPass `seq` pure ())
-  timed "compile + full pass rendered with show" 200 (\i -> evaluateOnce i spec suite fullPass `seq` pure ())
-```
+Milestone 2 — with `OKF_BIN` pointing at a plan 71 Milestone 1 build, sweep and compare:
 
 ```bash
-# okf checkout root
-nix develop --command bash -c '
-  cabal build okf-core --write-ghc-environment-files=always &&
-  ghc -O1 -outputdir spike/build spike/SweepSpike.hs -o spike/sweep-spike &&
-  ./spike/sweep-spike <okf-profiles checkout>'
-rm -rf spike .ghc.environment.*
-```
-
-The output on 2026-10-28 (second of two runs):
-
-```text
-profile decode: 0.1051s
-load: 0.14969s for 182 cases
-violations per pass: 197
-compile only (WHNF): 200 iterations in 0.794563 s = 3.972815 ms each
-compile + count violations over 182 cases: 200 iterations in 7.117308 s = 35.58654 ms each
-full pass, rendered with show, shared compile: 200 iterations in 6.019125 s = 30.095625 ms each
-compile + full pass rendered with show: 200 iterations in 7.240927 s = 36.204635 ms each
-```
-
-The last line is the per-relaxation cost. Record all four in Surprises & Discoveries if the
-spike is repeated.
-
-Milestone 3 — build, test and compare:
-
-```bash
-# okf checkout
-nix develop --command cabal build all && nix develop --command cabal test all
-export OKF_BIN="$(nix develop --command cabal list-bin okf)"
 "$OKF_BIN" profile sweep --help
-```
-
-```bash
-# okf-profiles checkout, with OKF_BIN exported as above
 for p in claim-checks:assurance audiences:coordination campaigns:coordination \
          strategy:coordination launches:coordination messaging:documentation; do
   name=${p%%:*}; family=${p##*:}
@@ -1356,7 +884,7 @@ The expected comparison output for each profile:
 parity: 119/119 legacy results matched; 2 okf-only results (legacy cannot delete a sole list element)
 ```
 
-Milestone 4 — the default-kind strategy sweep, before any manifest exists:
+Milestone 3 — the default-kind strategy sweep, before any manifest exists:
 
 ```bash
 "$OKF_BIN" profile sweep profiles/coordination/strategy.dhall \
@@ -1366,11 +894,11 @@ Milestone 4 — the default-kind strategy sweep, before any manifest exists:
 The expected shape is one line per relaxation, then a summary like:
 
 ```text
-sweep: 131 relaxations: 101 protected, 6 inert, 9 covered, 3 subsumed, 0 exception, 12 unprotected, 0 failing other; 4.1 s
+sweep: 166 relaxations: 130 protected, 6 inert, 9 covered, 3 subsumed, 0 exception, 18 unprotected, 0 failing other; 5.9 s
 exit=1
 ```
 
-Milestone 6 — after a manifest exists, the same command ends with `exit=0`. Then:
+After a manifest exists, the same command ends with `exit=0`. Then:
 
 ```bash
 just check
@@ -1383,7 +911,8 @@ okf validate docs/improvement-requests --strict --profile docs/improvement-reque
 ## Validation and Acceptance
 
 The plan is complete when every item below is true. Each corresponds to an IR-11 criterion or to
-this plan's widening.
+this plan's widening. Items that test okf's internals (the engine's own tests, the inertness
+contradiction, determinism under parallel evaluation) belong to plan 71.
 
 1. **Same answers as the serial baseline (IR-11 criterion 1).** For each of the six families,
    `scripts/compare-sweep-results.py` matches every legacy result recorded in
@@ -1391,21 +920,20 @@ this plan's widening.
    and exits 0. The only unmatched okf entries are labelled sole-element deletions.
 2. **Baseline faults stop the run, and nothing untested is labelled protected (IR-11
    criterion 2).**
-   - Breaking one `expected.json` entry makes `okf profile sweep` exit 2 before any relaxation
-     line. The okf-core baseline-fault test covers the same case.
-   - No relaxation is `protected` unless it has a witness.
-   - An acceptance failure or a definition error is `subsumed`, `covered` or failing, never
-     `protected`.
-   - The inertness contradiction test exits 3.
+   - Breaking one `expected.json` entry makes both engines exit 2 before any relaxation line.
+   - In the legacy engine, `OK` is printed only for a witness; in okf, no relaxation is
+     `protected` without a witness, and an acceptance failure or a definition error is
+     `subsumed`, `covered` or failing, never `protected`.
 3. **Prompt redirected output with elapsed time and a machine-readable summary (IR-11
-   criterion 3).** Redirect `okf profile sweep … > out` and run `tail -f out`: lines arrive as
-   relaxations are decided. The text summary carries the elapsed time. `--json` ends with a
-   `summary` event that `jq` parses. The legacy script does the same since Milestone 1.
+   criterion 3).** Redirect either engine's output to a file and run `tail -f`: lines arrive as
+   relaxations are decided. The summary carries the elapsed time. The legacy `--json` summary
+   parses with `python3 -m json.tool`; okf's `--json` ends with a `summary` event that `jq`
+   parses.
 4. **Lower wall time on a representative large corpus, without weakening ADR-9 (IR-11
    criterion 4).** Outcomes & Retrospective records, for the strategy profile (182 cases), the
    legacy wall time and the okf wall time for the same relaxations. The okf time must be at least
    20× lower, and under 60 s, on the same machine. Those are floors; the planning measurements
-   (Surprises & Discoveries) forecast about 4 s for okf against tens of minutes for the legacy
+   (Surprises & Discoveries) forecast about 4.5 s for okf against tens of minutes for the legacy
    script, a factor in the hundreds, and the measured legacy run on claim-checks took 205 s where
    okf is forecast at about 1 s. The `default` kinds are a superset of the legacy kinds, so
    coverage only grows.
@@ -1413,10 +941,7 @@ this plan's widening.
    the six families. Deleting any one rejection fixture that is the only witness of some
    relaxation makes it exit 1 and name that relaxation `unprotected`. Try this on one strategy
    fixture and restore it with `git checkout -- fixtures/strategy-invalid`.
-6. **Determinism (only if Milestone 5 ran).** `--jobs 1` and `--jobs 8` produce identical JSON,
-   ignoring elapsed times.
-7. **The repositories stay green.** `just check` passes in okf-profiles and
-   `nix develop --command cabal test all` passes in okf.
+6. **The repository stays green.** `just check` passes in okf-profiles.
 
 
 ## Idempotence and Recovery
@@ -1431,9 +956,9 @@ this plan's widening.
 - **Fixture experiments.** Negative experiments (breaking an `expected.json` entry, deleting a
   fixture) must be undone with `git checkout -- <path>`. Do them on a clean tree so the restore
   cannot discard other work.
-- **The okf release.** The release is the one outward-facing step: ask the owner before tagging
-  or pushing, and never move a published tag. If the release slips, Milestone 6's wrapper still
-  works with `OKF_BIN` pointing at a local build. Only the `just check` gating waits.
+- **The okf release.** The release belongs to plan 71 and is its one outward-facing step. If it
+  slips, Milestone 3's wrapper still works with `OKF_BIN` pointing at a local build. Only the
+  `just check` gating waits.
 - **Request files.** The okf request and IR-11 edits are additive frontmatter changes. Validate
   their bundles after each edit; if validation fails, fix the frontmatter rather than reverting
   the log entry.
@@ -1441,77 +966,13 @@ this plan's widening.
 
 ## Interfaces and Dependencies
 
-### `okf-core/src/Okf/Profile/Sweep.hs`
+### The okf command (owned by plan 71)
 
-This module is new and depends only on okf-core's existing dependencies, plus `deepseq` if
-Milestone 5 runs. Its exports at the end of Milestone 4:
-
-```haskell
-module Okf.Profile.Sweep
-  ( -- * Rule identity
-    RuleScope (..),          -- ProfileScope | TypeScope Text
-    PresenceList (..),       -- RequiredList | RecommendedList | OptionalList
-    NestedContainer (..),    -- ElementFields | ObjectFields
-    RuleLocation (..),       -- scope, list, field, Maybe (NestedContainer, PresenceList, Text)
-    renderRuleLocation,      -- :: RuleLocation -> Text
-    -- * Relaxations
-    RelaxationKind (..),     -- Delete | Presence | ClearVocabulary | AdmitValue Text | DropFormat
-                             -- | DropUniqueBy | AllowSelf | AllowLocal | DropExternalUriPattern
-                             -- | DropCardinality | DropCondition | DropPath | DropReference
-                             -- | DropNested NestedContainer | DropTypeAttribute TypeAttribute
-    TypeAttribute (..),      -- PathPattern | ResourceScheme | RequireSchemaSection | SchemaColumns | IdPrefix
-    KindSet (..),            -- LegacyKinds | DefaultKinds | AllKinds
-    Relaxation (..),         -- target (rule location or type name) and kind
-    relaxationId,            -- :: Relaxation -> Text, e.g. "type:Launch/required/launchRef#allowLocal"
-    legacyKindName,          -- :: RelaxationKind -> Maybe Text, the Python kind string when one exists
-    enumerateRelaxations,    -- :: KindSet -> ProfileSpec -> [Relaxation]
-    applyRelaxation,         -- :: Relaxation -> ProfileSpec -> ProfileSpec
-    -- * Suites
-    CaseExpectation (..),    -- field :: Text, count :: Int
-    RejectionCase (..),      -- name, expectation, loaded bundle
-    SuiteBundle (..),        -- path, concepts, inventory, version declaration, logs
-    Suite (..),              -- acceptance :: [SuiteBundle], cases :: [RejectionCase] (expected.json order)
-    SuiteError (..),
-    loadSuite,               -- :: [FilePath] -> FilePath -> IO (Either SuiteError Suite)
-    -- * Evaluation
-    Render,                  -- = CompiledProfile -> [Concept] -> ProfileViolation -> Text
-    BaselineFault (..),
-    checkBaseline,           -- :: Render -> CompiledProfile -> Suite -> Either BaselineFault PreparedSuite
-    PreparedSuite,           -- suite with profile-independent core and log results computed once
-    Observation (..),        -- witnesses, primaryWitness, facetWitnesses, acceptanceViolations, definitionErrors
-    observeRelaxation,       -- :: Render -> PreparedSuite -> ProfileSpec -> Relaxation -> Observation
-    legacyOutcome,           -- :: Observation -> Text  ("fixture <n>" | "acceptance-fails" | "UNPROTECTED")
-    -- * Classification
-    BehaviourKey,
-    behaviourKey,            -- :: CompiledProfile -> BehaviourKey
-    ExceptionClass (..),     -- SharedFamily Text | OverlappingRule Text | Deferred Text
-    SweepException (..),     -- relaxation id, class, rationale
-    loadExceptions,          -- :: FilePath -> IO (Either Text [SweepException])
-    Outcome (..),            -- Protected | Subsumed [Text] | Covered Text Text | DescriptorInvalidOutcome
-                             -- | AcceptanceObservableOutcome | Inert Text | ExceptionOutcome SweepException
-                             -- | Unprotected
-    outcomeIsFailing,        -- :: Outcome -> Bool
-    SweepResult (..),        -- relaxation, observation, outcome
-    sweepProfile,            -- :: Render -> KindSet -> [SweepException] -> PreparedSuite -> ProfileSpec
-                             --    -> Either InternalError ([SweepResult], [SweepException])  -- results, stale exceptions
-  )
-```
-
-The names may be adjusted during implementation if the compiler or okf's style requires it.
-Record any change in the Decision Log. `sweepProfile` must return a list in enumeration order
-that is lazy per rule-location group: consuming the first group's results must not force the
-evaluation of later groups, and within a group every relaxation is evaluated before any of its
-results is yielded, because `subsumed` and `covered` depend on siblings. Composite unit
-relaxations that it evaluates for classification and that the chosen `KindSet` does not request
-are reported only through `Covered`, never as their own results.
-
-### okf-cli
-
-- **`Okf.Cli`** gains `ProfileSweep ProfileSweepOptions` with the fields `profilePath`, `accept`
-  (non-empty list), `casesDir`, `kinds`, `json`, `only`, `exceptionsPath` and `jobs` (Milestone 5).
-- **`runProfileSweep`** sets line buffering on stdout and stderr, uses `loadProfileOrExit`,
-  `compileProfileOrExit`, `loadSuite`, `checkBaseline` and `sweepProfile`, and renders with the
-  existing `renderProfileViolation`.
+The engine module `Okf.Profile.Sweep`, the `okf profile sweep` options and the classification
+rules are specified in plan 71 (`mori://shinzui/okf/plans/71-add-okf-profile-sweep-for-load-bearing-rule-checks`). This plan consumes the command line
+`okf profile sweep PROFILE --accept BUNDLE [--accept BUNDLE ...] --cases DIR [--kinds legacy|default|all] [--json] [--only FIELD] [--exceptions FILE]`,
+the exit codes 0/1/2/3 described in Context and Orientation, the NDJSON events below, and the
+exception manifest below. If plan 71 changes any of these, update this plan in the same change.
 
 ### NDJSON events (`--json`)
 
@@ -1527,14 +988,40 @@ are reported only through `Covered`, never as their own results.
 A baseline fault writes `{"event":"baseline","ok":false,"fault":"...","detail":"..."}` and then
 the summary with `"exit":2`. `field` is the innermost field name, and `kind` is the legacy kind
 string when one exists, otherwise the new kind's name. Together with `legacyOutcome`, these two
-fields are what `scripts/compare-sweep-results.py` keys on.
+fields are what `scripts/compare-sweep-results.py` keys on; plan 71 treats them as a published
+contract.
+
+### Exception manifest (`fixtures/<name>-invalid/sweep-exceptions.json`)
+
+Authored in this repository beside the cases, read by okf:
+
+```json
+{
+  "version": 1,
+  "exceptions": [
+    {
+      "relaxation": "type:Objective/optional/verified/objectFields/required/by#delete",
+      "class": "shared-family",
+      "home": "okfV02",
+      "rationale": "Spliced from Profile/V02.dhall; okf-v0-2-invalid tests each member."
+    }
+  ]
+}
+```
+
+`class` is a closed vocabulary: `shared-family` requires `home`, naming the home profile's
+export; `overlapping-rule` requires `overlapsWith`, the relaxation ID or type attribute that
+governs the same value (ADR-9's one-governing-rule caveat); `deferred` requires `request`, a
+`mori://` URI of the request that will add the fixture. Every entry needs a non-empty
+`rationale`. A relaxation ID is a rule location (`profile/required/status`,
+`type:Objective/required/keyResults/elementFields/required/id`) plus `#<kind>`.
 
 ### okf-profiles
 
 - **`scripts/sweep-profile-rules.py`:**
   - positional interface unchanged;
   - options `--json PATH`, `--quiet` and `--only FIELD` from Milestone 1;
-  - from Milestone 6, `--engine okf|legacy` and `--kinds`.
+  - from Milestone 3, `--engine okf|legacy` and `--kinds`.
   - Python standard library only: argparse, json, shutil, subprocess, tempfile, time.
 - **`scripts/compare-sweep-results.py LEGACY.json OKF.ndjson`:**
   - exit 0 on parity, 1 otherwise;
@@ -1543,13 +1030,13 @@ fields are what `scripts/compare-sweep-results.py` keys on.
   continues past one profile's failure so it can report every profile, then exits non-zero if any
   failed.
 - **`fixtures/<name>-invalid/sweep-exceptions.json`:** the manifest shape above, one per suite
-  that needs exceptions.
+  that needs exceptions (Milestone 3).
 - **`docs/plans/evidence/13/`:** the legacy JSON and okf NDJSON evidence files.
 
-External tools are `dhall` (≥ 1.42, legacy engine only), `okf` (≥ 0.11.0.0 for the native engine),
-`python3`, `jq` (for the determinism check), `hyperfine` (optional, for repeating the timing
-measurements) and, for the okf work, `nix` with flakes enabled so that `nix develop` provides
-GHC 9.12.4 and cabal.
+External tools are `dhall` (≥ 1.42, legacy engine only), `okf` (≥ 0.11.0.0 for the native
+engine, or an unreleased build through `OKF_BIN`), `python3`, `jq` (to inspect NDJSON) and
+`hyperfine` (optional, for repeating the timing measurements). Building okf needs `nix`; see
+plan 71.
 
 
 ## Revision Notes
@@ -1599,3 +1086,21 @@ Validated by measuring rather than by reading. Changes and why:
   message with `Failed to load profile`.
 - **Milestone 3 acceptance** gains a wall-time expectation (about 4 s; over 15 s is a defect to
   investigate), so a lost sharing of the loaded suite cannot pass unnoticed.
+
+### 2026-10-28 — okf work relocated to plan 71
+
+The okf half of this plan (the prototype, the `Okf.Profile.Sweep` engine, the `okf profile sweep`
+command, classification and exit codes, optional parallel evaluation, the okf release, okf ADR
+and okf request) now lives in okf's own ExecPlan,
+`mori://shinzui/okf/plans/71-add-okf-profile-sweep-for-load-bearing-rule-checks`, created from this plan's text with the
+measurements and decisions it owns. This plan keeps the catalog side and restates only the
+contract it consumes. Changes: the intro, Purpose and Progress say where each half lives; the
+Decision Log records the relocation and which earlier entries are now history; the okf section
+of Context and Orientation became a description of the command's contract (usage, predicate,
+outcome classes, exit codes, NDJSON, manifest) with `OKF_BIN` instructions; Milestones 2–6
+became Milestone 2 (comparison script and parity, needing plan 71's Milestone 1) and Milestone 3
+(wrapper, manifests, catalog script, gating, documentation, IR-11 completion, needing plan 71's
+Milestone 2 and release); Concrete Steps, Validation and Interfaces dropped the okf build, spike,
+engine exports and okf-internal checks, and the exception manifest moved to Interfaces because it
+is authored here. Milestone 1 is unchanged except that its comparison-key reference now points
+at Milestone 2.
