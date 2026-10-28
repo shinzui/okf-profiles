@@ -27,6 +27,11 @@ provenance:
       at: 2026-10-28T14:37:57Z
       mode: "update"
       note: "Recorded planning measurements, corrected the Milestone 2 spike and okf toolchain commands, added the legacy objectFields scanner fix, and grouped evaluation per rule location"
+    - model: "claude-opus-5-5"
+      harness: "claude-code"
+      at: 2026-10-28T17:51:23Z
+      mode: "implement"
+      note: "Milestones implemented against okf plan 71's sweep build"
 ---
 
 # Make profile policy sweeps observable and run them natively in okf
@@ -85,11 +90,17 @@ After this plan:
 
 ## Progress
 
-- [ ] Milestone 1: the legacy sweep streams progress, resolves `OKF_BIN`, separates
-      acceptance and descriptor failures from protection, enumerates rules nested under
-      `objectFields`, and writes a JSON summary.
+- [x] Milestone 1 (2026-10-28): the legacy sweep streams progress, resolves `OKF_BIN`,
+      separates acceptance and descriptor failures from protection, enumerates rules nested
+      under `objectFields` and attributes whose value starts on the next line, and writes a
+      JSON summary. IR-11 set to `in-progress` with `targetPlan`. Acceptance checked: a
+      redirected claim-checks run streamed line by line and ended
+      `sweep: 55 relaxations: 27 witnessed, 0 acceptance-fails, 4 descriptor-invalid, 24 unprotected; 1123 okf runs in 4m 24s`;
+      its `--json` parses; `OKF_BIN=/nonexistent/okf` and `OKF_BIN=false` exit 2 naming the
+      binary; a broken `expected.json` entry (scratch copy) exits 2 with `baseline fault`.
 - [ ] Milestone 1: legacy baseline summaries recorded for the six families under
-      `docs/plans/evidence/13/`.
+      `docs/plans/evidence/13/`, with `OKF_BIN` set to the okf `7d5c285` build (see Decision
+      Log) and `GHCRTS=-N1`.
 - [x] Timing spike run on 2026-10-28 during plan validation: compile plus one full pass over
       the 182 strategy cases costs about 36 ms in process, so the in-process approach is
       promoted. The numbers are in Surprises & Discoveries; the spike is now Milestone 0 of
@@ -219,6 +230,59 @@ are plan 71's milestones; their state is tracked there.
   are `delete`, `format`, `allowedValues`, `allowSelf` and `allowLocal` relaxations on the
   object-nested rules; a sole-element `delete` is still not produced, as before.
 
+- **2026-10-28 (implementation): the scanner also missed attributes whose value starts on the
+  next line.** okf plan 71 found this while checking parity: `top_level_attr` looked for
+  `attr = ` with a trailing space, but `dhall` writes a long value on the line after `attr =`
+  (`allowedValues =\n  [ "content", …`). Those vocabularies were never cleared. Milestone 1
+  fixes both gaps. Enumerating with the old script and with the new one (a scratch harness that
+  imports both and compares the multisets of `(field, kind, mutated text)`) gives, per family,
+  old → `objectFields` fix only → both fixes, with zero old triples lost in every family:
+
+  ```text
+  campaigns     90 → 121 → 125
+  claim-checks  48 →  52 →  55
+  audiences     65 →  79 →  81
+  strategy     105 → 119 → 123
+  launches      97 → 101 → 103
+  messaging     79 →  83 →  85
+  ```
+
+  The middle column reproduces the planning counts exactly. The second fix adds only
+  `allowedValues` relaxations (`reviews.scope`, `reviews.effort` everywhere, plus `verdict` in
+  claim-checks, `direction` and `status` in campaigns, and `status` in strategy). The mutated
+  text keeps the original whitespace, so every old mutation is reproduced byte for byte.
+  Enumeration also dropped from about 1.8 s to 0.2 s on strategy, because the "inside a string
+  literal?" test now bisects a sorted span list instead of scanning it.
+
+- **2026-10-28 (implementation): okf's side was already built when this plan started.** okf
+  commits `e23e9a9` (engine and command) and `7d5c285` (docs, okf ADR-23) implement plan 71's
+  Milestones 1 and 2. The release will be 0.12.0.0, not 0.11.0.0: 0.11.0.0 was tagged before
+  plan 71 began. okf's working tree held another session's uncommitted release edits, so the
+  build used here comes from a detached `git worktree` of okf at `7d5c285` in a scratch
+  directory, built with `nix develop --command cabal build exe:okf`. It reports
+  `okf v0.11.0.0 (7d5c285)` because the version bump is not committed yet.
+
+- **2026-10-28 (implementation): the native sweep, measured.** With no manifests and default
+  kinds, every one of the six families exits 1. Elapsed times from the `summary` events, taken
+  while a legacy sweep and another session's Haskell build were running: claim-checks 0.3 s,
+  audiences 2.5 s, campaigns 7.8 s, strategy 10.4 s, launches 6.3 s, messaging 4.0 s. Unprotected
+  counts are 39 for every family except launches (47); each family also has 2
+  `descriptor-invalid` results (`reviews.kind`, a condition source in the shared `reviews`
+  block). The `--kinds legacy` claim-checks sweep took 0.64 s of wall time.
+
+- **2026-10-28 (implementation): the v0.2 home suite cannot be swept.** `fixtures/okf-v0-2-invalid`
+  has no `expected.json`; `scripts/test-okf-v0-2-profile.sh` only checks that each of its eight
+  fixtures is rejected under `--profile-enforce`. `okf profile sweep profiles/okf-v0-2.dhall
+  --accept fixtures/okf-v0-2 --cases fixtures/okf-v0-2-invalid` exits 2 with a `suite` fault.
+  Milestone 3's step "verify each shared-family exception in its home profile" therefore needs
+  the home suite to gain an `expected.json` first.
+
+- **2026-10-28 (implementation): the request bundle already failed strict validation.**
+  `okf validate docs/improvement-requests --strict --profile docs/improvement-requests/profile.dhall --profile-enforce --log-enforce`
+  reports `add-a-platform-transitions-profile: missing profile-recommended field: resolution`
+  before any change from this plan; without `--strict` the bundle validates. Milestone 3's
+  acceptance requires the strict run to pass, so that record needs its `resolution`.
+
 
 ## Decision Log
 
@@ -345,6 +409,35 @@ are plan 71's milestones; their state is tracked there.
   manifests, the wrapper, the catalog gate and the ADR-9 amendment, and restates only the parts
   of okf's contract it consumes. Commits in the okf checkout carry plan 71's trailer; commits
   here carry this plan's. Both carry the shared intention.
+  Date: 2026-10-28
+
+- Decision: Milestone 1 also fixes `top_level_attr` so an attribute whose value starts on the
+  next line is found, and the baselines are recorded after both fixes.
+  Rationale: It is the same class of defect as the `objectFields` gap: rules okf's typed
+  enumeration relaxes and the script never tried. Without it, Milestone 2's comparison would
+  report okf-only `allowedValues` results that are not sole-element deletions and could never
+  reach parity. The fix only adds relaxations (verified: zero lost in all six families).
+  Date: 2026-10-28
+
+- Decision: The legacy script exits 0 after a completed sweep, whatever the results, and 2 for
+  a missing tool or a baseline fault.
+  Rationale: The legacy engine stays a report; the gate is okf's exit code (Milestone 3).
+  Making the legacy script fail on `UNPROTECTED` would make every recorded baseline look like a
+  failed command although it did exactly what was asked.
+  Date: 2026-10-28
+
+- Decision: Exercise Milestone 1's baseline-fault acceptance on a scratch copy of
+  `fixtures/claim-checks-invalid` with one `expected.json` entry broken, rather than by editing
+  the working tree.
+  Rationale: The tree holds unrelated uncommitted work under `fixtures/designs-invalid/`, and
+  the Idempotence section asks for negative experiments on a clean tree. A copy exercises the
+  same code path with no restore step.
+  Date: 2026-10-28
+
+- Decision: Build okf for `OKF_BIN` from a detached scratch `git worktree` of okf at `7d5c285`.
+  Rationale: okf's main checkout carries another session's uncommitted 0.12.0.0 release edits
+  and its own builds; building there could race them or pick up half-finished changes.
+  `7d5c285` is plan 71's last commit and contains the whole sweep.
   Date: 2026-10-28
 
 

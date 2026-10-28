@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-10-28
+* **Update**: IR-11 enters implementation under mori://shinzui/okf-profiles/plans/13-make-profile-policy-sweeps-observable-and-run-them-natively-in-okf; the native sweep is mori://shinzui/okf/plans/71-add-okf-profile-sweep-for-load-bearing-rule-checks.
+
 ## 2026-10-23
 * **Update**: IR-10 completed: owner-approved v0.25.0 published; remote tag, hash and three exports verified.
 * **Update**: IR-11: request observable and efficient policy-sweep verification after recurring consumer friction.

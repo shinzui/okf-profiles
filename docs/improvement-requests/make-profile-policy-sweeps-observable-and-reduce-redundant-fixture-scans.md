@@ -3,7 +3,8 @@ type: "Improvement Request"
 title: "Make profile policy sweeps observable and reduce redundant fixture scans"
 description: "Retain ADR-9 constraint coverage while reporting live progress and avoiding expensive repeated scans of known unobservable policy relaxations."
 requestId: "IR-11"
-status: "proposed"
+status: "in-progress"
+targetPlan: "mori://shinzui/okf-profiles/plans/13-make-profile-policy-sweeps-observable-and-run-them-natively-in-okf"
 generated: {"by": "codex-cli/gpt-6.1-sol", "at": "2026-10-23T22:58:57Z"}
 origin: "mori://tan/tan-product-management/plans/4-add-strategy-messaging-and-launch-profiles-to-okf-profiles"
 reviews: [{"kind": "model", "reviewer": "openai/gpt-6.1-sol", "provider": "openai", "model": "gpt-6.1-sol", "effort": "high", "reviewed_at": "2026-10-23T22:58:57Z", "document_timestamp": "2026-10-23T22:58:57Z", "scope": "content-and-metadata", "outcome": "commented", "context": "Author proposal from repeated release verification cost; not an independent review or a claim that the tool is broken."}]
