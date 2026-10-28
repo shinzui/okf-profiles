@@ -10,6 +10,23 @@ provenance:
     model: "claude-opus-5-5"
     harness: "claude-code"
     at: 2026-10-28T13:49:40Z
+  reviews:
+    - model: "claude-fable-5-1"
+      harness: "claude-code"
+      at: 2026-10-28T14:37:57Z
+      verdict: "changes-requested"
+      note: "Measured the speedup claim (36 ms/relaxation in process vs ~70 s legacy full pass); spike instructions, okf toolchain, objectFields scanner gap and streaming/classification grouping needed fixes, applied in the same session"
+    - model: "claude-fable-5-1"
+      harness: "claude-code"
+      at: 2026-10-28T14:50:13Z
+      verdict: "approved"
+      note: "Re-read end to end after applying the requested changes; counts, commands and section cross-references are consistent and the plan is implementable from Milestone 1"
+  revisions:
+    - model: "claude-fable-5-1"
+      harness: "claude-code"
+      at: 2026-10-28T14:37:57Z
+      mode: "update"
+      note: "Recorded planning measurements, corrected the Milestone 2 spike and okf toolchain commands, added the legacy objectFields scanner fix, and grouped evaluation per rule location"
 ---
 
 # Make profile policy sweeps observable and run them natively in okf
@@ -36,13 +53,16 @@ makes this sweep mandatory whenever a profile gains, loses or changes a rule. To
 per relaxation, and each process spends about 0.37 seconds decoding the profile. A full sweep of a
 large profile takes tens of minutes to hours. While it runs and output is redirected, nothing
 appears until it finishes. Some results it prints as `OK` do not show that any fixture tests the
-rule (see Context and Orientation).
+rule (see Context and Orientation). The same work done once in process costs about 36 ms per
+relaxation, measured during planning (see Surprises & Discoveries), which is where the speedup
+in this plan comes from.
 
 After this plan:
 
 - **The command.** A maintainer runs
   `okf profile sweep profiles/coordination/strategy.dhall --accept fixtures/strategy --cases fixtures/strategy-invalid`.
-  It finishes in seconds rather than tens of minutes.
+  It finishes in seconds rather than tens of minutes: the planning measurement forecasts about
+  six seconds for the strategy profile's default relaxations.
 - **Streaming output.** It prints one line per relaxation as soon as that relaxation is decided,
   even when output goes to a file or pipe. It ends with a summary that includes elapsed time.
 - **Machine-readable output.** With `--json`, it emits one JSON object per line: start, baseline,
@@ -60,11 +80,15 @@ After this plan:
 ## Progress
 
 - [ ] Milestone 1: the legacy sweep streams progress, resolves `OKF_BIN`, separates
-      acceptance and descriptor failures from protection, and writes a JSON summary.
+      acceptance and descriptor failures from protection, enumerates rules nested under
+      `objectFields`, and writes a JSON summary.
 - [ ] Milestone 1: legacy baseline summaries recorded for the six families under
       `docs/plans/evidence/13/`.
-- [ ] Milestone 2 (prototype): in-process timing spike in the okf checkout, with numbers
+- [x] Milestone 2 (prototype): in-process timing spike in the okf checkout, with numbers
       recorded in Surprises & Discoveries and a promote/discard decision in the Decision Log.
+      Done 2026-10-28 during plan validation, before implementation started: compile plus one
+      full pass over the 182 strategy cases costs about 36 ms, so the approach is promoted. Re-run
+      the spike only if okf-core's profile validation changes before Milestone 3 begins.
 - [ ] Milestone 3: okf improvement request filed in `mori://shinzui/okf` with an allocated handle.
 - [ ] Milestone 3: `Okf.Profile.Sweep` in okf-core: typed relaxation enumeration, suite
       loading, in-process evaluation with the legacy predicate.
@@ -82,30 +106,145 @@ After this plan:
 
 ## Surprises & Discoveries
 
-(None yet.)
+- **2026-10-28 (plan validation): where a legacy okf call spends its time.** Measured with
+  `hyperfine -N -w 1 -r 5` on the planning machine (Apple Silicon, okf 0.10.0.0 from the Nix
+  profile, another cabal build running concurrently in a different session, so these are
+  conservative). The fixture is `fixtures/strategy-invalid/strategic-theme-missing-type`, the
+  first entry of `expected.json`. "normalized" means the output of
+  `dhall --file profiles/coordination/strategy.dhall` written to a file, which is what the legacy
+  script validates against.
+
+  ```text
+  okf --version                                                        25.9 ms ±  1.2 ms
+  okf validate <fixture>                                               25.7 ms ±  1.2 ms
+  okf validate <fixture> --profile profiles/coordination/strategy.dhall  163.8 ms ±  4.9 ms
+  okf validate <fixture> --profile <normalized>                         379.7 ms ±  7.8 ms
+  okf validate fixtures/strategy --strict --profile <normalized> \
+      --profile-enforce --log-enforce                                   392.9 ms ± 11.0 ms
+  okf validate fixtures/strategy                                        37.1 ms ±  5.5 ms
+  dhall type --file <normalized>                                       309.6 ms ±  4.2 ms
+  ```
+
+  Process start-up is 26 ms and validating a two-concept fixture without a profile adds nothing
+  measurable. Decoding the source descriptor costs about 138 ms; decoding the 442,085-byte
+  normalized descriptor costs about 354 ms, 2.6× more, because normalization inlines every
+  shared import. The legacy script pays the slower path on every call because it mutates the
+  normalized text. Profile validation of the fixture itself is below the measurement noise.
+  Each legacy relaxation therefore costs `0.31 s (dhall type) + 0.39 s (acceptance) +
+  0.38 s × fixtures tried`; a relaxation that no fixture notices tries all 182 and costs about
+  70 s.
+
+- **2026-10-28 (plan validation): in-process cost, from the Milestone 2 spike.** Run twice from
+  the okf checkout inside `nix develop` with GHC 9.12.4 and `-O1`, loading the strategy profile
+  and all 182 rejection cases (see Concrete Steps for the exact code and commands):
+
+  ```text
+  profile decode: 0.105 s – 0.136 s (once)
+  load: 0.150 s – 0.188 s for 182 cases (once)
+  violations per pass: 197
+  compile only (WHNF):                             200 iterations,  4.0 ms each
+  compile + count violations over 182 cases:       200 iterations, 35.6 ms each
+  full pass, rendered with show, shared compile:   200 iterations, 30.1 ms each
+  compile + full pass rendered with show:          200 iterations, 36.2 ms each
+  ```
+
+  One relaxation costs at most 36 ms in process even when every one of the 182 cases is
+  evaluated and rendered, against 70 s for the same full pass through the legacy script: a
+  factor of about 1,900 on the pass that dominates legacy sweeps. `compileProfile` is cheap
+  (about 6 ms once its lazy fields are forced by validation; the 4 ms "WHNF" line forces only
+  the outer constructor). Rendering with `show` costs about a sixth of the pass. For the
+  strategy profile's 119 legacy relaxations (after the scanner fix), the forecast is 0.3 s of
+  fixed loading plus at most 119 × 36 ms, about 4.5 s; the default kinds add one presence
+  demotion for each of the strategy profile's 47 required rules, about 166 relaxations and
+  about 6 s.
+
+- **2026-10-28 (plan validation): the first spike measured the wrong thing.** The spike as
+  originally written looped 200 times over an expression that did not mention the loop index.
+  GHC's full-laziness pass floated the expression out of the loop and evaluated it once, so the
+  spike printed `200 compiles: 0.164 s` and `200 full suite passes: 0.043 s`, which are the cost
+  of one compile and one pass, not of 200. The corrected spike in Concrete Steps passes the loop
+  index into `NOINLINE` workers and compiles with `-fno-full-laziness -fno-cse`. Any later
+  micro-benchmark of okf-core must do the same.
+
+- **2026-10-28 (plan validation): okf builds only inside its Nix shell.** The okf checkout's
+  `cabal.project` says GHC comes from the flake's devShell, pinned to GHC 9.12.4, and
+  `dist-newstyle` holds only 9.12.x builds. The `ghc` on the planning machine's `PATH` is 9.10.3;
+  a `cabal build` with it fails on the test suite's `zlib` dependency. Also,
+  `cabal exec -- runghc spike/SweepSpike.hs` cannot see okf-core: the in-place package is exposed
+  to a standalone `ghc` only through a GHC environment file, which
+  `cabal build okf-core --write-ghc-environment-files=always` writes to the checkout root. The
+  plan's commands now say so, and the environment file must be deleted afterwards because it is
+  not ignored by git.
+
+- **2026-10-28 (plan validation): legacy relaxation counts for all six families.** Running the
+  legacy script's enumeration (its `rules` and `relaxations` functions) without validating:
+  campaigns 62 rules / 90 relaxations, claim-checks 38 / 48, audiences 48 / 65, strategy 68 /
+  105, launches 59 / 97, messaging 52 / 79. The strategy profile's 105 break down as 65 `delete`,
+  16 `format`, 12 `allowSelf`, 6 `allowLocal`, 5 `allowedValues` and 1 `uniqueBy`. Six of the
+  12 `allowSelf` relaxations sit on references with `allowLocal = False`, where okf never
+  consults `allowSelf`, so they are provably inert; the 6 `allowLocal` relaxations are masked by
+  the composite reference policy. The legacy sweep scans all 182 fixtures for each of these 12,
+  about 14 minutes in total, and reports each as `UNPROTECTED`.
+
+- **2026-10-28 (plan validation): a measured legacy run on the smallest family.** The unmodified
+  legacy script on `profiles/assurance/claim-checks.dhall` (48 relaxations, 39 cases) took 205 s
+  of wall time and printed `20 unprotected of 48 relaxations`. All 20 are members of spliced
+  families (`reviews`, the list spelling of `generated` and `verified`, and `sources`). Three
+  more results were `acceptance-fails` and were printed as `OK`, which is the honesty defect
+  Milestone 1 fixes. Dividing 205 s by the roughly 930 okf and dhall calls the run made gives
+  about 0.22 s per call: the claim-checks descriptor is smaller than strategy's, and the per-call
+  cost scales with descriptor size. In process, the same sweep is forecast at about one second
+  (48 relaxations × 39 cases × 0.17 ms, plus compiles and loading).
+
+- **2026-10-28 (plan validation): the legacy script never relaxes rules nested under
+  `objectFields`.** Its `rules` function scans the normalized text for `field = "`, takes the
+  enclosing record, and then continues scanning *after* that record. Dhall normalization sorts
+  record fields alphabetically, so inside a container rule the `elementFields` member comes
+  before `field` and its nested rules are visited first, but `objectFields` comes after `field`,
+  so the scanner reaches the container's own `field = "…"` first and jumps over everything
+  inside its `objectFields`. In the strategy profile, 11 nested rules are therefore never swept:
+  `generated.at`, `generated.by`, `verified.at`, `verified.by` (the object spellings from
+  `Profile/V02.dhall`), `assessment.rationale`, `assessment.assessedAt`, `assessment.evidenceRefs`
+  and `hypothesis.problem`, `hypothesis.belief`, `hypothesis.prediction`, `hypothesis.falsifiedIf`.
+  Claim-checks has 4 (`generated` and `verified` members). The `at`/`by` relaxations that the
+  legacy claim-checks run did print come from the list spelling, through `elementFields`.
+  Milestone 1 fixes the scanner (see Decision Log) before the six baselines are recorded, so
+  the baselines cover these rules and Milestone 3's comparison needs no special case for them.
+  The fix was tried on a copy during validation: it keeps every relaxation the old scanner
+  produced (zero lost in all six families) and adds campaigns 90 → 121, claim-checks 48 → 52,
+  audiences 65 → 79, strategy 105 → 119, launches 97 → 101 and messaging 79 → 83. The additions
+  are `delete`, `format`, `allowedValues`, `allowSelf` and `allowLocal` relaxations on the
+  object-nested rules; a sole-element `delete` is still not produced, as before.
 
 
 ## Decision Log
 
 - Decision: Put the sweep engine in okf as a typed, in-process command (`okf profile sweep`)
   rather than only tuning the Python script.
-  Rationale: Measurement during planning showed that about 0.37 s of each `okf validate` call is
-  spent decoding the 442,085-byte normalized strategy descriptor. Validating the fixture itself
-  takes negligible time. A full scan of the 182 strategy rejection fixtures takes 70.5 s however
-  the fixtures are ordered, so a field-indexed ordering alone cannot remove the dominant cost.
-  Inside okf, profile validation is the pure function
+  Rationale: Measurement during planning showed that about 0.35 s of each `okf validate` call is
+  spent decoding the 442,085-byte normalized strategy descriptor (process start-up is 26 ms, and
+  validating the fixture itself is below measurement noise). A full scan of the 182 strategy
+  rejection fixtures takes about 70 s however the fixtures are ordered, so a field-indexed
+  ordering alone cannot remove the dominant cost. Inside okf, profile validation is the pure
+  function
   `validateProfileWith :: BundleInventory -> ValidationProfile -> CompiledProfile -> [Concept] -> [ProfileViolation]`
   (`okf-core/src/Okf/Profile.hs`). Core OKF validation and log staleness do not depend on the
   profile at all. So a sweep can decode the profile once, load every bundle once, and re-run only
-  the pure profile check for each relaxation. Relaxing the decoded `ProfileSpec` value also
-  replaces the Python script's hand-written Dhall text surgery, which breaks easily.
+  the pure profile check for each relaxation. The Milestone 2 spike confirmed the arithmetic: a
+  compile plus a full rendered pass over all 182 cases costs 36 ms in process, so the whole
+  strategy sweep is forecast at about 6 s against tens of minutes. The speedup comes entirely
+  from paying the decode once; the typed engine, classification and exit codes exist for
+  correctness, not speed. Relaxing the decoded `ProfileSpec` value also replaces the Python
+  script's hand-written Dhall text surgery, which breaks easily and, as validation found, skips
+  every rule nested under `objectFields`.
   Date: 2026-10-28
 
 - Decision: Keep the existing Python script as a working, improved *legacy engine* (Milestone 1)
   and use it as the reference against which the okf engine must agree.
   Rationale: IR-11's first acceptance criterion is agreement with "the serial baseline". The only
-  credible way to show that is to record that baseline with the current algorithm before replacing
-  it, and to keep that algorithm runnable until parity is proven.
+  credible way to show that is to record that baseline with the current algorithm (plus the
+  scanner fix below, which only adds relaxations) before replacing it, and to keep that
+  algorithm runnable until parity is proven.
   Date: 2026-10-28
 
 - Decision: Do all the okf code work under this one ExecPlan. Commits in the okf checkout carry
@@ -144,6 +283,48 @@ After this plan:
   as "supplemental controls". Making every new kind a release gate at once could add new required
   fixtures across the whole catalog. Their results are triaged in Milestone 6 and recorded. Making
   them gating is a separate decision.
+  Date: 2026-10-28
+
+- Decision: Promote the in-process approach (Milestone 2's promote/discard decision), and expect
+  Milestone 5 (parallel evaluation) to be skipped.
+  Rationale: The spike measured 36 ms for one compile plus one full rendered pass over all 182
+  strategy cases, under the 50 ms promotion threshold. Loading costs about 0.3 s once. The
+  forecast for the strategy profile is about 4.5 s with the legacy kinds and about 6 s with the
+  default kinds, far under Milestone 5's 30 s trigger. Milestone 4 still measures the real
+  command before the skip is recorded.
+  Date: 2026-10-28
+
+- Decision: Evaluate relaxations in groups, one group per rule location, and emit a group's
+  lines only when every relaxation in the group is classified.
+  Rationale: Two classification rules in Milestone 4 look sideways. `subsumed` asks whether
+  *every other* relaxation of the same rule location is non-failing, and `covered` asks whether
+  a derived `admitValue` relaxation or a composite unit relaxation of the same rule is
+  protected. A line-per-relaxation stream in strict enumeration order would have to print a
+  `delete` line before its siblings were evaluated. Grouping by rule location keeps the output
+  order equal to the enumeration order, keeps `sweepProfile`'s result a lazy list (lazy per
+  group), and gives Milestone 5 a natural unit of parallel work. A group costs at most a few
+  hundred milliseconds, so streaming stays prompt.
+  Date: 2026-10-28
+
+- Decision: Every okf build, test and spike command runs inside the okf checkout's Nix
+  development shell: `nix develop --command <command>`.
+  Rationale: okf's `cabal.project` states that GHC comes from the flake's devShell (GHC 9.12.4),
+  and `dist-newstyle` holds only 9.12.x builds. The planning machine's `PATH` carries GHC 9.10.3,
+  which fails to build the test suite's `zlib` dependency outside the shell. A build with the
+  wrong compiler would also produce an `okf` binary whose behaviour the release does not
+  share.
+  Date: 2026-10-28
+
+- Decision: Milestone 1 fixes the legacy scanner so that it also enumerates rules nested under
+  `objectFields`, and the six baselines are recorded after that fix.
+  Rationale: Validation found that the scanner jumps past a container's `objectFields` because
+  normalized Dhall sorts `field` before `objectFields` (see Surprises & Discoveries). Eleven
+  strategy rules and four claim-checks rules have never been swept. Recording baselines without
+  the fix would make the reference incomplete, and the okf engine, which enumerates the typed
+  spec, would then disagree with it for reasons that have nothing to do with the engine. The fix
+  is one line (continue scanning inside the record instead of after it) and changes no
+  relaxation that the old scanner produced. The pre-fix and post-fix relaxation counts are
+  recorded in Surprises & Discoveries so the two can be told apart.
   Date: 2026-10-28
 
 
@@ -232,9 +413,9 @@ python3 scripts/sweep-profile-rules.py <profile.dhall> <accept-bundle> <invalid-
 ```
 
 It normalizes the descriptor with `dhall --file`, which inlines every import into one large
-expression. It then finds every record containing `field = "` in the normalized text. Records
-that are conditions (`hasValue` without `allowedValues`) are skipped. It builds textual mutations
-of seven kinds:
+expression. It then scans the normalized text for records containing `field = "` (missing those
+nested under `objectFields`; see fact 5 below). Records that are conditions (`hasValue` without
+`allowedValues`) are skipped. It builds textual mutations of seven kinds:
 
 - `delete`: remove the record from its list.
 - `allowedValues`: replace a non-empty list with `[] : List Text`.
@@ -257,7 +438,7 @@ OK  <field>                  <kind>               fixture <name>
 
 The last line is `N unprotected of M relaxations`.
 
-Planning found four facts about this script that shape the work:
+Planning found five facts about this script that shape the work:
 
 1. **Acceptance and descriptor failures print as protection.** The print at the end of the file
    marks anything not starting with `UNPROTECTED` or `MUTATION` as `OK`. That includes
@@ -266,38 +447,53 @@ Planning found four facts about this script that shape the work:
    is clearing a vocabulary that a `when` condition depends on. okf requires a condition's source
    field to have a closed scalar vocabulary, and `dhall type` does not catch this.
 2. **Decoding dominates the cost.** On the strategy profile, `okf validate` of a two-concept
-   rejection fixture takes 0.37 s against the normalized descriptor. One pass over all 182
-   strategy fixtures took 70.5 s. Every unprotected relaxation costs a full pass.
+   rejection fixture takes 0.38 s against the normalized descriptor: 26 ms of process start-up,
+   about 0.35 s decoding the descriptor, and no measurable time validating the fixture. The
+   source descriptor decodes in 0.14 s, but the script cannot use it because it mutates the
+   normalized text. One pass over all 182 strategy fixtures takes about 70 s. Every unprotected
+   relaxation costs a full pass, and every `dhall type` check costs another 0.31 s. The measured
+   numbers are in Surprises & Discoveries.
 3. **Output is buffered.** Results print only at the end, through Python's default block
    buffering, so redirected output shows nothing for hours.
 4. **The okf binary is hard-coded.** The script calls `okf` from `PATH` and ignores `OKF_BIN`, so
    it cannot be pointed at an unreleased okf build.
+5. **Rules nested under `objectFields` are never swept.** `rules()` continues scanning after the
+   end of each record it finds. Normalized Dhall sorts record members alphabetically, so a
+   container's `elementFields` precede its `field = "…"` and are scanned first, while its
+   `objectFields` follow it and are jumped over. Milestone 1 changes the scanner to continue
+   scanning inside the record. See Surprises & Discoveries for the affected rules and counts.
 
-The six release-relevant families are listed below.
+The six release-relevant families are listed below. The last column gives the relaxation
+count from the current scanner and, after the arrow, the count after Milestone 1's scanner fix.
 
 | Profile | Accept | Cases | Legacy relaxations |
 |---|---|---|---|
-| `profiles/coordination/campaigns.dhall` | `fixtures/campaigns` | 161 | measure |
-| `profiles/assurance/claim-checks.dhall` | `fixtures/claim-checks` | 39 | measure |
-| `profiles/coordination/audiences.dhall` | `fixtures/audiences` | 96 | measure |
-| `profiles/coordination/strategy.dhall` | `fixtures/strategy` | 182 | 105 |
-| `profiles/coordination/launches.dhall` | `fixtures/launches` | 122 | 97 |
-| `profiles/documentation/messaging.dhall` | `fixtures/messaging` | 105 | 79 |
+| `profiles/coordination/campaigns.dhall` | `fixtures/campaigns` | 161 | 90 → 121 |
+| `profiles/assurance/claim-checks.dhall` | `fixtures/claim-checks` | 39 | 48 → 52 |
+| `profiles/coordination/audiences.dhall` | `fixtures/audiences` | 96 | 65 → 79 |
+| `profiles/coordination/strategy.dhall` | `fixtures/strategy` | 182 | 105 → 119 |
+| `profiles/coordination/launches.dhall` | `fixtures/launches` | 122 | 97 → 101 |
+| `profiles/documentation/messaging.dhall` | `fixtures/messaging` | 105 | 79 → 83 |
 
 Each profile's rejection fixtures are in `fixtures/<name>-invalid` (the strategy row, for example,
 uses `fixtures/strategy-invalid`). None of the six per-profile tests passes extra acceptance
-bundles. The relaxation counts come from
-`mori://tan/tan-product-management/plans/4-add-strategy-messaging-and-launch-profiles-to-okf-profiles`
-(and `mori://tan/tan-product-management/plans/3-add-campaign-and-audience-profiles-to-okf-profiles`
-for the campaign family).
+bundles. The counts were produced during planning by running the script's own `rules` and
+`relaxations` functions without validating; the strategy, launches and messaging counts agree
+with the sweeps recorded in
+`mori://tan/tan-product-management/plans/4-add-strategy-messaging-and-launch-profiles-to-okf-profiles`.
 
 ### okf, the producer (`mori://shinzui/okf`)
 
 okf is a Haskell project: the `okf-core` library and the `okf-cli` executable `okf`, currently
 version 0.10.0.0. Find the checkout with `mori registry show shinzui/okf --full` (field `Path`).
-Build and test it from the checkout root with `cabal build all` and `cabal test all`. The
-executable already links with `-threaded -rtsopts -with-rtsopts=-N`. Use
-`OKF_BIN="$(cd <okf checkout> && cabal list-bin okf)"` to run an unreleased build from okf-profiles.
+Its compiler is GHC 9.12.4, provided by the checkout's Nix flake development shell, so every
+cabal command below runs from the checkout root as `nix develop --command <command>`, for
+example `nix develop --command cabal build all` and `nix develop --command cabal test all`.
+A `ghc` found on `PATH` outside that shell is not the project's compiler (the planning machine
+had 9.10.3 there, which cannot build the test suite's `zlib` dependency). The executable already
+links with `-threaded -rtsopts -with-rtsopts=-N`. Use
+`OKF_BIN="$(cd <okf checkout> && nix develop --command cabal list-bin okf)"` to run an
+unreleased build from okf-profiles.
 
 These modules matter:
 
@@ -314,9 +510,13 @@ These modules matter:
     `FieldPath`, for example `ValueNotInVocabulary`, `LocalDocumentReferenceNotAllowed` and
     `SelfDocumentReference`.
 
-  `NestedRules` cannot contain further nesting, so a rule's location has at most two levels.
-  `compileProfile` rejects duplicate field names within one list at one scope, so
-  scope + list + field identifies an authored rule uniquely.
+  `NestedRules` cannot contain further nesting, so a rule's location has at most two levels. A
+  `NestedFieldRule` carries `allowedValues`, `cardinality`, `format`, `path`, `when` and
+  `reference`, but never `uniqueBy`, `elementFields` or `objectFields`; so `allowSelf`,
+  `allowLocal` and `externalUriPattern` relaxations apply at nested scope too, and the legacy
+  script already produces them there (for example `jobRef` inside `keyResults`).
+  `compileProfile` rejects duplicate field names within one list at one scope
+  (`DuplicateFieldRule`), so scope + list + field identifies an authored rule uniquely.
 - **`validateReferenceText`** in the same file checks `allowLocal` *before* the prefix,
   dangling-owner and `allowSelf` checks. Two consequences follow:
   - When `allowLocal = False`, the `allowSelf` flag is never consulted, so relaxing it is provably
@@ -400,6 +600,16 @@ It also produces the reference results that later milestones must agree with. Ev
 - `--quiet` suppresses per-relaxation lines but keeps the summary;
 - `--only FIELD` restricts the sweep to rules with that field name, for quick checks.
 
+**Scanner fix.** In `rules()`, the last statement of the loop is `i = end`, which resumes the
+scan after the record just found and so skips every rule nested under that record's
+`objectFields` (fact 5 above). Change it to `i += len('field = "')`, which resumes just after
+the match and lets the loop find the nested records on later iterations. Nothing else changes:
+nested records are complete rule records with their own `field = "…"`, `enclosing_brace` finds
+their own opening brace, and condition records are still skipped by the `hasValue` test. Verify
+the change the way validation did: enumerate relaxations with the old and new scanner on a copy
+and confirm that every old `(field, kind, text)` triple is still produced and that the added
+triples match the counts in Surprises & Discoveries (strategy 105 → 119).
+
 **Executable resolution.** Read `OKF_BIN` the same way `scripts/profile_fixture_cases.py` does,
 defaulting to `okf`. Resolve it with `shutil.which`. At start-up, run `<okf> --version` and print
 the first line of its output. If the binary cannot be found or exits non-zero, exit with status 2
@@ -418,7 +628,10 @@ Distinguish these outcomes:
 - `acceptance-fails`: an acceptance bundle reports a profile deviation under the relaxed
   descriptor.
 - `descriptor-invalid`: okf's output for the acceptance run contains `Failed to load profile`.
-  Check this before treating the run as `acceptance-fails`.
+  Both a descriptor that does not decode (`loadProfileOrExit`) and one that decodes but has a
+  definition error (`compileProfileOrExit`, for example a condition whose source vocabulary was
+  cleared) start their message with that text. Check this before treating the run as
+  `acceptance-fails`.
 - `mutation-ill-typed`: `dhall type` rejects the mutated text.
 - `unprotected`.
 
@@ -427,13 +640,13 @@ case in the last column. Keep the legacy column layout, so a reader of old logs 
 lines.
 
 **Streaming.** Print each relaxation's line as soon as it is decided, with `flush=True`, prefixed
-by its position, for example `[ 12/105]`. Add the elapsed time for that relaxation and the number
+by its position, for example `[ 12/119]`. Add the elapsed time for that relaxation and the number
 of okf invocations it used, for example `(4 okf runs, 1.6 s)`. Print the total relaxation count
 before the first relaxation: compute the full list of `(name, kind, text)` first, which costs
 nothing compared with validation. End with:
 
 ```text
-sweep: 105 relaxations: 80 witnessed, 3 acceptance-fails, 2 descriptor-invalid, 20 unprotected; 2714 okf runs in 1h 05m 12s
+sweep: 119 relaxations: 94 witnessed, 3 acceptance-fails, 2 descriptor-invalid, 20 unprotected; 2714 okf runs in 1h 05m 12s
 ```
 
 **JSON summary.** With `--json PATH`, write one JSON object at the end:
@@ -491,23 +704,43 @@ that decoding the profile once and evaluating every relaxation in memory is as c
 Decision Log assumes. It also finds anything unexpectedly expensive in `compileProfile`, such as
 compiling `externalUriPattern` regexes on every compile.
 
+**This milestone was run on 2026-10-28 during plan validation**, and its numbers are in
+Surprises & Discoveries: one compile plus one full rendered pass over all 182 strategy cases
+costs 36 ms, so the approach is promoted. Repeat it only if okf-core's profile validation or
+compilation changes before Milestone 3 begins; it takes about a minute.
+
 In the okf checkout, write an uncommitted file `spike/SweepSpike.hs` (code under Concrete Steps).
 It loads `profiles/coordination/strategy.dhall` from the okf-profiles checkout with
-`loadProfileFile`, and loads all 182 rejection fixtures and the acceptance bundle with
-`walkBundle`, `walkBundleInventory` and `readBundleVersion`. Then it times three things:
+`loadProfileFile`, and loads all 182 rejection fixtures with `walkBundle`,
+`walkBundleInventory` and `readBundleVersion`. Then it times, 200 iterations each:
 
-- the load;
-- 200 calls of `compileProfile` on the decoded spec;
-- 200 full passes over every fixture with
-  `validateProfileVersion declaration compiled <> validateProfileWith inventory PermissiveConformance compiled concepts`,
-  forcing the results with `length` and `show`.
+- `compileProfile` on the decoded spec, forced to weak head normal form only;
+- compile plus counting the violations over every fixture;
+- one full pass over every fixture with a shared compiled profile, rendering every violation
+  with `show`;
+- compile plus that full rendered pass, which is the cost of one relaxation.
 
-Run it with `cabal build okf-core && cabal exec -- runghc spike/SweepSpike.hs <okf-profiles checkout>`.
+Each timed call takes the iteration index as an argument and is marked `NOINLINE`, and the file
+is compiled with `-fno-full-laziness -fno-cse`. Without that, GHC floats a loop body that does
+not depend on the index out of the loop and evaluates it once, and the spike reports the cost
+of one iteration as the cost of 200 (this happened during validation).
 
-Promote the approach if one compile plus one full suite pass costs under 50 ms. That gives under
-10 s serial for 200 relaxations, against tens of minutes today. Otherwise, record the dominant
-cost in Surprises & Discoveries and treat Milestone 5 (parallel evaluation) as required.
-Record the measured numbers in Surprises & Discoveries either way, and delete `spike/` afterwards.
+Build and run it from the okf checkout root, inside the Nix shell. `cabal exec -- runghc` does
+not see the in-place library; a GHC environment file does:
+
+```bash
+nix develop --command bash -c '
+  cabal build okf-core --write-ghc-environment-files=always &&
+  ghc -O1 -outputdir spike/build spike/SweepSpike.hs -o spike/sweep-spike &&
+  ./spike/sweep-spike <okf-profiles checkout>'
+rm -rf spike .ghc.environment.*
+```
+
+Promote the approach if one compile plus one full rendered pass costs under 50 ms. That gives
+under 10 s serial for 200 relaxations, against tens of minutes today. Otherwise, record the
+dominant cost in Surprises & Discoveries and treat Milestone 5 (parallel evaluation) as required.
+Record the measured numbers in Surprises & Discoveries either way, and delete `spike/` and the
+environment file afterwards; neither is ignored by git.
 
 ### Milestone 3 — Native `okf profile sweep` with legacy parity (okf, then okf-profiles)
 
@@ -532,7 +765,7 @@ if the registry lags, record the intended URI anyway.
 
 **Engine module.** Create `okf-core/src/Okf/Profile/Sweep.hs` and list it in
 `okf-core/okf-core.cabal` under `exposed-modules`. It is pure except for one loading function.
-Its interfaces are specified in Interfaces and Dependencies. It has five parts:
+Its interfaces are specified in Interfaces and Dependencies. It has six parts:
 
 1. **Rule locations.** A `RuleLocation` names an authored rule by scope (profile-wide, or
    `type:<Type Name>`), presence list (`required`, `recommended`, `optional`), field, and
@@ -581,9 +814,17 @@ Its interfaces are specified in Interfaces and Dependencies. It has five parts:
 
    Collect *all* witnesses, not just the first. The *primary* witness is the first in the legacy
    order: cases whose expected field equals the rule's innermost field name first (stable), then
-   the rest in file order. Because rendering lives in okf-cli, the engine takes the renderer as a
-   parameter:
+   the rest in file order. Collecting every witness means every relaxation costs a full pass
+   over the cases; the spike measured that pass at about 30 ms for 182 cases, so this is
+   affordable and buys the full witness list and the facet witnesses of Milestone 4. Because
+   rendering lives in okf-cli, the engine takes the renderer as a parameter:
    `type Render = CompiledProfile -> [Concept] -> ProfileViolation -> Text`.
+6. **Grouping.** Evaluate relaxations one *rule location* at a time: all relaxations of one
+   authored rule form a group, evaluated together, and the group's results are emitted in
+   enumeration order once the whole group is decided. In this milestone the grouping changes
+   nothing visible, because no outcome depends on a sibling; Milestone 4 adds `subsumed` and
+   `covered`, which do, and Milestone 5 parallelizes over groups. `sweepProfile` returns a list
+   that is lazy per group, so printing starts after the first group, not after the whole sweep.
 
 **Command.** Add `ProfileSweep ProfileSweepOptions` to `ProfileCommand` in `okf-cli/src/Okf/Cli.hs`
 and a `sweep` subcommand to `profileCommandParser`:
@@ -601,11 +842,12 @@ In this milestone, `default` equals `legacy`. `runProfileSweep` follows these st
 3. Print a start line naming the okf version, the profile, the number of relaxations and the
    number of cases.
 4. Run the baseline. On a fault, print it and exit 2.
-5. Print one line per relaxation, in enumeration order, as each is decided. The text layout is:
+5. Print one line per relaxation, in enumeration order, as each rule location's group is
+   decided. The text layout is:
 
    ```text
-   [  12/105] OK  type:Objective/required/status#allowedValues  witness objective-bad-status (+2 more) 3 ms
-   [  13/105] !!  type:Launch/required/launchRef#allowLocal      unprotected 41 ms
+   [  12/119] OK  type:Objective/required/status#allowedValues  witness objective-bad-status (+2 more) 3 ms
+   [  13/119] !!  type:Launch/required/launchRef#allowLocal      unprotected 41 ms
    ```
 
 6. Print a summary line with counts per outcome and the total elapsed time.
@@ -649,7 +891,10 @@ Acceptance:
   completes.
 - `python3 scripts/compare-sweep-results.py docs/plans/evidence/13/<name>.legacy.json docs/plans/evidence/13/<name>.okf.ndjson`
   prints `parity: N/N legacy results matched` and exits 0.
-- Record each pair of wall times in Outcomes & Retrospective.
+- Record each pair of wall times in Outcomes & Retrospective. The strategy sweep with
+  `--kinds legacy` is forecast at about 4 s (0.3 s loading plus 119 relaxations × 36 ms); treat
+  a wall time over 15 s as a defect to investigate (a lost sharing of the loaded suite, or a
+  recompile per case) before accepting the milestone.
 
 ### Milestone 4 — Principled classification and a failing exit code (okf)
 
@@ -665,7 +910,11 @@ This milestone turns observations into classifications that can gate a release. 
   for a rule whose `allowedValues` relaxation is `DescriptorInvalid`. There is one candidate for
   each distinct value that some rejection case's baseline `ValueNotInVocabulary` violation
   reports at that rule's field path. It is the general form of the "expand the allowed values"
-  controls recorded in the tan-product-management EP-4 record.
+  controls recorded in the tan-product-management EP-4 record. Derive these candidates during
+  enumeration, after the baseline: whether the `allowedValues` relaxation is `DescriptorInvalid`
+  needs only `compileProfile` (about 6 ms), and the baseline violations are already computed.
+  The start event's `relaxationCount` is therefore exact, and `index`/`total` never change
+  mid-run.
 - In the `all` set only:
   - `cardinality` (set to `Any`);
   - `condition` (set `when` to `Nothing`);
@@ -693,6 +942,9 @@ reason. The mapping from relaxation kind to violation constructors is:
 - `path` → the path constructors.
 
 **Classification:** apply these rules in order; the first that matches decides the outcome.
+Rules 2, 3 and 6 look at sibling relaxations of the same rule location (and at the derived
+`admitValue` and composite unit relaxations of that rule), which is why Milestone 3 evaluates
+and emits one rule location's relaxations as a group.
 
 1. **`protected`:** at least one witness, and no acceptance violation and no definition error.
 2. **`subsumed`** (non-failing): the kind is `delete`, the result is `AcceptanceObservable` or
@@ -790,7 +1042,7 @@ Dependencies).
 
 Acceptance:
 
-- `cabal test all` passes in the okf checkout.
+- `nix develop --command cabal test all` passes in the okf checkout.
 - On the six families,
   `"$OKF_BIN" profile sweep … --kinds legacy --json` still passes the comparison script.
   `legacyOutcome` is unchanged by classification.
@@ -804,17 +1056,20 @@ Acceptance:
 Do this milestone only if Milestone 4's default-kind sweep of the strategy profile takes more
 than 30 s of wall time on the reference machine, or if Milestone 2 recorded that it would.
 Otherwise, record the measured time and the decision to skip it in the Decision Log, check the
-Progress item, and move on.
+Progress item, and move on. Milestone 2 forecasts about 6 s, so the expected outcome is a
+recorded skip; the design below stays in the plan in case the measured command disagrees.
 
 Evaluation is pure, so parallelism needs no threads in the engine. In `runProfileSweep`:
 
-1. Build the lazy list of `(Relaxation, Outcome)` pairs.
-2. Apply `withStrategy (parBufferChunks jobs rdeepseq)`. If the `parallel` package lacks a
-   chunked buffer in the version the build resolves, use `parBuffer jobs rdeepseq`.
+1. Build the lazy list of per-rule-location groups, each a list of `(Relaxation, Outcome)`
+   pairs (Milestone 3's grouping).
+2. Apply `withStrategy (parBuffer jobs rdeepseq)` to the list of groups.
+   `Control.Parallel.Strategies.parBuffer :: Int -> Strategy a -> Strategy [a]` from the
+   `parallel` package evaluates up to `jobs` list elements ahead of the consumer.
 3. Consume the list sequentially for printing.
 
 Output order stays the enumeration order whatever the scheduling, so results are deterministic.
-At most `jobs` evaluations run ahead of printing, which bounds both work and memory.
+At most `jobs` groups run ahead of printing, which bounds both work and memory.
 
 To support this:
 
@@ -833,9 +1088,12 @@ lower.
 **okf release.** Prepare the release by following okf's established process: version bump in
 both `.cabal` files, the changelog section, and generated help if any. Look at the most recent
 `chore(release)` commit in the okf checkout with `git log --grep 'chore(release)' -1 --stat` and
-mirror it. The expected version is 0.11.0.0; record the actual one. **Ask the owner before
-tagging or pushing.** Installing the release on the owner's `PATH` (through their Nix
-home-manager configuration) is the owner's action. Until it happens, keep using `OKF_BIN`.
+mirror it (the 0.10.0.0 commit, `b575102`, bumps both `.cabal` files, moves the `[Unreleased]`
+changelog entries under the version heading, and explains the semver bump in its body). Build
+and test the release candidate inside the Nix shell: `nix develop --command cabal test all`.
+The expected version is 0.11.0.0; record the actual one. **Ask the owner before tagging or
+pushing.** Installing the release on the owner's `PATH` (through their Nix home-manager
+configuration) is the owner's action. Until it happens, keep using `OKF_BIN`.
 
 **Delegating wrapper.** In okf-profiles, add `--engine okf|legacy` to
 `scripts/sweep-profile-rules.py`:
@@ -925,14 +1183,23 @@ The expected shape (numbers are illustrative):
 
 ```text
 okf: okf v0.10.0.0 (feacb5e)
-baseline: 1 acceptance bundle, 39 rejection cases OK (40 okf runs, 15.2 s)
-[  1/58] OK  claimCheckId             delete               fixture missing-claim-check-id  (2 okf runs, 0.8 s)
-[  2/58] !!  verified                 delete               UNPROTECTED  (40 okf runs, 15.0 s)
+baseline: 1 acceptance bundle, 39 rejection cases OK (40 okf runs, 9.1 s)
+[  1/52] OK  claimCheckId             delete               fixture missing-claim-check-id  (2 okf runs, 0.6 s)
+[  2/52] !!  reviewer                 delete               UNPROTECTED  (40 okf runs, 9.0 s)
 ...
-sweep: 58 relaxations: 49 witnessed, 1 acceptance-fails, 0 descriptor-invalid, 8 unprotected; 640 okf runs in 4m 06s
+sweep: 52 relaxations: 29 witnessed, 3 acceptance-fails, 0 descriptor-invalid, 20 unprotected; 1000 okf runs in 3m 50s
 ```
 
-Record the six baselines (long-running, one at a time, in the background):
+The unmodified script took 205 s on this family during planning and reported 20 unprotected
+results and 3 acceptance failures (printed as `OK`), so the improved script should land near
+the numbers above; the four extra relaxations come from the scanner fix.
+
+Record the six baselines (long-running, one at a time, in the background). Budget for them:
+each unprotected relaxation costs a full pass of about 0.38 s per case on the strategy profile
+(less on smaller descriptors), so expect roughly half an hour each for strategy, launches,
+campaigns and messaging, a quarter of an hour for audiences and four minutes for claim-checks,
+about two hours in total. Start the loop and carry on with Milestone 3's okf work while it
+runs:
 
 ```bash
 mkdir -p docs/plans/evidence/13
@@ -952,35 +1219,64 @@ feat(sweep): stream legacy sweep results and separate acceptance failures
 
 Print each relaxation as it is decided with elapsed time and okf run counts,
 resolve OKF_BIN, fail clearly on baseline faults, report acceptance and
-descriptor failures as their own classes, and write a JSON summary.
+descriptor failures as their own classes, enumerate rules nested under
+objectFields (the scanner skipped them), and write a JSON summary.
 
 ExecPlan: docs/plans/13-make-profile-policy-sweeps-observable-and-run-them-natively-in-okf.md
 Intention: intention_01m61cc0jhee7trcx2kvb6x77y
 ```
 
-Milestone 2 — the spike file in the okf checkout, `spike/SweepSpike.hs`. Adjust imports if the
-compiler reports a name in a different module. Each name below was verified to exist at planning
-time in the module shown.
+Milestone 2 — the spike file in the okf checkout, `spike/SweepSpike.hs`. This exact file
+compiled and ran on 2026-10-28 against okf-core 0.10.0.0 with GHC 9.12.4. Adjust imports if a
+later compiler reports a name in a different module.
 
 ```haskell
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_GHC -fno-full-laziness -fno-cse #-}
 module Main (main) where
 
-import Control.Monad (forM, forM_, replicateM_)
+import Control.Monad (forM, forM_)
 import Data.Time.Clock (diffUTCTime, getCurrentTime)
 import Okf.Bundle (walkBundle, walkBundleInventory)
 import Okf.Index (readBundleVersion)
-import Okf.Profile (compileProfile, loadProfileFile, validateProfileVersion, validateProfileWith)
+import Okf.Profile (CompiledProfile, ProfileSpec, compileProfile, loadProfileFile, validateProfileVersion, validateProfileWith)
 import Okf.Validation (ValidationProfile (..))
 import System.Directory (doesDirectoryExist, listDirectory)
 import System.Environment (getArgs)
 import System.FilePath ((</>))
+import System.IO (hFlush, stdout)
+
+-- Each worker takes an iteration index it ignores, and is NOINLINE, so GHC
+-- cannot float the call out of the loop and compute it once.
+
+{-# NOINLINE compileOnce #-}
+compileOnce :: Int -> ProfileSpec -> CompiledProfile
+compileOnce _ spec = either (error . show) id (compileProfile spec)
+
+{-# NOINLINE passOnce #-}
+passOnce :: Int -> CompiledProfile -> [(a, b, c)] -> ([(a, b, c)] -> CompiledProfile -> Int) -> Int
+passOnce _ compiled suite f = f suite compiled
+
+{-# NOINLINE evaluateOnce #-}
+evaluateOnce :: Int -> ProfileSpec -> [(a, b, c)] -> ([(a, b, c)] -> CompiledProfile -> Int) -> Int
+evaluateOnce _ spec suite f = f suite (either (error . show) id (compileProfile spec))
+
+timed :: String -> Int -> (Int -> IO ()) -> IO ()
+timed label n act = do
+  t0 <- getCurrentTime
+  forM_ [1 .. n] act
+  t1 <- getCurrentTime
+  let total = realToFrac (diffUTCTime t1 t0) :: Double
+  putStrLn (label <> ": " <> show n <> " iterations in " <> show total <> " s = " <> show (total / fromIntegral n * 1000) <> " ms each")
+  hFlush stdout
 
 main :: IO ()
 main = do
   [root] <- getArgs
   t0 <- getCurrentTime
   Right spec <- loadProfileFile (root </> "profiles/coordination/strategy.dhall")
+  tLoad <- getCurrentTime
+  putStrLn ("profile decode: " <> show (diffUTCTime tLoad t0))
   let casesDir = root </> "fixtures/strategy-invalid"
   names <- listDirectory casesDir
   dirs <- filter snd <$> forM names (\n -> (,) (casesDir </> n) <$> doesDirectoryExist (casesDir </> n))
@@ -990,36 +1286,54 @@ main = do
     Right declaration <- readBundleVersion d
     pure (concepts, inventory, declaration)
   t1 <- getCurrentTime
-  putStrLn ("load: " <> show (diffUTCTime t1 t0) <> " for " <> show (length suite) <> " cases")
-  replicateM_ 200 (either (error . show) (const (pure ())) (compileProfile spec))
-  t2 <- getCurrentTime
-  putStrLn ("200 compiles: " <> show (diffUTCTime t2 t1))
-  let Right compiled = compileProfile spec
-  forM_ [1 :: Int .. 200] $ \i -> do
-    let total = sum [ length (show vs)
-                    | (concepts, inventory, declaration) <- suite
-                    , let vs = validateProfileVersion declaration compiled
-                                 <> validateProfileWith inventory PermissiveConformance compiled concepts ]
-    total `seq` pure i
-  t3 <- getCurrentTime
-  putStrLn ("200 full suite passes: " <> show (diffUTCTime t3 t2))
+  putStrLn ("load: " <> show (diffUTCTime t1 tLoad) <> " for " <> show (length suite) <> " cases")
+  let fullPass s compiled =
+        sum [ length (show vs)
+            | (concepts, inventory, declaration) <- s
+            , let vs = validateProfileVersion declaration compiled
+                         <> validateProfileWith inventory PermissiveConformance compiled concepts ]
+      violationCount s compiled =
+        sum [ length (validateProfileVersion declaration compiled
+                        <> validateProfileWith inventory PermissiveConformance compiled concepts)
+            | (concepts, inventory, declaration) <- s ]
+  let compiled0 = compileOnce 0 spec
+  putStrLn ("violations per pass: " <> show (violationCount suite compiled0))
+  timed "compile only (WHNF)" 200 (\i -> compileOnce i spec `seq` pure ())
+  timed "compile + count violations over 182 cases" 200 (\i -> evaluateOnce i spec suite violationCount `seq` pure ())
+  timed "full pass, rendered with show, shared compile" 200 (\i -> passOnce i compiled0 suite fullPass `seq` pure ())
+  timed "compile + full pass rendered with show" 200 (\i -> evaluateOnce i spec suite fullPass `seq` pure ())
 ```
 
 ```bash
-cabal build okf-core
-cabal exec -- runghc spike/SweepSpike.hs <okf-profiles checkout>
-rm -r spike
+# okf checkout root
+nix develop --command bash -c '
+  cabal build okf-core --write-ghc-environment-files=always &&
+  ghc -O1 -outputdir spike/build spike/SweepSpike.hs -o spike/sweep-spike &&
+  ./spike/sweep-spike <okf-profiles checkout>'
+rm -rf spike .ghc.environment.*
 ```
 
-Record the three printed durations in Surprises & Discoveries. Divide the second and third by 200
-to get the per-relaxation cost.
+The output on 2026-10-28 (second of two runs):
+
+```text
+profile decode: 0.1051s
+load: 0.14969s for 182 cases
+violations per pass: 197
+compile only (WHNF): 200 iterations in 0.794563 s = 3.972815 ms each
+compile + count violations over 182 cases: 200 iterations in 7.117308 s = 35.58654 ms each
+full pass, rendered with show, shared compile: 200 iterations in 6.019125 s = 30.095625 ms each
+compile + full pass rendered with show: 200 iterations in 7.240927 s = 36.204635 ms each
+```
+
+The last line is the per-relaxation cost. Record all four in Surprises & Discoveries if the
+spike is repeated.
 
 Milestone 3 — build, test and compare:
 
 ```bash
 # okf checkout
-cabal build all && cabal test all
-export OKF_BIN="$(cabal list-bin okf)"
+nix develop --command cabal build all && nix develop --command cabal test all
+export OKF_BIN="$(nix develop --command cabal list-bin okf)"
 "$OKF_BIN" profile sweep --help
 ```
 
@@ -1039,7 +1353,7 @@ done
 The expected comparison output for each profile:
 
 ```text
-parity: 105/105 legacy results matched; 2 okf-only results (legacy cannot delete a sole list element)
+parity: 119/119 legacy results matched; 2 okf-only results (legacy cannot delete a sole list element)
 ```
 
 Milestone 4 — the default-kind strategy sweep, before any manifest exists:
@@ -1090,16 +1404,19 @@ this plan's widening.
 4. **Lower wall time on a representative large corpus, without weakening ADR-9 (IR-11
    criterion 4).** Outcomes & Retrospective records, for the strategy profile (182 cases), the
    legacy wall time and the okf wall time for the same relaxations. The okf time must be at least
-   20× lower, and under 60 s, on the same machine. The `default` kinds are a superset of the
-   legacy kinds, so coverage only grows.
+   20× lower, and under 60 s, on the same machine. Those are floors; the planning measurements
+   (Surprises & Discoveries) forecast about 4 s for okf against tens of minutes for the legacy
+   script, a factor in the hundreds, and the measured legacy run on claim-checks took 205 s where
+   okf is forecast at about 1 s. The `default` kinds are a superset of the legacy kinds, so
+   coverage only grows.
 5. **The sweep is a gate.** With the manifests committed, `okf profile sweep` exits 0 for each of
    the six families. Deleting any one rejection fixture that is the only witness of some
    relaxation makes it exit 1 and name that relaxation `unprotected`. Try this on one strategy
    fixture and restore it with `git checkout -- fixtures/strategy-invalid`.
 6. **Determinism (only if Milestone 5 ran).** `--jobs 1` and `--jobs 8` produce identical JSON,
    ignoring elapsed times.
-7. **The repositories stay green.** `just check` passes in okf-profiles and `cabal test all`
-   passes in okf.
+7. **The repositories stay green.** `just check` passes in okf-profiles and
+   `nix develop --command cabal test all` passes in okf.
 
 
 ## Idempotence and Recovery
@@ -1181,9 +1498,12 @@ module Okf.Profile.Sweep
 ```
 
 The names may be adjusted during implementation if the compiler or okf's style requires it.
-Record any change in the Decision Log. `sweepProfile` must return a lazy list in enumeration
-order. Composite unit relaxations that it evaluates for classification and that the chosen
-`KindSet` does not request are reported only through `Covered`, never as their own results.
+Record any change in the Decision Log. `sweepProfile` must return a list in enumeration order
+that is lazy per rule-location group: consuming the first group's results must not force the
+evaluation of later groups, and within a group every relaxation is evaluated before any of its
+results is yielded, because `subsumed` and `covered` depend on siblings. Composite unit
+relaxations that it evaluates for classification and that the chosen `KindSet` does not request
+are reported only through `Covered`, never as their own results.
 
 ### okf-cli
 
@@ -1227,4 +1547,55 @@ fields are what `scripts/compare-sweep-results.py` keys on.
 - **`docs/plans/evidence/13/`:** the legacy JSON and okf NDJSON evidence files.
 
 External tools are `dhall` (≥ 1.42, legacy engine only), `okf` (≥ 0.11.0.0 for the native engine),
-`python3` and `jq` (for the determinism check).
+`python3`, `jq` (for the determinism check), `hyperfine` (optional, for repeating the timing
+measurements) and, for the okf work, `nix` with flakes enabled so that `nix develop` provides
+GHC 9.12.4 and cabal.
+
+
+## Revision Notes
+
+### 2026-10-28 — validation of the speedup claim and corrections found while validating
+
+Validated by measuring rather than by reading. Changes and why:
+
+- **Evidence for the speedup.** Surprises & Discoveries now holds the `hyperfine` split of a
+  legacy `okf validate` call (26 ms process, about 0.35 s decoding the normalized descriptor,
+  nothing measurable for the fixture), the Milestone 2 spike results (36 ms per compile plus full
+  rendered pass over 182 cases), a measured 205 s legacy run on claim-checks, and the legacy
+  relaxation counts for all six families. The Decision Log's first entry and Validation item 4
+  cite these numbers. Milestone 2's Progress item is checked, because the spike was run during
+  validation, and its promote decision is recorded.
+- **The spike as written would have misled.** `cabal exec -- runghc` cannot see the in-place
+  okf-core library, and GHC's full-laziness pass hoisted the original loop bodies so that 200
+  iterations cost one. The spike code, build commands and guidance were replaced with the
+  version that ran (NOINLINE workers taking the loop index, `-fno-full-laziness -fno-cse`, a GHC
+  environment file). Milestone 2 and Concrete Steps carry the fix.
+- **Toolchain.** okf builds only inside `nix develop` (GHC 9.12.4). Every okf command in Context
+  and Orientation, Milestones 2, 3 and 6, Concrete Steps and Interfaces and Dependencies now says
+  so, and the Decision Log records why.
+- **Legacy scanner gap.** The legacy script never relaxes rules nested under `objectFields`
+  (fact 5 in Context and Orientation, with the affected rules and before/after counts in
+  Surprises & Discoveries). Milestone 1 gains a one-line scanner fix, verified on a copy to lose
+  no existing relaxation, and the baselines are recorded after it. The family table shows both
+  counts, and the Milestone 1 transcript example uses claim-checks' real numbers.
+- **Streaming versus classification.** `subsumed` and `covered` depend on sibling relaxations,
+  which a strict one-line-per-relaxation stream in enumeration order cannot honour. Milestone 3
+  now evaluates and emits one rule location's relaxations as a group, Milestone 4 says which
+  rules need it, Milestone 5 parallelizes over groups, and Interfaces and Dependencies defines
+  the per-group laziness. `admitValue` candidates are derived during enumeration so the start
+  event's count is exact.
+- **Milestone 5.** `parBufferChunks` does not exist in the `parallel` package; the plan names
+  `parBuffer` with its type. The milestone is expected to be skipped on the measured forecast
+  (about 6 s against a 30 s trigger) and says so.
+- **Consistency pass (same day).** After the edits above, the plan was re-read end to end and
+  the counts that the scanner fix changed were aligned everywhere: 119 legacy relaxations for
+  strategy (the parity example, the stream examples and the Milestone 3 forecast) and about 166
+  default-kind relaxations (119 plus one presence demotion for each of the 47 required rules),
+  with the strategy forecast at about 6 s. The Milestone 3 engine description now says six
+  parts, the command prints as each rule location's group is decided, the remaining
+  `cabal test all` commands carry the `nix develop` prefix, the Milestone 1 commit example and
+  Progress item mention the scanner fix, and the `descriptor-invalid` detection string was
+  verified against okf's `loadProfileOrExit` and `compileProfileOrExit`, which both start their
+  message with `Failed to load profile`.
+- **Milestone 3 acceptance** gains a wall-time expectation (about 4 s; over 15 s is a defect to
+  investigate), so a lost sharing of the loaded suite cannot pass unnoticed.
