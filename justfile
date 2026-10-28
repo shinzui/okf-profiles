@@ -26,11 +26,15 @@ types:
     done
     exit "$status"
 
-# Run every check under scripts/, including the documentation staleness gate
+# Run every test under scripts/, including the documentation staleness gate
 test:
     #!/usr/bin/env bash
     set -euo pipefail
-    for s in scripts/*.sh; do bash "$s"; done
+    for s in scripts/test-*.sh; do bash "$s"; done
+
+# ADR-9 load-bearing sweep of every profile suite; needs okf >= 0.12.0.0 (or OKF_BIN)
+sweep *args:
+    @bash scripts/sweep-all-profiles.sh {{args}}
 
 # Everything a release has to pass
 check: types test

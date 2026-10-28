@@ -1,6 +1,8 @@
 # Bundle Update Log
 
 ## 2026-10-28
+* **Update**: IR-8: record its 2026-10-07 completion evidence as `resolution`, which strict validation requires of a completed request.
+* **Addition**: IR-12: close the 612 load-bearing sweep gaps the first native catalog sweep recorded as deferred exceptions, starting with home suites for the shared reviews and v0.2 families.
 * **Update**: IR-11 enters implementation under mori://shinzui/okf-profiles/plans/13-make-profile-policy-sweeps-observable-and-run-them-natively-in-okf; the native sweep is mori://shinzui/okf/plans/71-add-okf-profile-sweep-for-load-bearing-rule-checks.
 
 ## 2026-10-23

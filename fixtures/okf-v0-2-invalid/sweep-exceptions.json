@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "exceptions": [
+    {
+      "relaxation": "profile/required/type#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/required/type#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/required/title#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/required/title#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/required/description#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/required/description#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/required/generated/objectFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/required/generated/objectFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/required/generated/objectFields/recommended/at#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/verified/elementFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/verified/elementFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/verified/elementFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/verified/objectFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/verified/objectFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/verified/objectFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/optional/author#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/optional/author#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/optional/last_modified#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/optional/last_modified#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/usage_window/objectFields/optional/to#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/usage_window/objectFields/optional/to#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Home suite of the shared v0.2 families; no rejection case here notices this relaxation yet."
+    }
+  ]
+}

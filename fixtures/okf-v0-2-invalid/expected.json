@@ -1,0 +1,10 @@
+{
+  "bad-actor": "generated.by",
+  "missing-generated": "generated",
+  "bad-status": "status",
+  "bad-stale-after": "stale_after",
+  "missing-source-resource": "sources[0].resource",
+  "quoted-usage-count": "sources[0].usage_count",
+  "bad-verified-actor": "verified[0].by",
+  "bad-usage-window-date": "usage_window.from"
+}

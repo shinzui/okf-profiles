@@ -105,14 +105,28 @@ After this plan:
       the 182 strategy cases costs about 36 ms in process, so the in-process approach is
       promoted. The numbers are in Surprises & Discoveries; the spike is now Milestone 0 of
       plan 71.
-- [ ] Milestone 2: `scripts/compare-sweep-results.py` written and, with plan 71's Milestone 1
-      build on `OKF_BIN`, parity proven for the six families with the okf NDJSON evidence
-      committed under `docs/plans/evidence/13/`.
-- [ ] Milestone 3: `scripts/sweep-profile-rules.py` delegates to `okf profile sweep`; exception
-      manifests written for the six families; `scripts/sweep-all-profiles.sh` added; full
-      catalog swept and triaged, including one `--kinds all` run.
-- [ ] Milestone 3: README, ADR-9 amendment, IR-11 completion and the logs; the `just check`
-      gating decision recorded.
+- [x] Milestone 2 (2026-10-28): `scripts/compare-sweep-results.py` written. Trial on
+      claim-checks (legacy with okf 0.10) found the okf-version difference recorded in
+      Surprises & Discoveries; with the same okf both engines agree on it.
+- [ ] Milestone 2: parity proven for the six families against the recorded baselines, with the
+      okf NDJSON evidence committed under `docs/plans/evidence/13/`.
+- [x] Milestone 3 (2026-10-28): `scripts/sweep-profile-rules.py` delegates to
+      `okf profile sweep` by default (`--engine okf|legacy`, `--kinds`); verified that okf 0.10
+      makes it exit 2 with the install hint, and that with the new build it streams okf's lines
+      and exits 0 on strategy. `scripts/sweep-all-profiles.sh` added; `just sweep` recipe added
+      and `just test` narrowed to `scripts/test-*.sh`.
+- [x] Milestone 3 (2026-10-28): the v0.2 home suite gained `expected.json` and a Python test;
+      exception manifests written for all 14 swept suites (shared-family entries verified
+      against the home sweeps, the rest `deferred` to IR-12, filed); every suite's sweep exits
+      0 against committed fixtures. Removing the sole witness `strategic-theme-missing-strategyid`
+      (scratch copy) makes the strategy sweep exit 1 naming
+      `type:Strategic Theme/required/strategyId#presence`.
+- [x] Milestone 3 (2026-10-28): README section, ADR-9 amendment with log entry (ADR bundle
+      validates strictly), IR-8 `resolution` so the request bundle validates strictly.
+- [x] Milestone 3 (2026-10-28): one `--kinds all` catalog run recorded in Surprises & Discoveries; `just check` passes with okf 0.10 after these changes (12m 57s under load).
+- [ ] Milestone 3: IR-11 completion and log, after parity.
+- [ ] Follow-up, after okf 0.12.0.0 is installed on the owner's `PATH`: change `justfile` to
+      `check: types test sweep` and confirm `just check` passes.
 
 The okf engine, command, classification, optional parallelism, release, okf ADR and okf request
 are plan 71's milestones; their state is tracked there.
@@ -283,6 +297,64 @@ are plan 71's milestones; their state is tracked there.
   before any change from this plan; without `--strict` the bundle validates. Milestone 3's
   acceptance requires the strict run to pass, so that record needs its `resolution`.
 
+- **2026-10-28 (implementation): okf 0.10 and the new okf disagree about `verified.by`.** The
+  first trial parity check (legacy run with okf 0.10, native run with the `7d5c285` build) on
+  claim-checks matched 54 of 55 legacy results. The miss: relaxing the format of
+  `verified/objectFields/required/by` is witnessed by `claim-check-bad-verified` under okf 0.10
+  but not under the new build, where the same fixture still reports
+  `frontmatter value at verified.by must match format actor` with that format removed, and okf
+  classifies both `verified … by#format` relaxations `inert`. Re-running the legacy engine with
+  `OKF_BIN` on the new build gave `UNPROTECTED` for both, agreeing with okf. So the difference
+  is okf's validation behaviour between versions, not the engine. Since the shared `verified`
+  family is in every family, all six legacy baselines are recorded with the new build.
+
+- **2026-10-28 (implementation): per-call cost on a loaded machine.** Another session was
+  building Haskell throughout (load average 20 on 10 cores). `hyperfine` on one strategy case
+  against the normalized descriptor: released okf 0.10 484 ms, the `7d5c285` cabal build
+  1.38 s, the same build with `+RTS -N1` 973 ms (the executable is linked with `-N`; plan 71 saw
+  the same effect in the sweep and pins one capability there). The baselines therefore run
+  through a scratch wrapper, `exec <okf> +RTS -N1 -RTS "$@"`, set as `OKF_BIN`. Setting
+  `GHCRTS=-N1` instead does not work: `dhall` is also a GHC program, rejects `-N1` as
+  non-threaded, and the script then exits 2 at start-up. At about 1 s per call, one
+  unprotected strategy relaxation costs about 3 minutes (183 okf runs).
+
+- **2026-10-28 (implementation): excusing a rule's siblings reclassifies its `delete`.** After
+  the first manifests were written, every suite reported one stale exception (21 for the house
+  variant of designs): the `delete` of `reviews/elementFields/required/kind`, previously
+  `descriptor-invalid`, became `subsumed` once its sibling relaxations were excused, because
+  `subsumed` requires every other relaxation of the rule to be non-failing. Dropping the stale
+  entries and re-sweeping converged in one round for every suite.
+
+- **2026-10-28 (implementation): the whole catalog, swept.** `scripts/sweep-all-profiles.sh`
+  sweeps 14 suites (the 13 that use `profile_fixture_cases.run` plus the v0.2 home suite once it
+  gained a Python test) in 66–73 s of wall time on the loaded machine. Without manifests every
+  suite failed: 41 failing relaxations in each of the six released families (the shared
+  `generated.at`, `reviews`, `verified` and `sources` members), 49 in launches (plus
+  `launchEvidence`, which splices `v02.sources`), and profile-specific gaps in the older suites:
+  use-case 42, designs 32, product-research 21, jobs 17, features 8, friction-log 3. The house
+  variant of designs fails 306, of which 240 are designs rules that `fixtures/designs-invalid`
+  protects.
+
+- **2026-10-28 (implementation): unrelated uncommitted designs work changes two outcomes.** The
+  working tree's uncommitted `fixtures/designs-invalid/bb-invalid-handle`,
+  `des-invalid-handle` and `expected.json` edits (not part of this plan) make
+  `type:Breadboard/required/designId#format` and `type:Detailed Design/required/designId#format`
+  protected; at `HEAD` they are unprotected. The designs manifest is written against `HEAD`'s
+  fixtures, so it lists them as `deferred`; when that work is committed those two entries go
+  stale and must be deleted in the same change.
+
+- **2026-10-28 (implementation): the advisory `--kinds all` catalog run.** With the manifests in
+  place, `okf profile sweep … --kinds all` exits 1 for all 14 suites (88 s in total; no stale
+  exceptions). Failing relaxations per suite, almost all of the wider kinds: audiences 34,
+  campaigns 56, claim-checks 30, designs 141, designs house 177, features 44, friction-log 42,
+  jobs 50, launches 48, messaging 31, okf-v0-2 5, product-research 67, strategy 57, use-case 47.
+  By kind, `cardinality` dominates everywhere (for example 39 of strategy's 57, 90 of designs'
+  141), then `condition`, `objectFields`/`elementFields` (whole nested container), `idPrefix`
+  and `pathPattern`. A few `delete` lines also fail under `all` although they pass under the
+  default kinds: a `delete` is `subsumed` only when every sibling relaxation of its rule is
+  accounted for, and the wider kinds add unexcused siblings. As decided, `all` is not gating;
+  these counts are the starting point for deciding whether cardinality relaxations should be.
+
 
 ## Decision Log
 
@@ -438,6 +510,85 @@ are plan 71's milestones; their state is tracked there.
   Rationale: okf's main checkout carries another session's uncommitted 0.12.0.0 release edits
   and its own builds; building there could race them or pick up half-finished changes.
   `7d5c285` is plan 71's last commit and contains the whole sweep.
+  Date: 2026-10-28
+
+- Decision: Record all six legacy baselines with `OKF_BIN` on the `7d5c285` build (through the
+  `+RTS -N1` wrapper), from a frozen copy of the Milestone 1 script (`git show
+  e760b85:scripts/sweep-profile-rules.py`, with `profile_fixture_cases.py`, in a scratch
+  directory), two families at a time.
+  Rationale: The comparison must isolate the engine; okf 0.10 and the new build validate
+  `verified.by` differently (Surprises & Discoveries), and Milestone 2 already says to regenerate
+  with the new build when versions explain a mismatch. The frozen copy is needed because each
+  lane starts a new Python process per family and Milestone 3 changes the script's default
+  engine to okf, which would silently turn later baselines into okf runs. Two lanes halve wall
+  time on a machine that was already saturated; the strategy wall time is recorded with that
+  caveat, and Validation item 4's 20× floor is still met by orders of magnitude.
+  Date: 2026-10-28
+
+- Decision: Write manifests for every suite the catalog sweep covers, not only the six
+  families, and record every gap that okf cannot classify and no home suite protects as
+  `deferred` to a new request, `mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12`.
+  Rationale: Milestone 3's acceptance requires `scripts/sweep-all-profiles.sh` to exit 0, and
+  the older suites have hundreds of real gaps; adding about 600 fixtures is a project of its
+  own. A manifest of `deferred` entries turns the sweep into a ratchet: nothing new can become
+  untested without failing, every known gap is listed by relaxation ID with a reason and a
+  request, and okf's stale check forces each entry out as soon as a fixture witnesses it.
+  Hiding the gaps (not sweeping those suites) or calling them `shared-family` without a home
+  that protects them would both misreport coverage.
+  Date: 2026-10-28
+
+- Decision: A relaxation is `shared-family` only when its home suite protects the same
+  relaxation, matched by its path below the family root, not just by innermost field and kind.
+  Homes are `okfV02` (`fixtures/okf-v0-2-invalid`) for members of `generated`, `verified`,
+  `sources` and the fields that splice `v02.sources` (`launchEvidence`, `deliveryEvidence`,
+  type-level `sources`), and `coordination.designs` for the house variant of designs, whose
+  descriptor `fixtures/designs-house.dhall` extends it. The `reviews` block has no home suite,
+  so its members are `deferred`.
+  Rationale: Field names such as `by` and `at` recur in `generated` and both spellings of
+  `verified`, so field and kind alone would let one protected member vouch for another. A
+  protected-at-home check is what ADR-9's 2026-10-16 amendment meant by "whose home profile
+  tests it member by member".
+  Date: 2026-10-28
+
+- Decision: Give `fixtures/okf-v0-2-invalid` an `expected.json` and move
+  `scripts/test-okf-v0-2-profile.sh` onto `profile_fixture_cases.run` through a new
+  `scripts/test-okf-v0-2-profile.py`.
+  Rationale: The v0.2 home suite could not be swept without it, so no v0.2 member anywhere
+  could be verified as `shared-family`. Each of its eight fixtures already reported exactly
+  one deviation; the harness adds that check and makes the suite part of the catalog sweep.
+  Date: 2026-10-28
+
+- Decision: Draft the manifests with a scratch generator applying the two decisions above, then
+  prune stale entries by re-sweeping until each suite reports none; the generator is not
+  committed.
+  Rationale: The rules are recorded here and the manifests are reviewable data; a committed
+  generator would make it too cheap to paper over a new gap with a fresh `deferred` entry, which
+  is exactly what the gate exists to stop. New gaps should be fixed by hand or excused
+  deliberately.
+  Date: 2026-10-28
+
+- Decision: Under `--engine okf`, the wrapper's `--json PATH` redirects okf's NDJSON stream to
+  PATH (so the flag means "machine-readable result to PATH" for both engines), `--quiet` is
+  refused with exit 2, and `--kinds` other than `legacy` is refused for the legacy engine.
+  Rationale: okf's `--json` is a flag that switches stdout to NDJSON, while the legacy option
+  takes a path; keeping the path form preserves the script's interface. Silently ignoring
+  `--quiet` or a kind set would misreport what ran.
+  Date: 2026-10-28
+
+- Decision: Narrow `just test` from `scripts/*.sh` to `scripts/test-*.sh` (every existing script
+  matched both), add a `just sweep` recipe, and leave `check` as `types test` until okf
+  0.12.0.0 is installed on the owner's `PATH`.
+  Rationale: `scripts/sweep-all-profiles.sh` must not run inside `just test`, where okf 0.10
+  would fail it for a missing command. The catalog sweep takes 66–73 s under heavy load, inside
+  the 120 s budget, so `check: types test sweep` is the intended end state once the release is
+  installed (Progress tracks it).
+  Date: 2026-10-28
+
+- Decision: Record the 2026-10-07 completion evidence of IR-8 (the platform transitions
+  request) as its `resolution`.
+  Rationale: Milestone 3 requires the request bundle to validate strictly, and that completed
+  record lacked the `resolution` its profile recommends. The text restates the bundle log's
+  completion entry and invents nothing.
   Date: 2026-10-28
 
 

@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "exceptions": [
+    {
+      "relaxation": "profile/required/generated/objectFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/required/generated/objectFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "profile/required/generated/objectFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/required/generated/objectFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/required/generated/objectFields/recommended/at#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/required/generated/objectFields/recommended/at#format is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/kind#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/kind#allowedValues",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; kind is a when-condition source, so the relaxed descriptor cannot compile; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/reviewer#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/reviewer#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/reviewed_at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/reviewed_at#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/reviewed_at#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/document_timestamp#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/document_timestamp#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/document_timestamp#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/scope#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/scope#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/scope#allowedValues",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/outcome#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/context#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/context#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/provider#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/provider#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/model#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/model#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/effort#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/effort#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/reviews/elementFields/required/effort#allowedValues",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/verified/elementFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/required/by#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/verified/elementFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/verified/elementFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/verified/objectFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/required/by#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/verified/objectFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/verified/objectFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/required/resource#delete",
+      "class": "shared-family",
+      "home": "okfV02",
+      "rationale": "Spliced from Profile/V02.dhall; fixtures/okf-v0-2-invalid protects profile/optional/sources/elementFields/required/resource#delete (witness missing-source-resource)."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/required/resource#presence",
+      "class": "shared-family",
+      "home": "okfV02",
+      "rationale": "Spliced from Profile/V02.dhall; fixtures/okf-v0-2-invalid protects profile/optional/sources/elementFields/required/resource#presence (witness missing-source-resource)."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/optional/author#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/sources/elementFields/optional/author#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/optional/author#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/sources/elementFields/optional/author#format is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/optional/usage_count#delete",
+      "class": "shared-family",
+      "home": "okfV02",
+      "rationale": "Spliced from Profile/V02.dhall; fixtures/okf-v0-2-invalid protects profile/optional/sources/elementFields/optional/usage_count#delete (witness quoted-usage-count)."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/optional/usage_count#format",
+      "class": "shared-family",
+      "home": "okfV02",
+      "rationale": "Spliced from Profile/V02.dhall; fixtures/okf-v0-2-invalid protects profile/optional/sources/elementFields/optional/usage_count#format (witness quoted-usage-count)."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/optional/last_modified#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/sources/elementFields/optional/last_modified#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/sources/elementFields/optional/last_modified#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/campaigns-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/sources/elementFields/optional/last_modified#format is unprotected there)."
+    }
+  ]
+}

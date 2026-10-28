@@ -1,0 +1,1715 @@
+{
+  "version": 1,
+  "exceptions": [
+    {
+      "relaxation": "profile/required/type#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness missing-type)."
+    },
+    {
+      "relaxation": "profile/required/type#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness missing-type)."
+    },
+    {
+      "relaxation": "profile/required/title#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness missing-title)."
+    },
+    {
+      "relaxation": "profile/required/title#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness missing-title)."
+    },
+    {
+      "relaxation": "profile/required/description#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness missing-description)."
+    },
+    {
+      "relaxation": "profile/required/description#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness missing-description)."
+    },
+    {
+      "relaxation": "profile/required/generated#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness missing-generated)."
+    },
+    {
+      "relaxation": "profile/required/generated#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness missing-generated)."
+    },
+    {
+      "relaxation": "profile/required/generated/objectFields/required/by#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bad-generated-actor)."
+    },
+    {
+      "relaxation": "profile/required/generated/objectFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/required/generated/objectFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "profile/required/generated/objectFields/required/by#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bad-generated-actor)."
+    },
+    {
+      "relaxation": "profile/required/generated/objectFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/required/generated/objectFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/required/generated/objectFields/recommended/at#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/required/generated/objectFields/recommended/at#format is unprotected there)."
+    },
+    {
+      "relaxation": "profile/recommended/reviews#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness invalid-review-outcome)."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/kind#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/kind#allowedValues",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; kind is a when-condition source, so the relaxed descriptor cannot compile; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/reviewer#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/reviewer#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/reviewed_at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/reviewed_at#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/reviewed_at#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/document_timestamp#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/document_timestamp#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/document_timestamp#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/scope#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/scope#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/scope#allowedValues",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/outcome#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness invalid-review-outcome)."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/outcome#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/outcome#allowedValues",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness invalid-review-outcome)."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/context#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/context#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/provider#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/provider#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/model#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/model#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/effort#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/effort#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/recommended/reviews/elementFields/required/effort#allowedValues",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/ReviewRule.dhall; no suite tests the shared reviews members one by one, and the block has no home suite."
+    },
+    {
+      "relaxation": "profile/optional/tags#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "profile/optional/verified#delete",
+      "class": "shared-family",
+      "home": "okfV02",
+      "rationale": "Spliced from Profile/V02.dhall; fixtures/okf-v0-2-invalid protects profile/optional/verified#delete (witness bad-verified-actor)."
+    },
+    {
+      "relaxation": "profile/optional/verified/elementFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/required/by#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/verified/elementFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/verified/elementFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/verified/objectFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/required/by#delete is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/verified/objectFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "profile/optional/verified/objectFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/designId#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-designId)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/designId#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-designId)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/designId#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-invalid-handle)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/status#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-status)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/status#allowedValues",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/surface#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-surface)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/surface#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-surface)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/origin#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-origin)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/origin#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-origin)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/origin#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-invalid-origin)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewers#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-viewers)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewers#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-viewers)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewers#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness viewer-duplicate-name)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewers/elementFields/required/name#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewers/elementFields/required/definition#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness viewer-missing-definition)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewers/elementFields/required/definition#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness viewer-missing-definition)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewers/elementFields/optional/computedFrom#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Design Brief/required/jobs#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-jobs)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/jobs#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-missing-jobs)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/jobs#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness job-duplicate-name)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/jobs/elementFields/required/name#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/jobs/elementFields/required/jobRef#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness job-missing-jobRef)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/jobs/elementFields/required/jobRef#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness job-missing-jobRef)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/jobs/elementFields/required/jobRef#allowLocal",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/jobs/elementFields/required/jobRef#externalUriPattern",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness job-wrong-target)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/jobs/elementFields/optional/viewers#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness job-scalar-viewers)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/outcomeRefs#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness validated-without-outcomeRefs)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/outcomeRefs#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness validated-without-outcomeRefs)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/outcomeRefs/elementFields/required/jobRef#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness outcomeRef-missing-jobRef)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/outcomeRefs/elementFields/required/jobRef#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness outcomeRef-missing-jobRef)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/outcomeRefs/elementFields/required/jobRef#allowLocal",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/outcomeRefs/elementFields/required/jobRef#externalUriPattern",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness outcomeRef-wrong-target)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/outcomeRefs/elementFields/required/outcomeName#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness outcomeRef-missing-outcomeName)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/outcomeRefs/elementFields/required/outcomeName#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness outcomeRef-missing-outcomeName)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewerAxes#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness validated-without-viewerAxes)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewerAxes#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness viewerAxis-duplicate-name)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewerAxes/elementFields/required/name#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewerAxes/elementFields/required/applies#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness viewerAxis-missing-applies)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewerAxes/elementFields/required/applies#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness viewerAxis-missing-applies)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewerAxes/elementFields/required/applies#allowedValues",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness viewerAxis-invalid-applies)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewerAxes/elementFields/required/because#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness viewerAxis-missing-because)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewerAxes/elementFields/required/because#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness viewerAxis-missing-because)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/viewerAxes/elementFields/optional/rules#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness validated-without-scenarios)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness validated-without-scenarios)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness scenario-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios/elementFields/required/id#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios/elementFields/required/viewer#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness scenario-missing-viewer)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios/elementFields/required/viewer#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness scenario-missing-viewer)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios/elementFields/required/fixture#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness scenario-missing-fixture)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios/elementFields/required/fixture#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness scenario-missing-fixture)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios/elementFields/optional/state#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios/elementFields/optional/axes#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Design Brief/required/scenarios/elementFields/optional/jobs#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness scenario-scalar-jobs)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/successCriteria#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness validated-without-successCriteria)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/successCriteria#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness validated-without-successCriteria)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/successCriteria#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness criterion-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/successCriteria/elementFields/required/id#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/successCriteria/elementFields/required/id#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness criterion-wrong-prefix)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/successCriteria/elementFields/required/statement#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness criterion-missing-statement)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/successCriteria/elementFields/required/statement#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness criterion-missing-statement)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/successCriteria/elementFields/required/verification#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness criterion-missing-verification)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/successCriteria/elementFields/required/verification#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness criterion-missing-verification)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/verified#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-validated-without-verified)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/verified#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-validated-without-verified)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/verified/elementFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/required/by#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/verified/elementFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/verified/elementFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/verified/objectFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/required/by#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/verified/objectFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/verified/objectFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/supersededBy#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-retired-without-supersededBy)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/supersededBy#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-retired-without-supersededBy)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/supersededBy#allowSelf",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-self-supersededBy)."
+    },
+    {
+      "relaxation": "type:Design Brief/required/supersededBy#externalUriPattern",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-supersededBy-wrong-target)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectStates#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness subjectState-duplicate-name)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectStates#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness subjectState-duplicate-name)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectStates/elementFields/required/name#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectStates/elementFields/required/definition#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness subjectState-missing-definition)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectStates/elementFields/required/definition#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness subjectState-missing-definition)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectAxes#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness subjectAxis-duplicate-name)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectAxes#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness subjectAxis-duplicate-name)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectAxes/elementFields/required/name#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectAxes/elementFields/required/applies#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness subjectAxis-invalid-applies)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectAxes/elementFields/required/applies#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectAxes/elementFields/required/applies#allowedValues",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness subjectAxis-invalid-applies)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectAxes/elementFields/required/because#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness subjectAxis-missing-because)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectAxes/elementFields/required/because#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness subjectAxis-missing-because)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/subjectAxes/elementFields/optional/rules#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/decisions#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-decision-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/decisions#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-decision-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/decisions/elementFields/required/id#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/decisions/elementFields/required/id#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-decision-wrong-prefix)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/decisions/elementFields/required/statement#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-decision-missing-statement)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/decisions/elementFields/required/statement#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-decision-missing-statement)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/decisions/elementFields/required/date#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-decision-missing-date)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/decisions/elementFields/required/date#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-decision-missing-date)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/decisions/elementFields/required/date#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-decision-invalid-date)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/decisions/elementFields/optional/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/openQuestions#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-question-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/openQuestions#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-question-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/openQuestions/elementFields/required/id#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/openQuestions/elementFields/required/id#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-question-wrong-prefix)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/openQuestions/elementFields/required/question#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-question-missing-question)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/openQuestions/elementFields/required/question#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-question-missing-question)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/openQuestions/elementFields/required/owner#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-question-missing-owner)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/openQuestions/elementFields/required/owner#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-question-missing-owner)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/useCases#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-useCase-wrong-target)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/useCases#allowLocal",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Design Brief/optional/useCases#externalUriPattern",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness brief-useCase-wrong-target)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/designId#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-designId)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/designId#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-designId)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/designId#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Breadboard/required/status#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-status)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/status#allowedValues",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/brief#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-brief)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/brief#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-brief)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/brief#allowSelf",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/places#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-places)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/places#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-places)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/places#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness place-duplicate-name)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/places/elementFields/required/name#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/places/elementFields/required/kind#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness place-missing-kind)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/places/elementFields/required/kind#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness place-missing-kind)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/places/elementFields/required/kind#allowedValues",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness place-invalid-kind)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/places/elementFields/required/description#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness place-missing-description)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/places/elementFields/required/description#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness place-missing-description)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-affordances)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-affordances)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness affordance-duplicate-name)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances/elementFields/required/name#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances/elementFields/required/place#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness affordance-missing-place)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances/elementFields/required/place#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness affordance-missing-place)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances/elementFields/required/does#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness affordance-missing-does)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances/elementFields/required/does#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness affordance-missing-does)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances/elementFields/optional/features#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness affordance-local-feature)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances/elementFields/optional/features#allowLocal",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/affordances/elementFields/optional/features#externalUriPattern",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness affordance-feature-wrong-target)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/connections#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-connections)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/connections#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-connections)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/connections/elementFields/required/from#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness connection-missing-from)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/connections/elementFields/required/from#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness connection-missing-from)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/connections/elementFields/required/to#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness connection-missing-to)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/connections/elementFields/required/to#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness connection-missing-to)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/connections/elementFields/optional/carries#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Breadboard/required/connections/elementFields/optional/jobs#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness connection-scalar-jobs)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/visibility#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-visibility)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/visibility#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-missing-visibility)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/visibility/elementFields/required/affordance#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness visibility-missing-affordance)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/visibility/elementFields/required/affordance#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness visibility-missing-affordance)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/visibility/elementFields/required/viewer#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness visibility-missing-viewer)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/visibility/elementFields/required/viewer#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness visibility-missing-viewer)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/visibility/elementFields/required/rule#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness visibility-missing-rule)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/visibility/elementFields/required/rule#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness visibility-missing-rule)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/visibility/elementFields/required/rule#allowedValues",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness visibility-invalid-rule)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/visibility/elementFields/optional/note#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Breadboard/required/verified#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-validated-without-verified)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/verified#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-validated-without-verified)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/verified/elementFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/required/by#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/verified/elementFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/verified/elementFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/verified/objectFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/required/by#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/verified/objectFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/verified/objectFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/supersededBy#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-retired-without-supersededBy)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/supersededBy#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-retired-without-supersededBy)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/supersededBy#allowSelf",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-self-supersededBy)."
+    },
+    {
+      "relaxation": "type:Breadboard/required/supersededBy#externalUriPattern",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-supersededBy-wrong-target)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/decisions#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-decision-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/decisions#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-decision-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/decisions/elementFields/required/id#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/decisions/elementFields/required/id#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-decision-wrong-prefix)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/decisions/elementFields/required/statement#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-decision-missing-statement)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/decisions/elementFields/required/statement#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-decision-missing-statement)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/decisions/elementFields/required/date#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-decision-missing-date)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/decisions/elementFields/required/date#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-decision-missing-date)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/decisions/elementFields/required/date#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-decision-invalid-date)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/decisions/elementFields/optional/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/openQuestions#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-question-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/openQuestions#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-question-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/openQuestions/elementFields/required/id#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/openQuestions/elementFields/required/id#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-question-wrong-prefix)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/openQuestions/elementFields/required/question#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-question-missing-question)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/openQuestions/elementFields/required/question#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-question-missing-question)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/openQuestions/elementFields/required/owner#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-question-missing-owner)."
+    },
+    {
+      "relaxation": "type:Breadboard/optional/openQuestions/elementFields/required/owner#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness bb-question-missing-owner)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/designId#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-missing-designId)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/designId#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-missing-designId)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/designId#format",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/status#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-missing-status)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/status#allowedValues",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/breadboard#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-missing-breadboard)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/breadboard#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-missing-breadboard)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/breadboard#allowSelf",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/states#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-missing-states)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/states#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-missing-states)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/states#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness state-duplicate-affordance)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/states/elementFields/required/affordance#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/states/elementFields/required/states#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness state-missing-states)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/states/elementFields/required/states#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness state-missing-states)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/designArtifacts#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness designed-without-designArtifacts)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/designArtifacts#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness designed-without-designArtifacts)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/designArtifacts#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness artifact-duplicate-resource)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/designArtifacts/elementFields/required/kind#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness artifact-missing-kind)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/designArtifacts/elementFields/required/kind#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness artifact-missing-kind)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/designArtifacts/elementFields/required/resource#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/designArtifacts/elementFields/optional/note#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-designed-without-decisions)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-designed-without-decisions)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-decision-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions/elementFields/required/id#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions/elementFields/required/id#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-decision-wrong-prefix)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions/elementFields/required/statement#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-decision-missing-statement)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions/elementFields/required/statement#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-decision-missing-statement)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions/elementFields/required/date#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-decision-missing-date)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions/elementFields/required/date#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-decision-missing-date)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions/elementFields/required/date#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-decision-invalid-date)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/decisions/elementFields/optional/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "No rejection case in fixtures/designs-house-invalid notices this relaxation yet."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/verified#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-designed-without-verified)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/verified#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-designed-without-verified)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/verified/elementFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/required/by#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/verified/elementFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/verified/elementFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/elementFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/verified/objectFields/required/by#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/required/by#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/verified/objectFields/required/by#presence",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/required/by#presence is unprotected there)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/verified/objectFields/recommended/at#delete",
+      "class": "deferred",
+      "request": "mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12",
+      "rationale": "Spliced from Profile/V02.dhall; neither fixtures/designs-house-invalid nor the home suite fixtures/okf-v0-2-invalid notices this relaxation (profile/optional/verified/objectFields/recommended/at#delete is unprotected there)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/supersededBy#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-retired-without-supersededBy)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/supersededBy#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-retired-without-supersededBy)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/supersededBy#allowSelf",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-self-supersededBy)."
+    },
+    {
+      "relaxation": "type:Detailed Design/required/supersededBy#externalUriPattern",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-supersededBy-wrong-target)."
+    },
+    {
+      "relaxation": "type:Detailed Design/optional/openQuestions#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-question-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Detailed Design/optional/openQuestions#uniqueBy",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-question-duplicate-id)."
+    },
+    {
+      "relaxation": "type:Detailed Design/optional/openQuestions/elementFields/required/id#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (covered)."
+    },
+    {
+      "relaxation": "type:Detailed Design/optional/openQuestions/elementFields/required/id#format",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-question-wrong-prefix)."
+    },
+    {
+      "relaxation": "type:Detailed Design/optional/openQuestions/elementFields/required/question#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-question-missing-question)."
+    },
+    {
+      "relaxation": "type:Detailed Design/optional/openQuestions/elementFields/required/question#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-question-missing-question)."
+    },
+    {
+      "relaxation": "type:Detailed Design/optional/openQuestions/elementFields/required/owner#delete",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-question-missing-owner)."
+    },
+    {
+      "relaxation": "type:Detailed Design/optional/openQuestions/elementFields/required/owner#presence",
+      "class": "shared-family",
+      "home": "coordination.designs",
+      "rationale": "fixtures/designs-house.dhall extends coordination.designs unchanged here; fixtures/designs-invalid holds this relaxation (protected, witness des-question-missing-owner)."
+    }
+  ]
+}

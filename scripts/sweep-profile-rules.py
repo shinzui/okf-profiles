@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
-"""ADR-9 load-bearing sweep over a normalized profile (the legacy engine).
+"""ADR-9 load-bearing sweep: `okf profile sweep`, or the legacy engine.
+
+By default this delegates to `okf profile sweep` (okf >= 0.12.0.0), which decodes
+the profile once, relaxes it in memory, classifies every relaxation (protected,
+inert, covered, subsumed, exception or failing), reads the suite's
+`sweep-exceptions.json`, streams one line per relaxation and exits 0 only when
+nothing fails. The okf engine's output and exit code are okf's own; this script
+only translates the positional usage. If the okf on `OKF_BIN` (default `okf`)
+lacks the command, it exits 2 rather than falling back.
+
+`--engine legacy` runs the original algorithm, described below, which is kept
+as the reference the okf engine was proven against.
 
 For every field rule (top-level or nested) in the normalized Dhall, apply one
 relaxation at a time — delete the rule, empty its allowedValues, drop its
@@ -11,7 +22,8 @@ usage (from the repository root):
 
     python3 scripts/sweep-profile-rules.py <profile.dhall> <accept-bundle> \
         <invalid-dir-with-expected.json> [extra-accept-bundle ...] \
-        [--json PATH] [--quiet] [--only FIELD]
+        [--engine okf|legacy] [--kinds legacy|default|all] [--json PATH] \
+        [--quiet] [--only FIELD]
 
 The profile is normalized with `dhall --file`, so the mutated copy has no
 relative imports to keep resolvable. `OKF_BIN` selects the okf executable, as
@@ -33,7 +45,8 @@ families whose own profiles test them member by member, and
 behavior together with `localPrefix` (ADR-9's composite policy unit). Anything
 else needs a fixture. `--json PATH` writes a machine-readable summary at the
 end. Slow by design: one okf run per fixture per relaxation, stopping at the
-first fixture that notices. Not part of `just test`.
+first fixture that notices; the legacy engine always exits 0 after a complete
+sweep, since it is a report, not a gate.
 """
 import argparse
 import bisect
@@ -49,6 +62,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from profile_fixture_cases import deviations  # noqa: E402
 
+OKF_RELEASE = "0.12.0.0"
 LOAD_FAILURE = "Failed to load profile"
 LEGACY_OUTCOME = {"acceptance-fails": "acceptance-fails", "descriptor-invalid": "acceptance-fails",
                   "mutation-ill-typed": "MUTATION-ILL-TYPED", "unprotected": "UNPROTECTED"}
@@ -306,16 +320,50 @@ class Sweep:
         return "unprotected", None
 
 
+def delegate(args):
+    """Replace this process with `okf profile sweep`, which streams and exits on its own."""
+    if args.quiet:
+        sys.exit(_fault("--quiet applies to --engine legacy only"))
+    okf, okf_version = resolve("OKF_BIN", "okf", "set OKF_BIN to an okf executable")
+    if subprocess.run([okf, "profile", "sweep", "--help"], capture_output=True).returncode != 0:
+        sys.exit(_fault(f"{okf_version} has no 'profile sweep'; install okf >= {OKF_RELEASE} "
+                        "or pass --engine legacy"))
+    argv = [okf, "profile", "sweep", args.profile, "--cases", args.invalid]
+    for bundle in [args.accept, *args.extra]:
+        argv += ["--accept", bundle]
+    if args.kinds:
+        argv += ["--kinds", args.kinds]
+    if args.only:
+        argv += ["--only", args.only]
+    if args.json:
+        # okf writes NDJSON to stdout; send it to PATH as the legacy engine does its summary.
+        argv.append("--json")
+        fd = os.open(args.json, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o644)
+        os.dup2(fd, sys.stdout.fileno())
+        os.close(fd)
+    sys.stdout.flush()
+    os.execv(okf, argv)
+
+
 def main():
-    parser = argparse.ArgumentParser(description="ADR-9 load-bearing sweep (legacy engine).")
+    parser = argparse.ArgumentParser(description="ADR-9 load-bearing sweep.")
     parser.add_argument("profile", help="profile descriptor (.dhall)")
     parser.add_argument("accept", help="acceptance bundle that must validate strictly")
     parser.add_argument("invalid", help="rejection cases directory with expected.json")
     parser.add_argument("extra", nargs="*", help="further acceptance bundles")
-    parser.add_argument("--json", metavar="PATH", help="write a JSON summary to PATH at the end")
-    parser.add_argument("--quiet", action="store_true", help="print only the header and summary lines")
+    parser.add_argument("--engine", choices=("okf", "legacy"), default="okf",
+                        help="okf: delegate to `okf profile sweep` (default); legacy: this script's own sweep")
+    parser.add_argument("--kinds", choices=("legacy", "default", "all"),
+                        help="relaxation kinds for --engine okf; --engine legacy only has the legacy kinds")
+    parser.add_argument("--json", metavar="PATH",
+                        help="write the machine-readable result to PATH (okf: NDJSON; legacy: a JSON summary)")
+    parser.add_argument("--quiet", action="store_true", help="legacy: print only the header and summary lines")
     parser.add_argument("--only", metavar="FIELD", help="sweep only rules with this field name")
     args = parser.parse_args()
+    if args.engine == "okf":
+        delegate(args)
+    if args.kinds not in (None, "legacy"):
+        parser.error("--engine legacy only has --kinds legacy")
 
     began = time.monotonic()
     commit = subprocess.run(["git", "rev-parse", "HEAD"], text=True, capture_output=True).stdout.strip()

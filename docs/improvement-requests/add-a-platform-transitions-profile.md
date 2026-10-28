@@ -10,6 +10,9 @@ generated:
 requestId: IR-8
 status: completed
 completedAt: "2026-10-07T07:31:06Z"
+resolution: >-
+  Shipped in v0.20.0 with verified remote pins; prompt-guided TAN adoption, the no-intent no-op
+  and a repeated stable-handle rehearsal closed all five criteria (bundle log, 2026-10-07).
 targetPlan: mori://shinzui/okf-profiles/plans/11-publish-the-platform-transitions-profile-and-adoption-blueprint
 origin: mori://shinzui/mori/plans/293-specify-the-platform-transition-contract-and-request-it-upstream
 reviews:
