@@ -8,6 +8,10 @@ date: 2026-08-02
 generated:
   by: claude-code/claude-opus-5-5
   at: "2026-10-16T15:30:00Z"
+amended:
+  - by: claude-code/claude-opus-5-5
+    at: 2026-10-28T18:24:19Z
+    change: Native, typed sweep with machine-checked classification and exception manifests replaces the text-mutating script as the second check.
 ---
 
 # A rejection fixture must fail for exactly one reason
@@ -147,3 +151,55 @@ unconstrained optional field, which is unobservable when unknown fields are
 allowed. Another is a member of a spliced family whose home profile tests it
 member by member. The third is `allowSelf` or `allowLocal` on an external-only
 reference, which takes effect only together with `localPrefix`.
+
+## Amendment — 2026-10-28
+
+The second check is now `okf profile sweep` (okf 0.12.0.0 or later), run for
+every suite by `just sweep`. okf decodes the profile once and relaxes the typed
+descriptor in memory instead of editing normalized Dhall text, so the 182-case
+strategy suite sweeps in seconds rather than tens of minutes, and output streams
+as each relaxation is decided. The relaxation kinds are the old script's seven
+plus presence demotion of a `required` rule, which the 2026-09-27 amendment
+already asked for by hand; `--kinds all` adds wider kinds that are reported but
+not yet gating.
+
+Four rules change how a result is read.
+
+**An acceptance failure or a descriptor that no longer loads is never
+protection.** The old script printed both as `OK`. A deletion that only makes
+the field unknown in a closed profile is `subsumed` when every narrower
+relaxation of the same rule is accounted for, and failing otherwise.
+
+**Inertness and composite coverage are decided by okf, not by reading output.**
+`allowSelf` on a reference with `allowLocal = False`, or an unconstrained
+optional field in an open profile, is `inert` because okf proves the relaxed
+profile behaves identically. A member of a composite policy unit (a reference
+policy, a list's shape, handle prefix plus format, a `uniqueBy` with its key)
+is `covered` when a case notices the whole unit relaxed. Two of the three
+"expected unprotected" classes of the 2026-10-16 amendment are therefore
+computed.
+
+**Only what okf cannot decide may be excused, and only in writing.** Each
+suite's `fixtures/<name>-invalid/sweep-exceptions.json` lists relaxation IDs with
+a class and a rationale: `shared-family` (a spliced member whose home suite
+protects it, `home` naming that suite's export, verified by sweeping the home),
+`overlapping-rule` (the one-governing-rule caveat above, `overlapsWith` naming
+the other rule), or `deferred` (a known gap, `request` naming the improvement
+request that will add the case). An entry whose relaxation is no longer
+unexcused is stale and fails the sweep, so the manifest cannot outlive the gap
+it records.
+
+**The sweep is a gate.** It exits 0 only when nothing fails. Adding a rule
+without a case, or deleting the only witness of one, now fails mechanically.
+
+The first catalog-wide run found that the shared families are less tested than
+the 2026-10-16 amendment assumed. The `reviews` block from
+`Profile/ReviewRule.dhall` has no home suite, and the v0.2 home suite
+`fixtures/okf-v0-2-invalid` had no `expected.json` and leaves several members
+(`generated.at`, the `verified` members, `sources` author and last-modified)
+untested. Those gaps, and the profile-specific gaps in the older suites, are
+`deferred` to
+`mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12` rather
+than hidden. The old script survives as `--engine legacy`, the reference the
+native sweep is compared against on the six campaign and strategy families
+(`mori://shinzui/okf-profiles/plans/13-make-profile-policy-sweeps-observable-and-run-them-natively-in-okf`).

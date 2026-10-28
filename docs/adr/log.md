@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-10-28
+* **Update**: ADR-9: the load-bearing sweep is native and typed (okf profile sweep); acceptance and descriptor failures are never protection, inertness and composite coverage are computed, and only shared-family, overlapping-rule and deferred results may be excused in a sweep-exceptions.json that fails when stale.
+
 ## 2026-10-23
 * **Update**: ADR-22: record strategy, launch and messaging contract.
 * **Added**: Record campaign, claim-check and audience profile contract.

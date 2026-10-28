@@ -108,8 +108,12 @@ After this plan:
 - [x] Milestone 2 (2026-10-28): `scripts/compare-sweep-results.py` written. Trial on
       claim-checks (legacy with okf 0.10) found the okf-version difference recorded in
       Surprises & Discoveries; with the same okf both engines agree on it.
-- [ ] Milestone 2: parity proven for the six families against the recorded baselines, with the
-      okf NDJSON evidence committed under `docs/plans/evidence/13/`.
+- [x] Milestone 2 (2026-10-28): okf `--kinds legacy --json` evidence recorded for the six
+      families under `docs/plans/evidence/13/<name>.okf.ndjson` with the `7d5c285` build
+      (wall time under load ~40: claim-checks 0.54 s, audiences 1.98 s, campaigns 6.06 s,
+      strategy 7.34 s, launches 5.35 s, messaging 3.20 s).
+- [ ] Milestone 2: legacy baselines (running) recorded, then parity proven for the six
+      families with `scripts/compare-sweep-results.py`; README and ADR-9 then say so.
 - [x] Milestone 3 (2026-10-28): `scripts/sweep-profile-rules.py` delegates to
       `okf profile sweep` by default (`--engine okf|legacy`, `--kinds`); verified that okf 0.10
       makes it exit 2 with the install hint, and that with the new build it streams okf's lines
@@ -750,7 +754,7 @@ with the sweeps recorded in
 
 okf is the Haskell tool (`okf-core` library, `okf-cli` executable) that validates bundles.
 Version 0.10.0.0, the one installed on the owner's `PATH`, has no sweep command. Plan 71 adds
-`okf profile sweep` and prepares the next release (expected 0.11.0.0). Until that release is
+`okf profile sweep` and prepares the next release (0.12.0.0; 0.11.0.0 shipped first without it). Until that release is
 installed, this plan runs the unreleased build through `OKF_BIN`: from the okf checkout (find
 it with `mori registry show shinzui/okf --full`, field `Path`), build inside its Nix shell with
 `nix develop --command cabal build all`, then export
@@ -1277,7 +1281,7 @@ governs the same value (ADR-9's one-governing-rule caveat); `deferred` requires 
   that needs exceptions (Milestone 3).
 - **`docs/plans/evidence/13/`:** the legacy JSON and okf NDJSON evidence files.
 
-External tools are `dhall` (≥ 1.42, legacy engine only), `okf` (≥ 0.11.0.0 for the native
+External tools are `dhall` (≥ 1.42, legacy engine only), `okf` (≥ 0.12.0.0 for the native
 engine, or an unreleased build through `OKF_BIN`), `python3`, `jq` (to inspect NDJSON) and
 `hyperfine` (optional, for repeating the timing measurements). Building okf needs `nix`; see
 plan 71.

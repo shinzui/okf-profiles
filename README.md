@@ -371,7 +371,7 @@ not a corpus migration: a v0.15.0 descriptor needs okf 0.9.0.0 to decode.
 Every check lives under `scripts/`. Run them all:
 
 ```bash
-for s in scripts/*.sh; do bash "$s"; done
+for s in scripts/test-*.sh; do bash "$s"; done
 ```
 
 There is a `justfile` front door onto the same checks — `just check` is what a
@@ -379,9 +379,10 @@ release has to pass, and `just --list` shows the rest. Nothing is only runnable
 through `just`.
 
 ```bash
-just check    # types + every script under scripts/
+just check    # types + every test-*.sh script under scripts/
 just types    # dhall type sweep only
-just test     # every script under scripts/
+just test     # every test-*.sh script under scripts/
+just sweep    # ADR-9 load-bearing sweep of every profile suite (okf >= 0.12.0.0)
 just docs     # regenerate docs/profiles/ (see below)
 ```
 
@@ -436,14 +437,56 @@ OK: architecture-decision profile acceptance and rejection fixtures
 Each profile script validates one acceptance fixture under
 `--strict --profile-enforce`, then asserts that every bundle in the matching
 `fixtures/<name>-invalid/` tree is rejected. The rejection fixtures are not
-decorative: each one is written to fail for exactly one reason, and every rule a
-profile splices from `Profile/V02.dhall` has a fixture that goes green if the rule
-is deleted. See
+decorative: each one is written to fail for exactly one reason. See
 [ADR-9](./docs/adr/0009-a-rejection-fixture-must-fail-for-exactly-one-reason.md)
 for the two checks that keep them honest. Profiles tested through
-`scripts/profile_fixture_cases.py` assert the one-deviation rule mechanically, and
-`scripts/sweep-profile-rules.py` runs the load-bearing sweep against any profile
-(slow, and not part of `just test`).
+`scripts/profile_fixture_cases.py` assert the one-deviation rule mechanically
+(their `fixtures/<name>-invalid/expected.json` names the field each case must
+report), and the load-bearing sweep checks the converse: that every rule is
+tested by some case.
+
+### The load-bearing sweep
+
+`okf profile sweep` (okf 0.12.0.0 or later) weakens each rule of a profile one
+way at a time, a *relaxation*, and reports which rejection case notices. It
+decodes the profile once and re-checks every case in memory, so even the
+182-case strategy suite sweeps in about ten seconds, and it prints one line per
+relaxation as it goes, also when redirected:
+
+```bash
+okf profile sweep profiles/coordination/strategy.dhall \
+  --accept fixtures/strategy --cases fixtures/strategy-invalid
+just sweep                    # every suite whose test uses profile_fixture_cases.py
+just sweep --kinds all        # also the wider relaxation kinds (advisory, not gating)
+```
+
+Each relaxation ends as `protected` (a case noticed it), `inert` (okf proves
+the relaxed profile behaves identically), `covered` (a case notices the whole
+composite policy it belongs to), `subsumed` (a deletion only the acceptance
+bundle or the descriptor itself can see, while every narrower relaxation of
+the rule is accounted for), `exception`, or a failing `unprotected`,
+`descriptor-invalid` or `acceptance-observable`. An acceptance failure is never
+counted as protection. The command exits 0 only when nothing fails, 1 for a
+failing result or a stale exception, and 2 when the unrelaxed suite is already
+broken.
+
+What okf cannot decide goes in `fixtures/<name>-invalid/sweep-exceptions.json`,
+one entry per relaxation ID with a `class` and a `rationale`: `shared-family`
+(a member spliced from a shared block whose home suite protects it; `home`
+names that suite's export, verified by sweeping it), `overlapping-rule`
+(another rule governs the same value; `overlapsWith`), or `deferred` (a known
+gap; `request` is the improvement request that will add the case). An entry
+whose relaxation is no longer unexcused is *stale* and fails the sweep, so a
+new fixture must delete its entry in the same change. The gaps found by the
+first catalog sweep are `deferred` to
+`mori://shinzui/okf-profiles/okf/improvement-requests/concepts/IR-12`.
+
+`scripts/sweep-profile-rules.py PROFILE ACCEPT CASES` is the same sweep with the
+older positional usage; it delegates to `okf profile sweep` and fails with exit
+2 if the installed okf lacks the command. `--engine legacy` keeps the original
+text-mutating script, which runs one okf process per case per relaxation and
+takes tens of minutes per profile; it is kept as the reference the native sweep
+is compared against (`docs/plans/evidence/13/`).
 
 Type-check every Dhall file (requires the `dhall` CLI, ≥ 1.42):
 
