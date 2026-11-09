@@ -5,8 +5,12 @@ import path from "node:path"
 
 const root = import.meta.dir
 process.env.DOCS_CONTENT_ROOT = path.resolve(
-  process.env.DOCS_CONTENT_ROOT ?? path.join(root, "../.."),
+  process.env.DOCS_CONTENT_ROOT ?? path.join(root, "../../.."),
 )
+process.env.DOCS_CONTENT_CONFIG ??= "publication.json"
+// Nix snapshots normalize the selected manifest name.
+if (await Bun.file(path.join(process.env.DOCS_CONTENT_ROOT, "content-inventory.json")).exists())
+  process.env.DOCS_CONTENT_CONFIG = "content.config.json"
 process.env.DOCS_SITE_NAME = (await readFile(path.join(root, "site-name.txt"), "utf8")).trim()
 const { default: handler } = await import(path.join(root, "dist/server/server.js"))
 const client = path.join(root, "dist/client")

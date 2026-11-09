@@ -25,6 +25,11 @@ Declared by the [pattern-applications](/profile.md) profile.
 Every rule below is the effective rule for a concept of type `Pattern Application`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `applicationId` — required
@@ -37,6 +42,8 @@ Bundle-scoped stable PA-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -51,6 +58,8 @@ Whether the pattern governs this service: `applicable`, `not-applicable`, `excep
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -65,6 +74,8 @@ One sentence stating the decision and the pattern it concerns.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -79,12 +90,16 @@ Who accepted not meeting an applicable pattern, over what bounded scope, why, an
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: applies only when `decision` is `exception`
 - Object fields:
     - `authority` — required; allowed values: any; cardinality: scalar; format: human-actor — The human who accepted the exception, as an OKF §7 human actor such as `human:alice`.
     - `reason` — required; allowed values: any; cardinality: scalar; format: none — Why the service does not meet the pattern.
     - `reviewCondition` — required; allowed values: any; cardinality: scalar; format: none — The date or event that reopens this decision.
     - `scope` — required; allowed values: any; cardinality: scalar; format: none — Exactly which criteria, components, or situations the exception covers.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `generated` — required
@@ -97,10 +112,14 @@ Who accepted not meeting an applicable pattern, over what bounded scope, why, an
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `pattern` — required
@@ -113,6 +132,8 @@ Canonical Mori URI of the assessable pattern, such as `mori://acme/patterns/okf/
 - Reference: local handles with prefix `PA`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/PAT-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -127,6 +148,8 @@ Why this decision holds for this service.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -141,6 +164,8 @@ Canonical Mori project URI of the service this decision governs, such as `mori:/
 - Reference: local handles with prefix `PA`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -155,6 +180,8 @@ Human-readable application title.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -169,6 +196,8 @@ The Pattern Application concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -189,11 +218,15 @@ Bindings from a pattern criterion id to a check target this service defines and 
 - Reference: none
 - Path: none
 - Unique by: `criterion`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `criterion` — required; allowed values: any; cardinality: scalar; format: none — A criterion id declared by the applied pattern.
     - `target` — required; allowed values: any; cardinality: scalar; format: none — The name of a service-owned, allow-listed check target, such as a Kotei pipeline target.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `tags` — optional
 
@@ -205,6 +238,8 @@ Free classification tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -219,10 +254,14 @@ Free classification tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

@@ -26,6 +26,11 @@ Declared by the [terminology](/profile.md) profile.
 Every rule below is the effective rule for a concept of type `Term`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `description` — required
@@ -38,6 +43,8 @@ A one-sentence definition.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -52,10 +59,14 @@ A one-sentence definition.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `replacedBy` — required when `status` is `deprecated`
@@ -68,6 +79,8 @@ The term to use instead. Demanded once `status` is `deprecated`.
 - Reference: local handles with prefix `TERM`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is `deprecated`
 - Object fields: none
 - Element fields: none
@@ -82,6 +95,8 @@ Whether this is the term to use or a retired one.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -96,6 +111,8 @@ Bundle-scoped stable TERM-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -110,6 +127,8 @@ The canonical term, spelled and cased exactly as it should be written.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -124,6 +143,8 @@ The Term concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -144,6 +165,8 @@ An accepted short form of the term.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -158,6 +181,8 @@ Accepted synonyms with identical meaning.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -172,12 +197,16 @@ What embodies this term: a module, type, function, file, document, or absolute U
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `kind` — required; allowed values: `module`, `type`, `function`, `file`, `doc`, `uri`; cardinality: scalar; format: none — What sort of artifact this anchor names.
     - `note` — optional; allowed values: any; cardinality: scalar; format: none — Why this anchor matters.
     - `resource` — required; allowed values: any; cardinality: scalar; format: none — Module name, qualified identifier, repository-relative path, or absolute URI.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `broader` — optional
 
@@ -189,6 +218,8 @@ More general terms this term specialises.
 - Reference: local handles with prefix `TERM`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -203,6 +234,8 @@ Wording that must not be used for this concept. The body says why.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -217,6 +250,8 @@ Associated terms that are neither broader nor equivalent.
 - Reference: local handles with prefix `TERM`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -231,6 +266,8 @@ Terms this term succeeds.
 - Reference: local handles with prefix `TERM`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -245,6 +282,8 @@ The same concept published by another project, as canonical Mori term URIs.
 - Reference: local handles with prefix `TERM`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/TERM-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -259,6 +298,8 @@ The subsystem or bounded context in which this meaning holds.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -273,6 +314,8 @@ Free classification tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -287,10 +330,14 @@ Free classification tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

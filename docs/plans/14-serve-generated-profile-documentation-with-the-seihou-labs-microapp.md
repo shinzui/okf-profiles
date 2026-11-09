@@ -50,17 +50,21 @@ while applying a live publication or deployment is a subsequent operator action.
 ## Progress
 
 - [x] M1 (2026-11-09): Recipe 0.1.0 at upstream `d7688ba1f42448520d5fc9d28996fcff4f181508` reads the parent manifest. Production Chromium followed profile/type/back links in Features and Pattern Catalog; build, type/lint/format/content checks and 3 corpus tests (31 assertions) passed. Exact npm releases are recorded in `evidence/14/dependency-releases.json`.
-- [ ] M2: The complete catalog is easy to browse and search on desktop and mobile, with accessible navigation, deep section links, and legible reference pages in both themes.
+- [x] M2 (2026-11-09): All 30 profiles / 61 concept types / 150 documents are reachable. Six production browser journeys passed catalog/404 coverage, keyboard field search, shared heading IDs, copied deep links/history, guidance, local fonts, mobile navigation, themes and focus. An isolated renderer journey also passed tables, nested lists, reference-style links and exact fenced-code copying. Screenshots in `evidence/14/` show 390px/1440px light/dark layouts; hierarchy, wrapping, contrast and focus are legible with no page-wide overflow.
 - [ ] M3: One documented regeneration workflow updates Markdown and publication selection, detects drift, and removes stale profile/type pages from navigation, search, and routes.
 - [ ] M4: The production build and content snapshot pass repository, browser, and Nix checks; protected Labs configuration and the maintainer update/runbook are verified.
 
 
 ## Surprises & Discoveries
 
+2026-11-09: Regenerating with the installed OKF 0.12.0.0 adds explicit presence/timestamp/membership/unique-value summaries and object/element field-name policies to 91 existing pages. These are current producer bytes; they are retained without reader postprocessing. No source profile or generator version changed.
+
 2026-11-09: Port 8080 is already occupied on this host. Browser acceptance uses an isolated port 18714; the delivered server and Labs configuration retain port 8080.
 
 
 ## Decision Log
+
+2026-11-09: Bundle declarations carry each inventory export as optional `export` metadata so snapshots retain catalog family and export labels without needing the source inventory at runtime. The explicit selected document list remains authoritative. Development invalidates its parsed-corpus cache using the atomically replaced manifest; installed snapshots retain normalized `content.config.json`.
 
 2026-11-09: Generate a nested `web/` workspace using
 `mori://shinzui/seihou-modules/templates/docs-microapp-labs`. The root already owns
@@ -82,7 +86,7 @@ and the Labs hostname suffix. Keep the recipe's login protection.
 
 ## Outcomes & Retrospective
 
-(To be filled during and after implementation.)
+The reader and deterministic publication workflow are implemented. Host app/content Nix packages, host smoke and the offline Nagare Application check have passed. The full repository suite, real source-regeneration browser check, clean-checkout reproduction, and clean-commit Linux image acceptance are in progress. Durable publication/update context is recorded in [ADR-23](../adr/0023-generated-reference-crosses-an-explicit-publication-boundary.md).
 
 
 ## Context and Orientation

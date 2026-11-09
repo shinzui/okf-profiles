@@ -1,0 +1,122 @@
+[
+  {
+    "export": "assurance.claimChecks",
+    "directory": "claim-checks"
+  },
+  {
+    "export": "assurance.failureModes",
+    "directory": "failure-modes"
+  },
+  {
+    "export": "assurance.reviews",
+    "directory": "reviews"
+  },
+  {
+    "export": "assurance.verificationEvidence",
+    "directory": "verification-evidence"
+  },
+  {
+    "export": "coordination.audiences",
+    "directory": "audiences"
+  },
+  {
+    "export": "coordination.bugReports",
+    "directory": "bug-reports"
+  },
+  {
+    "export": "coordination.campaigns",
+    "directory": "campaigns"
+  },
+  {
+    "export": "coordination.capabilities",
+    "directory": "capabilities"
+  },
+  {
+    "export": "coordination.designs",
+    "directory": "designs"
+  },
+  {
+    "export": "coordination.features",
+    "directory": "features"
+  },
+  {
+    "export": "coordination.frictionLog",
+    "directory": "friction-log"
+  },
+  {
+    "export": "coordination.improvementRequests",
+    "directory": "improvement-requests"
+  },
+  {
+    "export": "coordination.jobs",
+    "directory": "jobs"
+  },
+  {
+    "export": "coordination.launches",
+    "directory": "launches"
+  },
+  {
+    "export": "coordination.patternApplications",
+    "directory": "pattern-applications"
+  },
+  {
+    "export": "coordination.strategy",
+    "directory": "strategy"
+  },
+  {
+    "export": "coordination.transitions",
+    "directory": "transitions"
+  },
+  {
+    "export": "coordination.useCases",
+    "directory": "use-cases"
+  },
+  {
+    "export": "documentation.architectureDecisions",
+    "directory": "architecture-decisions"
+  },
+  {
+    "export": "documentation.messaging",
+    "directory": "messaging"
+  },
+  {
+    "export": "documentation.patternCatalog",
+    "directory": "pattern-catalog"
+  },
+  {
+    "export": "documentation.productResearch",
+    "directory": "product-research"
+  },
+  {
+    "export": "documentation.researchDocuments",
+    "directory": "research-documents"
+  },
+  {
+    "export": "documentation.runbooks",
+    "directory": "runbooks"
+  },
+  {
+    "export": "documentation.specifications",
+    "directory": "specifications"
+  },
+  {
+    "export": "documentation.terminology",
+    "directory": "terminology"
+  },
+  {
+    "export": "documentation.userDocumentation",
+    "directory": "user-documentation"
+  },
+  {
+    "export": "okfV02",
+    "directory": "okf-v0-2"
+  },
+  {
+    "export": "postgresql",
+    "directory": "postgresql"
+  },
+  {
+    "export": "tanPostgresql",
+    "directory": "tan-postgresql"
+  }
+]

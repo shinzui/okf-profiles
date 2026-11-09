@@ -24,6 +24,11 @@ These rules apply to every concept in a bundle governed by this profile,
 whatever its type. Each concept type's own page repeats them merged with that
 type's rules, which is the form that actually applies.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### `amended` — optional
 
 Later changes that leave the decision standing, such as marking it superseded, newest last. `generated` keeps who wrote the decision.
@@ -34,12 +39,16 @@ Later changes that leave the decision standing, such as marking it superseded, n
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: scalar; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
     - `change` — required; allowed values: any; cardinality: scalar; format: none — What changed, in one sentence.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 ### `date` — required
 
@@ -51,6 +60,8 @@ Original calendar date of the decision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -65,6 +76,8 @@ One-sentence summary of the decision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -79,6 +92,8 @@ Bundle-scoped stable ADR-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -93,10 +108,14 @@ Bundle-scoped stable ADR-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 ### `originatingPlan` — optional
@@ -109,6 +128,8 @@ Plan that produced the decision, when recorded.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -123,6 +144,8 @@ Repository-native decision status.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -137,6 +160,8 @@ Later ADR handle replacing this decision.
 - Reference: local handles with prefix `ADR`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -151,6 +176,8 @@ Earlier ADR handles replaced by this decision.
 - Reference: local handles with prefix `ADR`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -165,6 +192,8 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -179,6 +208,8 @@ Decision title without the ADR number.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -193,6 +224,8 @@ The Architecture Decision Record concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -207,10 +240,14 @@ The Architecture Decision Record concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

@@ -26,6 +26,11 @@ Declared by the [verification-evidence](/profile.md) profile.
 Every rule below is the effective rule for a concept of type `Attestation`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `attestationId` — required
@@ -38,6 +43,8 @@ UUIDv7. Equals the file name.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -52,6 +59,8 @@ UTC completion time.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -66,6 +75,8 @@ The verifier, as an OKF actor.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -80,6 +91,8 @@ Full 40-character commit of the verifier.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -94,12 +107,16 @@ Every check, and what it found.
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `detail` — optional; allowed values: any; cardinality: scalar; format: none — One line saying why.
     - `name` — required; allowed values: `digests-match`, `revisions-resolve`, `cohort-matches-plan`, `verdict-recomputed`, `environment-captured`, `clean-worktree`; cardinality: scalar; format: none — Which check.
     - `result` — required; allowed values: `passed`, `failed`, `skipped`; cardinality: scalar; format: none — What it found.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `dataDigests` — required
 
@@ -111,6 +128,8 @@ Every check, and what it found.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -125,6 +144,8 @@ One sentence a reader can evaluate alone.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -139,10 +160,14 @@ One sentence a reader can evaluate alone.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `run` — required
@@ -155,6 +180,8 @@ The record attested.
 - Reference: none
 - Path: bundle paths resolved to concepts; external URLs not allowed; self-reference not allowed
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -169,6 +196,8 @@ What this record is, in one line.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -183,6 +212,8 @@ One of the three concept types.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -197,6 +228,8 @@ What the verifier concluded.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -217,10 +250,14 @@ A human's acceptance of an anomaly.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `authority` — required; allowed values: any; cardinality: scalar; format: human-actor — The human who accepted it.
     - `reason` — required; allowed values: any; cardinality: scalar; format: none — Why the anomaly is acceptable.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `verified` — optional
@@ -233,10 +270,14 @@ A human's acceptance of an anomaly.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

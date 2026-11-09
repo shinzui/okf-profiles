@@ -26,6 +26,11 @@ Declared by the [verification-evidence](/profile.md) profile.
 Every rule below is the effective rule for a concept of type `Attested Computation`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `algorithm` — required
@@ -38,6 +43,8 @@ Identifier the harness writes into its documents.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -52,6 +59,8 @@ A change that can alter a result takes a new VC handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -66,9 +75,13 @@ Deterministic code that re-checks a run.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `resource` — required; allowed values: any; cardinality: any; format: none; path: bundle paths resolved to concepts; external URLs not allowed; self-reference not allowed — The verifier: a non-Markdown file here.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `computationId` — required
@@ -81,6 +94,8 @@ Bundle-scoped stable VC-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -95,6 +110,8 @@ One sentence a reader can evaluate alone.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -109,10 +126,14 @@ How a run is performed and what it returns.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `receipt` — required; allowed values: any; cardinality: list; format: none — Run-directory documents a run returns.
     - `resource` — required; allowed values: any; cardinality: any; format: none; path: bundle paths resolved to concepts; external URLs not allowed; self-reference not allowed — Run instructions: a non-Markdown file here.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `generated` — required
@@ -125,10 +146,14 @@ How a run is performed and what it returns.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `implementation` — required
@@ -141,6 +166,8 @@ Module implementing the algorithm.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -155,6 +182,8 @@ Data-link kinds the computation reads.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -169,12 +198,16 @@ Typed named holes; empty when it takes none.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `name` — required; allowed values: any; cardinality: scalar; format: none — The name the computation binds.
     - `required` — optional; allowed values: any; cardinality: scalar; format: boolean — Whether a caller must supply it.
     - `type` — required; allowed values: any; cardinality: scalar; format: none — What kind of value it takes.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `produces` — required
 
@@ -186,6 +219,8 @@ What the computation yields.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -200,6 +235,8 @@ How the computation is run.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -214,6 +251,8 @@ What this record is, in one line.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -228,6 +267,8 @@ One of the three concept types.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -248,6 +289,8 @@ Evidence kinds whose runs may name it.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -262,6 +305,8 @@ The computation file, when not inline.
 - Reference: none
 - Path: bundle paths resolved to concepts; external URLs not allowed; self-reference not allowed
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -276,6 +321,8 @@ The computation file, when not inline.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -290,6 +337,8 @@ The computation file, when not inline.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -304,6 +353,8 @@ The definition this one replaces.
 - Reference: local handles with prefix `VC`; external URIs not allowed; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -318,10 +369,14 @@ The definition this one replaces.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

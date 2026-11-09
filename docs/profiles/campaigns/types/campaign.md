@@ -31,6 +31,11 @@ Approval and sending require the responsible owners’ actual review and send ev
 Every rule below is the effective rule for a concept of type `Campaign`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `announcement` — required when `purpose` is `announcement`
@@ -43,10 +48,14 @@ Announced features and intended availability.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: applies only when `purpose` is `announcement`
 - Object fields:
     - `featureRefs` — required; allowed values: any; cardinality: list; format: none; reference: local handles with prefix `CMP`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/FEAT-[1-9][0-9]*` — Canonical URIs of the announced Features.
     - `liveBy` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — Intended availability deadline.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `campaignId` — required
@@ -59,6 +68,8 @@ Bundle-scoped stable CMP-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -73,6 +84,8 @@ Why the campaign was cancelled.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is `cancelled`
 - Object fields: none
 - Element fields: none
@@ -87,6 +100,8 @@ One sentence describing the concept.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -101,10 +116,14 @@ Behavior this campaign seeks and why.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: applies only when `purpose` is `engagement`
 - Object fields:
     - `behavior` — required; allowed values: any; cardinality: scalar; format: none — The behavior to encourage.
     - `why` — required; allowed values: any; cardinality: scalar; format: none — Why the behavior matters.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `generated` — required
@@ -117,10 +136,14 @@ Behavior this campaign seeks and why.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `hypothesis` — required when `purpose` is `hypothesis`
@@ -133,12 +156,16 @@ The problem, belief, prediction, and falsification condition.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: applies only when `purpose` is `hypothesis`
 - Object fields:
     - `belief` — required; allowed values: any; cardinality: scalar; format: none — The causal belief being tested.
     - `falsifiedIf` — required; allowed values: any; cardinality: scalar; format: none — The observation that would falsify the belief.
     - `prediction` — required; allowed values: any; cardinality: scalar; format: none — The observable result expected if the belief holds.
     - `problem` — required; allowed values: any; cardinality: scalar; format: none — The observed problem being addressed.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `owners` — required
@@ -151,6 +178,8 @@ Actors or canonical Mori URIs accountable for the campaign.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -165,6 +194,8 @@ Primary purpose of the coordinated campaign.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -179,10 +210,14 @@ Decision and research findings evaluating the campaign.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: applies only when `status` is `read-out`
 - Object fields:
     - `decision` — required; allowed values: any; cardinality: scalar; format: none — Decision taken in light of the findings.
     - `findingRefs` — required; allowed values: any; cardinality: list; format: none; reference: local handles with prefix `CMP`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/PR-[1-9][0-9]*` — Canonical result Finding URIs.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `status` — required
@@ -195,6 +230,8 @@ Campaign coordination lifecycle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -209,6 +246,8 @@ Human-readable concept title.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -223,6 +262,8 @@ The declared concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -243,6 +284,8 @@ Inline audience definitions for a corpus without a Segment bundle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -250,6 +293,8 @@ Inline audience definitions for a corpus without a Segment bundle.
     - `definition` — required; allowed values: any; cardinality: scalar; format: none — Queryable population definition.
     - `segment` — required; allowed values: any; cardinality: scalar; format: none — Segment name.
     - `size` — required; allowed values: any; cardinality: scalar; format: none — Population size at the stated time.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `audienceRefs` — optional
 
@@ -261,6 +306,8 @@ Canonical audience Segment URIs.
 - Reference: local handles with prefix `CMP`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/SEG-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -275,6 +322,8 @@ Chapter labels in scope.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -289,6 +338,8 @@ Customer jobs this campaign serves.
 - Reference: local handles with prefix `CMP`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/JOB-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -303,6 +354,8 @@ Canonical Launch URI.
 - Reference: local handles with prefix `CMP`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/LAUNCH-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -317,11 +370,15 @@ Named job outcomes this work is intended to move.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `jobRef` — required; allowed values: any; cardinality: scalar; format: none; reference: local handles with prefix `CMP`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/JOB-[1-9][0-9]*` — Canonical job URI.
     - `outcomeName` — required; allowed values: any; cardinality: scalar; format: none — Name of an outcome declared by that job.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `primaryMetric` — optional
 
@@ -333,6 +390,8 @@ Primary evaluation metric; observed values belong in findings or claim checks.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `baseline` — optional; allowed values: any; cardinality: scalar; format: none — Numeric starting value; evidence, not a target.
@@ -343,6 +402,8 @@ Primary evaluation metric; observed values belong in findings or claim checks.
     - `period` — required; allowed values: any; cardinality: scalar; format: none — Observation period for the baseline.
     - `population` — required; allowed values: any; cardinality: scalar; format: none — Population described by the metric.
     - `unit` — required; allowed values: any; cardinality: scalar; format: none — Unit of measurement.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `reviews` — optional
@@ -355,6 +416,8 @@ Chronological human or model review provenance for this document revision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -368,6 +431,8 @@ Chronological human or model review provenance for this document revision.
     - `reviewed_at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC time at which the review completed.
     - `reviewer` — required; allowed values: any; cardinality: scalar; format: none — Stable identity of the reviewing person or agent.
     - `scope` — required; allowed values: `content`, `technical-accuracy`, `editorial`, `catalog-metadata`, `content-and-metadata`; cardinality: scalar; format: none — Aspect of the document covered by the review.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `secondaryPurposes` — optional
 
@@ -379,6 +444,8 @@ Additional purposes whose blocks also apply.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -393,6 +460,8 @@ Additional purposes whose blocks also apply.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -402,6 +471,8 @@ Additional purposes whose blocks also apply.
     - `resource` — required; allowed values: any; cardinality: any; format: none — §5.1. What the source is: a followable artifact, or a scope descriptor.
     - `title` — optional; allowed values: any; cardinality: any; format: none — §5.1. Human-readable name for the source.
     - `usage_count` — optional; allowed values: any; cardinality: scalar; format: non-negative-integer — §5.1. How many times the source was drawn on. A count, so never negative.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `studyRef` — optional
 
@@ -413,6 +484,8 @@ Canonical experiment Study URI.
 - Reference: local handles with prefix `CMP`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/PR-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -427,6 +500,8 @@ Producer-defined search and grouping tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -441,10 +516,14 @@ Producer-defined search and grouping tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
@@ -459,9 +538,13 @@ Campaign evaluation interval.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `from` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — Start of the evaluation window.
     - `to` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — End of the evaluation window.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 

@@ -25,6 +25,11 @@ These rules apply to every concept in a bundle governed by this profile,
 whatever its type. Each concept type's own page repeats them merged with that
 type's rules, which is the form that actually applies.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### `description` — required
 
 Purpose and scope of the procedure.
@@ -35,6 +40,8 @@ Purpose and scope of the procedure.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -49,6 +56,8 @@ Bundle-scoped stable RB-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -63,6 +72,8 @@ Possible effects of following the procedure, including conditional branches; thi
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -77,6 +88,8 @@ Explicit applicable environments; vocabulary is owned by the repository.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -91,10 +104,14 @@ Explicit applicable environments; vocabulary is owned by the repository.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 ### `owner` — required
@@ -107,6 +124,8 @@ Accountable person, team or role that maintains the procedure and receives escal
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -121,6 +140,8 @@ Canonical Mori URIs for the projects or artifacts affected by this procedure.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -135,6 +156,8 @@ Supporting alerts, dashboards, failure modes or other operational evidence.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -149,6 +172,8 @@ Supporting alerts, dashboards, failure modes or other operational evidence.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -158,6 +183,8 @@ Supporting alerts, dashboards, failure modes or other operational evidence.
     - `resource` — required; allowed values: any; cardinality: any; format: none — §5.1. What the source is: a followable artifact, or a scope descriptor.
     - `title` — optional; allowed values: any; cardinality: any; format: none — §5.1. Human-readable name for the source.
     - `usage_count` — optional; allowed values: any; cardinality: scalar; format: non-negative-integer — §5.1. How many times the source was drawn on. A count, so never negative.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 ### `stale_after` — optional
 
@@ -169,6 +196,8 @@ Supporting alerts, dashboards, failure modes or other operational evidence.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -183,6 +212,8 @@ Documentation lifecycle: draft, stable or deprecated; this does not certify an o
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -197,6 +228,8 @@ Later runbook replacing this procedure.
 - Reference: local handles with prefix `RB`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -211,6 +244,8 @@ Earlier runbooks replaced by this procedure.
 - Reference: local handles with prefix `RB`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -225,6 +260,8 @@ Search and discovery terms.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -239,6 +276,8 @@ Human-readable procedure title.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -253,6 +292,8 @@ Event or symptom that makes this procedure applicable.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -267,6 +308,8 @@ The operational document type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -281,10 +324,14 @@ The operational document type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

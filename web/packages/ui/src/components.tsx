@@ -27,7 +27,7 @@ export function SearchField({
   return (
     <AriaSearchField value={value} onChange={onChange}>
       <Label>Search documents</Label>
-      <Input placeholder="Search titles and descriptions" />
+      <Input placeholder="Profiles, types, or fields…" />
     </AriaSearchField>
   )
 }

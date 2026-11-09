@@ -38,6 +38,11 @@ okf checks the shapes, not the cross-references or the scenario coverage the `sc
 Every rule below is the effective rule for a concept of type `Design Brief`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `description` — required
@@ -50,6 +55,8 @@ One sentence: what this document settles.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -64,6 +71,8 @@ Bundle-scoped stable BRIEF-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -78,10 +87,14 @@ Bundle-scoped stable BRIEF-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `jobs` — required
@@ -94,12 +107,16 @@ The canonical jobs this surface serves, each under a short local name, and which
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `jobRef` — required; allowed values: any; cardinality: scalar; format: none; reference: local handles with prefix `BRIEF`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/JOB-[1-9][0-9]*` — Canonical Mori URI of the JOB concept.
     - `name` — required; allowed values: any; cardinality: scalar; format: none — Short local name used by scenarios and connections.
     - `viewers` — optional; allowed values: any; cardinality: list; format: none — Viewer names that hold this job.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `origin` — required
 
@@ -111,6 +128,8 @@ Mori project URI that owns the surface.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -125,11 +144,15 @@ The job outcomes this surface is meant to move — the desired outcomes, owned b
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: applies only when `status` is `validated`
 - Object fields: none
 - Element fields:
     - `jobRef` — required; allowed values: any; cardinality: scalar; format: none; reference: local handles with prefix `BRIEF`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/JOB-[1-9][0-9]*` — Canonical Mori URI of a job in `jobs`.
     - `outcomeName` — required; allowed values: any; cardinality: scalar; format: none — Name of an outcome declared by that job.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `scenarios` — required when `status` is `validated`
 
@@ -141,6 +164,8 @@ The situations the surface must work in, each with a concrete fixture: at least 
 - Reference: none
 - Path: none
 - Unique by: `id`
+- Object field names: none
+- Element field names: open
 - Condition: applies only when `status` is `validated`
 - Object fields: none
 - Element fields:
@@ -150,6 +175,8 @@ The situations the surface must work in, each with a concrete fixture: at least 
     - `jobs` — optional; allowed values: any; cardinality: list; format: none — Local job names this scenario exercises.
     - `state` — optional; allowed values: any; cardinality: scalar; format: none — A declared subject state.
     - `viewer` — required; allowed values: any; cardinality: scalar; format: none — A declared viewer name.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `status` — required
 
@@ -161,6 +188,8 @@ Workflow step. See the type guidance.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -175,12 +204,16 @@ How the shipped surface is judged: observable conditions, each with how it will 
 - Reference: none
 - Path: none
 - Unique by: `id`
+- Object field names: none
+- Element field names: open
 - Condition: applies only when `status` is `validated`
 - Object fields: none
 - Element fields:
     - `id` — required; allowed values: any; cardinality: scalar; format: document-handle(SC) — Brief-local SC-N handle.
     - `statement` — required; allowed values: any; cardinality: scalar; format: none — Observable condition that must hold.
     - `verification` — required; allowed values: any; cardinality: scalar; format: none — Procedure or evidence that will prove it.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `supersededBy` — required when `status` is `retired`
 
@@ -192,6 +225,8 @@ Later document replacing this one.
 - Reference: local handles with prefix `BRIEF`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/BRIEF-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is `retired`
 - Object fields: none
 - Element fields: none
@@ -206,6 +241,8 @@ Route or component the surface is, e.g. /orders/[id].
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -220,6 +257,8 @@ Human-readable title, usually the surface.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -234,6 +273,8 @@ Design Brief, Breadboard or Detailed Design.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -248,10 +289,14 @@ The approving review, mirrored from `reviews`.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: applies only when `status` is `validated`
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
@@ -266,6 +311,8 @@ Attributes of the viewer that every surface must consider, each answered explici
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: applies only when `status` is `validated`
 - Object fields: none
 - Element fields:
@@ -273,6 +320,8 @@ Attributes of the viewer that every surface must consider, each answered explici
     - `because` — required; allowed values: any; cardinality: scalar; format: none — Why it applies or does not — the evidence, not the conclusion.
     - `name` — required; allowed values: any; cardinality: scalar; format: none — Which viewer attribute.
     - `rules` — optional; allowed values: any; cardinality: scalar; format: none — What changes when it applies, or which scenarios and open questions carry it.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `viewers` — required
 
@@ -284,12 +333,16 @@ The kinds of viewer this surface distinguishes, declared per brief. Every `viewe
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `computedFrom` — optional; allowed values: any; cardinality: scalar; format: none — How the app decides a viewer is this kind.
     - `definition` — required; allowed values: any; cardinality: scalar; format: none — Who this is, in one sentence.
     - `name` — required; allowed values: any; cardinality: scalar; format: none — Short identifier used by jobs, scenarios and visibility.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 ### Recommended
 
@@ -303,6 +356,8 @@ Chronological human or model review provenance for this document revision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -316,6 +371,8 @@ Chronological human or model review provenance for this document revision.
     - `reviewed_at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC time at which the review completed.
     - `reviewer` — required; allowed values: any; cardinality: scalar; format: none — Stable identity of the reviewing person or agent.
     - `scope` — required; allowed values: `content`, `technical-accuracy`, `editorial`, `catalog-metadata`, `content-and-metadata`; cardinality: scalar; format: none — Aspect of the document covered by the review.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Checked only under `--strict`
 
 ### Optional
@@ -330,6 +387,8 @@ Settled questions a later phase must not reopen. D-N ids are unique across the s
 - Reference: none
 - Path: none
 - Unique by: `id`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -337,6 +396,8 @@ Settled questions a later phase must not reopen. D-N ids are unique across the s
     - `date` — required; allowed values: any; cardinality: scalar; format: date — When it was decided.
     - `id` — required; allowed values: any; cardinality: scalar; format: document-handle(D) — D-N handle.
     - `statement` — required; allowed values: any; cardinality: scalar; format: none — The decision.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `openQuestions` — optional
 
@@ -348,12 +409,16 @@ Questions still open, each with an owner. Q-N ids are unique across the surface'
 - Reference: none
 - Path: none
 - Unique by: `id`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `id` — required; allowed values: any; cardinality: scalar; format: document-handle(Q) — Q-N handle.
     - `owner` — required; allowed values: any; cardinality: scalar; format: none — Who answers it.
     - `question` — required; allowed values: any; cardinality: scalar; format: none — The question.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `subjectAxes` — optional
 
@@ -365,6 +430,8 @@ Attributes of the thing being viewed, or of the context, that modulate this surf
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -372,6 +439,8 @@ Attributes of the thing being viewed, or of the context, that modulate this surf
     - `because` — required; allowed values: any; cardinality: scalar; format: none — Why it applies — the evidence.
     - `name` — required; allowed values: any; cardinality: scalar; format: none — Which attribute of the subject or context.
     - `rules` — optional; allowed values: any; cardinality: scalar; format: none — What changes when it applies, or which scenarios and open questions carry it.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `subjectStates` — optional
 
@@ -383,11 +452,15 @@ The states the thing shown can be in, declared per brief — how much of a profi
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `definition` — required; allowed values: any; cardinality: scalar; format: none — What the subject has in this state, in facts that can be checked against the data, in one sentence.
     - `name` — required; allowed values: any; cardinality: scalar; format: none — Short identifier used by scenarios.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `tags` — optional
 
@@ -397,6 +470,8 @@ The states the thing shown can be in, declared per brief — how much of a profi
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -411,6 +486,8 @@ Canonical Mori URIs of the use cases this surface realises.
 - Reference: local handles with prefix `BRIEF`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/UC-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none

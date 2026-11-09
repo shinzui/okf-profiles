@@ -545,6 +545,14 @@ because generation is reproducible: it reads no clock, `generated.at` is omitted
 by design, and `generated.by` is the tool's stable `process:` actor rather than a
 version that would churn every page on an okf bump.
 
+The generated catalog is also available in the `web/` reader. Run `just docs-web-dev`
+to browse it, or `just docs-web-build` for a production build. The shared inventory
+in `scripts/profile-docs-catalog.json` must match `package.dhall`; `just docs` stages
+all bundles and regenerates the explicit `publication.json` selection together.
+`just check` includes the reader checks; `just docs-web-e2e` runs production Chromium
+acceptance separately. Follow [How to update and package the profile reference](docs/guides/profile-docs-web.md)
+for setup, profile additions/removals, snapshots, and delivery.
+
 When a profile carries `guidance`, `profile.md` gains a `## Guidance` section.
 When a profile or type carries it, each affected type page gains a `## Guidance`
 section with `### Profile-wide` text first and `### Type-specific` text after it,

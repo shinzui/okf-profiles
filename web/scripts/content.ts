@@ -2,8 +2,8 @@ import { mkdir, copyFile, readFile, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { createHash } from "node:crypto"
 import { approvedFile, loadCorpus, parseConfig } from "../packages/corpus/src/index"
-const root = path.resolve(process.env.DOCS_CONTENT_ROOT ?? ".")
-const configPath = process.env.DOCS_CONTENT_CONFIG ?? "content.config.json"
+const root = path.resolve(process.env.DOCS_CONTENT_ROOT ?? "..")
+const configPath = process.env.DOCS_CONTENT_CONFIG ?? "publication.json"
 const corpus = await loadCorpus(root, configPath)
 if (process.argv[2] === "snapshot") {
   const out = path.resolve(process.argv[3] ?? "docs-content")
@@ -16,6 +16,8 @@ if (process.argv[2] === "snapshot") {
   const config = parseConfig(
     JSON.parse(await readFile(await approvedFile(root, configPath), "utf8")),
   )
+  // Refuse an existing output, which could retain files removed from selection.
+  await mkdir(out)
   const files = []
   for (const relative of [...config.documents, ...config.assets].sort()) {
     const file = await approvedFile(root, relative)

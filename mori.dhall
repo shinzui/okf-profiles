@@ -32,6 +32,13 @@ in  Schema.Project::{
     , dependencies = [ "shinzui/okf", "shinzui/seihou" ]
     , docs =
       [ Schema.DocRef::{
+        , key = "profile-docs-web"
+        , kind = Schema.DocKind.Guide
+        , audience = Schema.DocAudience.User
+        , description = Some "How to regenerate, preview, check and package the profile reference reader"
+        , location = Schema.DocLocation.LocalFile "docs/guides/profile-docs-web.md"
+        }
+      , Schema.DocRef::{
         , key = "adopt-transitions-blueprint"
         , kind = Schema.DocKind.Runbook
         , audience = Schema.DocAudience.User

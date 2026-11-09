@@ -29,6 +29,11 @@ These rules apply to every concept in a bundle governed by this profile,
 whatever its type. Each concept type's own page repeats them merged with that
 type's rules, which is the form that actually applies.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### `baseSha` — required when `coverage` is `incremental`
 
 Commit the examined range starts after. Demanded once `coverage` is `incremental`.
@@ -39,6 +44,8 @@ Commit the examined range starts after. Demanded once `coverage` is `incremental
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `coverage` is `incremental`
 - Object fields: none
 - Element fields: none
@@ -53,6 +60,8 @@ Identifier the codebase uses for the part reviewed, when `subject` names the con
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -67,6 +76,8 @@ What the reviewer could see and how the review was run, where it bounds the resu
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -81,6 +92,8 @@ Whether the whole subject was read at `reviewedSha`, or only the range since `ba
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -95,6 +108,8 @@ One sentence a reader can evaluate without opening the body.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -109,6 +124,8 @@ Concerns the review actually examined, one per entry. A concern nobody looked at
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -123,6 +140,8 @@ Reasoning or thinking effort the review was run at.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `reviewerKind` is `model`
 - Object fields: none
 - Element fields: none
@@ -137,10 +156,14 @@ Reasoning or thinking effort the review was run at.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 ### `model` — required when `reviewerKind` is `model`
@@ -153,6 +176,8 @@ Most specific available model identifier.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `reviewerKind` is `model`
 - Object fields: none
 - Element fields: none
@@ -167,6 +192,8 @@ Result the reviewer recorded.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -181,6 +208,8 @@ The review this one continues from, as a local REV-N handle or an external Mori 
 - Reference: local handles with prefix `REV`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `coverage` is `incremental`
 - Object fields: none
 - Element fields: none
@@ -196,6 +225,8 @@ Mori URIs of records this review caused to exist: bug reports, improvement reque
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -210,6 +241,8 @@ Serving provider for a model review.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `reviewerKind` is `model`
 - Object fields: none
 - Element fields: none
@@ -224,6 +257,8 @@ Mori URI of the repository `reviewedSha` belongs to, when `subject` alone does n
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -238,6 +273,8 @@ Bundle-scoped stable REV-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -252,6 +289,8 @@ UTC time at which the review completed.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -266,6 +305,8 @@ Full 40-character commit SHA of the state reviewed. Never a branch or tag name, 
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -280,6 +321,8 @@ Full 40-character commit SHA of the state reviewed. Never a branch or tag name, 
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -294,6 +337,8 @@ Whether a person or a model performed the review. Gates the provider, model, and
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -308,6 +353,8 @@ Mori URI of what was reviewed: the most specific artifact that has one, else the
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -322,6 +369,8 @@ What `subject` and `component` name, assigned by what was read.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -336,6 +385,8 @@ Short statement of what was reviewed and how it went.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -350,6 +401,8 @@ The Review concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -364,10 +417,14 @@ The Review concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

@@ -25,6 +25,11 @@ These rules apply to every concept in a bundle governed by this profile,
 whatever its type. Each concept type's own page repeats them merged with that
 type's rules, which is the form that actually applies.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### `description` — required
 
 One or two sentences on what this concept is.
@@ -35,6 +40,8 @@ One or two sentences on what this concept is.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -49,10 +56,14 @@ One or two sentences on what this concept is.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 ### `sources` — optional
@@ -65,6 +76,8 @@ One or two sentences on what this concept is.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -74,6 +87,8 @@ One or two sentences on what this concept is.
     - `resource` — required; allowed values: any; cardinality: any; format: none — §5.1. What the source is: a followable artifact, or a scope descriptor.
     - `title` — optional; allowed values: any; cardinality: any; format: none — §5.1. Human-readable name for the source.
     - `usage_count` — optional; allowed values: any; cardinality: scalar; format: non-negative-integer — §5.1. How many times the source was drawn on. A count, so never negative.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 ### `stale_after` — optional
 
@@ -85,6 +100,8 @@ One or two sentences on what this concept is.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -99,6 +116,8 @@ One or two sentences on what this concept is.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -113,6 +132,8 @@ Human-readable name of the concept, as a reader would say it.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -127,6 +148,8 @@ The concept type. This profile constrains no vocabulary, because OKF defines no 
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -141,10 +164,14 @@ The concept type. This profile constrains no vocabulary, because OKF defines no 
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `from` — optional; allowed values: any; cardinality: any; format: date — §5.1. Calendar date the window opens.
     - `to` — optional; allowed values: any; cardinality: any; format: date — §5.1. Calendar date the window closes.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 ### `verified` — optional
@@ -157,10 +184,14 @@ The concept type. This profile constrains no vocabulary, because OKF defines no 
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

@@ -37,4 +37,20 @@ sweep *args:
     @bash scripts/sweep-all-profiles.sh {{args}}
 
 # Everything a release has to pass
-check: types test
+check: types test docs-web-check
+
+# Preview the generated profile catalog
+docs-web-dev:
+    @bash scripts/docs-web.sh dev
+
+# Build the web reader after checking publication selection
+docs-web-build:
+    @bash scripts/docs-web.sh build
+
+# Build, type/lint/format/content checks, and corpus tests
+docs-web-check:
+    @bash scripts/docs-web.sh check
+
+# Chromium acceptance against the production server
+docs-web-e2e:
+    @bash scripts/docs-web.sh e2e

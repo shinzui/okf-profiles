@@ -25,6 +25,11 @@ Declared by the [jobs](/profile.md) profile.
 Every rule below is the effective rule for a concept of type `Job`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `actor` — required
@@ -37,6 +42,8 @@ Person or role trying to make progress.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -51,11 +58,15 @@ The authors' synthesis of research findings behind `validationStatus`.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: applies only when `validationStatus` is one of `supported`, `mixed`, `challenged`
 - Object fields:
     - `assessedAt` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC RFC3339 time the assessment was made.
     - `findingRefs` — required; allowed values: any; cardinality: list; format: none; reference: local handles with prefix `JOB`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/PR-[1-9][0-9]*` — Canonical Mori URIs of the product-research findings assessed.
     - `rationale` — required; allowed values: any; cardinality: scalar; format: none — Why the cited findings justify the declared validation status.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `description` — required
@@ -68,6 +79,8 @@ One sentence stating the job.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -82,10 +95,14 @@ One sentence stating the job.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `jobId` — required
@@ -98,6 +115,8 @@ Bundle-scoped stable JOB-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -112,6 +131,8 @@ Progress the actor wants to make.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -126,6 +147,8 @@ Desired results that show the job's progress, qualitative or measured.
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -139,6 +162,8 @@ Desired results that show the job's progress, qualitative or measured.
     - `population` — optional; allowed values: any; cardinality: scalar; format: none — Whose behavior the baseline describes.
     - `target` — optional; allowed values: any; cardinality: scalar; format: none — Aspired value in `unit`; never an observation.
     - `unit` — optional; allowed values: any; cardinality: scalar; format: none — Unit every baseline, target, and measurement uses.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `situation` — required
 
@@ -150,6 +175,8 @@ Circumstance in which the job arises.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -164,6 +191,8 @@ Lifecycle of this job statement: `draft`, `active`, or `retired`.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -178,6 +207,8 @@ Short name for the progress the actor seeks.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -192,6 +223,8 @@ The Job concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -206,6 +239,8 @@ Declared research support: `untested`, `supported`, `mixed`, or `challenged`.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -226,6 +261,8 @@ How the actor wants to feel, or avoid feeling.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -240,6 +277,8 @@ Practical task constraints surrounding the job.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -254,6 +293,8 @@ Related local JOB handles or canonical Mori job URIs.
 - Reference: local handles with prefix `JOB`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/JOB-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -268,6 +309,8 @@ Chronological human or model review provenance for this document revision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -281,6 +324,8 @@ Chronological human or model review provenance for this document revision.
     - `reviewed_at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC time at which the review completed.
     - `reviewer` — required; allowed values: any; cardinality: scalar; format: none — Stable identity of the reviewing person or agent.
     - `scope` — required; allowed values: `content`, `technical-accuracy`, `editorial`, `catalog-metadata`, `content-and-metadata`; cardinality: scalar; format: none — Aspect of the document covered by the review.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `socialContext` — optional
 
@@ -292,6 +337,8 @@ How the actor wants to be perceived by others.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -306,6 +353,8 @@ How the actor wants to be perceived by others.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -315,6 +364,8 @@ How the actor wants to be perceived by others.
     - `resource` — required; allowed values: any; cardinality: any; format: none — §5.1. What the source is: a followable artifact, or a scope descriptor.
     - `title` — optional; allowed values: any; cardinality: any; format: none — §5.1. Human-readable name for the source.
     - `usage_count` — optional; allowed values: any; cardinality: scalar; format: non-negative-integer — §5.1. How many times the source was drawn on. A count, so never negative.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `tags` — optional
 
@@ -326,6 +377,8 @@ Producer-defined search and grouping tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -340,10 +393,14 @@ Producer-defined search and grouping tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

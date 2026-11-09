@@ -12,3 +12,8 @@ CLAUDE.local.md
 .seihou/manifest.json.tmp
 .mina/
 .codex/
+
+# Regeneration staging and recoverable prior output
+/docs/.profile-docs-*/
+/docs/.profiles-last-good/
+/scripts/__pycache__/

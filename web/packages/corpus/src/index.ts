@@ -1,3 +1,7 @@
+import { unified } from "unified"
+import remarkParse from "remark-parse"
+import remarkGfm from "remark-gfm"
+import { headingsFromTree } from "./headings"
 import { docHref } from "./links"
 export { resolveLink } from "./links"
 import { readFile, realpath, stat } from "node:fs/promises"
@@ -57,6 +61,7 @@ export function parseConfig(input: unknown): ContentConfig {
       name: r.name,
       directory: relativePath(r.directory),
       projectUri: projectUri(r.projectUri),
+      ...(typeof r.export === "string" ? { export: r.export } : {}),
     }
   })
   if (new Set(bundles.map((b) => b.name)).size !== bundles.length)
@@ -111,6 +116,8 @@ export async function loadCorpus(
       title:
         metadata.title ?? /^#\s+(.+)$/m.exec(parsed.content)?.[1] ?? path.posix.basename(source),
       description: metadata.description ?? "",
+      exportPath: bundle?.export ?? null,
+      headings: headingsFromTree(unified().use(remarkParse).use(remarkGfm).parse(parsed.content)),
       metadata,
       body: parsed.content,
       links,

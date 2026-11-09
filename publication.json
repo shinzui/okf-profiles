@@ -2,10 +2,74 @@
   "schemaVersion": 1,
   "projectUri": "mori://shinzui/okf-profiles",
   "documents": [
+    "docs/profiles/architecture-decisions/index.md",
+    "docs/profiles/architecture-decisions/profile.md",
+    "docs/profiles/architecture-decisions/types/architecture-decision-record.md",
+    "docs/profiles/architecture-decisions/types/index.md",
+    "docs/profiles/audiences/index.md",
+    "docs/profiles/audiences/profile.md",
+    "docs/profiles/audiences/types/index.md",
+    "docs/profiles/audiences/types/persona.md",
+    "docs/profiles/audiences/types/segment.md",
+    "docs/profiles/bug-reports/index.md",
+    "docs/profiles/bug-reports/profile.md",
+    "docs/profiles/bug-reports/types/bug-report.md",
+    "docs/profiles/bug-reports/types/index.md",
+    "docs/profiles/campaigns/index.md",
+    "docs/profiles/campaigns/profile.md",
+    "docs/profiles/campaigns/types/campaign-email.md",
+    "docs/profiles/campaigns/types/campaign.md",
+    "docs/profiles/campaigns/types/index.md",
+    "docs/profiles/capabilities/index.md",
+    "docs/profiles/capabilities/profile.md",
+    "docs/profiles/capabilities/types/capability.md",
+    "docs/profiles/capabilities/types/index.md",
+    "docs/profiles/claim-checks/index.md",
+    "docs/profiles/claim-checks/profile.md",
+    "docs/profiles/claim-checks/types/claim-check.md",
+    "docs/profiles/claim-checks/types/index.md",
+    "docs/profiles/designs/index.md",
+    "docs/profiles/designs/profile.md",
+    "docs/profiles/designs/types/breadboard.md",
+    "docs/profiles/designs/types/design-brief.md",
+    "docs/profiles/designs/types/detailed-design.md",
+    "docs/profiles/designs/types/index.md",
+    "docs/profiles/failure-modes/index.md",
+    "docs/profiles/failure-modes/profile.md",
+    "docs/profiles/failure-modes/types/failure-mode.md",
+    "docs/profiles/failure-modes/types/index.md",
     "docs/profiles/features/index.md",
     "docs/profiles/features/profile.md",
     "docs/profiles/features/types/feature.md",
     "docs/profiles/features/types/index.md",
+    "docs/profiles/friction-log/index.md",
+    "docs/profiles/friction-log/profile.md",
+    "docs/profiles/friction-log/types/friction-entry.md",
+    "docs/profiles/friction-log/types/index.md",
+    "docs/profiles/improvement-requests/index.md",
+    "docs/profiles/improvement-requests/profile.md",
+    "docs/profiles/improvement-requests/types/improvement-request.md",
+    "docs/profiles/improvement-requests/types/index.md",
+    "docs/profiles/jobs/index.md",
+    "docs/profiles/jobs/profile.md",
+    "docs/profiles/jobs/types/index.md",
+    "docs/profiles/jobs/types/job.md",
+    "docs/profiles/launches/index.md",
+    "docs/profiles/launches/profile.md",
+    "docs/profiles/launches/types/index.md",
+    "docs/profiles/launches/types/landing-page.md",
+    "docs/profiles/launches/types/launch.md",
+    "docs/profiles/messaging/index.md",
+    "docs/profiles/messaging/profile.md",
+    "docs/profiles/messaging/types/index.md",
+    "docs/profiles/messaging/types/message.md",
+    "docs/profiles/messaging/types/positioning.md",
+    "docs/profiles/okf-v0-2/index.md",
+    "docs/profiles/okf-v0-2/profile.md",
+    "docs/profiles/pattern-applications/index.md",
+    "docs/profiles/pattern-applications/profile.md",
+    "docs/profiles/pattern-applications/types/index.md",
+    "docs/profiles/pattern-applications/types/pattern-application.md",
     "docs/profiles/pattern-catalog/index.md",
     "docs/profiles/pattern-catalog/profile.md",
     "docs/profiles/pattern-catalog/types/assessable-pattern.md",
@@ -18,16 +82,227 @@
     "docs/profiles/pattern-catalog/types/pattern.md",
     "docs/profiles/pattern-catalog/types/reference.md",
     "docs/profiles/pattern-catalog/types/runbook.md",
-    "docs/profiles/pattern-catalog/types/standard.md"
+    "docs/profiles/pattern-catalog/types/standard.md",
+    "docs/profiles/postgresql/index.md",
+    "docs/profiles/postgresql/profile.md",
+    "docs/profiles/postgresql/types/index.md",
+    "docs/profiles/postgresql/types/postgresql-schema.md",
+    "docs/profiles/postgresql/types/postgresql-table.md",
+    "docs/profiles/postgresql/types/postgresql-view.md",
+    "docs/profiles/product-research/index.md",
+    "docs/profiles/product-research/profile.md",
+    "docs/profiles/product-research/types/index.md",
+    "docs/profiles/product-research/types/product-research-finding.md",
+    "docs/profiles/product-research/types/product-research-study.md",
+    "docs/profiles/research-documents/index.md",
+    "docs/profiles/research-documents/profile.md",
+    "docs/profiles/research-documents/types/index.md",
+    "docs/profiles/research-documents/types/research-document.md",
+    "docs/profiles/reviews/index.md",
+    "docs/profiles/reviews/profile.md",
+    "docs/profiles/reviews/types/index.md",
+    "docs/profiles/reviews/types/review.md",
+    "docs/profiles/runbooks/index.md",
+    "docs/profiles/runbooks/profile.md",
+    "docs/profiles/runbooks/types/index.md",
+    "docs/profiles/runbooks/types/runbook.md",
+    "docs/profiles/specifications/index.md",
+    "docs/profiles/specifications/profile.md",
+    "docs/profiles/specifications/types/index.md",
+    "docs/profiles/specifications/types/specification-pointer.md",
+    "docs/profiles/specifications/types/specification.md",
+    "docs/profiles/strategy/index.md",
+    "docs/profiles/strategy/profile.md",
+    "docs/profiles/strategy/types/index.md",
+    "docs/profiles/strategy/types/initiative.md",
+    "docs/profiles/strategy/types/objective.md",
+    "docs/profiles/strategy/types/strategic-theme.md",
+    "docs/profiles/tan-postgresql/index.md",
+    "docs/profiles/tan-postgresql/profile.md",
+    "docs/profiles/tan-postgresql/types/event-stream.md",
+    "docs/profiles/tan-postgresql/types/index.md",
+    "docs/profiles/tan-postgresql/types/postgresql-schema.md",
+    "docs/profiles/tan-postgresql/types/postgresql-table.md",
+    "docs/profiles/tan-postgresql/types/postgresql-view.md",
+    "docs/profiles/terminology/index.md",
+    "docs/profiles/terminology/profile.md",
+    "docs/profiles/terminology/types/index.md",
+    "docs/profiles/terminology/types/term.md",
+    "docs/profiles/transitions/index.md",
+    "docs/profiles/transitions/profile.md",
+    "docs/profiles/transitions/types/index.md",
+    "docs/profiles/transitions/types/transition.md",
+    "docs/profiles/use-cases/index.md",
+    "docs/profiles/use-cases/profile.md",
+    "docs/profiles/use-cases/types/index.md",
+    "docs/profiles/use-cases/types/use-case-theme.md",
+    "docs/profiles/use-cases/types/use-case.md",
+    "docs/profiles/user-documentation/index.md",
+    "docs/profiles/user-documentation/profile.md",
+    "docs/profiles/user-documentation/types/explanation.md",
+    "docs/profiles/user-documentation/types/guide.md",
+    "docs/profiles/user-documentation/types/index.md",
+    "docs/profiles/user-documentation/types/navigation.md",
+    "docs/profiles/user-documentation/types/reference.md",
+    "docs/profiles/user-documentation/types/runbook.md",
+    "docs/profiles/user-documentation/types/tutorial.md",
+    "docs/profiles/verification-evidence/index.md",
+    "docs/profiles/verification-evidence/profile.md",
+    "docs/profiles/verification-evidence/types/attestation.md",
+    "docs/profiles/verification-evidence/types/attested-computation.md",
+    "docs/profiles/verification-evidence/types/index.md",
+    "docs/profiles/verification-evidence/types/verification-run.md"
   ],
   "bundles": [
     {
+      "name": "architecture-decisions",
+      "directory": "docs/profiles/architecture-decisions",
+      "export": "documentation.architectureDecisions"
+    },
+    {
+      "name": "audiences",
+      "directory": "docs/profiles/audiences",
+      "export": "coordination.audiences"
+    },
+    {
+      "name": "bug-reports",
+      "directory": "docs/profiles/bug-reports",
+      "export": "coordination.bugReports"
+    },
+    {
+      "name": "campaigns",
+      "directory": "docs/profiles/campaigns",
+      "export": "coordination.campaigns"
+    },
+    {
+      "name": "capabilities",
+      "directory": "docs/profiles/capabilities",
+      "export": "coordination.capabilities"
+    },
+    {
+      "name": "claim-checks",
+      "directory": "docs/profiles/claim-checks",
+      "export": "assurance.claimChecks"
+    },
+    {
+      "name": "designs",
+      "directory": "docs/profiles/designs",
+      "export": "coordination.designs"
+    },
+    {
+      "name": "failure-modes",
+      "directory": "docs/profiles/failure-modes",
+      "export": "assurance.failureModes"
+    },
+    {
       "name": "features",
-      "directory": "docs/profiles/features"
+      "directory": "docs/profiles/features",
+      "export": "coordination.features"
+    },
+    {
+      "name": "friction-log",
+      "directory": "docs/profiles/friction-log",
+      "export": "coordination.frictionLog"
+    },
+    {
+      "name": "improvement-requests",
+      "directory": "docs/profiles/improvement-requests",
+      "export": "coordination.improvementRequests"
+    },
+    {
+      "name": "jobs",
+      "directory": "docs/profiles/jobs",
+      "export": "coordination.jobs"
+    },
+    {
+      "name": "launches",
+      "directory": "docs/profiles/launches",
+      "export": "coordination.launches"
+    },
+    {
+      "name": "messaging",
+      "directory": "docs/profiles/messaging",
+      "export": "documentation.messaging"
+    },
+    {
+      "name": "okf-v0-2",
+      "directory": "docs/profiles/okf-v0-2",
+      "export": "okfV02"
+    },
+    {
+      "name": "pattern-applications",
+      "directory": "docs/profiles/pattern-applications",
+      "export": "coordination.patternApplications"
     },
     {
       "name": "pattern-catalog",
-      "directory": "docs/profiles/pattern-catalog"
+      "directory": "docs/profiles/pattern-catalog",
+      "export": "documentation.patternCatalog"
+    },
+    {
+      "name": "postgresql",
+      "directory": "docs/profiles/postgresql",
+      "export": "postgresql"
+    },
+    {
+      "name": "product-research",
+      "directory": "docs/profiles/product-research",
+      "export": "documentation.productResearch"
+    },
+    {
+      "name": "research-documents",
+      "directory": "docs/profiles/research-documents",
+      "export": "documentation.researchDocuments"
+    },
+    {
+      "name": "reviews",
+      "directory": "docs/profiles/reviews",
+      "export": "assurance.reviews"
+    },
+    {
+      "name": "runbooks",
+      "directory": "docs/profiles/runbooks",
+      "export": "documentation.runbooks"
+    },
+    {
+      "name": "specifications",
+      "directory": "docs/profiles/specifications",
+      "export": "documentation.specifications"
+    },
+    {
+      "name": "strategy",
+      "directory": "docs/profiles/strategy",
+      "export": "coordination.strategy"
+    },
+    {
+      "name": "tan-postgresql",
+      "directory": "docs/profiles/tan-postgresql",
+      "export": "tanPostgresql"
+    },
+    {
+      "name": "terminology",
+      "directory": "docs/profiles/terminology",
+      "export": "documentation.terminology"
+    },
+    {
+      "name": "transitions",
+      "directory": "docs/profiles/transitions",
+      "export": "coordination.transitions"
+    },
+    {
+      "name": "use-cases",
+      "directory": "docs/profiles/use-cases",
+      "export": "coordination.useCases"
+    },
+    {
+      "name": "user-documentation",
+      "directory": "docs/profiles/user-documentation",
+      "export": "documentation.userDocumentation"
+    },
+    {
+      "name": "verification-evidence",
+      "directory": "docs/profiles/verification-evidence",
+      "export": "assurance.verificationEvidence"
     }
   ],
   "assets": []

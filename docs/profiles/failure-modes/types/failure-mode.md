@@ -26,6 +26,11 @@ Declared by the [failure-modes](/profile.md) profile.
 Every rule below is the effective rule for a concept of type `Failure Mode`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `control` — required when `status` is one of `mitigated`, `prevented`, `accepted`
@@ -38,6 +43,8 @@ The change that stops this recurring, or — under `accepted` — what makes liv
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is one of `mitigated`, `prevented`, `accepted`
 - Object fields: none
 - Element fields: none
@@ -52,6 +59,8 @@ One sentence a reader can match against a live symptom without opening the body.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -66,6 +75,8 @@ Ordered checks that confirm this mode once the signature matches, cheapest first
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -80,6 +91,8 @@ Bundle-scoped stable FM-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -94,10 +107,14 @@ Bundle-scoped stable FM-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `occurrences` — required
@@ -110,6 +127,8 @@ One entry per sighting, newest last, each naming the Mori URI where it fired and
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -124,6 +143,8 @@ The mechanism, stated so that someone who has never seen it can predict when it 
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is one of `diagnosed`, `mitigated`, `prevented`, `accepted`
 - Object fields: none
 - Element fields: none
@@ -138,6 +159,8 @@ Where the mechanism lives, and therefore where a durable fix must go.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -152,6 +175,8 @@ What a reader matches against a live symptom in seconds, from what is already on
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -166,6 +191,8 @@ How far this has been driven to ground. `prevented` means the control is deploye
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -180,6 +207,8 @@ Short statement of the mechanism, not of one incident.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -194,6 +223,8 @@ The Failure Mode concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -210,6 +241,8 @@ The standing, cheap signal that surfaces this early — the thing to watch rathe
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is one of `mitigated`, `prevented`, `accepted`
 - Object fields: none
 - Element fields: none
@@ -225,6 +258,8 @@ Explanations tested and disproved, each naming the check that disproved it. An e
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is one of `diagnosed`, `mitigated`, `prevented`, `accepted`
 - Object fields: none
 - Element fields: none
@@ -240,6 +275,8 @@ Chronological human or model review provenance for this document revision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -253,6 +290,8 @@ Chronological human or model review provenance for this document revision.
     - `reviewed_at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC time at which the review completed.
     - `reviewer` — required; allowed values: any; cardinality: scalar; format: none — Stable identity of the reviewing person or agent.
     - `scope` — required; allowed values: `content`, `technical-accuracy`, `editorial`, `catalog-metadata`, `content-and-metadata`; cardinality: scalar; format: none — Aspect of the document covered by the review.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Checked only under `--strict`
 
 ### Optional
@@ -267,6 +306,8 @@ Mori URI of a bug report that is one instance of this mode, where a repository o
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -281,6 +322,8 @@ What each undiagnosed occurrence has cost, stated observably — machine-hours l
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -295,6 +338,8 @@ The entry that replaces this one, as a local FM-N handle or an external Mori URI
 - Reference: local handles with prefix `FM`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -309,10 +354,14 @@ The entry that replaces this one, as a local FM-N handle or an external Mori URI
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

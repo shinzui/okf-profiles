@@ -7,7 +7,12 @@ export function publishedLink(
   links: Record<string, string>,
   bundleDirectory: string | null = null,
 ): string | null {
-  if (href.includes("\\") || /[\u0000-\u0020]/.test(href) || href.startsWith("//")) return null
+  if (
+    href.includes("\\") ||
+    Array.from(href).some((char) => char.charCodeAt(0) <= 32) ||
+    href.startsWith("//")
+  )
+    return null
   if (href.startsWith("#")) return href
   if (/^https?:\/\//i.test(href) || /^mailto:/i.test(href)) return href
   if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return null

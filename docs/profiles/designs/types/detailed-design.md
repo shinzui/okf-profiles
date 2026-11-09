@@ -35,6 +35,11 @@ By `designed`, every brief scenario is either in the `## Design handoff` table, 
 Every rule below is the effective rule for a concept of type `Detailed Design`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `breadboard` — required
@@ -47,6 +52,8 @@ The breadboard this design presents.
 - Reference: local handles with prefix `BB`; external URIs not allowed; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -61,6 +68,8 @@ Settled questions a later phase must not reopen. D-N ids are unique across the s
 - Reference: none
 - Path: none
 - Unique by: `id`
+- Object field names: none
+- Element field names: open
 - Condition: applies only when `status` is one of `chosen`, `designed`
 - Object fields: none
 - Element fields:
@@ -68,6 +77,8 @@ Settled questions a later phase must not reopen. D-N ids are unique across the s
     - `date` — required; allowed values: any; cardinality: scalar; format: date — When it was decided.
     - `id` — required; allowed values: any; cardinality: scalar; format: document-handle(D) — D-N handle.
     - `statement` — required; allowed values: any; cardinality: scalar; format: none — The decision.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `description` — required
 
@@ -79,6 +90,8 @@ One sentence: what this document settles.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -93,12 +106,16 @@ Where the design lives.
 - Reference: none
 - Path: none
 - Unique by: `resource`
+- Object field names: none
+- Element field names: open
 - Condition: applies only when `status` is one of `chosen`, `designed`
 - Object fields: none
 - Element fields:
     - `kind` — required; allowed values: any; cardinality: scalar; format: none — Tool or medium, such as figma, sketch, screenshot or video.
     - `note` — optional; allowed values: any; cardinality: scalar; format: none — What this artifact shows.
     - `resource` — required; allowed values: any; cardinality: scalar; format: none — A URL, or a path relative to this concept for a file in the repository.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `designId` — required
 
@@ -110,6 +127,8 @@ Bundle-scoped stable DES-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -124,10 +143,14 @@ Bundle-scoped stable DES-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `states` — required
@@ -140,11 +163,15 @@ The states each affordance is designed in: with-data, and empty wherever the aff
 - Reference: none
 - Path: none
 - Unique by: `affordance`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `affordance` — required; allowed values: any; cardinality: scalar; format: none — A breadboard affordance.
     - `states` — required; allowed values: any; cardinality: list; format: none — State names; every one appears on at least one final screen.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `status` — required
 
@@ -156,6 +183,8 @@ Workflow step. See the type guidance.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -170,6 +199,8 @@ Later document replacing this one.
 - Reference: local handles with prefix `DES`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/DES-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is `retired`
 - Object fields: none
 - Element fields: none
@@ -184,6 +215,8 @@ Human-readable title, usually the surface.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -198,6 +231,8 @@ Design Brief, Breadboard or Detailed Design.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -212,10 +247,14 @@ The approving review, mirrored from `reviews`.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: applies only when `status` is `designed`
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
@@ -232,6 +271,8 @@ Chronological human or model review provenance for this document revision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -245,6 +286,8 @@ Chronological human or model review provenance for this document revision.
     - `reviewed_at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC time at which the review completed.
     - `reviewer` — required; allowed values: any; cardinality: scalar; format: none — Stable identity of the reviewing person or agent.
     - `scope` — required; allowed values: `content`, `technical-accuracy`, `editorial`, `catalog-metadata`, `content-and-metadata`; cardinality: scalar; format: none — Aspect of the document covered by the review.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Checked only under `--strict`
 
 ### Optional
@@ -259,12 +302,16 @@ Questions still open, each with an owner. Q-N ids are unique across the surface'
 - Reference: none
 - Path: none
 - Unique by: `id`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `id` — required; allowed values: any; cardinality: scalar; format: document-handle(Q) — Q-N handle.
     - `owner` — required; allowed values: any; cardinality: scalar; format: none — Who answers it.
     - `question` — required; allowed values: any; cardinality: scalar; format: none — The question.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `tags` — optional
 
@@ -274,6 +321,8 @@ Questions still open, each with an owner. Q-N ids are unique across the surface'
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none

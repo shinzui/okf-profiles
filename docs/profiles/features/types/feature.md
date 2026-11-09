@@ -25,6 +25,11 @@ Declared by the [features](/profile.md) profile.
 Every rule below is the effective rule for a concept of type `Feature`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `acceptanceCriteria` — required when `status` is one of `planned`, `in-progress`, `blocked`, `delivered`
@@ -37,12 +42,16 @@ Feature-local product acceptance conditions with AC-N ids; not request criteria.
 - Reference: none
 - Path: none
 - Unique by: `id`
+- Object field names: none
+- Element field names: open
 - Condition: applies only when `status` is one of `planned`, `in-progress`, `blocked`, `delivered`
 - Object fields: none
 - Element fields:
     - `id` — required; allowed values: any; cardinality: scalar; format: document-handle(AC) — Stable feature-local AC-N handle for this condition.
     - `statement` — required; allowed values: any; cardinality: scalar; format: none — Observable product condition that must hold for acceptance.
     - `verification` — required; allowed values: any; cardinality: scalar; format: none — Expected procedure or evidence that will prove the condition.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `behavior` — required
 
@@ -54,6 +63,8 @@ Proposed or actual customer-visible behavior.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -68,6 +79,8 @@ UTC RFC3339 time the behavior was delivered and accepted.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is `delivered`
 - Object fields: none
 - Element fields: none
@@ -82,6 +95,8 @@ Evidence that the behavior was delivered, in the shape of §5.1 sources.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: applies only when `status` is `delivered`
 - Object fields: none
 - Element fields:
@@ -91,6 +106,8 @@ Evidence that the behavior was delivered, in the shape of §5.1 sources.
     - `resource` — required; allowed values: any; cardinality: any; format: none — §5.1. What the source is: a followable artifact, or a scope descriptor.
     - `title` — optional; allowed values: any; cardinality: any; format: none — §5.1. Human-readable name for the source.
     - `usage_count` — optional; allowed values: any; cardinality: scalar; format: non-negative-integer — §5.1. How many times the source was drawn on. A count, so never negative.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `description` — required
 
@@ -102,6 +119,8 @@ One sentence stating the feature.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -116,6 +135,8 @@ Bundle-scoped stable FEAT-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -130,10 +151,14 @@ Bundle-scoped stable FEAT-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `owners` — required when `status` is one of `planned`, `in-progress`, `blocked`, `delivered`
@@ -146,6 +171,8 @@ Mori project URIs accountable for delivering the feature.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is one of `planned`, `in-progress`, `blocked`, `delivered`
 - Object fields: none
 - Element fields: none
@@ -160,6 +187,8 @@ Delivery state: discovered, planned, in-progress, delivered, blocked, deferred, 
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -174,6 +203,8 @@ Short, stable-sounding feature name.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -188,6 +219,8 @@ The Feature concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -208,6 +241,8 @@ Canonical Mori URIs of producer capabilities contributing behavior.
 - Reference: local handles with prefix `FEAT`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/CAP-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -222,6 +257,8 @@ Canonical Mori URIs of requests delivering parts of this feature.
 - Reference: local handles with prefix `FEAT`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/IR-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -236,6 +273,8 @@ Canonical Mori URIs of the customer jobs this feature serves.
 - Reference: local handles with prefix `FEAT`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/JOB-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -250,11 +289,15 @@ Named outcomes of jobs in `jobRefs` that this feature is meant to move.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `jobRef` — required; allowed values: any; cardinality: scalar; format: none; reference: local handles with prefix `FEAT`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/JOB-[1-9][0-9]*` — Canonical Mori URI of a job in `jobRefs`.
     - `outcomeName` — required; allowed values: any; cardinality: scalar; format: none — Name of an outcome declared by that job.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `priority` — optional
 
@@ -266,6 +309,8 @@ Producer-declared ordering signal: low, medium, high, or critical.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -280,6 +325,8 @@ Chronological human or model review provenance for this document revision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -293,6 +340,8 @@ Chronological human or model review provenance for this document revision.
     - `reviewed_at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC time at which the review completed.
     - `reviewer` — required; allowed values: any; cardinality: scalar; format: none — Stable identity of the reviewing person or agent.
     - `scope` — required; allowed values: `content`, `technical-accuracy`, `editorial`, `catalog-metadata`, `content-and-metadata`; cardinality: scalar; format: none — Aspect of the document covered by the review.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `specificationRefs` — optional
 
@@ -304,6 +353,8 @@ Canonical Mori URIs of specifications governing this feature.
 - Reference: local handles with prefix `FEAT`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/SPEC-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -318,6 +369,8 @@ Producer-defined search and grouping tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -332,10 +385,14 @@ Producer-defined search and grouping tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

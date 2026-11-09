@@ -1,6 +1,8 @@
+import type { Heading } from "./headings"
 export interface Bundle {
   name: string
   directory: string
+  export?: string
   projectUri?: string | null
 }
 export interface ContentConfig {
@@ -17,6 +19,8 @@ export interface Summary {
   description: string
   identity: string
   bundle: string | null
+  exportPath: string | null
+  headings: Heading[]
   metadata: Record<string, string>
 }
 export interface Document extends Summary {

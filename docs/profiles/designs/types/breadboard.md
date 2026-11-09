@@ -36,6 +36,11 @@ okf checks the shapes, not the cross-references. Read them: every `viewer` is de
 Every rule below is the effective rule for a concept of type `Breadboard`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `affordances` — required
@@ -48,6 +53,8 @@ What a viewer can read or do in each surface place, in words, with no layout. Ea
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -55,6 +62,8 @@ What a viewer can read or do in each surface place, in words, with no layout. Ea
     - `features` — optional; allowed values: any; cardinality: list; format: none; reference: local handles with prefix `BB`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/FEAT-[1-9][0-9]*` — Canonical Mori URIs of the FEAT concepts that deliver it.
     - `name` — required; allowed values: any; cardinality: scalar; format: none — Stable affordance name, used by visibility, connections and the detailed design.
     - `place` — required; allowed values: any; cardinality: scalar; format: none — A declared surface place.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `brief` — required
 
@@ -66,6 +75,8 @@ The brief this breadboard answers.
 - Reference: local handles with prefix `BRIEF`; external URIs not allowed; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -80,6 +91,8 @@ How the viewer moves: from an external place or an affordance to a place. Connec
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -87,6 +100,8 @@ How the viewer moves: from an external place or an affordance to a place. Connec
     - `from` — required; allowed values: any; cardinality: scalar; format: none — A declared place or affordance.
     - `jobs` — optional; allowed values: any; cardinality: list; format: none — Brief job names that arrive by this connection.
     - `to` — required; allowed values: any; cardinality: scalar; format: none — A declared place.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `description` — required
 
@@ -98,6 +113,8 @@ One sentence: what this document settles.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -112,6 +129,8 @@ Bundle-scoped stable BB-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -126,10 +145,14 @@ Bundle-scoped stable BB-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `places` — required
@@ -142,12 +165,16 @@ Where the viewer can be: the surface's own places and the external places that l
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `description` — required; allowed values: any; cardinality: scalar; format: none — What the place is, in one sentence.
     - `kind` — required; allowed values: `surface`, `external`; cardinality: scalar; format: none — `surface` for a place this breadboard designs; `external` for one it only connects to.
     - `name` — required; allowed values: any; cardinality: scalar; format: none — Stable place name.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `status` — required
 
@@ -159,6 +186,8 @@ Workflow step. See the type guidance.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -173,6 +202,8 @@ Later document replacing this one.
 - Reference: local handles with prefix `BB`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/BB-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is `retired`
 - Object fields: none
 - Element fields: none
@@ -187,6 +218,8 @@ Human-readable title, usually the surface.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -201,6 +234,8 @@ Design Brief, Breadboard or Detailed Design.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -215,10 +250,14 @@ The approving review, mirrored from `reviews`.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: applies only when `status` is `validated`
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
@@ -233,6 +272,8 @@ Affordance × viewer, one entry each. `shown` and `hidden` are what they say; `c
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -240,6 +281,8 @@ Affordance × viewer, one entry each. `shown` and `hidden` are what they say; `c
     - `note` — optional; allowed values: any; cardinality: scalar; format: none — Why, or the condition under which the rule changes.
     - `rule` — required; allowed values: `shown`, `collapsed`, `hidden`, `filtered`, `prompts`; cardinality: scalar; format: none — What this viewer gets.
     - `viewer` — required; allowed values: any; cardinality: scalar; format: none — A viewer declared by the brief.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 ### Recommended
 
@@ -253,6 +296,8 @@ Chronological human or model review provenance for this document revision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -266,6 +311,8 @@ Chronological human or model review provenance for this document revision.
     - `reviewed_at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC time at which the review completed.
     - `reviewer` — required; allowed values: any; cardinality: scalar; format: none — Stable identity of the reviewing person or agent.
     - `scope` — required; allowed values: `content`, `technical-accuracy`, `editorial`, `catalog-metadata`, `content-and-metadata`; cardinality: scalar; format: none — Aspect of the document covered by the review.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Checked only under `--strict`
 
 ### Optional
@@ -280,6 +327,8 @@ Settled questions a later phase must not reopen. D-N ids are unique across the s
 - Reference: none
 - Path: none
 - Unique by: `id`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -287,6 +336,8 @@ Settled questions a later phase must not reopen. D-N ids are unique across the s
     - `date` — required; allowed values: any; cardinality: scalar; format: date — When it was decided.
     - `id` — required; allowed values: any; cardinality: scalar; format: document-handle(D) — D-N handle.
     - `statement` — required; allowed values: any; cardinality: scalar; format: none — The decision.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `openQuestions` — optional
 
@@ -298,12 +349,16 @@ Questions still open, each with an owner. Q-N ids are unique across the surface'
 - Reference: none
 - Path: none
 - Unique by: `id`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `id` — required; allowed values: any; cardinality: scalar; format: document-handle(Q) — Q-N handle.
     - `owner` — required; allowed values: any; cardinality: scalar; format: none — Who answers it.
     - `question` — required; allowed values: any; cardinality: scalar; format: none — The question.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `tags` — optional
 
@@ -313,6 +368,8 @@ Questions still open, each with an owner. Q-N ids are unique across the surface'
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none

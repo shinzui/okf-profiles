@@ -1,3 +1,7 @@
+import { catalog, searchDocuments } from "../src/catalog"
+import { unified } from "unified"
+import remarkParse from "remark-parse"
+import { headingsFromTree, headingAnchors, type TextNode } from "../src/headings"
 import { test, expect } from "bun:test"
 import { mkdtemp, mkdir, writeFile, symlink, rm } from "node:fs/promises"
 import os from "node:os"
@@ -105,4 +109,37 @@ test("generated bundle-root links stay inside their declared bundle", () => {
   ])
     expect(link("a/profile.md", href)).toBeNull()
   expect(link("a/types/feature.md", "/profile.md", null)).toBeNull()
+})
+test("real publication includes all profiles and section search excludes bodies", async () => {
+  const root = path.resolve(import.meta.dir, "../../../..")
+  const corpus = await loadCorpus(root, "publication.json")
+  const profiles = catalog(corpus.documents)
+  expect(profiles).toHaveLength(30)
+  expect(profiles.flatMap((entry) => entry.types)).toHaveLength(61)
+  expect(profiles.find((entry) => entry.profile.bundle === "okf-v0-2")?.types).toHaveLength(0)
+  const results = searchDocuments(corpus.documents, "Feature acceptanceCriteria")
+  expect(
+    results.some((result) =>
+      result.href.startsWith("/docs/docs/profiles/features/types/feature#acceptancecriteria"),
+    ),
+  ).toBe(true)
+  expect(
+    new Set(searchDocuments(corpus.documents, "generated").map((result) => result.profile)).size,
+  ).toBeGreaterThan(20)
+  expect(searchDocuments(corpus.documents, "no-such-field-xyz")).toHaveLength(0)
+})
+test("heading IDs use inline text at all depths and disambiguate collisions", () => {
+  const tree = unified()
+    .use(remarkParse)
+    .parse("# A\n## A\n### `Code` and **bold**\n#### A\n##### A-1\n###### A\n")
+  const headings = headingsFromTree(tree)
+  expect(headings.map((h) => h.id)).toEqual(["a", "a-1", "code-and-bold", "a-2", "a-1-1", "a-3"])
+  const hast: TextNode = {
+    children: headings.map((h) => ({
+      tagName: `h${h.depth}`,
+      children: [{ type: "text", value: h.text }],
+    })),
+  }
+  headingAnchors()(hast)
+  expect(hast.children!.map((node) => node.properties!.id)).toEqual(headings.map((h) => h.id))
 })

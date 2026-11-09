@@ -26,6 +26,11 @@ Declared by the [product-research](/profile.md) profile.
 Every rule below is the effective rule for a concept of type `Product Research Finding`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `context` — required
@@ -38,6 +43,8 @@ Circumstances in which the observation was made.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -52,6 +59,8 @@ One sentence stating the study or finding.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -66,10 +75,14 @@ One sentence stating the study or finding.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `interpretation` — required
@@ -82,6 +95,8 @@ The conclusion the authors draw from the observation.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -96,6 +111,8 @@ What this finding cannot support.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -110,6 +127,8 @@ What was seen or measured, without interpretation.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -124,6 +143,8 @@ UTC RFC3339 time the observation was made.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -138,6 +159,8 @@ Bundle-scoped stable PR-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -152,6 +175,8 @@ Bundle-scoped stable PR-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -161,6 +186,8 @@ Bundle-scoped stable PR-N handle.
     - `resource` — required; allowed values: any; cardinality: any; format: none — §5.1. What the source is: a followable artifact, or a scope descriptor.
     - `title` — optional; allowed values: any; cardinality: any; format: none — §5.1. Human-readable name for the source.
     - `usage_count` — optional; allowed values: any; cardinality: scalar; format: non-negative-integer — §5.1. How many times the source was drawn on. A count, so never negative.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `status` — required
 
@@ -172,6 +199,8 @@ Finding lifecycle: `current`, `superseded`, or `withdrawn`.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -186,6 +215,8 @@ Local PR-N handle or canonical Mori URI of the study producing this finding.
 - Reference: local handles with prefix `PR`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/PR-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -200,6 +231,8 @@ Local PR-N handle or canonical Mori URI of the replacing finding.
 - Reference: local handles with prefix `PR`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/[^/]+/concepts/PR-[1-9][0-9]*`
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is `superseded`
 - Object fields: none
 - Element fields: none
@@ -214,6 +247,8 @@ Human-readable title.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -228,6 +263,8 @@ The Product Research Study or Product Research Finding concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -242,6 +279,8 @@ Why the finding no longer stands.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is `withdrawn`
 - Object fields: none
 - Element fields: none
@@ -262,6 +301,8 @@ What this finding says about named claims concerning canonical jobs.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -270,6 +311,8 @@ What this finding says about named claims concerning canonical jobs.
     - `outcomeName` — optional; allowed values: any; cardinality: scalar; format: none — Name of the job outcome the claim concerns, when it concerns one.
     - `rationale` — required; allowed values: any; cardinality: scalar; format: none — Why the observation bears on the claim.
     - `stance` — required; allowed values: `supports`, `challenges`, `inconclusive`; cardinality: scalar; format: none — `supports`, `challenges`, or `inconclusive` toward the claim.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `measurements` — optional
 
@@ -281,6 +324,8 @@ Observed values of a job's measurable outcome, in that outcome's unit.
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -293,6 +338,8 @@ Observed values of a job's measurable outcome, in that outcome's unit.
     - `population` — required; allowed values: any; cardinality: scalar; format: none — Whose behavior the value describes.
     - `unit` — required; allowed values: any; cardinality: scalar; format: none — Unit of `value`; the outcome's declared unit.
     - `value` — required; allowed values: any; cardinality: scalar; format: none — Observed finite number in `unit`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `reviews` — optional
 
@@ -304,6 +351,8 @@ Chronological human or model review provenance for this document revision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -317,6 +366,8 @@ Chronological human or model review provenance for this document revision.
     - `reviewed_at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC time at which the review completed.
     - `reviewer` — required; allowed values: any; cardinality: scalar; format: none — Stable identity of the reviewing person or agent.
     - `scope` — required; allowed values: `content`, `technical-accuracy`, `editorial`, `catalog-metadata`, `content-and-metadata`; cardinality: scalar; format: none — Aspect of the document covered by the review.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `tags` — optional
 
@@ -328,6 +379,8 @@ Producer-defined search and grouping tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -342,10 +395,14 @@ Producer-defined search and grouping tags.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

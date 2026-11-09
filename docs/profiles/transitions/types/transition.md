@@ -29,6 +29,11 @@ Use canonical project roots and typed capability/context/flow/use-case URIs. Req
 Every rule below is the effective rule for a concept of type `Transition`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `accountable` — required
@@ -41,11 +46,15 @@ Accountable parties.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `party` — required; allowed values: any; cardinality: scalar; format: none — Owner identity; unassigned is explicit uncertainty.
     - `role` — required; allowed values: any; cardinality: scalar; format: none — Accountable role.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `coordinator` — required
 
@@ -57,6 +66,8 @@ Owning coordinator project root.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -71,6 +82,8 @@ One-sentence intent.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -85,6 +98,8 @@ Nonempty lowercase environment slugs.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -99,10 +114,14 @@ Nonempty lowercase environment slugs.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `kind` — required
@@ -113,6 +132,8 @@ Nonempty lowercase environment slugs.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -125,6 +146,8 @@ Nonempty lowercase environment slugs.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -139,11 +162,15 @@ Services participating before responsibility movement.
 - Reference: none
 - Path: none
 - Unique by: `project`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `disposition` — required; allowed values: `retire`, `retain`; cardinality: scalar; format: none — Retire or retain.
     - `project` — required; allowed values: any; cardinality: scalar; format: uri-with-scheme(mori) — Canonical predecessor project root.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `responsibilities` — required
 
@@ -155,6 +182,8 @@ Declared duties and their dispositions.
 - Reference: none
 - Path: none
 - Unique by: `key`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -168,6 +197,8 @@ Declared duties and their dispositions.
     - `title` — required; allowed values: any; cardinality: scalar; format: none — Human-readable duty.
     - `to` — required when `disposition` is `move`; allowed values: any; cardinality: scalar; format: none — Listed successor key, required for move.
     - `useCaseRefs` — optional; allowed values: any; cardinality: list; format: uri-with-scheme(mori) — Use Case concept URIs.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `successors` — required
 
@@ -179,12 +210,16 @@ Known project or explicitly pending identity; exactly one is checked by Mori.
 - Reference: none
 - Path: none
 - Unique by: `key`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `key` — required; allowed values: any; cardinality: scalar; format: none — Unique lowercase successor key.
     - `pendingIdentity` — optional; allowed values: any; cardinality: scalar; format: none — Unsettled successor identity; no invented project.
     - `project` — optional; allowed values: any; cardinality: scalar; format: uri-with-scheme(mori) — Canonical successor project root.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `title` — required
 
@@ -196,6 +231,8 @@ Transition name.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -210,6 +247,8 @@ Positive unpadded TR-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -224,6 +263,8 @@ Transition concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -240,6 +281,8 @@ Chronological human or model review provenance for this document revision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -253,6 +296,8 @@ Chronological human or model review provenance for this document revision.
     - `reviewed_at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC time at which the review completed.
     - `reviewer` — required; allowed values: any; cardinality: scalar; format: none — Stable identity of the reviewing person or agent.
     - `scope` — required; allowed values: `content`, `technical-accuracy`, `editorial`, `catalog-metadata`, `content-and-metadata`; cardinality: scalar; format: none — Aspect of the document covered by the review.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Checked only under `--strict`
 
 ### Optional
@@ -267,6 +312,8 @@ Source for the declared phase.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -281,6 +328,8 @@ Optional retirement requirements; absence never establishes readiness. Mori vali
 - Reference: none
 - Path: none
 - Unique by: `key`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -295,6 +344,8 @@ Optional retirement requirements; absence never establishes readiness. Mori vali
     - `requiresAcceptance` — optional; allowed values: any; cardinality: scalar; format: boolean — Defaults to false.
     - `responsibility` — optional; allowed values: any; cardinality: scalar; format: none — Optional listed duty key; forbidden for responsibility-transfer.
     - `statement` — required; allowed values: any; cardinality: scalar; format: none — What must be established.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `timestamp` — optional
 
@@ -306,6 +357,8 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`; keep this in `optiona
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none

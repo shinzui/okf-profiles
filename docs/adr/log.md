@@ -1,5 +1,8 @@
 # Bundle Update Log
 
+## 2026-11-09
+* **Added**: ADR-23: keep generated profile reference behind an explicit publication manifest and immutable content snapshot.
+
 ## 2026-10-28
 * **Update**: ADR-9: the load-bearing sweep is native and typed (okf profile sweep); acceptance and descriptor failures are never protection, inertness and composite coverage are computed, and only shared-family, overlapping-rule and deferred results may be excused in a sweep-exceptions.json that fails when stale.
 

@@ -26,6 +26,11 @@ Declared by the [verification-evidence](/profile.md) profile.
 Every rule below is the effective rule for a concept of type `Verification Run`:
 the profile-wide rule and this type's own rule, already merged.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### Required
 
 #### `cohort` — required when `recordKind` is `run`
@@ -38,6 +43,8 @@ Name of the cohort the build linked.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `recordKind` is `run`
 - Object fields: none
 - Element fields: none
@@ -52,6 +59,8 @@ The arms and the verdict.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: applies only when `recordKind` is `comparison`
 - Object fields:
     - `baselineRuns` — required; allowed values: any; cardinality: list; format: none; path: bundle paths resolved to concepts; external URLs not allowed; self-reference not allowed — Recorded runs of the baseline arm.
@@ -62,6 +71,8 @@ The arms and the verdict.
     - `factor` — required; allowed values: `cohort`, `harness`, `dimension`, `knob`; cardinality: scalar; format: none — What differs between the arms.
     - `factorName` — optional; allowed values: any; cardinality: scalar; format: none — Which dimension, knob or package differs.
     - `verdict` — required; allowed values: `pass`, `regression`, `inconclusive`, `infrastructure-failure`; cardinality: scalar; format: none — What the comparison concluded.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `compatibilityKey` — required when `recordKind` is `run`
@@ -74,6 +85,8 @@ The arms and the verdict.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `recordKind` is `run`
 - Object fields: none
 - Element fields: none
@@ -88,6 +101,8 @@ Component inside the layer.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -102,6 +117,8 @@ Every runtime package the build linked.
 - Reference: none
 - Path: none
 - Unique by: `package`
+- Object field names: none
+- Element field names: open
 - Condition: applies only when `recordKind` is `run`
 - Object fields: none
 - Element fields:
@@ -110,6 +127,8 @@ Every runtime package the build linked.
     - `revision` — required when `source` is `git`; allowed values: any; cardinality: scalar; format: none — Full 40-character commit.
     - `source` — required; allowed values: `hackage`, `git`; cardinality: scalar; format: none — Where the solver took it from.
     - `version` — required; allowed values: any; cardinality: scalar; format: none — Exact resolved version.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `computations` — required
 
@@ -121,6 +140,8 @@ Definitions that produced the outcome.
 - Reference: local handles with prefix `VC`; external URIs not allowed; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -135,6 +156,8 @@ Digest-pinned links to the data.
 - Reference: none
 - Path: none
 - Unique by: `uri`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -143,6 +166,8 @@ Digest-pinned links to the data.
     - `kind` — required; allowed values: `run-spec`, `run-result`, `manifest`, `cell-manifest`, `samples`, `series`, `verdicts`, `diagnosis`, `logs`, `comparison`; cardinality: scalar; format: none — What the object is.
     - `mediaType` — required; allowed values: any; cardinality: scalar; format: none — IANA media type.
     - `uri` — required; allowed values: any; cardinality: scalar; format: uri — Where the object lives in durable storage.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `description` — required
 
@@ -154,6 +179,8 @@ One sentence a reader can evaluate alone.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -168,6 +195,8 @@ Flat excerpt of the environment fingerprint.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: applies only when `recordKind` is `run`
 - Object fields:
     - `arch` — required; allowed values: any; cardinality: scalar; format: none — CPU architecture.
@@ -183,6 +212,8 @@ Flat excerpt of the environment fingerprint.
     - `os` — required; allowed values: any; cardinality: scalar; format: none — Operating system.
     - `postgres` — required; allowed values: any; cardinality: scalar; format: none — PostgreSQL server version.
     - `zone` — optional; allowed values: any; cardinality: scalar; format: none — Cloud zone.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `finishedAt` — required
@@ -195,6 +226,8 @@ UTC finish.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -209,10 +242,14 @@ UTC finish.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 #### `harnessDirty` — required
@@ -225,6 +262,8 @@ Whether the harness was built from a modified tree.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -239,6 +278,8 @@ Full 40-character commit of the harness.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -253,6 +294,8 @@ Kind of evidence.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -267,6 +310,8 @@ Runtime layer the scenario isolates.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -281,6 +326,8 @@ What came of it.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -295,6 +342,8 @@ Where it ran.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -309,6 +358,8 @@ Why this was recorded.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -323,6 +374,8 @@ One run, or a comparison of runs.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -337,6 +390,8 @@ UUIDv7 of the record. Equals the file name.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -351,6 +406,8 @@ Scenario identifier: layer/component/kind/name.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -365,6 +422,8 @@ Seed of every random choice.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `recordKind` is `run`
 - Object fields: none
 - Element fields: none
@@ -379,6 +438,8 @@ Hash of the resolved solver plan.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `recordKind` is `run`
 - Object fields: none
 - Element fields: none
@@ -393,6 +454,8 @@ UTC start.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -407,6 +470,8 @@ Mori URI of the most specific runtime artifact under test.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -421,6 +486,8 @@ What `subject` names.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -435,6 +502,8 @@ Cost tier.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -449,6 +518,8 @@ What this record is, in one line.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -463,6 +534,8 @@ One of the three concept types.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -483,11 +556,15 @@ Dimension values the run used.
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `name` — required; allowed values: any; cardinality: scalar; format: none — Name, as the harness spells it.
     - `value` — required; allowed values: any; cardinality: scalar; format: none — Value the run used.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `knobs` — optional
 
@@ -499,11 +576,15 @@ Knob values the run used.
 - Reference: none
 - Path: none
 - Unique by: `name`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `name` — required; allowed values: any; cardinality: scalar; format: none — Name, as the harness spells it.
     - `value` — required; allowed values: any; cardinality: scalar; format: none — Value the run used.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 #### `knownDefects` — optional
 
@@ -515,6 +596,8 @@ Known-defect references of the scenario.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -529,6 +612,8 @@ Latest earlier record of the same scenario and compatibility key.
 - Reference: none
 - Path: bundle paths resolved to concepts; external URLs not allowed; self-reference not allowed
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -543,6 +628,8 @@ Mori URIs of reports this run caused.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -557,10 +644,14 @@ Mori URIs of reports this run caused.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

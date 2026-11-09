@@ -27,6 +27,11 @@ These rules apply to every concept in a bundle governed by this profile,
 whatever its type. Each concept type's own page repeats them merged with that
 type's rules, which is the form that actually applies.
 
+- Presence constraints: none
+- Timestamp order constraints: none
+- Membership constraints (text operands): none
+- Unique values constraints (text operands): none
+
 ### `acceptanceCriteria` — optional
 
 Stable request-local completion conditions, not tasks, dependencies, or evidence. Later evidence may cite a criterion id without rewriting the condition it proves.
@@ -37,12 +42,16 @@ Stable request-local completion conditions, not tasks, dependencies, or evidence
 - Reference: none
 - Path: none
 - Unique by: `id`
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `id` — required; allowed values: any; cardinality: scalar; format: document-handle(AC) — Stable request-local AC-N handle for this acceptance condition.
     - `statement` — required; allowed values: any; cardinality: scalar; format: none — Observable condition that must hold for the request to be complete.
     - `verification` — required; allowed values: any; cardinality: scalar; format: none — Expected procedure or evidence that will prove the condition, without claiming that evidence already exists.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 ### `completedAt` — required when `status` is `completed`
 
@@ -54,6 +63,8 @@ UTC time at which acceptance evidence proved the request complete.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is `completed`
 - Object fields: none
 - Element fields: none
@@ -68,12 +79,16 @@ Typed source relationships between improvement requests, not live operational bl
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
     - `kind` — required; allowed values: `hard`, `soft`, `integration`; cardinality: scalar; format: none — Source relationship kind: `hard` gates fulfillment on the target; `soft` never blocks by itself; `integration` permits independent implementation but gates fulfillment on named joint verification.
     - `reason` — required; allowed values: any; cardinality: scalar; format: none — Concise non-empty explanation of why this source relationship exists.
     - `ref` — required; allowed values: any; cardinality: scalar; format: none; reference: local handles with prefix `IR`; external URIs with scheme `mori`; local handles prohibited; self-reference not allowed; external URI whole-value pattern `mori://[^/]+/[^/]+/okf/improvement-requests/concepts/IR-[1-9][0-9]*` — Canonical external Mori URI of the target improvement request; local IR-N handles are ambiguous across repositories.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 
 ### `description` — required
 
@@ -85,6 +100,8 @@ Concise explanation of the problem and desired outcome.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -99,10 +116,14 @@ Concise explanation of the problem and desired outcome.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: none
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields: none
 
 ### `origin` — required
@@ -115,6 +136,8 @@ Mori URI of the project or artifact raising the request.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -129,6 +152,8 @@ Bundle-scoped stable IR-N handle.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -143,6 +168,8 @@ Evidence or rationale recorded when a request reaches a terminal state.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is one of `completed`, `rejected`, `withdrawn`, `superseded`
 - Object fields: none
 - Element fields: none
@@ -158,6 +185,8 @@ Chronological human or model review provenance for this document revision.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: open
 - Condition: none
 - Object fields: none
 - Element fields:
@@ -171,6 +200,8 @@ Chronological human or model review provenance for this document revision.
     - `reviewed_at` — required; allowed values: any; cardinality: scalar; format: rfc3339-utc — UTC time at which the review completed.
     - `reviewer` — required; allowed values: any; cardinality: scalar; format: none — Stable identity of the reviewing person or agent.
     - `scope` — required; allowed values: `content`, `technical-accuracy`, `editorial`, `catalog-metadata`, `content-and-metadata`; cardinality: scalar; format: none — Aspect of the document covered by the review.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Checked only under `--strict`
 
 ### `status` — required
@@ -183,6 +214,8 @@ Lifecycle decision for the request.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -197,6 +230,8 @@ Later request that replaces this request.
 - Reference: local handles with prefix `IR`; external URIs with scheme `mori`; local handles allowed; self-reference not allowed
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: applies only when `status` is `superseded`
 - Object fields: none
 - Element fields: none
@@ -211,6 +246,8 @@ Repository-relative path or Mori URI of the implementation plan.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -225,6 +262,8 @@ Superseded v0.1 revision timestamp. Prefer `generated.at`.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -239,6 +278,8 @@ Short statement of the requested improvement.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -253,6 +294,8 @@ The Improvement Request concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: none
+- Element field names: none
 - Condition: none
 - Object fields: none
 - Element fields: none
@@ -267,10 +310,14 @@ The Improvement Request concept type.
 - Reference: none
 - Path: none
 - Unique by: none
+- Object field names: open
+- Element field names: open
 - Condition: none
 - Object fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.
+    - Presence constraints: none
+    - Timestamp order constraints: none
 - Element fields:
     - `at` — recommended; allowed values: any; cardinality: any; format: rfc3339-utc — UTC RFC3339 timestamp, ending in `Z`, for when this happened.
     - `by` — required; allowed values: any; cardinality: any; format: actor — §7. The actor responsible: `<producer>/<version>`, `human:<id>`, or `process:<id>`.

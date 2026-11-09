@@ -210,6 +210,173 @@
         "type": "git"
       },
       "integrity": "sha512-UTHaYHOaM71bOCjGPF50DcLywlrwAodE63IP64LB4kO+OizatQEL8TesVEOM8+TkBeSgHoflJ45388IlJfa7aw=="
+    },
+    {
+      "package": "unified",
+      "version": "11.0.5",
+      "gitHead": "242105bd6e18c61ca10f37d99529b89f1be37518",
+      "repository": {
+        "url": "git+https://github.com/unifiedjs/unified.git",
+        "type": "git"
+      },
+      "integrity": "sha512-xKvGhPWw3k84Qjh8bI3ZeJjqnyadK+GEFtazSfZv/rKeTkTjOJho6mFqh2SM96iIcZokxiOpg78GazTSg8+KHA=="
+    },
+    {
+      "package": "remark-parse",
+      "version": "11.0.0",
+      "gitHead": "de740c7d52c0278bbc36d8eac218ab74995c6420",
+      "repository": {
+        "url": "git+https://github.com/remarkjs/remark.git#main",
+        "type": "git"
+      },
+      "integrity": "sha512-FCxlKLNGknS5ba/1lmpYijMUzX2esxW5xQqjWxw2eHFfS2MSdaHVINFmhjo+qN1WhZhNimq0dZATN9pH0IDrpA=="
     }
+  ],
+  "upstreamTags": [
+    {
+      "repository": "microsoft/playwright",
+      "patterns": [
+        "v1.65.0"
+      ],
+      "tags": [
+        "a1f35e1955976e84411f9c10358228a80b763ebe\trefs/tags/v1.65.0"
+      ]
+    },
+    {
+      "repository": "oxc-project/oxc",
+      "patterns": [
+        "*0.78.0*",
+        "*1.93.0*"
+      ],
+      "tags": [
+        "ccf1fb4241aadc5af2e524991f6d2aeb2caea4a7\trefs/tags/crates_v0.78.0",
+        "7d8e1f4953a694e9705117f674933925142ed457\trefs/tags/oxfmt_v0.78.0",
+        "7d8e1f4953a694e9705117f674933925142ed457\trefs/tags/oxlint_v1.93.0"
+      ]
+    },
+    {
+      "repository": "microsoft/TypeScript",
+      "patterns": [
+        "v7.0.2"
+      ],
+      "tags": [
+        "1e4744d68260a7cb91b62b12edc3f6a2187faaf1\trefs/tags/v7.0.2"
+      ]
+    },
+    {
+      "repository": "TanStack/router",
+      "patterns": [
+        "@tanstack/react-start@1.169.5",
+        "@tanstack/react-router@1.170.46"
+      ],
+      "tags": [
+        "5637925f4dc6d14525e3a497138fe163cfcc40bf\trefs/tags/@tanstack/react-router@1.170.46",
+        "697bda0c4b8ee71c5ec3b7bfc000e947a24cac4c\trefs/tags/@tanstack/react-start@1.169.5"
+      ]
+    },
+    {
+      "repository": "facebook/react",
+      "patterns": [
+        "v19.3.1"
+      ],
+      "tags": [
+        "61aa00df822d0eb76d0362eb8b6fdd3527693efe\trefs/tags/v19.3.1"
+      ]
+    },
+    {
+      "repository": "remarkjs/react-markdown",
+      "patterns": [
+        "10.1.0"
+      ],
+      "tags": [
+        "44d2e4a44b37461ab7778d6870c1a9eb36393ad2\trefs/tags/10.1.0"
+      ]
+    },
+    {
+      "repository": "remarkjs/remark-gfm",
+      "patterns": [
+        "4.0.1"
+      ],
+      "tags": [
+        "109972e8a773bf5dac1d6d2da0776557f36971aa\trefs/tags/4.0.1"
+      ]
+    },
+    {
+      "repository": "tailwindlabs/tailwindcss",
+      "patterns": [
+        "v4.3.5"
+      ],
+      "tags": [
+        "9b2c925c19aae46ff4f9cf54a2fa6d2dbac7fa19\trefs/tags/v4.3.5"
+      ]
+    },
+    {
+      "repository": "vitejs/vite-plugin-react",
+      "patterns": [
+        "*6.3.0*"
+      ],
+      "tags": [
+        "0e95069a8f90489da74371c9ad35dfc619c1b72e\trefs/tags/plugin-react@6.3.0"
+      ]
+    },
+    {
+      "repository": "vitejs/vite",
+      "patterns": [
+        "v8.3.7"
+      ],
+      "tags": [
+        "5def936009d2637a48d056e197aebc6242ac27c6\trefs/tags/v8.3.7"
+      ]
+    },
+    {
+      "repository": "jonschlinkert/gray-matter",
+      "patterns": [
+        "4.0.3"
+      ],
+      "tags": []
+    },
+    {
+      "repository": "adobe/react-spectrum",
+      "patterns": [
+        "*react-aria-components*1.22.1*"
+      ],
+      "tags": [
+        "740c6c5c4a717ca8c82fc4d15d199f6166cd42dc\trefs/tags/react-aria-components@1.22.1"
+      ]
+    },
+    {
+      "repository": "unifiedjs/unified",
+      "patterns": [
+        "11.0.5"
+      ],
+      "tags": [
+        "242105bd6e18c61ca10f37d99529b89f1be37518\trefs/tags/11.0.5"
+      ]
+    },
+    {
+      "repository": "remarkjs/remark",
+      "patterns": [
+        "*11.0.0*"
+      ],
+      "tags": [
+        "025b401230477552cd3e7a513d7ffb09ed107ede\trefs/tags/11.0.0",
+        "99179c6745a2173d07d5c3b46bad7df767e1989d\trefs/tags/remark-cli@11.0.0",
+        "de740c7d52c0278bbc36d8eac218ab74995c6420\trefs/tags/remark-parse@11.0.0",
+        "51e094e47211b08a0512d1c26c9a66697c6b83da\trefs/tags/remark-stringify@11.0.0"
+      ]
+    },
+    {
+      "repository": "pierrecomputer/pierre",
+      "patterns": [
+        "*0.5.0*"
+      ],
+      "tags": [
+        "31ecdba60483fe1377db4a99f56740ece16adc4d\trefs/tags/highlights-v0.5.0"
+      ]
+    }
+  ],
+  "notes": [
+    "DefinitelyTyped packages are independently published with npm gitHead metadata; upstream does not use per-package release tags.",
+    "Recipe-qualified versions retained; npm exact releases and upstream tag queries checked on 2026-11-09."
   ]
 }
