@@ -1,0 +1,10 @@
+{
+  "semi": false,
+  "printWidth": 100,
+  "ignorePatterns": [
+    ".seihou",
+    "node_modules",
+    "**/dist",
+    "**/routeTree.gen.ts"
+  ]
+}

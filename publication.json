@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "projectUri": "mori://shinzui/okf-profiles",
+  "documents": [
+    "docs/profiles/features/index.md",
+    "docs/profiles/features/profile.md",
+    "docs/profiles/features/types/feature.md",
+    "docs/profiles/features/types/index.md",
+    "docs/profiles/pattern-catalog/index.md",
+    "docs/profiles/pattern-catalog/profile.md",
+    "docs/profiles/pattern-catalog/types/assessable-pattern.md",
+    "docs/profiles/pattern-catalog/types/assessable-standard.md",
+    "docs/profiles/pattern-catalog/types/gotcha.md",
+    "docs/profiles/pattern-catalog/types/guide.md",
+    "docs/profiles/pattern-catalog/types/index.md",
+    "docs/profiles/pattern-catalog/types/navigation.md",
+    "docs/profiles/pattern-catalog/types/overview.md",
+    "docs/profiles/pattern-catalog/types/pattern.md",
+    "docs/profiles/pattern-catalog/types/reference.md",
+    "docs/profiles/pattern-catalog/types/runbook.md",
+    "docs/profiles/pattern-catalog/types/standard.md"
+  ],
+  "bundles": [
+    {
+      "name": "features",
+      "directory": "docs/profiles/features"
+    },
+    {
+      "name": "pattern-catalog",
+      "directory": "docs/profiles/pattern-catalog"
+    }
+  ],
+  "assets": []
+}

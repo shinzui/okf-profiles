@@ -1,0 +1,30 @@
+[
+  {
+    "projectUri": "mori://vercel/geist-font",
+    "tag": "v1.9.2",
+    "commit": "ef2597cfc42f4797676df105517ccc0a1cfa6569",
+    "path": "fonts/GeistSerif/webfonts/GeistSerif-Regular.woff2",
+    "file": "geist-serif.woff2",
+    "sha256": "98979c19f111bc48d731702d40b8707845b667def7f722ee1b49346a75151dad",
+    "license": "LICENSE.txt",
+    "seed": "geist-serif.woff2.base64",
+    "encoding": "base64",
+    "axes": {},
+    "artifactUriStatus": "Artifact-level URI pending; path is relative to the canonical project at the recorded commit."
+  },
+  {
+    "projectUri": "mori://paper-design/paper-mono",
+    "tag": "v1.000",
+    "commit": "e6eaeceaef02e77e3db997711e07a16378de2bd7",
+    "path": "fonts/webfonts/PaperMono[wght].woff2",
+    "file": "paper-mono.woff2",
+    "sha256": "34bf2cb064a77b2b966063b17887e50d71f9fb61481af67444eaf91561cf6327",
+    "license": "LICENSE.txt",
+    "seed": "paper-mono.woff2.base64",
+    "encoding": "base64",
+    "axes": {
+      "wght": [100, 400, 800]
+    },
+    "artifactUriStatus": "Artifact-level URI pending; path is relative to the canonical project at the recorded commit."
+  }
+]

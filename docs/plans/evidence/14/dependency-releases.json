@@ -1,0 +1,215 @@
+{
+  "recipeRevision": "d7688ba1f42448520d5fc9d28996fcff4f181508",
+  "npm": [
+    {
+      "package": "@playwright/test",
+      "version": "1.65.0",
+      "gitHead": "a1f35e1955976e84411f9c10358228a80b763ebe",
+      "repository": {
+        "url": "git+https://github.com/microsoft/playwright.git",
+        "type": "git"
+      },
+      "integrity": "sha512-iGURLGuKDLakSEl7Pgfv8h7f+XLT+V861Wfhz0zlEl5nyFuKUopdkFBPKqTllTUp06aOwPuH8iuUEb3yp3MpbQ=="
+    },
+    {
+      "package": "@types/bun",
+      "version": "1.4.4",
+      "gitHead": null,
+      "repository": {
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "type": "git",
+        "directory": "types/bun"
+      },
+      "integrity": "sha512-9wkRDXUXK124pEnAutE6n/l18j+i9GC5IAHK8TmX/2nlySETmky0OU6yL5U8pW1AoKh++AN9auDCr647BfurjQ=="
+    },
+    {
+      "package": "@types/react",
+      "version": "19.3.0",
+      "gitHead": null,
+      "repository": {
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "type": "git",
+        "directory": "types/react"
+      },
+      "integrity": "sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg=="
+    },
+    {
+      "package": "@types/react-dom",
+      "version": "19.3.0",
+      "gitHead": null,
+      "repository": {
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "type": "git",
+        "directory": "types/react-dom"
+      },
+      "integrity": "sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q=="
+    },
+    {
+      "package": "oxfmt",
+      "version": "0.78.0",
+      "gitHead": null,
+      "repository": {
+        "url": "git+https://github.com/oxc-project/oxc",
+        "type": "git",
+        "directory": "npm/oxfmt"
+      },
+      "integrity": "sha512-uagX+70mKqh/YqxB6ON/lkxVPH6E1Z7pfP2x6XVRPPyiDCZtX6o1xIEeXAIXJ/2wA5ViX4RFuW+IAQn85yJdWg=="
+    },
+    {
+      "package": "oxlint",
+      "version": "1.93.0",
+      "gitHead": null,
+      "repository": {
+        "url": "git+https://github.com/oxc-project/oxc",
+        "type": "git",
+        "directory": "npm/oxlint"
+      },
+      "integrity": "sha512-19JMsQFX+YvEbcUTFQxjTwhvs0Ibg0D6CFneSLgpwnACWcY/6LjhpGpkPodh0T5aIT1pjMTLlYaeBFzaVgugTA=="
+    },
+    {
+      "package": "typescript",
+      "version": "7.0.2",
+      "gitHead": "2bd066d87f5bafd315be9f40889d0a60b9e58e0b",
+      "repository": {
+        "url": "git+https://github.com/microsoft/TypeScript.git",
+        "type": "git"
+      },
+      "integrity": "sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA=="
+    },
+    {
+      "package": "@pierre/highlights",
+      "version": "0.5.0",
+      "gitHead": null,
+      "repository": null,
+      "integrity": "sha512-G8gscrHrik3YjKd+tPTcmivJ/W0zRrtg4adVxnfX7+415+0Qplo6qUWuEX5R0UkA1fMhmE2sOSuLBMNGDtLhIw=="
+    },
+    {
+      "package": "@tanstack/react-router",
+      "version": "1.170.46",
+      "gitHead": null,
+      "repository": {
+        "url": "git+https://github.com/TanStack/router.git",
+        "type": "git",
+        "directory": "packages/react-router"
+      },
+      "integrity": "sha512-ez1iNIhsPjGlaDHg3BXWs67EWVIYzB2tbopEHYDESdkO7owgkGb5de52+5Kv2v1fxdkggcNzo35bdk4arTVGQw=="
+    },
+    {
+      "package": "@tanstack/react-start",
+      "version": "1.169.5",
+      "gitHead": null,
+      "repository": {
+        "url": "git+https://github.com/TanStack/router.git",
+        "type": "git",
+        "directory": "packages/react-start"
+      },
+      "integrity": "sha512-wbI+pitXm5J2uvFe9aLXVgIjY85ju4efsQ76reE19bZTkqyZzpSb+cBkNV5rZMSrsMzWUsbN5CRctHuWeMkRiA=="
+    },
+    {
+      "package": "react",
+      "version": "19.3.1",
+      "gitHead": "61aa00df822d0eb76d0362eb8b6fdd3527693efe",
+      "repository": {
+        "url": "git+https://github.com/react/react.git",
+        "type": "git",
+        "directory": "packages/react"
+      },
+      "integrity": "sha512-QNhWdt7nrgVWWQG58QuGsAR3jv3Hbe4mb4vz7w2csnHavciZJgda1CPNaldF6eVxv90ud3jUXpKlHL69gO38yw=="
+    },
+    {
+      "package": "react-dom",
+      "version": "19.3.1",
+      "gitHead": "61aa00df822d0eb76d0362eb8b6fdd3527693efe",
+      "repository": {
+        "url": "git+https://github.com/react/react.git",
+        "type": "git",
+        "directory": "packages/react-dom"
+      },
+      "integrity": "sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ=="
+    },
+    {
+      "package": "react-markdown",
+      "version": "10.1.0",
+      "gitHead": "44d2e4a44b37461ab7778d6870c1a9eb36393ad2",
+      "repository": {
+        "url": "git+https://github.com/remarkjs/react-markdown.git",
+        "type": "git"
+      },
+      "integrity": "sha512-qKxVopLT/TyA6BX3Ue5NwabOsAzm0Q7kAPwq6L+wWDwisYs7R8vZ0nRXqq6rkueboxpkjvLGU9fWifiX/ZZFxQ=="
+    },
+    {
+      "package": "remark-gfm",
+      "version": "4.0.1",
+      "gitHead": "109972e8a773bf5dac1d6d2da0776557f36971aa",
+      "repository": {
+        "url": "git+https://github.com/remarkjs/remark-gfm.git",
+        "type": "git"
+      },
+      "integrity": "sha512-1quofZ2RQ9EWdeN34S79+KExV1764+wCUGop5CPL1WGdD0ocPpu91lzPGbwWMECpEpd42kJGQwzRfyov9j4yNg=="
+    },
+    {
+      "package": "@tailwindcss/vite",
+      "version": "4.3.5",
+      "gitHead": null,
+      "repository": {
+        "url": "https://github.com/tailwindlabs/tailwindcss.git",
+        "type": "git",
+        "directory": "packages/@tailwindcss-vite"
+      },
+      "integrity": "sha512-BCNiY0a1ZjdOHVqw7kyb7U72BwfMF3dfUuN+tQsLWky/J5JOI/r7abibglXfygrZhVO/3u3V+E25kkKTeMkXaQ=="
+    },
+    {
+      "package": "@vitejs/plugin-react",
+      "version": "6.3.0",
+      "gitHead": "0e95069a8f90489da74371c9ad35dfc619c1b72e",
+      "repository": {
+        "url": "git+https://github.com/vitejs/vite-plugin-react.git",
+        "type": "git",
+        "directory": "packages/plugin-react"
+      },
+      "integrity": "sha512-H9E955aVvD2F4zNHCw4eIZbIfF6xKldlh7MNu+hSU7xwQzh65lI/N+CJWqmfhi0PEjDXIt/H7T7J/4wU63KJiw=="
+    },
+    {
+      "package": "tailwindcss",
+      "version": "4.3.5",
+      "gitHead": null,
+      "repository": {
+        "url": "https://github.com/tailwindlabs/tailwindcss.git",
+        "type": "git",
+        "directory": "packages/tailwindcss"
+      },
+      "integrity": "sha512-FcQk9BuffmEHJP2G0XmB2SplU1aLTI7j07Kunk+U74Ny+XiWOtzXz9aujFZ/avntw1e2cOv/3PkgzflQ7gX2vQ=="
+    },
+    {
+      "package": "vite",
+      "version": "8.3.7",
+      "gitHead": null,
+      "repository": {
+        "url": "git+https://github.com/vitejs/vite.git",
+        "type": "git",
+        "directory": "packages/vite"
+      },
+      "integrity": "sha512-oxh0dMxrayBr33ScJvvBJ2HBQ2jc1TBrXKR2NyL/MJ9WPuX19mN2DXWUmywKdyw5RFVQBo8hmtb2FMC0LHrnng=="
+    },
+    {
+      "package": "gray-matter",
+      "version": "4.0.3",
+      "gitHead": "e54a33b394e14a1808b88f939507f374552906e4",
+      "repository": {
+        "url": "git+https://github.com/jonschlinkert/gray-matter.git",
+        "type": "git"
+      },
+      "integrity": "sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q=="
+    },
+    {
+      "package": "react-aria-components",
+      "version": "1.22.1",
+      "gitHead": "740c6c5c4a717ca8c82fc4d15d199f6166cd42dc",
+      "repository": {
+        "url": "git+https://github.com/adobe/react-spectrum.git",
+        "type": "git"
+      },
+      "integrity": "sha512-UTHaYHOaM71bOCjGPF50DcLywlrwAodE63IP64LB4kO+OizatQEL8TesVEOM8+TkBeSgHoflJ45388IlJfa7aw=="
+    }
+  ]
+}

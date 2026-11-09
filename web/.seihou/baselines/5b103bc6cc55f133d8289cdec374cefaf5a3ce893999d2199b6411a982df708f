@@ -1,0 +1,52 @@
+# Copy to flake.module.nix for customizations that survive Seihou upgrades.
+{ inputs, ... }:
+{
+  perSystem = { config, pkgs, system, ... }: {
+    bunProject.extraDevPackages = [ pkgs.jq ];
+
+    # Build a Docker-compatible OCI image of a Bun or Node server with nix2container.
+    # The input is always locked, so this needs no Seihou variable. An image is
+    # project-specific (package, entrypoint, ports), so it stays in this unmanaged file.
+    # It wraps the application you define as packages.default: the module's bun2nix
+    # helper (nix.bun2nix=true) builds it from bun.lock, as the README's examples show.
+    # When defining that default in THIS same perSystem attrset, merge it as
+    # `packages = { default = ...; } // pkgs.lib.optionalAttrs ... { dockerImage = ...; };`
+    # so there is only one `packages` assignment. Separate imported modules merge freely.
+    #
+    # IMPORTANT: guard it to Linux. The image must hold Linux binaries, and an
+    # unconditional output makes tools that build every output for the current
+    # system fail on macOS. The guard also keeps the builder unresolved there.
+    #
+    #   packages = pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+    #     dockerImage =
+    #       let
+    #         nix2container = inputs.nix2container.packages.${system}.nix2container;
+    #         app = config.packages.default;
+    #         # The runtime changes rarely; a separate layer skips it on most pushes.
+    #         runtimeLayer = nix2container.buildLayer { deps = [ pkgs.nodejs_22 ]; };
+    #         appLayer = nix2container.buildLayer { deps = [ app ]; layers = [ runtimeLayer ]; };
+    #       in
+    #       nix2container.buildImage {
+    #         name = "okf-profiles-web";
+    #         tag = "latest";
+    #         layers = [ runtimeLayer appLayer ];
+    #         config = {
+    #           User = "65532:65532";
+    #           # Replace with the server your package installs.
+    #           Entrypoint = [ "${pkgs.nodejs_22}/bin/node" "${app}/server/index.mjs" ];
+    #           ExposedPorts = { "8080/tcp" = { }; };
+    #           Env = [ "NODE_ENV=production" "PORT=8080" ];
+    #         };
+    #         # Need files outside the store paths above (TLS roots, a writable /tmp)?
+    #         # Add a pkgs.buildEnv or pkgs.runCommand tree as copyToRoot, and use
+    #         # the perms argument for image ownership and modes.
+    #       };
+    #   };
+    #
+    # Build on Linux (or in CI):  nix build .#dockerImage
+    # Load into Docker:          nix run .#dockerImage.copyToDockerDaemon
+    # Push configured name/tag:  nix run .#dockerImage.copyToRegistry
+    # Export an OCI archive:     nix run .#dockerImage.copyTo -- oci-archive:/tmp/okf-profiles-web.tar:okf-profiles-web:latest
+    # `result` is an image description, not a tarball; the copy helpers materialize layers.
+  };
+}

@@ -1,0 +1,6 @@
+{
+  "ignorePatterns": [
+    "**/routeTree.gen.ts",
+    "**/dist/**"
+  ]
+}

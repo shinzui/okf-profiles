@@ -1,0 +1,105 @@
+{
+  "archives": {
+    "typescript@7.0.2": {
+      "name": "typescript",
+      "url": "https://registry.npmjs.org/typescript/-/typescript-7.0.2.tgz",
+      "hash": "sha256-2iUT9LlRdtbd6LUaq3r+ipJ2VsnSdzaXk/d/flk3HAg="
+    },
+    "@typescript/typescript-darwin-arm64@7.0.2": {
+      "name": "@typescript/typescript-darwin-arm64",
+      "url": "https://registry.npmjs.org/@typescript/typescript-darwin-arm64/-/typescript-darwin-arm64-7.0.2.tgz",
+      "hash": "sha256-kC4v4c8HmRmO+QLGuMMQpFD+9immurpB1FZB73XATr0="
+    },
+    "@typescript/typescript-linux-arm64@7.0.2": {
+      "name": "@typescript/typescript-linux-arm64",
+      "url": "https://registry.npmjs.org/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz",
+      "hash": "sha256-yD2TGsnddUnN5ucSRqqdapgShDAj3z4nf+O13PQd0Oo="
+    },
+    "@typescript/typescript-linux-x64@7.0.2": {
+      "name": "@typescript/typescript-linux-x64",
+      "url": "https://registry.npmjs.org/@typescript/typescript-linux-x64/-/typescript-linux-x64-7.0.2.tgz",
+      "hash": "sha256-fsrW9nN36DGFY2erBi7zlPIVBqYRQFv4rA/wOTSGN9M="
+    },
+    "oxlint@1.87.0": {
+      "name": "oxlint",
+      "url": "https://registry.npmjs.org/oxlint/-/oxlint-1.87.0.tgz",
+      "hash": "sha256-BEQZYaB6vHEN2mP3mFULNxadetUnrL5uiAeFmHthFtQ="
+    },
+    "@oxlint/binding-darwin-arm64@1.87.0": {
+      "name": "@oxlint/binding-darwin-arm64",
+      "url": "https://registry.npmjs.org/@oxlint/binding-darwin-arm64/-/binding-darwin-arm64-1.87.0.tgz",
+      "hash": "sha256-rEbTFoGYbl+Z4u5xx9Ixzb64KJraoBN3YGPLuNM3FWo="
+    },
+    "@oxlint/binding-linux-arm64-gnu@1.87.0": {
+      "name": "@oxlint/binding-linux-arm64-gnu",
+      "url": "https://registry.npmjs.org/@oxlint/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-1.87.0.tgz",
+      "hash": "sha256-+GM3fAm0EiWwqAImBG2CyAe6s9UrmilQoJkTg34Jr68="
+    },
+    "@oxlint/binding-linux-x64-gnu@1.87.0": {
+      "name": "@oxlint/binding-linux-x64-gnu",
+      "url": "https://registry.npmjs.org/@oxlint/binding-linux-x64-gnu/-/binding-linux-x64-gnu-1.87.0.tgz",
+      "hash": "sha256-EH63wfwFnJYd6iX02L22+MC7p4uVjoHFwbgQM6cfz9s="
+    },
+    "oxfmt@0.72.0": {
+      "name": "oxfmt",
+      "url": "https://registry.npmjs.org/oxfmt/-/oxfmt-0.72.0.tgz",
+      "hash": "sha256-vXayfKvHiDMGgEGfFhQeJvFzHJW0GWlX8Bf0V74awGU="
+    },
+    "tinypool@2.2.0": {
+      "name": "tinypool",
+      "url": "https://registry.npmjs.org/tinypool/-/tinypool-2.2.0.tgz",
+      "hash": "sha256-2Qys98IAg04V3ZtWUZW7kEo0giH41m9rZxkMf/D51pU="
+    },
+    "@oxfmt/binding-darwin-arm64@0.72.0": {
+      "name": "@oxfmt/binding-darwin-arm64",
+      "url": "https://registry.npmjs.org/@oxfmt/binding-darwin-arm64/-/binding-darwin-arm64-0.72.0.tgz",
+      "hash": "sha256-01QXGahPfY4e2hpPAP3ON07bE5OCP5/l7XiLxSdy23Y="
+    },
+    "@oxfmt/binding-linux-arm64-gnu@0.72.0": {
+      "name": "@oxfmt/binding-linux-arm64-gnu",
+      "url": "https://registry.npmjs.org/@oxfmt/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-0.72.0.tgz",
+      "hash": "sha256-D+NJXbk5YbPKUu+FtImSwUpBMG0cMGSUeHrYWuXTV6E="
+    },
+    "@oxfmt/binding-linux-x64-gnu@0.72.0": {
+      "name": "@oxfmt/binding-linux-x64-gnu",
+      "url": "https://registry.npmjs.org/@oxfmt/binding-linux-x64-gnu/-/binding-linux-x64-gnu-0.72.0.tgz",
+      "hash": "sha256-CYjmogSf5ET3m4NtAW8zOR3dVxSJ5HPjPa62OhgFadM="
+    }
+  },
+  "tools": {
+    "typescript": {
+      "version": "7.0.2",
+      "common": [
+        "typescript@7.0.2"
+      ],
+      "bindings": {
+        "aarch64-darwin": "@typescript/typescript-darwin-arm64@7.0.2",
+        "aarch64-linux": "@typescript/typescript-linux-arm64@7.0.2",
+        "x86_64-linux": "@typescript/typescript-linux-x64@7.0.2"
+      }
+    },
+    "oxlint": {
+      "version": "1.87.0",
+      "common": [
+        "oxlint@1.87.0"
+      ],
+      "bindings": {
+        "aarch64-darwin": "@oxlint/binding-darwin-arm64@1.87.0",
+        "aarch64-linux": "@oxlint/binding-linux-arm64-gnu@1.87.0",
+        "x86_64-linux": "@oxlint/binding-linux-x64-gnu@1.87.0"
+      }
+    },
+    "oxfmt": {
+      "version": "0.72.0",
+      "common": [
+        "oxfmt@0.72.0",
+        "tinypool@2.2.0"
+      ],
+      "bindings": {
+        "aarch64-darwin": "@oxfmt/binding-darwin-arm64@0.72.0",
+        "aarch64-linux": "@oxfmt/binding-linux-arm64-gnu@0.72.0",
+        "x86_64-linux": "@oxfmt/binding-linux-x64-gnu@0.72.0"
+      }
+    }
+  }
+}

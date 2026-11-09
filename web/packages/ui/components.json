@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "aria-nova",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@okf-profiles-web/ui/components",
+    "ui": "@okf-profiles-web/ui/components",
+    "utils": "@okf-profiles-web/ui/lib/utils"
+  }
+}

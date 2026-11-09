@@ -1,0 +1,14 @@
+install:
+    bun install
+
+dev:
+    bun run dev
+
+check:
+    bun run check
+
+build:
+    bun run build
+
+test:
+    bun run test

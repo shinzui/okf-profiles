@@ -16,6 +16,11 @@ provenance:
       at: 2026-11-09T15:49:20Z
       mode: "update"
       note: "Link the newly created personal Rei intention and finalize the reader, regeneration, and Labs configuration plan."
+    - model: "gpt-6.1-sol"
+      harness: "codex-cli"
+      at: 2026-11-09T15:55:26Z
+      mode: "implement"
+      note: "Implement the generated profile reader, deterministic publication workflow, and packaged Labs delivery."
 ---
 
 # Serve generated profile documentation with the Seihou Labs microapp
@@ -44,7 +49,7 @@ while applying a live publication or deployment is a subsequent operator action.
 
 ## Progress
 
-- [ ] M1: The recipe-generated app reads real profile documents from the parent repository, with correct forward/back links inside two different profile bundles.
+- [x] M1 (2026-11-09): Recipe 0.1.0 at upstream `d7688ba1f42448520d5fc9d28996fcff4f181508` reads the parent manifest. Production Chromium followed profile/type/back links in Features and Pattern Catalog; build, type/lint/format/content checks and 3 corpus tests (31 assertions) passed. Exact npm releases are recorded in `evidence/14/dependency-releases.json`.
 - [ ] M2: The complete catalog is easy to browse and search on desktop and mobile, with accessible navigation, deep section links, and legible reference pages in both themes.
 - [ ] M3: One documented regeneration workflow updates Markdown and publication selection, detects drift, and removes stale profile/type pages from navigation, search, and routes.
 - [ ] M4: The production build and content snapshot pass repository, browser, and Nix checks; protected Labs configuration and the maintainer update/runbook are verified.
@@ -52,7 +57,7 @@ while applying a live publication or deployment is a subsequent operator action.
 
 ## Surprises & Discoveries
 
-(None yet.)
+2026-11-09: Port 8080 is already occupied on this host. Browser acceptance uses an isolated port 18714; the delivered server and Labs configuration retain port 8080.
 
 
 ## Decision Log
