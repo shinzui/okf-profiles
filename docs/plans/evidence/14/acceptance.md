@@ -70,8 +70,9 @@ Offline Nagare v0.16.2 reported:
 ```
 
 The config retains hostname `okf-profiles.labs.topagentnetwork.net`, image repository
-`okf-profiles-web`, port 8080, `/healthz` and login protection. No publication or
-live deployment was applied. A Seihou recipe dry-run reported `alreadyUpToDate: true`,
+`okf-profiles-web`, port 8080, `/healthz` and login protection. During the original implementation acceptance, no publication
+or live deployment was applied; the subsequent user-authorized live deployment
+is recorded separately in `deployment.json`. A Seihou recipe dry-run reported `alreadyUpToDate: true`,
 15 unchanged managed files and 46 preserved seeds, with no warnings. ADR-23 passed
 strict profile/log enforcement. FRIC-1 is accepted; no friction remains logged for
 this plan.

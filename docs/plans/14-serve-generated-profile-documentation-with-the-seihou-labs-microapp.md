@@ -110,6 +110,25 @@ Temporary build/runtime containers and imported test image references were remov
 the accepted archive remains outside the checkout.
 
 
+On 2026-11-09 the user subsequently authorized live deployment. The new AMD64
+release `git-302647b50046` was built for the `intranet` context in `tan-ng-labs`,
+published through an accepted image review, and deployed as `personal/okf-profiles`.
+TLS and the protected route are ready at https://okf-profiles.labs.topagentnetwork.net/.
+Portal settings were synchronized through a separate review, and the deploying
+user's existing Labs account received a reviewed viewer grant. Anonymous requests
+redirect to login; En confirms the account's access. Both the local AMD64 image
+and the deployed backend passed all six catalog browser journeys; live backend
+health matched the release commit. Every image/application/portal/access
+transaction converged. See [the deployment receipt](evidence/14/deployment.json).
+
+FRIC-2 is accepted: disable the build syscall filter only in the disposable
+Rosetta builder. FRIC-3 is accepted: use command-scoped Labs credentials and the
+qualified operator package while preserving global Google configuration. FRIC-4
+is accepted: build the exact pinned exporter patch natively and transfer the
+unchanged fixed-output artifact through a local cache. The runbook and tested
+patch helper record these workarounds; no dependency pins or hashes changed.
+
+
 ## Context and Orientation
 
 This repository publishes Dhall records that describe conventions for Markdown knowledge

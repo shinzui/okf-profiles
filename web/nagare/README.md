@@ -21,25 +21,47 @@ nix run .#docs-image.copyTo -- "docker-archive:$DOCS_IMAGE_ARCHIVE:$IMAGE_REF" -
 
 ## Build and test locally with Apple Container
 
-Prefer a local ARM64 Linux Nix builder on Apple Silicon. From the repository root,
-start a dedicated builder and clone the clean committed repository inside it:
+The deployed `intranet` context uses **linux/amd64**. Build for that target; the
+ARM64 image used for local implementation acceptance cannot be deployed there.
+On Apple Silicon, use an AMD64 Apple Container with Rosetta. From the repository
+root, start a dedicated builder and clone the clean committed repository inside it:
 
 ```bash
-container run --detach --name okf-profiles-docs-builder --cpus 8 --memory 12G \
+container run --detach --name okf-profiles-docs-builder --arch amd64 --rosetta --cpus 8 --memory 12G \
   --volume "$PWD:/source:ro" ghcr.io/nixos/nix:2.35.2 sleep infinity && \
 container exec okf-profiles-docs-builder sh -c '
   git config --global --add safe.directory /source &&
   git clone --no-hardlinks /source /build/okf-profiles &&
   cd /build/okf-profiles/web &&
-  nix --extra-experimental-features "nix-command flakes" build .#docs-image .#checks.aarch64-linux.docs-smoke --no-link --option sandbox false --option max-jobs 4 --option cores 4 &&
+  nix --extra-experimental-features "nix-command flakes" build .#docs-image .#checks.x86_64-linux.docs-smoke --no-link --option sandbox false --option filter-syscalls false --option max-jobs 4 --option cores 4 &&
   DOCS_IMAGE_TAG=$(nix --extra-experimental-features "nix-command flakes" eval --raw .#lib.docsImageTag) &&
-  nix --extra-experimental-features "nix-command flakes" run .#docs-image.copyTo --option sandbox false -- "docker-archive:/tmp/okf-profiles-web.tar:okf-profiles-web:$DOCS_IMAGE_TAG" --tmpdir /tmp'
+  nix --extra-experimental-features "nix-command flakes" run .#docs-image.copyTo --option sandbox false --option filter-syscalls false -- "docker-archive:/tmp/okf-profiles-web.tar:okf-profiles-web:$DOCS_IMAGE_TAG" --tmpdir /tmp'
 ```
 
 The builder uses its own Linux Nix store; the source mount is only a clone input.
-Sandboxing is disabled inside this dedicated build container because its kernel
-cannot create Nix sandbox namespaces. For another native architecture, select the
-matching Linux smoke attribute.
+Sandboxing and the Nix build syscall filter are disabled only in this dedicated
+Rosetta builder. The filter otherwise fails to load an AMD64 seccomp program on
+the ARM64 kernel (FRIC-2). For a native ARM64 local runtime check, omit the AMD64/
+Rosetta options and use `checks.aarch64-linux.docs-smoke`.
+
+**Rosetta export workaround (FRIC-4):** if the pinned exporter reports an empty
+normalized patch, build the unchanged fixed-output patch on the native Mac and
+transfer it to the builder before retrying export. From the repository root:
+
+```bash
+export DOCS_PATCH_CACHE="$(mktemp -d)" && \
+  nix build --impure --file docs/plans/evidence/14/skopeo-patch.nix --no-link && \
+  nix copy --impure --file docs/plans/evidence/14/skopeo-patch.nix \
+    --to "file://$DOCS_PATCH_CACHE" && \
+  container copy "$DOCS_PATCH_CACHE" okf-profiles-docs-builder:/tmp/docs-patch-cache && \
+  container exec okf-profiles-docs-builder \
+    nix --extra-experimental-features "nix-command flakes" copy --all \
+      --from file:///tmp/docs-patch-cache
+```
+
+The helper reproduces the recipe-pinned patch with its original SHA-256; no
+dependency pin or hash is changed. Use a fresh archive filename for a repeated
+export; Skopeo refuses to modify an existing Docker archive.
 
 Still at the root, copy the archive out, convert it to OCI using the flake's pinned
 Skopeo, and run the image without mounting the source checkout:
@@ -52,7 +74,7 @@ nix shell --inputs-from ./web nixpkgs#skopeo -c skopeo --insecure-policy copy \
   "docker-archive:$DOCS_EXPORT_DIR/image.tar" \
   "oci-archive:$DOCS_EXPORT_DIR/image-oci.tar:okf-profiles-local:$DOCS_IMAGE_TAG" && \
 container image load --input "$DOCS_EXPORT_DIR/image-oci.tar" && \
-container run --detach --name okf-profiles-docs-acceptance --read-only --tmpfs /tmp \
+container run --detach --name okf-profiles-docs-acceptance --arch amd64 --rosetta --read-only --tmpfs /tmp \
   --publish 127.0.0.1:18718:8080 "okf-profiles-local:$DOCS_IMAGE_TAG"
 ```
 
@@ -82,6 +104,8 @@ binary cannot run on macOS.
 
 ## Prepare publication and deployment reviews
 
+Use the release-qualified operator package (`nix shell github:shinzui/nagare/v0.16.2#nagare -c nagarectl …`) for live commands; the bare CLI package omits Pulumi. Select `--context intranet` and the context-specific kubeconfig. Run the context/project and platform guards first. This deployment used a private command-scoped gcloud configuration with ADC quota project `tan-ng-labs`; the global ADC configuration was preserved (FRIC-3).
+
 Keep the exported archive outside tracked source or ignored; a dirty checkout cannot produce a publication image tag. Choose the actual registry from your authorized context. Config image, destination and accepted publication must agree on repository/tag. If `docsMicroapp.imageName` is overridden, update this seeded config and destination too.
 
 The following operator steps prepare two separate saved reviews; automatic checks do not run them:
@@ -97,3 +121,5 @@ nagarectl app deploy --file nagare/Config.hs --tag "$DOCS_IMAGE_TAG" --image-res
 ```
 
 Review before applying. Keep review and archive files at stable paths until the inventory transaction completes. For rollback, use a previously accepted publication and its original config/source revision; keep its immutable tag. Verify anonymous protection and an authorized page read after an explicitly authorized deployment.
+
+The initial live deployment is recorded in [the deployment receipt](../../docs/plans/evidence/14/deployment.json). After adding a protected host, prepare/apply `access portal sync --save-plan DIR` so authentication startup settings include it, then review the intended viewer grant.

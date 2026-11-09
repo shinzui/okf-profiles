@@ -1,0 +1,61 @@
+{
+  "deployedAt": "2026-11-09T17:51:36.605305+00:00",
+  "url": "https://okf-profiles.labs.topagentnetwork.net/",
+  "context": "intranet",
+  "project": "tan-ng-labs",
+  "namespace": "personal",
+  "service": "okf-profiles",
+  "sourceProject": "mori://shinzui/okf-profiles",
+  "sourceCommit": "302647b50046b0ed5b63944ded4746f3052a709b",
+  "nagareProject": "mori://shinzui/nagare",
+  "nagareVersion": "0.16.2",
+  "platformCompatibility": "exact",
+  "platform": "linux/amd64",
+  "builder": "Apple Container / Rosetta on Apple Silicon",
+  "imageTag": "git-302647b50046",
+  "image": "us-west1-docker.pkg.dev/tan-ng-labs/nagare-intranet/okf-profiles-web:git-302647b50046",
+  "imageResource": "publication:app-image-okf-profiles-web-git-302647b50046-amd64/okf-profiles-web-git-302647b50046-amd64/oci-image",
+  "archiveSha256": "4523975caf38d1ebc94ec0fba7b4ecc3ec0d8468e32fa06a76fabc552e16e80a",
+  "archivePath": "/tmp/okf-profiles-deploy/okf-profiles-web-git-302647b50046-amd64.tar",
+  "readyRevision": "okf-profiles-00001",
+  "serviceReady": true,
+  "tlsReady": true,
+  "anonymousAccess": "302 to auth.labs.topagentnetwork.net/login",
+  "deployerAccessVerified": true,
+  "observedBackendHealth": {
+    "status": "ok",
+    "commit": "302647b50046b0ed5b63944ded4746f3052a709b"
+  },
+  "localImageBrowserTests": {
+    "passed": 6,
+    "seconds": 8.7
+  },
+  "deployedBackendBrowserTests": {
+    "passed": 6,
+    "seconds": 34.5
+  },
+  "transactions": {
+    "image": {
+      "outcome": "converged",
+      "transaction": "tx-a3e185aff3b208471f888981e4b3d0e4fac70049d85413bbbc64d13b9e76f0a0"
+    },
+    "app": {
+      "outcome": "converged",
+      "transaction": "tx-ddf1678d4f9e0536f5dce9c95e3f828398c5b2df04cfac8bd784eb8de42c4968"
+    },
+    "portal": {
+      "outcome": "converged",
+      "transaction": "tx-e70a2c7942b9b7d97ae017be0b3738616e9e06a8f78a7b4684b91e6be779eaaf"
+    },
+    "access": {
+      "outcome": "converged",
+      "transaction": "tx-9c7285012e9ab68127d6802c4a75d2305fe873cbe76352985930935babcfcf8b"
+    }
+  },
+  "buildWorkarounds": [
+    "FRIC-2",
+    "FRIC-3",
+    "FRIC-4"
+  ],
+  "globalGoogleConfigurationChanged": false
+}
