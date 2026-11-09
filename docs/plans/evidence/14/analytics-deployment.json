@@ -1,0 +1,90 @@
+{
+  "verifiedAt": "2026-11-09T18:11:03.005739+00:00",
+  "sourceCommit": "c1c8beaf7d91f40c4cd0fcc0f42ab4efdc26ef5a",
+  "imageTag": "git-c1c8beaf7d91",
+  "architecture": "amd64",
+  "revision": "okf-profiles-00002",
+  "url": "https://okf-profiles.labs.topagentnetwork.net",
+  "sourceService": "okf-profiles",
+  "secretTransaction": {
+    "barriers": [],
+    "contractVersion": 1,
+    "detail": null,
+    "document": "transaction-outcome",
+    "failureClass": null,
+    "operation": null,
+    "outcome": "converged",
+    "problem": null,
+    "transaction": "tx-915eb9c639ebfec7ca81f97a718f4efbd6c10898bac6c91073bc2fae24f43c5c"
+  },
+  "imageTransaction": {
+    "barriers": [],
+    "contractVersion": 1,
+    "detail": null,
+    "document": "transaction-outcome",
+    "failureClass": null,
+    "operation": null,
+    "outcome": "converged",
+    "problem": null,
+    "transaction": "tx-c0b3163f435cdae80015d226cea84c45d106a3f87e5fd1f581d26cee462c19c8"
+  },
+  "applicationTransaction": {
+    "barriers": [],
+    "contractVersion": 1,
+    "detail": null,
+    "document": "transaction-outcome",
+    "failureClass": null,
+    "operation": null,
+    "outcome": "converged",
+    "problem": null,
+    "transaction": "tx-67b772d7fd4a5899e45d9daa92a3cf3654075faaf48756c43ac46c0455e56f71"
+  },
+  "browserSmoke": {
+    "method": "deployed backend through operator-only proxy; synthetic forwarded subject; canonical browser origin",
+    "identity": {
+      "status": 200,
+      "cache": "private, no-store",
+      "matchesSyntheticSubject": true
+    },
+    "batches": [
+      {
+        "status": 202,
+        "accepted": 5,
+        "rejected": 0
+      }
+    ]
+  },
+  "metricsBefore": {
+    "metric": "page_views",
+    "points": []
+  },
+  "metricsAfter": {
+    "metric": "page_views",
+    "points": [
+      {
+        "bucket": "2026-11-09",
+        "group": {
+          "host": "okf-profiles.labs.topagentnetwork.net",
+          "route": "/"
+        },
+        "value": 1
+      }
+    ]
+  },
+  "anonymousSpoofedIdentityStatus": "HTTP/2 302",
+  "checks": {
+    "bunTests": 37,
+    "productionBrowserTests": 9,
+    "linuxRuntimeSmoke": "passed",
+    "staticAndContentChecks": "passed",
+    "vendorFilesVerified": 32,
+    "strictAdrValidation": "24 concepts passed"
+  },
+  "operatorCredentialBackup": {
+    "project": "mori://tan/tan-ng-labs",
+    "commit": "d72d233",
+    "path": "operator/intranet/kansoku-tokens.yaml",
+    "keyName": "okf_profiles_write_key",
+    "artifactUri": "pending"
+  }
+}

@@ -54,7 +54,7 @@ while applying a live publication or deployment is a subsequent operator action.
 - [x] M3 (2026-11-09): `just docs` stages and validates all inventoried exports before replacing the generated tree/manifest. Six temporary-tree Python tests cover determinism, drift, missing exports, added/removed types/profiles, symlinks and generation/selection/write failures. Three isolated production/development browser journeys passed, including a real source description edit, drift failure, regeneration/live refresh, restoration, repeated byte-identical regeneration, removed-route 404s and an unchanged served snapshot (3.9 minutes).
 - [x] M4 (2026-11-09): `just check` and all 9 `just docs-web-e2e` journeys passed. Clean-clone setup/build/check/regeneration left no changes. Host and native ARM64 Linux app/content/smoke/image checks passed; installed host and source-free read-only Linux image each passed all 6 catalog browser journeys. Image `git-3e9d1a358db3` reported its exact source commit in `/healthz`. Offline Nagare v0.16.2, recipe-update preservation, ADR-23 strict validation, the maintainer guide/runbook, and friction triage are verified. See [acceptance evidence](evidence/14/acceptance.md) and [release metadata](evidence/14/linux-release.json).
 
-- [ ] M5: User-authorized Kansoku integration records verified reader visits under `okf-profiles`, preserves browser privacy controls, and is deployed with live collector acceptance evidence.
+- [x] M5 (2026-11-09): User-authorized Kansoku integration records verified reader visits under `okf-profiles`, preserves browser privacy controls, and is deployed with live collector acceptance evidence.
 
 
 ## Surprises & Discoveries
@@ -591,4 +591,13 @@ entry `okf_profiles_write_key` (artifact URI pending). The reviewed runtime Secr
 transaction `tx-915eb9c639ebfec7ca81f97a718f4efbd6c10898bac6c91073bc2fae24f43c5c`
 converged. Before activation the `okf-profiles` page-view metric had no points;
 the canonical identity endpoint rejected an anonymous spoofed forwarded header
-with a login redirect. Image rollout and live browser/collector evidence remain.
+with a login redirect. The AMD64 image at source `c1c8beaf7d91f40c4cd0fcc0f42ab4efdc26ef5a` is live
+on healthy revision `okf-profiles-00002`. An operator-only proxy to the deployed
+backend, using a synthetic forwarded subject and the canonical browser origin,
+received HTTP 202 for five real SDK events with zero rejections. Kansoku metrics
+subsequently reported one page view for the canonical host and `/` route. This
+checks deployed code and real ingestion; it does not claim a user login session
+was exercised. Anonymous identity requests with a spoofed header still redirect
+to login. The 37 unit tests, nine production browser journeys, Linux Nix smoke
+and strict ADR validation passed. Sanitized receipts and exact transaction IDs
+are in `evidence/14/analytics-deployment.json`. M5 is complete.
