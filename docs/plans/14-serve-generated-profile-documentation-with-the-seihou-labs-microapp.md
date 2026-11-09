@@ -51,8 +51,8 @@ while applying a live publication or deployment is a subsequent operator action.
 
 - [x] M1 (2026-11-09): Recipe 0.1.0 at upstream `d7688ba1f42448520d5fc9d28996fcff4f181508` reads the parent manifest. Production Chromium followed profile/type/back links in Features and Pattern Catalog; build, type/lint/format/content checks and 3 corpus tests (31 assertions) passed. Exact npm releases are recorded in `evidence/14/dependency-releases.json`.
 - [x] M2 (2026-11-09): All 30 profiles / 61 concept types / 150 documents are reachable. Six production browser journeys passed catalog/404 coverage, keyboard field search, shared heading IDs, copied deep links/history, guidance, local fonts, mobile navigation, themes and focus. An isolated renderer journey also passed tables, nested lists, reference-style links and exact fenced-code copying. Screenshots in `evidence/14/` show 390px/1440px light/dark layouts; hierarchy, wrapping, contrast and focus are legible with no page-wide overflow.
-- [x] M3 (2026-11-09): `just docs` stages and validates all inventoried exports before replacing the generated tree/manifest. Five temporary-tree Python tests cover determinism, drift, missing exports, added/removed types/profiles, symlinks and generation/selection/write failures. Three isolated production/development browser journeys passed, including a real source description edit, drift failure, regeneration/live refresh, restoration, repeated byte-identical regeneration, removed-route 404s and an unchanged served snapshot (3.9 minutes).
-- [ ] M4: The production build and content snapshot pass repository, browser, and Nix checks; protected Labs configuration and the maintainer update/runbook are verified.
+- [x] M3 (2026-11-09): `just docs` stages and validates all inventoried exports before replacing the generated tree/manifest. Six temporary-tree Python tests cover determinism, drift, missing exports, added/removed types/profiles, symlinks and generation/selection/write failures. Three isolated production/development browser journeys passed, including a real source description edit, drift failure, regeneration/live refresh, restoration, repeated byte-identical regeneration, removed-route 404s and an unchanged served snapshot (3.9 minutes).
+- [x] M4 (2026-11-09): `just check` and all 9 `just docs-web-e2e` journeys passed. Clean-clone setup/build/check/regeneration left no changes. Host and native ARM64 Linux app/content/smoke/image checks passed; installed host and source-free read-only Linux image each passed all 6 catalog browser journeys. Image `git-3e9d1a358db3` reported its exact source commit in `/healthz`. Offline Nagare v0.16.2, recipe-update preservation, ADR-23 strict validation, the maintainer guide/runbook, and friction triage are verified. See [acceptance evidence](evidence/14/acceptance.md) and [release metadata](evidence/14/linux-release.json).
 
 
 ## Surprises & Discoveries
@@ -86,7 +86,28 @@ and the Labs hostname suffix. Keep the recipe's login protection.
 
 ## Outcomes & Retrospective
 
-The reader and deterministic publication workflow are implemented. Host app/content Nix packages, host smoke and the offline Nagare Application check have passed. The full repository suite, clean-checkout reproduction, and Linux image runtime/browser acceptance are in progress. Real source-regeneration browser acceptance has passed. FRIC-1 is accepted: the user authorized the qualified one-install Bun release-age override, now documented in the maintainer guide. Durable publication/update context is recorded in [ADR-23](../adr/0023-generated-reference-crosses-an-explicit-publication-boundary.md).
+All four milestones are complete. The reader publishes the full generated catalog
+with profile/type navigation, field search, stable section URLs, accessible mobile
+navigation, both themes and local fonts. A single export inventory drives validated,
+staged generation and explicit publication; source changes, removals, drift, rollback
+on failure, and immutable snapshots have observable acceptance evidence.
+
+`just check` passed, and `just docs-web-e2e` passed all nine journeys in 3.9 minutes.
+Clean-checkout reproduction left no Git changes. Host packages/smoke and native
+ARM64 Linux image/smoke passed; the installed host server and exported image each
+passed all six catalog browser journeys. The retained image archive is tagged
+`git-3e9d1a358db3`; `/healthz` matched its full source commit, with no mounted checkout
+and a read-only root filesystem. Evidence is summarized in
+[evidence/14/acceptance.md](evidence/14/acceptance.md).
+
+Protected Labs configuration and the two-stage operator runbook are ready. Live
+image publication and deployment remain subsequent operator actions, as scoped.
+[ADR-23](../adr/0023-generated-reference-crosses-an-explicit-publication-boundary.md)
+records the durable publication/update boundary. FRIC-1 is accepted: the user
+explicitly authorized the qualified one-install Bun release-age override, now
+documented in the maintainer guide. No friction entries remain logged for this plan.
+Temporary build/runtime containers and imported test image references were removed;
+the accepted archive remains outside the checkout.
 
 
 ## Context and Orientation
@@ -98,14 +119,17 @@ with an `index.md`. `okf profile document` generates a bundle describing a profi
 including its settings, field rules, and one page per concept type. Type pages already
 merge profile-wide and type-specific rules; the reader must preserve their meaning.
 
-`scripts/test-profile-docs.sh` currently contains 30 export/directory pairs. Its default
-mode regenerates into a temporary directory, compares with `docs/profiles/`, and validates
-the committed bundles. Its `--regenerate` mode rewrites those directories; root
-`justfile` exposes that as `just docs`. At planning time there are 150 generated Markdown
-files, including 61 type pages. Treat these counts as baseline evidence, not fixed limits.
+`scripts/profile-docs-catalog.json` contains the 30 export/directory pairs. The
+`scripts/test-profile-docs.sh` gate delegates to `scripts/profile-docs-generate.py`,
+which compares the export set with OKF, regenerates and validates into staging,
+and compares with `docs/profiles/` and `publication.json`. Its `--regenerate` mode
+replaces the owned output and selection together; root `justfile` exposes that as
+`just docs`. The accepted catalog has 150 generated Markdown files, including 61
+type pages. Treat these counts as baseline evidence, not fixed limits.
 `README.md`, under “Generated profile documentation,” explains the edit-source-and-regenerate
-contract. Root `just check` runs Dhall type checks and all `scripts/test-*.sh` checks.
-There is currently no web workspace or root Nix flake.
+contract. Root `just check` runs Dhall type checks, all `scripts/test-*.sh` checks, and the reader build/type/lint/format/content/unit checks.
+Before this plan there was no web workspace. The reader now lives in `web/`, with
+a nested Nix flake; the root has no separate flake.
 
 Representative inputs are `docs/profiles/features/profile.md`,
 `docs/profiles/features/types/feature.md`, and `docs/profiles/pattern-catalog/types/pattern.md`.
@@ -132,20 +156,20 @@ on the server, and supplies local fonts, themes, navigation, and code copying. I
 immutable copy of that selection with a checksummed inventory and Git revision.
 The request-time server invokes no OKF, Dhall, Mori, or Git subprocess.
 
-The seeded `packages/corpus/src/links.ts` rejects every leading-slash link. This conflicts
-with generated OKF links and must be exercised before polishing the full catalog.
-The seeded heading renderer also gives IDs only to headings through level three;
-type rule headings use level four, so field navigation needs a shared, complete heading
-ID policy. Seeded search matches titles, descriptions, and identities; finding field
-names in document bodies requires extending its search data.
+Recipe 0.1.0 originally rejected all leading-slash links, assigned IDs only through
+heading level three, and searched titles/descriptions/identities. The implementation
+now resolves bundle-root links against explicit selection, shares heading IDs through
+level six, and searches heading/field summaries without shipping the collection's
+bodies as navigation data. These were proved against real generated bundles before
+expanding the catalog.
 
 Relevant local decisions are
 [ADR-8](../adr/0008-recommended-means-a-well-run-corpus-carries-it.md), which distinguishes
 required, recommended, and optional rules (recommended absence fails strict validation),
 and [ADR-18](../adr/0018-guidance-carries-what-rules-and-descriptions-cannot.md), which keeps
 guidance separate from enforceable rules and allows it to be absent. Preserve both
-distinctions in the presentation. No existing local ADR selects a web reader or update
-architecture. `docs/adr/profile.dhall` governs the local ADR bundle registered as `adrs`
+distinctions in the presentation. [ADR-23](../adr/0023-generated-reference-crosses-an-explicit-publication-boundary.md)
+now records the implemented reader/publication boundary and update architecture. `docs/adr/profile.dhall` governs the local ADR bundle registered as `adrs`
 in `mori.dhall`; follow the skill's ADR workflow when recording the implemented design.
 
 
@@ -488,8 +512,9 @@ Preserve deterministic output and the current omission of clock-derived timestam
 
 `scripts/profile-docs-catalog.json` is the shared export/directory inventory. Root
 `publication.json` is the reader's schema-version-1 manifest, with `projectUri`,
-`documents`, `bundles`, and `assets`. Each bundle has a unique slug name and the
-repository-relative `docs/profiles/<directory>` root. Keep selection explicit at runtime.
+`documents`, `bundles`, and `assets`. Each bundle has a unique slug name, the
+repository-relative `docs/profiles/<directory>` root, and the inventory `export`
+used for labels and family grouping in snapshots. Keep selection explicit at runtime.
 Do not add generated reference bundles to Mori's authored-concept bundles merely to
 provide reader context, and do not invent `docId` values for generated pages.
 

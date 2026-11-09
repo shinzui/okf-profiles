@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "3e9d1a358db39901bf3ce29de7541952065875f6",
+  "imageTag": "git-3e9d1a358db3",
+  "architecture": "arm64",
+  "os": "linux",
+  "user": "65532:65532",
+  "health": {
+    "status": "ok",
+    "commit": "3e9d1a358db39901bf3ce29de7541952065875f6"
+  },
+  "archiveSha256": "fa185705546bfbf2e6596833f122c8b9fabf1413047be42ec0f065a8e0f853dc",
+  "sourceCheckoutMounted": false,
+  "rootFilesystemReadOnly": true,
+  "temporaryDirectory": "tmpfs",
+  "builder": "Apple Container 1.5.0 / ghcr.io/nixos/nix:2.35.2 / aarch64-linux",
+  "archivePath": "/tmp/okf-profiles-plan14-delivery/image-3e9d1a358db3.tar",
+  "cleanup": "Temporary builder, runtime containers and imported test image references were removed after acceptance; archive retained."
+}
