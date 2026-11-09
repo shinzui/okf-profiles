@@ -30,6 +30,8 @@ def same_tree(left, right):
 
 
 def generate(root, regenerate=False, okf="okf"):
+    if (root / "docs").is_symlink():
+        raise ValueError("docs must be a regular directory")
     rows = pub.catalog(root)
     def run(*args):
         return subprocess.run([okf, *args], cwd=root, check=True, capture_output=True, text=True).stdout

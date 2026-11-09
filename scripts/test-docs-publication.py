@@ -98,6 +98,14 @@ else: sys.exit("unexpected command")
         self.assertFalse((self.root / "docs/profiles/new-profile").exists())
         self.assertNotIn("new-profile", (self.root / "publication.json").read_text())
 
+    def test_symlinked_docs_root_is_rejected_before_generation(self):
+        (self.root / "docs").rename(self.root / "original-docs")
+        (self.root / "docs").symlink_to(self.root / "original-docs", target_is_directory=True)
+        with patch.object(gen.subprocess, "run") as command:
+            with self.assertRaisesRegex(ValueError, "docs must be a regular directory"):
+                self.generate()
+            command.assert_not_called()
+
     def test_missing_inventory_export_is_actionable(self):
         before = self.state()
         self.fixture["exports"].append("documentation.unlisted")
