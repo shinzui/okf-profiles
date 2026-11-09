@@ -377,6 +377,7 @@
   ],
   "notes": [
     "DefinitelyTyped packages are independently published with npm gitHead metadata; upstream does not use per-package release tags.",
-    "Recipe-qualified versions retained; npm exact releases and upstream tag queries checked on 2026-11-09."
+    "Recipe-qualified versions retained; npm exact releases and upstream tag queries checked on 2026-11-09.",
+    "gray-matter 4.0.3 is published in npm but has no matching upstream release tag; the recipe pin is retained and source/API behavior is covered by the corpus and browser tests."
   ]
 }

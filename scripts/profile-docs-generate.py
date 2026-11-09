@@ -18,10 +18,15 @@ spec.loader.exec_module(pub)
 def same_tree(left, right):
     if left.is_symlink() or not left.is_dir():
         return False
-    def files(root):
-        return {p.relative_to(root).as_posix(): p for p in root.rglob("*") if not p.is_dir()}
-    a, b = files(left), files(right)
-    return a.keys() == b.keys() and all(not a[k].is_symlink() and a[k].read_bytes() == b[k].read_bytes() for k in a)
+    def entries(root):
+        return {p.relative_to(root).as_posix(): p for p in root.rglob("*")}
+    a, b = entries(left), entries(right)
+    return a.keys() == b.keys() and all(
+        not a[k].is_symlink() and
+        ((a[k].is_dir() and b[k].is_dir()) or
+         (a[k].is_file() and b[k].is_file() and a[k].read_bytes() == b[k].read_bytes()))
+        for k in a
+    )
 
 
 def generate(root, regenerate=False, okf="okf"):

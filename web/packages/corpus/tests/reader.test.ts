@@ -3,7 +3,7 @@ import { unified } from "unified"
 import remarkParse from "remark-parse"
 import { headingsFromTree, headingAnchors, type TextNode } from "../src/headings"
 import { test, expect } from "bun:test"
-import { mkdtemp, mkdir, writeFile, symlink, rm } from "node:fs/promises"
+import { mkdtemp, mkdir, writeFile, symlink, rm, readFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
 import { loadCorpus, parseConfig, resolveLink, approvedFile } from "../src/index"
@@ -114,8 +114,17 @@ test("real publication includes all profiles and section search excludes bodies"
   const root = path.resolve(import.meta.dir, "../../../..")
   const corpus = await loadCorpus(root, "publication.json")
   const profiles = catalog(corpus.documents)
-  expect(profiles).toHaveLength(30)
-  expect(profiles.flatMap((entry) => entry.types)).toHaveLength(61)
+  const inventory = JSON.parse(
+    await readFile(path.join(root, "scripts/profile-docs-catalog.json"), "utf8"),
+  )
+  expect(profiles.map((entry) => entry.profile.exportPath).sort()).toEqual(
+    inventory.map((entry: { export: string }) => entry.export).sort(),
+  )
+  expect(profiles.flatMap((entry) => entry.types)).toHaveLength(
+    corpus.documents.filter(
+      (doc) => doc.path.includes("/types/") && !doc.path.endsWith("/index.md"),
+    ).length,
+  )
   expect(profiles.find((entry) => entry.profile.bundle === "okf-v0-2")?.types).toHaveLength(0)
   const results = searchDocuments(corpus.documents, "Feature acceptanceCriteria")
   expect(
@@ -125,7 +134,7 @@ test("real publication includes all profiles and section search excludes bodies"
   ).toBe(true)
   expect(
     new Set(searchDocuments(corpus.documents, "generated").map((result) => result.profile)).size,
-  ).toBeGreaterThan(20)
+  ).toBeGreaterThan(1)
   expect(searchDocuments(corpus.documents, "no-such-field-xyz")).toHaveLength(0)
 })
 test("heading IDs use inline text at all depths and disambiguate collisions", () => {

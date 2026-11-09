@@ -51,7 +51,7 @@ while applying a live publication or deployment is a subsequent operator action.
 
 - [x] M1 (2026-11-09): Recipe 0.1.0 at upstream `d7688ba1f42448520d5fc9d28996fcff4f181508` reads the parent manifest. Production Chromium followed profile/type/back links in Features and Pattern Catalog; build, type/lint/format/content checks and 3 corpus tests (31 assertions) passed. Exact npm releases are recorded in `evidence/14/dependency-releases.json`.
 - [x] M2 (2026-11-09): All 30 profiles / 61 concept types / 150 documents are reachable. Six production browser journeys passed catalog/404 coverage, keyboard field search, shared heading IDs, copied deep links/history, guidance, local fonts, mobile navigation, themes and focus. An isolated renderer journey also passed tables, nested lists, reference-style links and exact fenced-code copying. Screenshots in `evidence/14/` show 390px/1440px light/dark layouts; hierarchy, wrapping, contrast and focus are legible with no page-wide overflow.
-- [ ] M3: One documented regeneration workflow updates Markdown and publication selection, detects drift, and removes stale profile/type pages from navigation, search, and routes.
+- [x] M3 (2026-11-09): `just docs` stages and validates all inventoried exports before replacing the generated tree/manifest. Five temporary-tree Python tests cover determinism, drift, missing exports, added/removed types/profiles, symlinks and generation/selection/write failures. Three isolated production/development browser journeys passed, including a real source description edit, drift failure, regeneration/live refresh, restoration, repeated byte-identical regeneration, removed-route 404s and an unchanged served snapshot (3.9 minutes).
 - [ ] M4: The production build and content snapshot pass repository, browser, and Nix checks; protected Labs configuration and the maintainer update/runbook are verified.
 
 
@@ -86,7 +86,7 @@ and the Labs hostname suffix. Keep the recipe's login protection.
 
 ## Outcomes & Retrospective
 
-The reader and deterministic publication workflow are implemented. Host app/content Nix packages, host smoke and the offline Nagare Application check have passed. The full repository suite, real source-regeneration browser check, clean-checkout reproduction, and clean-commit Linux image acceptance are in progress. Durable publication/update context is recorded in [ADR-23](../adr/0023-generated-reference-crosses-an-explicit-publication-boundary.md).
+The reader and deterministic publication workflow are implemented. Host app/content Nix packages, host smoke and the offline Nagare Application check have passed. The full repository suite, clean-checkout reproduction, and Linux image runtime/browser acceptance are in progress. Real source-regeneration browser acceptance has passed. FRIC-1 is accepted: the user authorized the qualified one-install Bun release-age override, now documented in the maintainer guide. Durable publication/update context is recorded in [ADR-23](../adr/0023-generated-reference-crosses-an-explicit-publication-boundary.md).
 
 
 ## Context and Orientation

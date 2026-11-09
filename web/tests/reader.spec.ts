@@ -23,7 +23,13 @@ test("every catalog page is reachable and unpublished paths return 404", async (
   await expect(
     page.getByRole("heading", { name: "Good documents start with a contract." }),
   ).toBeVisible()
-  await expect(page.locator(".profile-card")).toHaveCount(30)
+  const inventory = JSON.parse(
+    await readFile(
+      path.resolve(import.meta.dirname, "../../scripts/profile-docs-catalog.json"),
+      "utf8",
+    ),
+  )
+  await expect(page.locator(".profile-card")).toHaveCount(inventory.length)
   const paths = new Set(
     await page
       .locator('main a[href^="/docs/"]')

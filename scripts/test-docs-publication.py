@@ -132,6 +132,8 @@ else: sys.exit("unexpected command")
         (self.root / "docs/profiles/unapproved").mkdir()
         with self.assertRaisesRegex(ValueError, "directories differ"):
             pub.publication(self.root)
+        with self.assertRaisesRegex(ValueError, "stale"):
+            self.generate(False)
         self.rows[0]["directory"] = "../escape"
         self.save_catalog()
         with self.assertRaisesRegex(ValueError, "Invalid profile"):
