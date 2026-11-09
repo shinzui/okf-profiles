@@ -1,5 +1,6 @@
 import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router"
 import type { ReactNode } from "react"
+import { PageAnalytics } from "../components/page-analytics"
 import { Shell } from "../components/shell"
 import { getCollection } from "../server/content"
 import css from "@okf-profiles-web/ui/styles/globals.css?url"
@@ -15,6 +16,7 @@ export const Route = createRootRoute({
   }),
   component: () => (
     <Shell collection={Route.useLoaderData()}>
+      <PageAnalytics summaries={Route.useLoaderData().summaries} />
       <Outlet />
     </Shell>
   ),

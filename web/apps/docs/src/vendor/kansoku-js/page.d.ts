@@ -1,0 +1,33 @@
+import type { InternalClient } from "./client.js";
+import type { JsonObject, TrackOptions } from "./types.js";
+export declare function buildPageView(client: InternalClient, properties?: JsonObject, options?: TrackOptions): {
+    accountId?: import("./generated/schema.js").components["schemas"]["AccountId"];
+    anonymousId?: import("./generated/schema.js").components["schemas"]["AnonymousId"];
+    causationId?: import("./generated/schema.js").components["schemas"]["CausationId"];
+    context: import("./generated/schema.js").components["schemas"]["Object"];
+    correlationId?: import("./generated/schema.js").components["schemas"]["CorrelationId"];
+    eventId: import("./generated/schema.js").components["schemas"]["EventId"];
+    eventName: import("./generated/schema.js").components["schemas"]["EventName"];
+    identifiers?: {
+        [key: string]: string;
+    };
+    occurredAt: import("./generated/schema.js").components["schemas"]["UTCTime"];
+    organizationId?: import("./generated/schema.js").components["schemas"]["OrganizationId"];
+    properties: import("./generated/schema.js").components["schemas"]["Object"];
+    receivedAt: import("./generated/schema.js").components["schemas"]["UTCTime"];
+    referrer?: string;
+    schemaVersion?: number;
+    sentAt?: import("./generated/schema.js").components["schemas"]["UTCTime"];
+    sessionId?: import("./generated/schema.js").components["schemas"]["SessionId"];
+    source: import("./generated/schema.js").components["schemas"]["EventSource"];
+    sourceEventId?: import("./generated/schema.js").components["schemas"]["SourceEventId"];
+    sourceGlobalPosition?: number;
+    sourceService?: string;
+    url?: string;
+    userId?: import("./generated/schema.js").components["schemas"]["UserId"];
+    utmCampaign?: string;
+    utmContent?: string;
+    utmMedium?: string;
+    utmSource?: string;
+    utmTerm?: string;
+};

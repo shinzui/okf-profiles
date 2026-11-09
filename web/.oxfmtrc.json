@@ -5,6 +5,7 @@
     ".seihou",
     "node_modules",
     "**/dist",
-    "**/routeTree.gen.ts"
+    "**/routeTree.gen.ts",
+    "apps/docs/src/vendor/kansoku-js/**"
   ]
 }

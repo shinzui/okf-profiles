@@ -54,6 +54,8 @@ while applying a live publication or deployment is a subsequent operator action.
 - [x] M3 (2026-11-09): `just docs` stages and validates all inventoried exports before replacing the generated tree/manifest. Six temporary-tree Python tests cover determinism, drift, missing exports, added/removed types/profiles, symlinks and generation/selection/write failures. Three isolated production/development browser journeys passed, including a real source description edit, drift failure, regeneration/live refresh, restoration, repeated byte-identical regeneration, removed-route 404s and an unchanged served snapshot (3.9 minutes).
 - [x] M4 (2026-11-09): `just check` and all 9 `just docs-web-e2e` journeys passed. Clean-clone setup/build/check/regeneration left no changes. Host and native ARM64 Linux app/content/smoke/image checks passed; installed host and source-free read-only Linux image each passed all 6 catalog browser journeys. Image `git-3e9d1a358db3` reported its exact source commit in `/healthz`. Offline Nagare v0.16.2, recipe-update preservation, ADR-23 strict validation, the maintainer guide/runbook, and friction triage are verified. See [acceptance evidence](evidence/14/acceptance.md) and [release metadata](evidence/14/linux-release.json).
 
+- [ ] M5: User-authorized Kansoku integration records verified reader visits under `okf-profiles`, preserves browser privacy controls, and is deployed with live collector acceptance evidence.
+
 
 ## Surprises & Discoveries
 
@@ -63,6 +65,21 @@ while applying a live publication or deployment is a subsequent operator action.
 
 
 ## Decision Log
+
+2026-11-09: The user requested Kansoku tracking after verifying the initial live
+deployment. Extend this plan with M5 and reuse the established integration from
+`mori://tan/tan-product-management/plans/26-record-hub-page-reads-in-kansoku-analytics`.
+Use the published/integrity-pinned `kansoku-js` 0.1.1 snapshot, runtime public
+configuration under `DOCS_ANALYTICS_CONFIG`, and identity from Nagare only under
+`DOCS_TRUST_FORWARDED_USER=1`. Count settled catalog and selected-document visits;
+exclude search/query/fragment changes, errors and unknown paths. Retain the hub's
+identity-only identification, memory storage, URL redaction, privacy signals,
+sessions, page leaves, Web Vitals and sanitized errors. Qualify unit/production
+browser behavior, build the target AMD64 image, issue a dedicated public write key
+for the existing `intranet` Kansoku account, apply reviewed runtime configuration
+and image/application updates, and verify a real SDK batch in the live collector.
+Keep service/admin tokens out of browser configuration and bundles.
+
 
 2026-11-09: Bundle declarations carry each inventory export as optional `export` metadata so snapshots retain catalog family and export labels without needing the source inventory at runtime. The explicit selected document list remains authoritative. Development invalidates its parsed-corpus cache using the atomically replaced manifest; installed snapshots retain normalized `content.config.json`.
 
@@ -559,3 +576,19 @@ Every implementation commit must use Conventional Commits and carry:
 ExecPlan: docs/plans/14-serve-generated-profile-documentation-with-the-seihou-labs-microapp.md
 Intention: intention_01m70fs7znecdttjkh08q0pqs6
 ```
+
+
+M5 implementation update (2026-11-09): adapted the established runtime-config,
+verified-identity and generation-guarded client lifecycle into `web/apps/docs/src/lib/analytics`.
+The reader selects only settled catalog or manifest-selected pages; the SDK uses
+memory storage and no persistent queue, with privacy controls and event URL redaction.
+[ADR-24](../adr/0024-reader-analytics-require-a-verified-subject.md) records this boundary.
+The published SDK snapshot is checked against npm SHA-512 and all 32 installed file hashes.
+37 Bun tests, static checks and production browser tests cover the integration.
+A dedicated write key was issued for the existing `intranet` account and backed up
+in `mori://tan/tan-ng-labs`, project-relative `operator/intranet/kansoku-tokens.yaml`,
+entry `okf_profiles_write_key` (artifact URI pending). The reviewed runtime Secret
+transaction `tx-915eb9c639ebfec7ca81f97a718f4efbd6c10898bac6c91073bc2fae24f43c5c`
+converged. Before activation the `okf-profiles` page-view metric had no points;
+the canonical identity endpoint rejected an anonymous spoofed forwarded header
+with a login redirect. Image rollout and live browser/collector evidence remain.

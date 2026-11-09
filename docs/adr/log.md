@@ -1,6 +1,7 @@
 # Bundle Update Log
 
 ## 2026-11-09
+* **Addition**: ADR-24: record verified, runtime-configured Kansoku analytics for the protected profile reader.
 * **Added**: ADR-23: keep generated profile reference behind an explicit publication manifest and immutable content snapshot.
 
 ## 2026-10-28

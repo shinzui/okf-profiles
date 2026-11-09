@@ -9,14 +9,15 @@
   "type": "module",
   "scripts": {
     "dev": "bun scripts/dev.ts",
-    "build": "bun run --cwd apps/docs build",
+    "build": "bun run check-vendor && bun run --cwd apps/docs build",
     "start": "bun apps/docs/server.ts",
-    "check": "tsc --noEmit && oxlint apps packages scripts tests && oxfmt --check apps packages scripts tests playwright.config.ts package.json tsconfig.json content.config.json && bun run validate-content",
+    "check": "tsc --noEmit && oxlint apps packages scripts tests && oxfmt --check apps packages scripts tests playwright.config.ts package.json tsconfig.json content.config.json && bun run validate-content && bun run check-vendor",
     "format": "oxfmt apps packages scripts tests playwright.config.ts package.json tsconfig.json content.config.json",
     "validate-content": "bun scripts/content.ts validate",
     "snapshot": "bun scripts/content.ts snapshot",
-    "test": "bun test packages/corpus/tests",
-    "test:e2e": "playwright test"
+    "test": "bun test packages/corpus/tests apps/docs/src/lib/analytics apps/docs/src/server/analytics.test.ts",
+    "test:e2e": "playwright test",
+    "check-vendor": "bun apps/docs/scripts/check-vendor.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.65.0",

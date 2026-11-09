@@ -1,0 +1,12 @@
+export declare const PAGE_VIEW = "page_view";
+export declare const SESSION_START = "session_start";
+export declare const EXPERIMENT_VIEWED = "experiment_viewed";
+export declare const IDENTIFY = "identify";
+export declare const IDENTIFY_ONCE = "identify_once";
+export declare const ALIAS = "alias";
+export declare const GROUP = "group";
+export declare const BUILT_IN_SCHEMA_VERSIONS: Readonly<Record<string, number>>;
+export { IDENTIFIER_KINDS } from "../generated/identifier-kinds.js";
+export declare const MIN_SCHEMA_VERSION = 1;
+export declare const MAX_SCHEMA_VERSION = 65535;
+export declare const EXPERIMENT_NAME_PATTERN: RegExp;

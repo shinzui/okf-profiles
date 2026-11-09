@@ -196,3 +196,11 @@ original configuration revision, prepare the deployment review with that image
 resource ID and unchanged tag, then apply through the authorized operator workflow.
 Verify `/healthz`, an authorized profile read, and anonymous login protection after
 the operator action. Git retains the corresponding profile and snapshot history.
+
+The protected Labs deployment records Kansoku page visits under source service
+`okf-profiles`, using the signed-in opaque user subject. Search text, query strings,
+section fragments, referrer and UTM attribution are removed. Tracking uses memory
+storage, respects Do Not Track and Global Privacy Control, and stops when identity
+cannot be verified. Sessions, page leaves, Web Vitals and sanitized client errors are
+also enabled. See [ADR-24](../adr/0024-reader-analytics-require-a-verified-subject.md)
+and the [runtime configuration runbook](../../web/nagare/README.md#kansoku-analytics).

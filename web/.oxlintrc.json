@@ -1,6 +1,7 @@
 {
   "ignorePatterns": [
     "**/routeTree.gen.ts",
-    "**/dist/**"
+    "**/dist/**",
+    "apps/docs/src/vendor/kansoku-js/**"
   ]
 }

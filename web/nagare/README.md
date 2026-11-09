@@ -123,3 +123,31 @@ nagarectl app deploy --file nagare/Config.hs --tag "$DOCS_IMAGE_TAG" --image-res
 Review before applying. Keep review and archive files at stable paths until the inventory transaction completes. For rollback, use a previously accepted publication and its original config/source revision; keep its immutable tag. Verify anonymous protection and an authorized page read after an explicitly authorized deployment.
 
 The initial live deployment is recorded in [the deployment receipt](../../docs/plans/evidence/14/deployment.json). After adding a protected host, prepare/apply `access portal sync --save-plan DIR` so authentication startup settings include it, then review the intended viewer grant.
+
+## Kansoku analytics
+
+The protected service explicitly trusts Nagare's `X-Forwarded-User` header. Keep
+`requireLogin` and the origin boundary in place while `DOCS_TRUST_FORWARDED_USER=1`.
+The identity route returns only that opaque subject, with private/no-store headers.
+
+`DOCS_ANALYTICS_CONFIG` is runtime JSON in the managed
+`nagare-secret-okf-profiles-runtime` Secret. Its public enabled shape is:
+
+```json
+{"enabled":true,"baseUrl":"https://kansoku.labs.topagentnetwork.net","writeKey":"ksk_w_REPLACE","sourceService":"okf-profiles","identity":{"mode":"required","endpoint":"/api/analytics/identity"}}
+```
+
+The dedicated write key is backed up in `mori://tan/tan-ng-labs`, project-relative
+`operator/intranet/kansoku-tokens.yaml`, entry `okf_profiles_write_key` (artifact URI
+pending). It can only ingest events. Never configure a metrics service token here.
+Use the reviewed runtime Secret workflow from
+`mori://shinzui/nagare/okf/guides/concepts/DOC-13`: pipe the JSON into
+`nagarectl secret set okf-profiles DOCS_ANALYTICS_CONFIG --config nagare/Config.hs
+--runtime --version VERSION --save-plan REVIEW`, inspect and apply the review, then
+redeploy the application so a new revision reads the Secret.
+
+To disable capture, replace the runtime JSON with `{"enabled":false}` through the
+same workflow and redeploy. Missing or invalid JSON also disables collection. Test
+privacy and identity behavior with `bunx playwright test tests/analytics.spec.ts`.
+The SDK snapshot is verified by `bun run check-vendor`; refresh it deliberately with
+`bun apps/docs/scripts/vendor-kansoku.ts` after checking npm and upstream release tags.

@@ -23,13 +23,15 @@ application release = do
   domains <- D.mkDomains [("okf-profiles.labs.topagentnetwork.net", True)]
   health <- D.httpHealthCheck "/healthz"
   scale <- D.mkScale 0 2
-  let deployment = service { D.namespace = namespace, D.build = PrebuiltImage tag, D.domains = domains, D.healthCheck = Just health, D.scale = Just scale, D.access = Just requireLogin }
+  trust <- D.mkEnvName "DOCS_TRUST_FORWARDED_USER"
+  let runtime = Map.singleton trust (D.runtimeScoped (D.EnvLiteral "1"))
+      deployment = service { D.namespace = namespace, D.env = runtime, D.build = PrebuiltImage tag, D.domains = domains, D.healthCheck = Just health, D.scale = Just scale, D.access = Just requireLogin }
   App.mkApplication App.Application
     { App.name = name
     , App.logicalKey = Nothing
     , App.namespace = namespace
     , App.image = image
-    , App.env = Map.empty
+    , App.env = runtime
     , App.databases = []
     , App.brokers = []
     , App.access = Just requireLogin
