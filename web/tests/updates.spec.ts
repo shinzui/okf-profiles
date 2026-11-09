@@ -42,6 +42,7 @@ test.describe("isolated regeneration and renderer fixtures", () => {
       "Profile",
       "profiles",
       "package.dhall",
+      "CHANGELOG.md",
       "docs/profiles",
       "scripts/profile-docs-catalog.json",
       "publication.json",

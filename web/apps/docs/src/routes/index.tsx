@@ -1,10 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { catalog, groups } from "@okf-profiles-web/corpus/catalog"
+import { Inline } from "../components/inline"
 import { Route as Root } from "./__root"
 export const Route = createFileRoute("/")({ component: Home })
 function Home() {
   const collection = Root.useLoaderData()
   const profiles = catalog(collection.summaries)
+  const latest = collection.latestRelease
+  const changelog = collection.summaries.find((doc) => doc.path === "CHANGELOG.md")
+  const latestHref: string = `${changelog?.href}#${latest?.anchor}`
   return (
     <article className="catalog">
       <div className="catalog-intro">
@@ -24,6 +28,23 @@ function Home() {
           <span aria-hidden="true">·</span> OKF v0.2
         </p>
       </div>
+      {latest && changelog && (
+        <aside className="latest-release">
+          <div>
+            <p className="eyebrow">Latest release</p>
+            <Link to={latestHref} className="latest-version">
+              {latest.version}
+            </Link>
+            {latest.date && <time dateTime={latest.date}>{latest.date}</time>}
+          </div>
+          <p>
+            <Inline text={latest.summary} />
+          </p>
+          <Link to={changelog.href} className="latest-all">
+            All releases
+          </Link>
+        </aside>
+      )}
       <nav className="family-links" aria-label="Profile families">
         {groups.map((group) => (
           <a key={group} href={`#${group.toLowerCase()}`}>
@@ -45,8 +66,17 @@ function Home() {
                   <h3>
                     <Link to={entry.profile.href}>{entry.name}</Link>
                   </h3>
-                  <code className="export-path">{entry.profile.exportPath}</code>
-                  <p>{entry.profile.description}</p>
+                  <div className="card-meta">
+                    <code className="export-path">{entry.profile.exportPath}</code>
+                    {collection.profileReleases[entry.profile.bundle!] && (
+                      <span className="card-release">
+                        Changed in {collection.profileReleases[entry.profile.bundle!]}
+                      </span>
+                    )}
+                  </div>
+                  <p>
+                    <Inline text={entry.profile.description} />
+                  </p>
                   <div className="type-links">
                     {entry.types.map((doc) => (
                       <Link key={doc.path} to={doc.href}>

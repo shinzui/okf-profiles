@@ -4,6 +4,8 @@ import remarkGfm from "remark-gfm"
 import { headingsFromTree } from "./headings"
 import { docHref } from "./links"
 export { resolveLink } from "./links"
+export { CHANGELOG_PATH, parseChangelog, releasesForExport } from "./changelog"
+import { CHANGELOG_PATH, parseChangelog } from "./changelog"
 import { readFile, realpath, stat } from "node:fs/promises"
 import path from "node:path"
 import matter from "gray-matter"
@@ -130,5 +132,12 @@ export async function loadCorpus(
   } catch {
     /* Local content. */
   }
-  return { documents, assets: config.assets, commit: release.commit, date: release.date }
+  const changelog = documents.find((document) => document.path === CHANGELOG_PATH)
+  return {
+    documents,
+    assets: config.assets,
+    changelog: changelog ? parseChangelog(changelog.body) : [],
+    commit: release.commit,
+    date: release.date,
+  }
 }

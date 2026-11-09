@@ -31,6 +31,28 @@ export function SearchField({
     </AriaSearchField>
   )
 }
+export function CommandDialog({
+  isOpen,
+  onOpenChange,
+  children,
+}: {
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+  children: ReactNode
+}) {
+  return (
+    <ModalOverlay
+      className="overlay palette-overlay"
+      isDismissable
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+    >
+      <Modal className="palette">
+        <Dialog aria-label="Command palette">{children}</Dialog>
+      </Modal>
+    </ModalOverlay>
+  )
+}
 export function NavigationDialog({ children }: { children: ReactNode }) {
   return (
     <DialogTrigger>

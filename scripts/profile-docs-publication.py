@@ -9,6 +9,8 @@ import sys
 import tempfile
 
 PROJECT = "mori://shinzui/okf-profiles"
+# The curated release history is the one hand-written page in the selection (ADR-25).
+CHANGELOG = "CHANGELOG.md"
 
 
 def catalog(root):
@@ -34,7 +36,10 @@ def publication(root, generated=None):
     expected = {r["directory"] for r in rows}
     if {p.name for p in tree.iterdir()} != expected:
         raise ValueError("Generated profile directories differ from the inventory; run: just docs")
-    documents = []
+    changelog = root / CHANGELOG
+    if changelog.is_symlink() or not changelog.is_file():
+        raise ValueError(f"Expected regular file: {CHANGELOG}")
+    documents = [CHANGELOG]
     for row in rows:
         directory = tree / row["directory"]
         if directory.is_symlink() or not directory.is_dir():

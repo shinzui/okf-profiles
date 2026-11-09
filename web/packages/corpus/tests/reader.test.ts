@@ -6,7 +6,15 @@ import { test, expect } from "bun:test"
 import { mkdtemp, mkdir, writeFile, symlink, rm, readFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
-import { loadCorpus, parseConfig, resolveLink, approvedFile } from "../src/index"
+import {
+  loadCorpus,
+  parseChangelog,
+  parseConfig,
+  releasesForExport,
+  resolveLink,
+  approvedFile,
+} from "../src/index"
+import { changelogLayout, fieldHeading, referenceLayout } from "../src/reference-layout"
 const config = {
   schemaVersion: 1,
   projectUri: "mori://example/docs",
@@ -151,4 +159,198 @@ test("heading IDs use inline text at all depths and disambiguate collisions", ()
   }
   headingAnchors()(hast)
   expect(hast.children!.map((node) => node.properties!.id)).toEqual(headings.map((h) => h.id))
+})
+
+const element = (tagName: string, children: TextNode[], properties = {}): TextNode => ({
+  type: "element",
+  tagName,
+  children,
+  properties,
+})
+const text = (value: string): TextNode => ({ type: "text", value })
+const code = (value: string) => element("code", [text(value)])
+const item = (...children: TextNode[]) => element("li", children)
+const fieldRules = (extra: TextNode[] = []) =>
+  element("ul", [
+    item(text("Allowed values: any")),
+    item(text("Cardinality: list")),
+    item(text("Format: none")),
+    item(text("Unique by: "), code("id")),
+    item(text("Condition: applies only when "), code("status"), text(" is "), code("live")),
+    item(text("Object fields: none")),
+    ...extra,
+  ])
+function find(node: TextNode, className: string): TextNode[] {
+  const own = (node.properties?.className as string[] | undefined)?.includes(className)
+  return [...(own ? [node] : []), ...(node.children ?? []).flatMap((c) => find(c, className))]
+}
+const render = (node: TextNode): string => node.value ?? node.children?.map(render).join("") ?? ""
+
+test("field rules become cards that keep stated constraints and drop unset ones", () => {
+  const tree = element("root", [
+    element(
+      "h4",
+      [code("items"), text(" — required when "), code("status"), text(" is "), code("live")],
+      { id: "items" },
+    ),
+    element("p", [text("What it holds.")]),
+    fieldRules([
+      item(
+        text("Element fields:"),
+        element("ul", [
+          item(
+            code("id"),
+            text(" — required; allowed values: any; cardinality: scalar; format: "),
+            code("uri"),
+            text(" — The handle — stable."),
+          ),
+          item(text("Presence constraints: none")),
+        ]),
+      ),
+      item(text("Element field names: open")),
+    ]),
+  ])
+  referenceLayout()(tree)
+  const [card] = find(tree, "field-card")
+  expect(card!.properties!.dataPresence).toBe("required")
+  expect(card!.children![0]!.properties!.id).toBe("items")
+  const facts = render(find(card!, "facts")[0]!)
+  expect(facts).toContain("Cardinalitylist")
+  expect(facts).toContain("Unique byid")
+  expect(facts).not.toContain("Allowed values")
+  expect(facts).not.toContain("Format")
+  // The heading already states this condition.
+  expect(facts).not.toContain("Condition")
+  const [nested] = find(card!, "subfields")
+  expect(render(nested!)).toContain("names open")
+  expect(render(find(nested!, "subfield")[0]!)).toContain("The handle — stable.")
+  expect(render(find(nested!, "subfield")[0]!)).toContain("Formaturi")
+  expect(render(nested!)).not.toContain("Presence constraints")
+})
+
+test("a condition the heading does not state stays visible on an optional field", () => {
+  const tree = element("root", [element("h3", [code("note"), text(" — optional")]), fieldRules()])
+  referenceLayout()(tree)
+  expect(render(find(tree, "facts")[0]!)).toContain("Conditionapplies only when status is live")
+})
+
+test("an unlabelled rule stays on its card as a note", () => {
+  const tree = element("root", [
+    element("h3", [code("resource"), text(" — recommended")]),
+    fieldRules([item(text("Checked only under "), code("--strict"))]),
+  ])
+  referenceLayout()(tree)
+  expect(find(tree, "field-card").length).toBe(1)
+  expect(render(find(tree, "field-note")[0]!)).toBe("Checked only under --strict")
+})
+
+test("unrecognized lists and headings pass through unchanged", () => {
+  const list = element("ul", [item(text("Required")), item(text("Other: thing"))])
+  const heading = element("h3", [text("Guidance")])
+  const tree = element("root", [heading, list])
+  referenceLayout()(tree)
+  expect(tree.children).toEqual([heading, list])
+})
+
+test("constraint lists disappear only when every constraint is none", () => {
+  const unset = element("root", [element("ul", [item(text("Presence constraints: none"))])])
+  referenceLayout()(unset)
+  expect(unset.children).toEqual([])
+  const stated = element("root", [
+    element("ul", [
+      item(text("Presence constraints: none")),
+      item(text("Timestamp order constraints: "), code("a"), text(" before "), code("b")),
+    ]),
+  ])
+  referenceLayout()(stated)
+  expect(render(stated)).toContain("a before b")
+  expect(render(stated)).not.toContain("Presence")
+})
+
+test("field headings separate name, level and rule", () => {
+  expect(fieldHeading("status — required when kind is model")).toEqual({
+    name: "status",
+    level: "required",
+    rule: "required when kind is model",
+  })
+  expect(fieldHeading("Frontmatter rules")).toBeNull()
+})
+
+const history = `# Changelog
+
+Intro.
+
+## [Unreleased]
+
+## [1.2.0] — 2026-10-23
+
+Adds **\`a.one\`** and [more](./x.md).
+
+### Added
+
+- \`a.one\`: the first.
+  - nested detail
+- Unrelated work on \`a.oneMore\`.
+
+### Not included
+
+\`a.one\` migration tooling waits.
+
+## [1.1.0] — 2026-10-01
+
+### Changed
+
+- Everything moved.
+
+[1.1.0]: https://example.test/1.1.0
+`
+
+test("changelog entries attach to a profile only by its exact export", () => {
+  const releases = parseChangelog(history)
+  expect(releases.map((release) => release.version)).toEqual(["Unreleased", "1.2.0", "1.1.0"])
+  expect(releases[0]!.blocks).toEqual([])
+  expect(releases[1]!.summary).toBe("Adds `a.one` and more.")
+  const [release, ...others] = releasesForExport(releases, "a.one")
+  expect(others).toEqual([])
+  expect(release!.anchor).toBe("120-2026-10-23")
+  expect(release!.entries.map((entry) => entry.section)).toEqual([null, "Added"])
+  expect(release!.entries[1]!.markdown).toContain("nested detail")
+  expect(release!.entries.join("")).not.toContain("a.oneMore")
+  expect(releasesForExport(releases, "a.missing")).toEqual([])
+})
+
+test("changelog releases wrap their entries and keep heading anchors", () => {
+  const tree = element("root", [
+    element("h1", [text("Changelog")]),
+    element("h2", [text("[1.2.0] — 2026-10-23")], { id: "120-2026-10-23" }),
+    element("h3", [text("Added")], { id: "added" }),
+    element("h2", [text("[Unreleased]")], { id: "unreleased" }),
+  ])
+  changelogLayout()(tree)
+  const releases = find(tree, "release")
+  expect(releases.length).toBe(2)
+  expect(releases[0]!.children![0]!.properties!.id).toBe("120-2026-10-23")
+  expect(render(find(releases[0]!, "release-version")[0]!)).toBe("1.2.0")
+  expect(render(find(releases[1]!, "muted")[0]!)).toBe("Nothing recorded yet.")
+  expect(find(releases[0]!, "release-kind")[0]!.properties!.dataKind).toBe("added")
+})
+
+test("search ranks page titles first and omits repeated changelog labels", () => {
+  const summary = (path: string, title: string, bundle: string | null, depth = 2) => ({
+    path,
+    href: `/docs/${path}`,
+    title,
+    description: "",
+    identity: path,
+    bundle,
+    exportPath: null,
+    metadata: {},
+    headings: [{ id: "added", text: "Added jobs", depth }],
+  })
+  const results = searchDocuments(
+    [summary("CHANGELOG.md", "Changelog", null, 3), summary("b/jobs.md", "Jobs", "b", 2)],
+    "jobs",
+  )
+  expect(results[0]!.href).toBe("/docs/b/jobs.md")
+  expect(results.some((result) => result.profile === "Changelog")).toBe(false)
 })

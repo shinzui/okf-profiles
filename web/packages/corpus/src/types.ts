@@ -28,9 +28,27 @@ export interface Document extends Summary {
   body: string
   links: Record<string, string>
 }
+export interface ChangeBlock {
+  section: string | null
+  markdown: string
+}
+export interface Release {
+  version: string
+  date: string | null
+  anchor: string
+  summary: string
+  blocks: ChangeBlock[]
+}
+export interface ProfileRelease {
+  version: string
+  date: string | null
+  anchor: string
+  entries: ChangeBlock[]
+}
 export interface Corpus {
   documents: Document[]
   assets: string[]
+  changelog: Release[]
   commit: string
   date: string
 }

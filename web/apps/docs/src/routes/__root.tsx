@@ -23,10 +23,13 @@ export const Route = createRootRoute({
   shellComponent: Document,
   notFoundComponent: () => <h1>Document not found</h1>,
 })
+// Runs before first paint so a saved dark theme never flashes light.
+const restoreTheme = `try{document.documentElement.dataset.theme=localStorage.getItem("docs-theme")||"light"}catch(e){}`
 function Document({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: restoreTheme }} />
         <HeadContent />
       </head>
       <body>

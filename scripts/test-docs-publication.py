@@ -52,6 +52,7 @@ elif args[0]=="validate": pass
 else: sys.exit("unexpected command")
 ''')
         self.okf.chmod(0o755)
+        (self.root / "CHANGELOG.md").write_text("# Changelog\n")
         self.generate()
 
     def save_catalog(self):
@@ -128,6 +129,15 @@ else: sys.exit("unexpected command")
             with self.assertRaisesRegex(OSError, "failed manifest"):
                 self.generate()
         self.assertEqual(before, self.state())
+
+    def test_changelog_is_selected_and_must_be_a_regular_file(self):
+        self.assertIn("CHANGELOG.md", json.loads(pub.publication(self.root))["documents"])
+        (self.root / "CHANGELOG.md").unlink()
+        with self.assertRaisesRegex(ValueError, "CHANGELOG.md"):
+            pub.publication(self.root)
+        (self.root / "CHANGELOG.md").symlink_to(self.root / "fixture.json")
+        with self.assertRaisesRegex(ValueError, "CHANGELOG.md"):
+            pub.publication(self.root)
 
     def test_boundaries_symlinks_and_selection_drift(self):
         tree = self.root / "docs/profiles/features"

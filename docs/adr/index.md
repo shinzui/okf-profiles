@@ -31,4 +31,5 @@ okf_version: "0.2"
 - [Campaigns are coordinated work, claim checks are assurance, readouts are research](0021-campaigns-are-coordinated-work-claim-checks-are-assurance-readouts-are-research.md) - Campaigns and audiences join coordination, checked wording joins assurance, and experiment results reuse product research with an opt-in interim gate.
 - [Strategy and launches are coordination; messaging is documentation](0022-strategy-and-launches-are-coordination-messaging-is-documentation.md) - Targets and coordinated go-live work stay separate from observations and evidence-backed customer explanations.
 - [Generated reference crosses an explicit publication boundary](0023-generated-reference-crosses-an-explicit-publication-boundary.md) - The web reader consumes selected generated Markdown through a committed manifest and ships immutable content snapshots independently of its application.
+- [The release history is published with the reference](0025-the-release-history-is-published-with-the-reference.md) - The reader publishes the curated CHANGELOG.md as one explicitly selected page and attributes release notes to a profile only when they name its exact export.
 

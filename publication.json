@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "projectUri": "mori://shinzui/okf-profiles",
   "documents": [
+    "CHANGELOG.md",
     "docs/profiles/architecture-decisions/index.md",
     "docs/profiles/architecture-decisions/profile.md",
     "docs/profiles/architecture-decisions/types/architecture-decision-record.md",

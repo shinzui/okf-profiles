@@ -64,9 +64,17 @@ entry removes its old directory and selected URLs. Adding/removing a concept typ
 inside an existing profile needs only the source edit and regeneration.
 
 Do not add unrelated documents to `publication.json` by hand. The publication
-check accepts the two root pages and the flat `types/` pages in inventoried bundles;
-it rejects symlinks and unexpected directories/files. The request-time reader
+check accepts `CHANGELOG.md`, the two root pages and the flat `types/` pages in
+inventoried bundles; it rejects symlinks and unexpected directories/files. The request-time reader
 serves only the committed explicit selection.
+
+## Write release notes the reader can attribute
+
+The reader publishes `CHANGELOG.md` as a release timeline and adds a Changelog section
+to a profile's page for each top-level bullet or paragraph that names its exact export
+in backticks, such as `` `coordination.features` ``. Name the export when a note
+concerns one profile. A note that does not name an export appears only in the full
+changelog, and entries under `### Not included` are never attributed to a profile.
 
 ## Check the candidate
 
